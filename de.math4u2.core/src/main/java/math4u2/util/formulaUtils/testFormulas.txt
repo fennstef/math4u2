@@ -1,0 +1,17 @@
+matrix({{1,2,3},{4,5,6},{4,5,6}})
+vektor({1,2,3})
+fl[3](x,y)
+m(3)[2][4]
+f(x):=b/sqrt(x)+2
+f(x):=sin(x)*sqrt(matrix({1},{2},{3}))+b
+f(x):=b*sqrt(sqrt(sqrt(x)))+2
+f(x):=int(x,1,23,b+c)
+f(x):=(c^2 + sin(3/2)) / cos(b^2)
+f(x):=(sin(3/2)) / cos(bi^2)
+f(x):=6/x * (x/3)
+f(x):=((x+3))/2
+f(x):=(x[1]^2+4)/(x+2)
+f(x):=c+d
+p.x +p.y
+pi
+punkt(x,y)

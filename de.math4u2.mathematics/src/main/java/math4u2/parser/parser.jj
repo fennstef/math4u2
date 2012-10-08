@@ -1,0 +1,3289 @@
+/*
+ *
+ */
+
+options {
+	LOOKAHEAD= 1;
+}
+
+
+PARSER_BEGIN(parser)
+
+package math4u2.parser;
+
+import math4u2.mathematics.functions.*;
+import math4u2.mathematics.termnodes.*;
+import math4u2.mathematics.results.*;
+import math4u2.mathematics.types.*;
+import math4u2.application.MainWindow;
+import math4u2.controller.*;
+import math4u2.controller.reference.*;
+import math4u2.mathematics.affine.*;
+import math4u2.mathematics.affine.Map;
+import math4u2.mathematics.collection.*;
+
+import java.util.*;
+import java.io.StringReader;
+import math4u2.mathematics.types.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import math4u2.parser.importdata.*;
+import math4u2.util.exception.ExceptionManager;
+import math4u2.util.exception.parser.*;
+import math4u2.view.gui.listview.ViewFactoryInterface;
+
+public class parser {
+	static parser theOnlyParser= null;
+	static Broker broker;
+	static ViewFactoryInterface viewFactory;
+	static String functionName; // sollte man als globale ScalarVariable beseitigen
+
+	private static void init(Broker broker, ViewFactoryInterface viewFactory){
+		parser.broker=broker;
+		parser.viewFactory = viewFactory;
+	}
+	
+	public static List startValidate ( String text, Broker broker, ViewFactoryInterface viewFactory ) {
+		init(broker, viewFactory);
+		
+		if (theOnlyParser == null) {
+			theOnlyParser= new parser(new StringReader(text));
+		} else {
+			parser.ReInit(new StringReader(text));
+		}
+		
+		return new ArrayList();
+	}
+	
+	public static void handleValidateError( Throwable e, List regList, Broker broker )
+	   throws ParseException {
+
+			try {         	        
+           		broker.deleteAnonymousObjects(regList);
+			}catch ( BrokerException be) {
+               	ExceptionManager.doError("Fehler beim Loeschen der temporaer erzeugten Objekte",be);
+            }  
+			if (e instanceof ParseException){
+				//System.out.println("Parse-Exc col " + ((ParseException)e).getErrorColumn());
+				throw (ParseException)e;
+			}			
+			if (e instanceof TokenMgrError){
+				throw new ParseException(((TokenMgrError) e).getErrorColumn(), e.getMessage(), e);
+			}				
+			if (token != null){
+				throw new ParseException(token.beginColumn, e.getMessage(), e);
+			}			
+			throw new ParseException(e);
+		
+	}
+	
+	
+	
+	public static void validatePoint( String text, Broker broker ) throws ParseException {
+		init(broker, viewFactory);
+		Object def;
+		List regList = new ArrayList();
+	
+		
+		if (theOnlyParser == null) {
+			theOnlyParser= new parser(new StringReader(text));
+		} else {
+			parser.ReInit(new StringReader(text));
+		}
+		
+		try {
+			def=parser.newPointObject(regList);
+		} catch (Throwable e) {
+			// die neu erzeugten Objekte werden geloescht
+			try {         	        
+           		broker.deleteAnonymousObjects(regList);
+			}catch ( BrokerException be) {
+               	ExceptionManager.doError("Fehler beim Loeschen der temporaer erzeugten Objekte",be);
+            }  
+			if (e instanceof ParseException){
+				//System.out.println("Parse-Exc col " + ((ParseException)e).getErrorColumn());
+				throw (ParseException)e;
+			}			
+			if (e instanceof TokenMgrError){
+				throw new ParseException(((TokenMgrError) e).getErrorColumn(), e.getMessage(), e);
+			}				
+			if (token != null){
+				throw new ParseException(token.beginColumn, e.getMessage(), e);
+			}			
+			throw new ParseException(e);
+		}
+	}
+	
+	
+	/**
+	 * Parst die in text enthaltene Definition eines Objekts und
+	 * meldet sie beim Broker an.
+	 * @param text  Enthaelt die Definition
+	 * @param broker
+	 * @return Name des definierten Objekts
+	 * @throws Exception
+	 */
+	public static String NEWParseDefinition(String text, boolean publish, Broker broker) throws ParseException {
+		
+		// Dateipfade durch ihren Inhalt ersetzen
+		
+			
+		Pattern pat = Pattern.compile("finput");
+		Matcher mat = pat.matcher(text);
+		
+		// pruefen, ob ein Datei-Imput vorliegt, dann Ersetzung vornehmen
+		if ( mat.find() ) {
+			
+			// Gesamtstruktur testen
+			if ( ! defStrucTester.hasDefStruc(text) )
+		   throw new ParseException( 0, "Fehler im Definitionsterm" );
+			
+			// Pruefen, ob Matrix (oder vektot bzw. dualvektor )
+			boolean isMatrix = text.indexOf( "matrix" ) >= 0 ;
+			
+			// Position des Zuweisungsoperators
+			int assingPos = text.indexOf( ":=" );
+			// Name des Objekts
+			String head = text.substring(0,assingPos );
+			
+			// Beginn von finput
+			int startRepl = mat.start();
+
+			// Ende von finput
+			int startPath = mat.end();
+
+			// Position der schliessenden Klammer
+			
+			int endPath = text.indexOf( ')', startPath);
+			String path;
+			// Pruefen, ob Pfadangabe vorliegt
+			if (  text.charAt( startPath ) == ':'  ) {
+				path = text.substring(startPath+1, endPath ).trim();
+			}
+			else path = "";
+			
+			WhitespaceSeperated id = new WhitespaceSeperated();
+			id.setAllwaysMatrixResult(isMatrix);
+			
+			try {
+					String result = id.importFromStream(path, head, MainWindow.get());
+					text = text.substring(0, startRepl).concat(result.concat(text.substring(endPath)));
+			}
+			catch ( Exception e ) {
+				throw new ParseException(e);
+			}		
+		}
+	   
+		
+		init(broker, viewFactory);
+		Object def;
+	
+		
+		if (theOnlyParser == null) {
+			theOnlyParser= new parser(new StringReader(text));
+		} else {
+			parser.ReInit(new StringReader(text));
+		}
+		/* in regList werden die Objekte registriert, die 
+		   beim Parse-Vorgang neu erzeugt werden. */
+		List regList = new ArrayList(); 
+		try {
+			def=parser.definition(regList, publish, broker);
+		} catch (Throwable e) {
+			// die neu erzeugten Objekte werden geloescht
+			try {         	        
+           		broker.deleteAnonymousObjects(regList);
+			}catch ( BrokerException be) {
+               	ExceptionManager.doError("Fehler beim Loeschen der temporaer erzeugten Objekte",be);
+            }  
+			if (e instanceof ParseException){
+				//System.out.println("Parse-Exc col " + ((ParseException)e).getErrorColumn());
+				throw (ParseException)e;
+			}			
+			if (e instanceof TokenMgrError){
+				throw new ParseException(((TokenMgrError) e).getErrorColumn(), e.getMessage(), e);
+			}				
+			if (token != null){
+				throw new ParseException(token.beginColumn, e.getMessage(), e);
+			}			
+			throw new ParseException(e);
+		}
+
+		//Wenn ein Unterobjekt redefiniert wurde z.B. p.x,
+		//weiß das Object mit getKey() nicht ihren namen
+		if(def instanceof String){
+			return (String)def;
+		}
+
+		return (String) (((MathObject)def).getKey());
+	}
+	
+	public static TermNode parsePath(String text, Broker broker) throws ParseException {
+		init(broker, viewFactory);
+		TermNode path = null;
+		
+		if (theOnlyParser == null) {
+			theOnlyParser= new parser(new StringReader(text));
+		} else {
+			parser.ReInit(new StringReader(text));
+		}
+		
+		try {
+			path=parser.methodPath(new ArrayList(), new ArrayList(), new HashSet(), new ArrayList());
+
+		}
+		catch( Exception e ) {
+					throw new ParseException("Fehler beim Parsen eines Pfades in der Definition "+text);
+		}
+		return path;
+
+	}
+	
+	
+
+	static UserFunction objectToUserFunction( MathObject mo, List regList, Broker broker ) {
+		        TermNode rTerm = new PathReference(mo, new LinkedList(),  broker);
+		        UserFunction rFunction= new UserFunction(rTerm, new ScalarVariable[0], broker, viewFactory);
+				List temp = new ArrayList();
+				temp.add(mo);
+				try {
+				   UserFunction.register(rFunction, new ArrayList(temp), regList, broker);
+				}
+				catch( BrokerException e ) {
+					ExceptionManager.doError("Fehler beim Erzeugen der Funktion "+rFunction.getKey(), e);
+				}				
+     			regList.add(rFunction);
+     			return rFunction;
+	}
+
+}
+
+PARSER_END(parser)
+
+SKIP :
+{
+	" " /* blank */ | "\r" /* carriage-return */ | "\t"
+/* tab */
+
+}
+
+TOKEN :
+{
+	< EOL :
+		"\n"
+	>
+}
+
+TOKEN :
+/* OPERATORS */
+
+{
+	< PLUS :
+		"+"
+	>
+	|
+	< MINUS :
+		"-"
+	>
+	|
+	< MULTIPLY :
+		"*"
+	>
+        |     < SCALARPRODUCT: "$" >
+	|
+	< DIVIDE :
+		"/"
+	>
+	|
+	< EXP :
+		"^"
+	>
+	|
+	< FAC :
+		"!"
+	>
+	/* Fakultaet */
+	|
+	< ASSIGN :
+		":="
+	>
+	|
+	< LT :
+		"<"
+	>
+	|
+	< GT :
+		">"
+	>
+}
+
+TOKEN :
+/* special functions */
+
+{
+	< SUM : "sum" >
+	|   < PRODUCT : "prod" >
+	|   < DERIVE : "derive" >
+	|   < PDERIVE : "pderive" >
+	|   < VARS : "vars" >
+	|   < CURVE : "kurve" | "curve" >
+	|   < COMPOUNDCURVE : "kurvenzug" | "compoundcurve" >
+	|   < POINT : "punkt" | "point" >
+	|   < MARKER : "marker">
+	|   < BAR : "balken">	
+	|   < DISCRETE : "punkte">	
+	|   < DISCRETESEQ : "punktFolge">
+	|   < FIELD : "feld">
+	|   < TEXTELEMENT : "text" >
+	|   < AREA : "flaeche" | "area" >
+	|   < PFEIL : "pfeil" | "arrow" >
+	|   < STRETCH : "strecke" | "stretch">
+	|   < BEZIER : "bezier" >
+	|   < CIRCLE : "kreis" | "circle" >
+	|   < ANGLE : "winkel" | "angle" >
+	|   < STRAIGHT : "gerade" | "straight" >
+	|   < FUNCTION : "funktion" | "function" >
+	|   < LIST : "liste" | "list" >
+	|   < LIST0 : "liste0" | "list0" >
+	|   < SEQUENCE : "folge" >
+	|   < SEQUENCE0 : "folge0" >
+    |   < SCALAR: "skalar" | "scalar" >
+    |   < MATRIX: "matrix" >
+    |   < DIAGMATRIX: "diagmatrix" >
+    |   < EMATRIX: "ematrix" >
+    |   < VECTOR: "vektor" | "vector" >
+    |   < DUALVECTOR: "dualvektor" | "dualvector" >
+    |   < KARTE: "karte"  >
+}
+
+TOKEN:
+{
+	< #DIGIT :
+		[ "0"-"9" ]
+	>
+	|
+	< #SMALLLETTER :
+		[ "a"-"z" ]
+	>
+	|
+	< #CAPITALLETTER :
+		[ "A"-"Z" ]
+	>
+	|
+	< #LETTER :
+	     <SMALLLETTER> | <CAPITALLETTER> >
+	|
+	< #BRACKET :
+		[ "(", ")", "[", "]", "{", "}" ]
+	>
+	|
+	< #PUNCTATION :
+		[ ".", ",", ";", "!", "?" ]
+	>
+	|
+	< #MATHSYMBOL :
+	  <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> | <EXP> | <LT> | <GT>
+	>
+	|
+	< STRING_LITERAL :
+      "\""
+      (   (~["\"","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+     >
+	
+	
+	
+
+}
+
+
+
+TOKEN :
+/* numeric constants */
+
+
+
+{
+	< Zahl :
+		<FLOAT>
+		|
+		<FLOAT>
+		(
+			[ "e", "E" ]
+			( [ "-", "+" ] )?
+			<INTEGER>
+		)?
+	>
+	|
+	< #FLOAT :
+		<INTEGER>
+		|
+		<INTEGER>
+		( "." <INTEGER> )?
+		|
+		"."
+		<INTEGER>
+	>
+	|
+	< #INTEGER :
+		( <DIGIT> )+
+	>
+	
+}
+
+TOKEN :
+/* Function names */
+
+{
+	< Bezeichner :
+		( <LETTER> )+
+		(
+			( <DIGIT> | <LETTER> )+
+		)*
+		(
+			(
+			"_" ( <DIGIT> | <LETTER> )+
+			) 
+			|
+			(
+			"~" ( <DIGIT> | <LETTER> )+
+			) 		
+		)?
+	>
+	
+}
+
+
+
+
+Object definition(List regList, boolean publish, Broker broker) throws Exception : {
+
+        Object defHead;
+        MathObject mo;
+	List vars= new ArrayList();
+	List varNames= new ArrayList();
+    List headerRegList = new ArrayList();
+
+}
+{
+	defHead = definitionHeaderPath(headerRegList)
+	variableDeclaration(vars, varNames)
+        <ASSIGN>
+        (
+      mo = functionDefinitionBody(vars, varNames, regList)
+	  |
+	  mo= keywordDefinitionBody(regList)
+	  |
+	  (
+	  LOOKAHEAD(2)
+	  mo= listDefinitionBody(regList)
+	  |
+	  mo = sequenceDefinitionBody(defHead, vars, regList)
+	  )
+        )
+        <EOF>
+	{
+
+		if(defHead instanceof String) {
+	                 if ( publish ) {
+	                 	broker.publishObject(mo, defHead.toString());
+	                 }
+	                 
+			 return mo;
+		}else{
+                         MathObject rpo = (MathObject) ((Object[])defHead)[0];
+			 List methods = (List) ((Object[])defHead)[1];
+
+			 //Erzeuge den Schlüssel
+			 String key = rpo.getKey()+"";
+			 Iterator iter = methods.iterator();
+			 while(iter.hasNext()){
+				if(iter.hasNext()) key += ".";
+				key += ((MethodContext)iter.next()).getMethodName();
+			}
+
+			 MethodContext lastMethod = (MethodContext)methods.get(methods.size()-1);
+                         lastMethod.setMethodName("set_"+lastMethod.getMethodName());
+
+			 List moMethods = new LinkedList();
+			 if(mo instanceof UserFunction){
+				moMethods.add(new MethodContext("funktion"));
+			}else{
+				PathReference pr = new PathReference(mo,new LinkedList(), broker);
+				mo = new UserFunction(pr, new Variable[0],broker, viewFactory);
+			}//else
+			 lastMethod.setArgs(new TermNode[]{new PathReference(mo, moMethods, broker)});
+
+			 //hier wird die Set-Methode aufgerufen
+			 PathReference pr = new PathReference( rpo, methods, broker );
+
+			 //Veröffentlichen, damit die Redefinition mit swaplinks anläuft
+			 if ( publish ) {
+			 	broker.publishObject(mo,key);
+			 }			 
+			return key;
+		}
+	}
+}
+
+/* Liest eine Variablendeklaration wie in g(x):= ...
+   das (x) oder in  f(<vektor>x, <vektor>y):= das (<vektor>x, <vektor>y)
+   fuegt an vars saemtliche Variablen an
+   und an varNames die entsprechenden Namen.
+   Wenn keine Variable deklariert wird (nullstellige Funktion),
+   dann kann dies durch die leere Variablenklammer erfolgen, also z.B.
+   a():=3
+   oder dadurch, dass die Deklaration ganz entfaellt:
+   b:= 4 */
+
+
+void variableDeclaration(List vars, List varNames) throws Exception : {}
+{
+    (   
+      "(" //"("
+       (
+         oneVariableDeclaration(vars, varNames)
+         (
+            ","
+            oneVariableDeclaration(vars, varNames)
+          )*
+       )?
+       ")"
+    )?
+}
+
+
+/* Liest die Deklaration einer Variablen wie in g(x)
+   das x oder in  f(<vektor>x, <vektor>y) das <vektor>y,
+   fuegt an vars die entsprechende Variable an
+   und an varNames den entsprechenden Namen. */
+
+void oneVariableDeclaration(List vars, List varNames) throws Exception :
+{ int type = SCALAR; }
+{
+  (
+    <LT>
+     (
+       <SCALAR>
+       |
+       <MATRIX> { type = MATRIX; }
+       |
+       <VECTOR> { type = VECTOR; }
+       |
+       <DUALVECTOR> { type = DUALVECTOR; }
+     )
+    <GT>
+  )?
+  <Bezeichner>
+    {
+      for (int i= 0; i < varNames.size(); i++) {
+        if (token.image.compareTo((String) (varNames.get(i))) == 0)
+          throw new ParseException( token.beginColumn,
+                                    "Variable mit Namen  \"" + token.image + "\" kommt mehrfach vor");
+        }
+      varNames.add(token.image);
+      switch( type ) {
+        case SCALAR : {
+          vars.add(new ScalarVariable(token.image));
+          break;
+        }
+        case MATRIX : {
+          vars.add(new MatrixVariable(token.image));
+          break;
+        }
+        case VECTOR : {
+          vars.add(new VectorVariable(token.image));
+          break;
+        }
+        case DUALVECTOR : {
+          vars.add(new DualVectorVariable(token.image));
+          break;
+        }
+      }
+    }
+}
+
+
+/**
+ * Parst Einen Term in Operatorschreibweise der die Infix-Operatoren "+" und "-"
+ * und alle anderen Operatoren mit hoeherer Bindungsstärke enthaelt.
+ * varNames enthält die Namen (Strings) der Variablen,
+ * die vorkommen dürfen, vars die entsprechenden Variablen(-Objekte).
+ * In refObjPaths werden die Pfade der Objekte (Funktionen, ...) eingefügt,
+ * die verwendet werden.
+ * @param vars
+ * @param varNames
+ * @param refObjPaths
+ * @return
+ * @throws Exception
+ */
+
+TermNode sum(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+	Token x;
+	TermNode firstTerm, secondTerm;
+}
+{
+	firstTerm= signedTerm(vars, varNames, refObjPaths, regList)
+	(
+           (
+              x= <PLUS>
+              |
+              x= <MINUS>
+            )
+		secondTerm = term(vars, varNames, refObjPaths, regList)
+		{
+                    switch( x.kind ) {
+                      case PLUS : {
+                         Function func = OperatorExpert.getFunctionForArguments( firstTerm,
+                                                  secondTerm,
+                                                  x.image,
+                                                  broker );
+                         firstTerm = new TermNodeFunct( func,
+                                                         new TermNode [] { firstTerm, secondTerm },
+                                                         broker );
+                         break;
+                      }
+                      case MINUS : {
+                         Function func = OperatorExpert.getFunctionForArguments( firstTerm,
+                                                  secondTerm,
+                                                  x.image,
+                                                  broker );
+                         firstTerm = new TermNodeFunct( func,
+                                                        new TermNode [] { firstTerm, secondTerm },
+                                                        broker );
+                         break;
+                      }
+                    }
+		}
+	)*
+	{
+		return firstTerm;
+	}
+}
+
+/**
+ * Parst in einem Term den ersten Summanden, der gegebenenfalls
+ * ein Vorzeichen "-" haben kann.
+ */
+
+TermNode signedTerm(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+	TermNode firstTerm;
+}
+{
+	<MINUS> firstTerm = term(vars, varNames, refObjPaths, regList)
+	{
+		if (firstTerm instanceof TermNodeNum) {
+			firstTerm= new TermNodeNum(-1 * firstTerm.evalScalar());
+		}
+        else {
+            Function func = OperatorExpert.getFunctionForArgument( firstTerm, "-", broker );
+			firstTerm = new TermNodeFunct( func, new TermNode [] { firstTerm }, broker );
+		}
+		return firstTerm;
+	}
+	|
+	firstTerm = term(vars, varNames, refObjPaths, regList)
+	{
+		return firstTerm;
+	}
+}
+
+/**
+ * Parst einen Term in Operatorschreibweise der die Infix-Operatoren "*" und "/"
+ * und alle anderen Operatoren mit hoeherer Bindungsstärke enthaelt.
+ * Sonst wie sum()
+ */
+
+TermNode term(List vars, List varNames, Set refObjPaths, List regList) throws Exception  :
+{  Token x = null;
+   int kind = 0;
+   TermNode firstTerm, secondTerm;
+}
+{
+    firstTerm= exp(vars, varNames, refObjPaths, regList)
+    (
+      (
+         x = <MULTIPLY>
+           { kind = x.kind; }
+         | ( "<" <MULTIPLY> ">" )
+           { kind = SCALARPRODUCT; }
+         | x = <DIVIDE>
+           { kind = x.kind; }
+      )
+      secondTerm = exp(vars, varNames, refObjPaths, regList)
+        {
+           switch ( kind ) {
+             case MULTIPLY : {
+                Function func = OperatorExpert.getFunctionForArguments( firstTerm,
+                                                  secondTerm,
+                                                  x.image,
+                                                  broker );
+                firstTerm = new TermNodeFunct(
+                          func,
+                          new TermNode [] { firstTerm, secondTerm },
+                          broker );
+                break;
+             }
+             case SCALARPRODUCT : {
+               firstTerm = new TermNodeFunct(
+                          (Function)(broker.getObject("ScalarProd")),
+                          new TermNode [] { firstTerm, secondTerm },
+                          broker );
+                break;
+             }
+             case DIVIDE : {
+                 Function func = OperatorExpert.getFunctionForArguments( firstTerm,
+                                                  secondTerm,
+                                                  x.image,
+                                                  broker );
+                firstTerm = new TermNodeFunct(
+                          func,
+                          new TermNode [] { firstTerm, secondTerm },
+                          broker );
+                break;
+             }
+           }
+        }
+    )*
+    {return firstTerm;}
+}
+
+/**
+ * Parst einen Term in Operatorschreibweise der den Infix-Operator "^" und
+ * alle anderen Operatoren mit hoeherer Bindungsstärke enthaelt.
+ * Sonst wie sum()
+ */
+
+TermNode exp(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+	TermNode firstTerm, secondTerm;
+}
+{
+	firstTerm= fac(vars, varNames, refObjPaths, regList)
+	(
+		LOOKAHEAD( <EXP> )
+		<EXP> secondTerm = exp(vars, varNames, refObjPaths, regList)
+		{
+			firstTerm= new TermNodeFunct(
+					(Function) (broker.getObject("pow")),
+					new TermNode[] { firstTerm, secondTerm },
+					broker);
+		}
+	)*
+	{
+		return firstTerm;
+	}
+}
+
+/**
+ * Parst einen Term in Operatorschreibweise der den Postfix-Operator "!" enthaelt.
+ * Sonst wie sum()
+ */
+TermNode fac(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+	TermNode firstTerm;
+}
+{
+	firstTerm= element(vars, varNames, refObjPaths, regList)
+	(
+		<FAC>
+		{
+			firstTerm=
+				new TermNodeFunct(
+					(Function) (broker.getObject("fac")),
+					new TermNode[] { firstTerm },
+					broker);
+		}
+	)*
+	{
+		return firstTerm;
+	}
+}
+
+
+/* Liest eine Gleitpunktzahl */
+
+TermNode zahl() throws Exception : {
+	TermNode term = null;
+}
+{
+	<Zahl>
+	   {  try { term= new TermNodeNum(Double.valueOf(token.image).doubleValue());
+		}
+                catch (NumberFormatException e) {
+                   throw new ParseException(token.beginColumn, e.toString());
+		}
+                return term;
+	   }
+}
+
+
+/**
+ * Parst folgende Teile eines Terms:
+ * -- Zahlen
+ * -- Funktionsaufrufe wie cos(1+x) oder strecke.begin.x
+ * -- Geklammerte Terme wie ( 1+sin(x) )
+ * -- Betraege wie | -3 +sin(x) |
+ */
+
+TermNode element(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+	TermNode term = null, term1 = null;;
+        TermNode colIndexTerm = null;
+        TermNode rowIndexTerm = null;
+        int indexCount = 0;
+
+}
+{
+	<Zahl>
+	   {  try { term= new TermNodeNum(Double.valueOf(token.image).doubleValue());
+		}
+                catch (NumberFormatException e) {
+                   throw new ParseException(token.beginColumn, e.toString());
+		}
+                return term;
+	   }
+	|
+	term = function(vars, varNames, refObjPaths, regList)
+	   {  return term;
+	   }
+	|
+	"("
+         term1 = sum(vars, varNames, refObjPaths, regList)
+        ")"
+           {  term = new TermNodeFunct((Function) (broker.getObject("brackets")),
+					new TermNode[] { term1 },
+					broker);
+              indexCount = 0; }
+        [
+           "[" rowIndexTerm = sum(vars, varNames, refObjPaths, regList)
+              { indexCount = 1;}
+           [
+              "," colIndexTerm = sum(vars, varNames, refObjPaths, regList)
+                 { indexCount = 2;}
+           ]
+           "]"
+        ]
+	   {
+             // brackets-Funktion holen
+             RootPathObject rpo  = (Function) (broker.getObject("brackets"));
+
+             // erster Schritt: eval mit term
+
+             MethodContext mc1 = new MethodContext("calceval", new TermNode [] {term1});
+
+             // zweiter Schritt: index mit rowIndexTerm, colIndexTerm
+             /*
+               TermNode[] arguments = new TermNode[argList.size()];
+                arguments = (TermNode[]) argList.toArray(arguments);
+
+             */
+             // pr = new PathReference( rpo, methods, broker );
+             MethodContext mc2 = null;
+
+             switch ( indexCount ) {
+                   case 0 : {
+                      return term;
+                   }
+                   case 1 : {
+                       mc2 = new MethodContext("index", new TermNode[] {rowIndexTerm}); break;
+                   }
+                   case 2 : {
+		       mc2 = new MethodContext("index", new TermNode[] {rowIndexTerm, colIndexTerm}); break;
+                   }
+                }
+                List steps = new ArrayList();
+                steps.add(mc1);
+                steps.add(mc2);
+                return new PathReference( rpo, steps, broker );
+	   }
+	|
+	"|"  term = sum(vars, varNames, refObjPaths, regList)  "|"
+                 {  if ( ScalarType.class.isAssignableFrom(term.getResultType()) )
+                       return new TermNodeFunct((Function) (broker.getObject("abs")), new TermNode[] { term }, broker);
+                    else
+                       return new TermNodeFunct((Function) (broker.getObject("norm")), new TermNode[] { term }, broker);
+                 }
+}
+
+/**
+ * Parst Funktionsaufrufe (nicht in Operatorschreibweise) und erzeugt den
+ * entsprechenden Termnode. varNames enthält die Namen (Strings) der Variablen, die
+ * in den Argumenttermen vorkommen dürfen, vars die entsprechenden
+ * Variablen(-Objekte).
+ * In refObjPaths werden die Pfade der Objekte eingefügt, die in den
+ * Argumenttermen verwendet werden.
+ */
+TermNode function(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+	TermNode term = null, term1, term2, colIndexTerm = null,  rowIndexTerm = null, deriveOrderTerm = null;
+	String funcname;
+	Function fkt = null;
+	int arity;
+    int indexCount;
+	Set localRefObjPaths;
+	List localVarNames, localVars, diffVars, argList = null;
+	UserFunction localFunction;
+	TermNode[] arguments= null;
+        TermNode inTerm;
+}
+{
+/* Definition einer Matrix oder eines Vektors */
+       inTerm = matrixNodeDefinition(vars, varNames, refObjPaths, regList)
+          {return inTerm;}
+          
+       |
+/* Summations- und Produktsymbol */
+        (
+		<SUM>
+		|
+		<PRODUCT>
+	)
+	{
+		funcname= token.image;
+	}
+	term= iteratorBody(funcname, vars, varNames, refObjPaths, regList)
+	{
+		return term;
+	}
+	
+	|
+/* Funtionsaufrufe wie "sin(x+1)" oder "min(3,4)" oder "a"
+           fuer einen Parameter (nullstellige Funktion) a */
+	LOOKAHEAD(2)
+	term = methodPath(vars, varNames, refObjPaths, regList)
+        {
+                return term;
+        }
+
+	|
+/* Ableitung wie "derive(x+sin(x))" */
+	<DERIVE> "("
+	   { localVarNames = varNames;
+             localVars = vars;
+	   }
+	(
+           <VARS>
+		{ localVarNames = new ArrayList();
+                  localVars = new ArrayList();
+		}
+           variableDeclaration(localVars, localVarNames)
+           ","
+	) ?
+	   {
+               if ( localVarNames.size() != 1 ) {
+                  throw new Exception( "Keine oder mehr als eine Variable bei Ableitung");
+               }
+               if ( ! (localVars.get(0) instanceof ScalarVariable) ) {
+                  throw new Exception( "Variable, nach der abgeleitet werden soll, ist nicht vom Typ Skalar");
+               }
+               localRefObjPaths= new HashSet();
+               diffVars = new ArrayList();
+               diffVars.add(new ScalarVariable((String)(localVarNames.get(0))));
+               List localRegList = new ArrayList();
+               Set localRefObjectPaths = new HashSet();
+
+	}
+	term= sum(diffVars, localVarNames, localRefObjPaths, localRegList)
+	{
+		UserFunction f = new UserFunction( term, new ScalarVariable[] {(ScalarVariable) (diffVars.get(0))},broker, viewFactory);
+		f.register(f, new ArrayList(localRefObjPaths), localRegList, broker );	
+		regList.add(f);
+	}
+	(    "," deriveOrderTerm = sum(vars, varNames, refObjPaths, regList)
+	)?
+	{
+		if( deriveOrderTerm == null ) {
+			deriveOrderTerm = new TermNodeNum(1.0);
+		}
+	}
+	")"
+	[
+           "("
+		{  arguments= null;
+		   argList = new ArrayList();
+		}
+		[
+			term= sum(vars, varNames, refObjPaths, regList)
+			{  argList.add(term);
+			}
+                    (
+                        "," term= sum(vars, varNames, refObjPaths, regList)
+                           {  argList.add(term);
+                           }
+                    )*
+		]
+		{
+			arguments= new TermNode[argList.size()];
+			argList.toArray(arguments);
+		}
+            ")"
+	]
+	{
+		refObjPaths.add(f);
+		if (arguments == null) {
+			arguments= new TermNode[vars.size()];
+			vars.toArray(arguments);
+		}
+		return new TermNodeDerive(f, deriveOrderTerm, arguments, broker);
+	}
+	// End: DERIVE
+	
+	|
+/* Partielle Ableitungen wie pderive(x+sin(y),x) */
+	<PDERIVE> "("
+	{  localVarNames = varNames;
+             localVars = vars;
+	}
+
+	(
+           <VARS>
+		{ localVarNames = new ArrayList();
+                  localVars = new ArrayList();
+		}
+           variableDeclaration(localVars, localVarNames)
+           ","
+	) ?
+	{
+		localRefObjPaths= new HashSet();
+		diffVars= new ArrayList();
+
+		for (int i= 0; i < localVarNames.size(); i++)
+			diffVars.add(new ScalarVariable((String) (localVarNames.get(i))));
+	}
+	localFunction= pDeriveBody(diffVars, localVarNames, localRefObjPaths, regList)
+	{
+		UserFunction.register(localFunction, new ArrayList(localRefObjPaths), regList, broker);
+	}
+	")"
+	[
+		"("
+		{  arguments= null;
+		   argList = new ArrayList();
+		}
+		[
+			term= sum(vars, varNames, refObjPaths, regList)
+			{
+				argList.add(term);
+			}
+			(
+				"," term= sum(vars, varNames, refObjPaths, regList)
+				{
+					argList.add(term);
+				}
+			)*
+		]
+		{
+			arguments= new TermNode[argList.size()];
+			argList.toArray(arguments);
+		}
+		")"
+	]
+	{
+		refObjPaths.add(localFunction);
+		if (arguments == null) {
+			arguments= new TermNode[vars.size()];
+			vars.toArray(arguments);
+		}
+		return new TermNodeFunct(localFunction, arguments, broker);
+	}
+	// End: PDERIVE
+
+}
+
+
+MethodContext evalStep(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+        TermNode term;
+	List argList = new ArrayList();
+}
+
+
+{
+	(
+	  "("
+         (
+	       term = sum(vars, varNames, refObjPaths, regList)
+                  { argList.add(term); }
+           (
+	          ","
+                   term = sum(vars, varNames, refObjPaths, regList)
+                         { argList.add(term); }
+           )*
+          )?
+      ")"
+    )
+    
+	{
+		TermNode[] arguments = new TermNode[argList.size()];
+                argList.toArray(arguments);
+                return new MethodContext("calceval", arguments);
+	}
+}
+
+MethodContext indexStep(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+        TermNode term;
+	List argList = new ArrayList();
+}
+
+
+{
+	"["
+        term = sum(vars, varNames, refObjPaths, regList)
+           { argList.add(term); }
+        (
+	","
+        term = sum(vars, varNames, refObjPaths, regList)
+           { argList.add(term); }
+        )?
+        "]"
+
+	{
+		TermNode[] arguments = new TermNode[argList.size()];
+                arguments = (TermNode[]) argList.toArray(arguments);
+                return new MethodContext("index", arguments);
+	}
+}
+
+MethodContext keyWordStep(List vars, List varNames, Set refObjPaths) throws Exception : {
+TermNode term;
+	List argList = new ArrayList();
+	String methodName=null;
+}
+
+{
+	"."
+	(
+	<Bezeichner>
+	| <VECTOR>
+	| <AREA>
+	| <FUNCTION>
+	| <POINT>
+        )
+	{
+		methodName = token.image;
+               return new MethodContext(methodName, new TermNode[0] );
+	}
+}
+
+TermNode methodPath(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+        List methods = new ArrayList();
+        String funcname;
+        boolean isVar;
+        MethodContext mc;
+        MathObject root = null;
+        Variable term = null;
+	RootPathObject rpo = null;
+}
+
+{
+	<Bezeichner>
+          { funcname = token.image;
+            isVar = false;
+                for (int i= 0; i < varNames.size(); i++) {
+			               if (funcname.compareTo((String)varNames.get(i)) == 0) {
+                           term = (Variable) (vars.get(i));
+                           isVar = true;
+                           break;
+			}
+                }
+		if(isVar){
+		     rpo= term;
+		      // fkt =  (MathObject)broker.tryToGetObject("identity");
+		     // methods.add(new MethodContext("eval", new TermNode[]{ term}));
+		}
+		else{
+			 rpo=  (MathObject)broker.tryToGetObject(funcname);
+			 
+			if(rpo instanceof UserDefinedFunction){
+				try {
+					 rpo = (RootPathObject) rpo.getClass().newInstance();
+				} catch (InstantiationException e) {
+					ExceptionManager.doError(e);
+				} catch (IllegalAccessException e) {
+					ExceptionManager.doError(e);
+				}
+			}
+			 
+			 //refObjPaths.add(new MathObjectPath((MathObject)rpo, funcname));
+			 refObjPaths.add((MathObject)rpo);
+		}
+          }
+        (
+          mc = evalStep(vars, varNames, refObjPaths, regList)
+            { methods.add(mc) ; }
+          |
+          mc = indexStep(vars, varNames, refObjPaths, regList)
+            { methods.add(mc) ; }
+          |
+          mc = keyWordStep(vars, varNames, refObjPaths)
+            { methods.add(mc) ; }
+        )*
+
+	{
+             PathReference pr;
+	     if(rpo==term) {
+                //if ( methods.size() == 0 )
+                //   return term;
+                //else
+                if ( methods.size() == 0 )
+                   return term;
+                else
+                pr = new VarPathReference(rpo,methods, broker);
+             }
+	     else pr = new PathReference( rpo, methods, broker );
+             return pr;
+	}
+}
+
+
+Object definitionHeaderPath(List regList) throws Exception : {
+        List methods = new ArrayList();
+        String funcname;
+        MethodContext mc;
+        Set refObjPaths = new HashSet();
+        List emptyList = new ArrayList();
+        RootPathObject rpo = null;
+}
+
+{
+	<Bezeichner>
+          { funcname = token.image;
+          }
+        (
+          mc = indexStep(emptyList, emptyList, refObjPaths, regList)
+            { methods.add(mc) ; }
+          |
+          mc = keyWordStep(emptyList, emptyList, refObjPaths)
+            { methods.add(mc) ; }
+        )*
+
+	{
+
+             /* rpo kann man nur finden, wenn
+                man den Teil eines Objekts redefiniert, z.B.
+                bei p.x :=3
+                wenn man ein ganzes Objekt neu definiert, dann
+                gibt es dieses beim Broker noch nicht.
+                Die beiden Situationen unterscheiden sich dadurch, dass in
+                der ersten mc die leere Liste ist, im zweiten Fall nicht */
+
+	     if(methods.isEmpty()){
+			return funcname;
+		}else{
+			 rpo =  (MathObject)broker.tryToGetObject(funcname);
+			 return new Object[]{rpo,methods};
+	     }
+
+	}
+}
+
+
+/**
+ * Parst den Inhalt eines Summen- oder Produktiterators, also
+ * bei "sum(i,1,5,i^2)" den Teil "(i,1,5,i^2)".
+ */
+
+TermNode iteratorBody(String type, List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+	String localVarName;
+	ScalarVariable localVar;
+	List localVars;
+	List localVarNames;
+	TermNode term, lowerBound, upperBound;
+}
+
+
+{
+	"(" <Bezeichner>
+	// lokale ScalarVariable, Summationsvariable
+	{
+		localVarName= token.image;
+		for (int i= 0; i < varNames.size(); i++) {
+			if (localVarName.compareTo((String) (varNames.get(i))) == 0)
+				throw new ParseException(
+					token.beginColumn,
+					"Variablenname \"" + localVarName + "\" bereits verwendet");
+		}
+	}
+	"," lowerBound= sum(vars, varNames, refObjPaths, regList)
+	// untere Grenze
+	"," upperBound= sum(vars, varNames, refObjPaths, regList)
+	// obere Grenze
+	{
+		// in den beiden Listen lokale ScalarVariable anhängen
+		localVar= new ScalarParameter(localVarName);
+		//localVar= new ScalarVariable(localVarName);
+		localVars= new ArrayList(vars);
+		localVars.add(localVar);
+		localVarNames= new ArrayList(varNames);
+		localVarNames.add(localVarName);
+	}
+	"," term= sum(localVars, localVarNames, refObjPaths, regList) ")"
+	{
+		return TermNodeIterator.makeIterator(type, localVar, lowerBound, upperBound, term);
+	}
+}
+
+
+
+
+
+MathObject newStretchObject( List regList) throws Exception : {
+	UserFunction moPath;
+	List parts = new ArrayList();
+}
+
+
+{
+	<STRETCH>  "("  moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+
+	","  moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           }    
+	")"
+	{
+		MathObject part0= (UserFunction) parts.get(0);
+		MathObject part1= (UserFunction) parts.get(1);
+		MathObject mo= new Stretch(part0,part1, broker, viewFactory);
+		Stretch.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;
+	}
+}
+
+UserFunction newStretchUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+
+{
+		mo = newStretchObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+MathObject newTextObject( List regList) throws Exception : {
+	UserFunction moPath;
+	List parts = new ArrayList();
+	String textString, orientation;
+}
+
+
+{
+	<TEXTELEMENT> 
+	"("
+	   moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+	","
+	   <STRING_LITERAL>
+	     { 
+	   	 	textString = token.image;
+	   	 	parts.add( textString ); 
+	   	 }
+	","
+	   <Bezeichner>
+	   	{ 
+	   		orientation = token.image;
+	   		parts.add( orientation );
+	    }
+	   	    
+	")"
+	
+	{
+		MathObject part0= (UserFunction) parts.get(0);
+		String part1= ((String) parts.get(1));
+		String part2= ((String) parts.get(2));
+		MathObject mo= new TextBubble(part0, part1, part2, broker, viewFactory);
+		parts.remove(2);
+		parts.remove(1);
+		TextBubble.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;
+	}
+}
+
+UserFunction newTextUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+
+{
+		mo = newTextObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+MathObject newCurveObject( List regList) throws Exception : {
+	UserFunction minFunction, maxFunction;	
+	UserFunction moPath;
+	List parts = new ArrayList();
+	String parameterName;
+	ScalarVariable parameter;
+	List localVars;
+	List localVarNames;
+    Set refObjPaths;
+	TermNode xTerm, yTerm;
+}
+
+{
+	<CURVE>	"(" <Bezeichner>
+		{
+			parameterName= token.image;
+			parameter= new ScalarVariable(parameterName);
+			localVars = new ArrayList();
+	                localVarNames = new ArrayList();
+		}
+	","
+        minFunction = scalarFunctionReference( regList )
+
+	    {
+			parts.add(minFunction);
+	    }
+    ","
+        maxFunction = scalarFunctionReference( regList )
+
+	    {
+			parts.add(maxFunction);
+	    }
+	","
+         { 	   refObjPaths= new HashSet();
+		       localVars.add(parameter);
+		       localVarNames.add(parameterName);
+         }
+    xTerm= sum(localVars, localVarNames, refObjPaths, regList)
+         {
+			UserFunction xFunction= new UserFunction(xTerm, (ScalarVariable[]) localVars.toArray(new ScalarVariable[0]), broker, viewFactory);
+			UserFunction.register(xFunction, new ArrayList(refObjPaths), regList, broker);
+			regList.add(xFunction);
+			parts.add(xFunction);
+	    }
+    ","
+        { 
+        	refObjPaths= new HashSet(); 
+        }
+    yTerm= sum(localVars, localVarNames, refObjPaths, regList)
+    ")"
+        {
+			UserFunction yFunction= new UserFunction(yTerm, (ScalarVariable[]) localVars.toArray(new ScalarVariable[0]), broker, viewFactory);
+			UserFunction.register(yFunction, new ArrayList(refObjPaths), regList, broker);
+			regList.add(yFunction);
+			parts.add(yFunction);
+			MathObject low= (UserFunction) parts.get(0);
+			MathObject up= (UserFunction) parts.get(1);
+            MathObject xf= (UserFunction) parts.get(2);
+			MathObject yf= (UserFunction) parts.get(3);
+			MathObject mo= new Curve(parameterName, (UserFunction)low, (UserFunction)up, (UserFunction)xf, (UserFunction)yf,  broker, viewFactory);
+			Curve.register(mo, parts, regList, broker);
+			regList.add(mo);
+        	return mo;
+	}
+}
+
+
+UserFunction newCurveUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+
+{
+		mo = newCurveObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+MathObject newMapObject( List regList) throws Exception : {
+	UserFunction moPath;
+	String funcname;
+	List parts = new ArrayList();
+	String parameterName;
+	ScalarVariable parameter;
+	List localVars = new ArrayList();
+	List localVarNames = new ArrayList();
+    Set refObjPaths;
+    Function bandVectorFunction, mapFunction, gradFunction = null;
+}
+
+{
+	<KARTE>	"(" 
+	
+	 <Bezeichner>
+          { funcname = token.image;
+            
+			 mapFunction =  (Function)broker.tryToGetObject(funcname);
+			 parts.add(mapFunction);
+ 
+	    }
+    ","
+        bandVectorFunction =  vectorFunctionReference(regList)
+           {
+           	   parts.add(bandVectorFunction);
+           } 	
+	[
+	"," 
+    <Bezeichner>
+          { funcname = token.image;
+            
+			 gradFunction =  (Function)broker.tryToGetObject(funcname);
+			 parts.add(gradFunction);
+	      }
+	]        
+    ")"
+        {		
+			MathObject mf= (UserFunction) parts.get(0);
+			MathObject bf= (UserFunction) parts.get(1);
+			MathObject mo;
+			if ( gradFunction == null ) {
+				mo= new Map((UserFunction)mf, (UserFunction)bf,  broker, viewFactory);
+				Map.register(mo, parts, regList, broker);
+			}	
+			else {
+				MathObject gf= (UserFunction) parts.get(2);
+				mo= new GradMap((UserFunction)mf, (UserFunction)bf, (UserFunction)gf, broker, viewFactory);
+				GradMap.register(mo, parts, regList, broker);
+			}
+			regList.add(mo);
+        	return mo;
+	}
+}
+
+UserFunction newMapUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+{
+		mo = newMapObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+
+MathObject newFieldObject( List regList) throws Exception : {
+	UserFunction moPath;
+	String funcname;
+	List parts = new ArrayList();
+	String parameterName, layoutConst = null;
+	ScalarVariable parameter;
+	List localVars = new ArrayList();
+	List localVarNames = new ArrayList();
+    Set refObjPaths;
+    Function mapFunction;
+	TermNode lowLimitTerm, upLimitTerm, bandTerm = null;
+}
+
+{
+	<FIELD>	"(" 
+	
+	   <Bezeichner>  // Name der Funktoin
+          { funcname = token.image;
+            
+			 mapFunction =  (Function)broker.tryToGetObject(funcname);
+			 parts.add(mapFunction);
+ 
+	    }
+    ","
+        moPath =  pointReference(regList)  // Referenzpunkt
+           {
+           	   parts.add(moPath);
+           } 
+	","
+	    moPath =  scalarFunctionReference(regList)  // Distanz in x-Richtung
+           {
+           	   parts.add(moPath);
+           } 
+	","  
+	     moPath =  scalarFunctionReference(regList)  // Distanz in y-Richtung
+           {
+           	   parts.add(moPath);
+           } 
+     ","  
+	     moPath =  scalarFunctionReference(regList)  // Cutoff
+           {
+           	   parts.add(moPath);
+           } 
+     [
+     ","
+	   <Bezeichner>   // Layout-Konstante
+	   	{ 
+	   		layoutConst = token.image;
+	    }  
+	 ]    
+	    
+	    {
+	      if ( layoutConst == null ) {
+	    	layoutConst = "V" ;
+	      } 
+	    }  
+    ")"
+        {		
+			MathObject mf= (Function) parts.get(0);
+			MathObject rp= (UserFunction) parts.get(1);
+            MathObject xdf= (UserFunction) parts.get(2);
+            MathObject ydf= (UserFunction) parts.get(3);
+            MathObject cof= (UserFunction) parts.get(4);
+
+            MathObject	mo=  new Field((Function)mf,(UserFunction)rp, 
+                                                (UserFunction)xdf, (UserFunction)ydf, 
+                                                (UserFunction)cof, layoutConst, true, broker, viewFactory);
+                                      
+            Field.register(mo, parts, regList, broker);
+           
+			regList.add(mo);
+        	return mo;
+	}
+}
+
+UserFunction newFieldUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+
+{
+		mo = newFieldObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+
+
+
+MathObject newBezierObject( List regList) throws Exception : {
+	UserFunction moPath;
+	List parts = new ArrayList();
+}
+
+
+{
+	<BEZIER> 
+	"("
+	moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+	","
+	moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           }            
+    ","
+	moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+   ","
+	moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           }    
+	")"	
+		{
+			MathObject part0= (UserFunction) parts.get(0);
+			MathObject part1= (UserFunction) parts.get(1);
+			MathObject part2= (UserFunction) parts.get(2);
+			MathObject part3= (UserFunction) parts.get(3);
+			MathObject mo= new Bezier(part0,part1, part2, part3, broker, viewFactory);
+			Bezier.register(mo, parts, regList, broker);
+			regList.add(mo);
+			return mo;
+		}
+}
+
+UserFunction newBezierUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+
+{
+		mo = newBezierObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+MathObject newAngleObject(List regList) throws Exception : {
+    List parts = new ArrayList();
+    UserFunction moPath, pFunction;
+    TermNode pTerm;
+}
+
+
+{
+	<ANGLE> 
+	"("
+	    // Punkt
+        moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+
+	","
+	     // erste Richtung
+	     moPath =  vectorFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+    ","
+	     // zweite Richtung
+	     moPath =  vectorFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           }     
+	","
+	(
+		// Radius
+		pFunction = scalarFunctionReference( regList )
+
+	{
+		parts.add(pFunction);
+	}
+		
+	)
+	")"
+	
+	{
+		MathObject part0= (UserFunction) parts.get(0);
+		MathObject part1= (UserFunction) parts.get(1);
+		MathObject part2= (UserFunction) parts.get(2);
+		MathObject part3= (UserFunction) parts.get(3);
+		
+		MathObject mo= new Angle(part0, part1, part2, part3, broker, viewFactory);
+		Angle.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;		
+	}
+}
+
+UserFunction newAngleUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+{
+		mo = newAngleObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+MathObject newArrowObject(List regList) throws Exception : {
+    List parts = new ArrayList();
+    UserFunction moPath;
+}
+
+
+{
+	<PFEIL> 
+	"("
+	   moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+	","
+	   moPath =  vectorFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+	")"
+	{
+		MathObject point= (UserFunction) parts.get(0);
+		MathObject vector= (UserFunction) parts.get(1);
+		MathObject mo= new Arrow(point, vector, broker, viewFactory);
+		Arrow.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;
+	}
+}
+
+UserFunction newArrowUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+{
+		mo = newArrowObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+MathObject newAreaObject(List regList) throws Exception : {
+    List parts = new ArrayList();
+    UserFunction moPath;
+    boolean fill;
+}
+
+
+{   
+	(
+	<AREA> { fill = true; }
+	|
+	<COMPOUNDCURVE> { fill = false; } 
+	)	
+	"(" "{"
+	[
+		areaElement(parts, regList)
+		(
+			"," areaElement(parts, regList)
+		)*
+	]
+	"}" ")"
+	{
+        MathObject[] list2 = new MathObject[parts.size()];
+        for (int i = 0; i < list2.length; i++) {
+			list2[i] = (UserFunction)parts.get(i);
+		}//for
+		MathObject mo= new Area(list2, fill, broker, viewFactory);
+		Area.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;
+	}
+	
+}
+
+UserFunction newAreaUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+{
+		mo = newAreaObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+
+
+
+
+MathObject newBarObject(List regList) throws Exception : {
+    List parts = new ArrayList();
+    UserFunction moPath;
+}
+
+
+{
+	<BAR> 
+	"("    
+	     // x-Vektor
+	     moPath =  vectorFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+    ","
+	     // y-Vektor
+	     moPath =  vectorFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           }         
+    [
+         ","
+	     // Dicke
+	     moPath =  scalarFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           }
+    ]    
+	")"
+
+	{	
+		
+		MathObject part0= (UserFunction) parts.get(0);
+		MathObject part1= (UserFunction) parts.get(1);	
+		MathObject part2, mo;
+		
+		if ( parts.size() == 2 ) {	
+			part2= new UserFunction(new TermNodeNum(-1), new ScalarVariable[0], broker, viewFactory);
+			regList.add(part2);
+			parts.add(part2);
+		}
+
+		part2= (UserFunction) parts.get(2);
+
+		mo= new Bar(part0, part1, part2, broker, viewFactory);
+		Bar.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;		
+	}
+}
+
+UserFunction newBarUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+{
+		mo = newBarObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+MathObject newDiscreteObject(List regList) throws Exception : {
+    List parts = new ArrayList();
+    UserFunction moPath;
+}
+
+
+{
+	<DISCRETE> 
+	"("    
+	     // x-Vektor
+	     moPath =  vectorFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+    ","
+	     // y-Vektor
+	     moPath =  vectorFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+    ","
+	     // radius-Funktion
+	     moPath =  scalarFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           }      
+	")"
+
+	{	
+		MathObject part0= (UserFunction) parts.get(0);
+		MathObject part1= (UserFunction) parts.get(1);
+		MathObject part2= (UserFunction) parts.get(2);
+			
+		MathObject mo= new Discrete(part0, part1, part2, broker, viewFactory);
+		Discrete.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;		
+	}
+}
+
+UserFunction newDiscreteUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+{
+		mo = newDiscreteObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+MathObject newDiscreteSequenceObject(List regList) throws Exception : {
+    List parts = new ArrayList();
+    UserFunction moPath;
+    String layoutConst = null;
+}
+
+
+{
+	<DISCRETESEQ> 
+	"("    
+	     // x-Folge
+	     moPath =  generalFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+    ","
+	     // y-Folge
+	     moPath =  generalFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+    ","
+	     // Index-Funktion
+	     moPath =  generalFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           }        
+    ","
+	     // radius-Funktion
+	     moPath =  generalFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+    [
+     ","
+	   <Bezeichner>   // Layout-Konstante
+	   	{ 
+	   		layoutConst = token.image;
+	    }  
+	 ]    
+	    
+	    {
+	      if ( layoutConst == null ) {
+	    	layoutConst = "P" ;
+	      } 
+	    }     
+	")"
+
+	{	
+		MathObject part0= (UserFunction) parts.get(0);
+		MathObject part1= (UserFunction) parts.get(1);
+		MathObject part2= (UserFunction) parts.get(2);
+		MathObject part3= (UserFunction) parts.get(3);
+			
+		MathObject mo= new DiscreteSequence(part0, part1, part2, part3, layoutConst, broker, viewFactory);
+		DiscreteSequence.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;		
+	}
+}
+
+UserFunction newDiscreteSequenceUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+{
+		mo = newDiscreteSequenceObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+MathObject newStraightObject(List regList) throws Exception : {
+    List parts = new ArrayList();
+    UserFunction moPath;
+}
+
+
+{	
+	<STRAIGHT> 
+	"("
+	   moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+	","
+	   moPath =  vectorFunctionReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+	")"
+	{
+		MathObject point= (UserFunction) parts.get(0);
+		MathObject vector= (UserFunction) parts.get(1);
+		MathObject mo= new Straight(point, vector, broker, viewFactory);
+		Straight.register(mo, parts, regList, broker);
+		regList.add(mo);
+		return mo;
+	}
+}
+
+
+UserFunction newStraightUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+{
+		mo = newStraightObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+
+MathObject newCircleObject( List regList) throws Exception : {
+	TermNode rTerm;
+	UserFunction rFunction;
+    Set refObjPaths= new HashSet();
+    List parts = new ArrayList();
+    UserFunction moPath;
+    MathObject mo;
+}
+
+
+{
+	<CIRCLE> "("	   
+    moPath =  pointReference(regList)
+           {
+           	   parts.add(moPath);
+           } 
+	","
+	       rFunction = scalarFunctionReference( regList )
+		   {
+				parts.add(1, rFunction);
+		   }
+	")"
+		   {
+				MathObject center= (UserFunction) parts.get(0);
+				MathObject radius= (UserFunction) parts.get(1);
+				mo= new Circle(center, radius, broker, viewFactory);
+				Circle.register(mo, parts, regList, broker);
+				regList.add(mo);
+				return mo;
+	       }	
+}
+
+UserFunction newCircleUserFunction( List regList) throws Exception : {
+	List localRegList = new ArrayList();
+	MathObject mo;
+}
+
+{
+		mo = newCircleObject(localRegList)
+			{	
+     			return objectToUserFunction(mo, localRegList, broker);
+     		}
+}
+
+
+
+MathObject newPointObject( List regList) throws Exception : {
+	UserFunction xFunction, yFunction;
+	List parts = new ArrayList();
+}
+
+
+{
+	<POINT>  "("  xFunction = scalarFunctionReference( regList )
+	{
+		parts.add(xFunction);
+	}
+	","   yFunction = scalarFunctionReference( regList )
+	{
+		parts.add(yFunction);
+	}
+	")"
+	{	
+     			MathObject part0 = (UserFunction) parts.get(0);
+				MathObject part1 = (UserFunction) parts.get(1);
+		        MathObject mo = new AffPoint(part0, part1, broker, viewFactory);
+				AffPoint.register(mo, parts, regList, broker);
+				regList.add(mo);
+				return mo;
+     }
+}
+
+
+UserFunction newPointUserFunction( List regList) throws Exception : {
+	MathObject mo;
+}
+
+
+{
+		mo = newPointObject(regList)
+			{	
+     			return objectToUserFunction(mo, regList, broker);
+     		}
+}
+
+
+MathObject newMarkerObject( List regList) throws Exception : {
+	UserFunction xFunction, yFunction;
+	List parts = new ArrayList();
+}
+
+
+{
+	<MARKER>  "("  xFunction = scalarFunctionReference( regList )
+
+	{
+		parts.add(xFunction);
+	}
+	","   yFunction = scalarFunctionReference( regList )
+	{
+		parts.add(yFunction);
+	}
+	")"
+	{	
+     			MathObject part0 = (UserFunction) parts.get(0);
+				MathObject part1 = (UserFunction) parts.get(1);
+		        MathObject mo = new Marker(part0, part1, broker, viewFactory);
+				Marker.register(mo, parts, regList, broker);
+				regList.add(mo);
+				return mo;
+     }
+}
+
+
+UserFunction newMarkerUserFunction( List regList) throws Exception : {
+	MathObject mo;
+}
+
+{
+		mo = newMarkerObject(regList)
+			{	
+     			return objectToUserFunction(mo, regList, broker);
+     		}
+}
+
+
+
+UserFunction pointReference( List regList) throws Exception : {
+	UserFunction rFunction;
+	TermNode rTerm;
+	Set refObjPaths= new HashSet();
+	List localRegList = new ArrayList();
+	UserFunction moPath;
+}
+
+
+{
+	(	 
+	    moPath = newPointUserFunction(regList)
+	|
+	(  
+	 	rTerm= sum(new ArrayList(), new ArrayList(), refObjPaths, localRegList)
+	     	{
+					
+				if ( !AffPoint.class.isAssignableFrom(rTerm.getResultType()) ) {
+					throw new Exception("Falscher Typ: erwartet:" 
+					                    + AffPoint.class.toString()
+					                    + " vorhanden: " + rTerm.getResultType().toString() );
+				}
+				rFunction= new UserFunction(rTerm, new ScalarVariable[0], broker, viewFactory);
+				UserFunction.register(rFunction, new ArrayList(refObjPaths), localRegList, broker);
+				regList.add(rFunction); 
+				moPath = rFunction;
+         	}
+     )
+    )
+     		{
+     			return moPath;
+     		}
+}
+
+
+
+
+
+
+
+UserFunction generalFunctionReference( List regList) throws Exception : {
+	UserFunction rFunction;
+	Set refObjPaths= new HashSet();
+	List localRegList = new ArrayList();
+	TermNode rTerm;
+}
+
+{	
+	(  
+	 	rTerm= sum(new ArrayList(), new ArrayList(), refObjPaths, localRegList)
+	     	{
+				rFunction= new UserFunction(rTerm, new ScalarVariable[0], broker, viewFactory);
+				UserFunction.register(rFunction, new ArrayList(refObjPaths), localRegList, broker);
+         	}
+     )
+     		{
+     			regList.add(rFunction);
+     			return rFunction;
+     		}
+}
+
+
+UserFunction scalarFunctionReference( List regList ) throws Exception : {
+	UserFunction rFunction;
+}
+
+{    
+	rFunction = generalFunctionReference( regList )
+	  {
+	  	Class rClass = rFunction.getResultType();
+	  	if ( rClass != ScalarType.class ) {
+	  		throw new Exception("Falscher Typ: erwartet:" 
+					                    + ScalarType.class.toString()
+					                    + " vorhanden: " + rClass.toString() );
+	  	}
+	  	return rFunction;
+	  }
+
+}
+
+UserFunction vectorFunctionReference( List regList ) throws Exception : {
+	UserFunction rFunction;
+}
+
+{    
+	rFunction = generalFunctionReference( regList )
+	  {
+	  	Class rClass = rFunction.getResultType();
+	  	if ( rClass != VectorType.class ) {
+	  		throw new Exception("Falscher Typ: erwartet:" 
+					                    + VectorType.class.toString()
+					                    + " vorhanden: " + rClass.toString() );
+	  	}
+	  	return rFunction;
+	  }
+}
+
+UserFunction dualVectorFunctionReference( List regList ) throws Exception : {
+	UserFunction rFunction;
+}
+
+{    
+	rFunction = generalFunctionReference( regList )
+	  {
+	  	Class rClass = rFunction.getResultType();
+	  	if ( rClass != DualVectorType.class ) {
+	  		throw new Exception("Falscher Typ: erwartet:" 
+					                    + DualVectorType.class.toString()
+					                    + " vorhanden: " + rClass.toString() );
+	  	}
+	  	return rFunction;
+	  }
+}
+
+UserFunction matrixFunctionReference( List regList ) throws Exception : {
+	UserFunction rFunction;
+}
+
+{    
+	rFunction = generalFunctionReference( regList )
+	  {
+	  	Class rClass = rFunction.getResultType();
+	  	if ( rClass != MatrixType.class ) {
+	  		throw new Exception("Falscher Typ: erwartet:" 
+					                    + MatrixType.class.toString()
+					                    + " vorhanden: " + rClass.toString() );
+	  	}
+	  	return rFunction;
+	  }
+}
+
+void areaElement(List parts, List regList) throws Exception : {
+	String funcname;
+	MathObject mo;
+	UserFunction moPath;
+}
+{
+	(
+		moPath =  generalFunctionReference(regList)
+		| 
+		moPath =  newCurveUserFunction(regList)
+		|
+		moPath = newPointUserFunction(regList)
+		| 
+		moPath = newStretchUserFunction(regList)
+		| 
+		moPath = newBezierUserFunction(regList) 
+	)
+	{
+		  regList.add(moPath);
+		  parts.add(moPath);
+	}      
+}
+
+
+
+
+
+
+/**
+ * Partielle Ableitung
+ */
+
+UserFunction pDeriveBody(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+	List deriveVars= new ArrayList();
+	TermNode term, deriveVarTerm;
+}
+
+
+{
+	term= sum(vars, varNames, refObjPaths, regList) "," deriveVarTerm= sum(vars, varNames, refObjPaths, regList)
+	{
+		//System.out.println("§§§§" + deriveVarTerm.getClass().toString() );
+		if (!(deriveVarTerm instanceof ScalarVariable)) {
+			throw new ParseException(token.beginColumn, "Name einer Variablen erwartet");
+		}
+		deriveVars.add(deriveVarTerm);
+	}
+	(
+		"," deriveVarTerm= sum(vars, varNames, refObjPaths, regList)
+		{
+			if (!(deriveVarTerm instanceof ScalarVariable)) {
+				throw new ParseException(token.beginColumn, "Name einer Variablen erwartet");
+			}
+			deriveVars.add(deriveVarTerm);
+		}
+	)*
+	{
+		UserFunction f = new UserPderiveFunction(term,
+			(ScalarVariable[]) (vars.toArray(new ScalarVariable[0])),
+			(ScalarVariable[]) (deriveVars.toArray(new ScalarVariable[0])),
+			broker, viewFactory);
+		regList.add(f);
+		return f;
+	}
+}
+
+
+
+
+
+MathObject functionDefinitionBody(List vars, List varNames, List regList) throws Exception : {
+	TermNode term;
+	Function f;
+	Set refObjPaths= new HashSet();
+
+}
+{
+	term= sum(vars, varNames, refObjPaths, regList)
+	{
+		f= new UserFunction(term, (Variable[]) vars.toArray(new Variable[0]), broker, viewFactory);
+		UserFunction.register(f, new ArrayList(refObjPaths), regList, broker);
+		regList.add(f);
+		return f;
+	}
+}
+
+/**
+ * Parse die Definition eines Objekts (z.B. Punkt, Strecke, Flaeche), dessen Typ
+ * durch einen entsprechenden Bezeichner (keyword) bestimmt ist
+ * (z.B. punkt(...), strecke(....), ...), erzeugt das Objekt und
+ * gibt es zurück. Fügt an regList sämtliche Objekte an,
+ * die während des Parse-Vorgangs neu erzeugt wurden.
+ * @param regList Hier werden sämtliche Objekte eingetragen, die waehrend
+ * des Parse-Vorgangs neu erzeugt wurden,
+ * @return Das neu erzeugte Objekt
+ * @throws Exception
+ */
+MathObject keywordDefinitionBody(List regList) throws Exception : {
+	MathObject mo= null, part0, part1, part2, part3;
+	TermNode term;
+	List vars= new ArrayList();
+	List varNames= new ArrayList();
+	Set refObjPaths= new HashSet();
+	List parts= new ArrayList();
+	UserFunction moPath;
+
+	if (vars.size() > 0) {
+		throw new ParseException(token.beginColumn, "ScalarVariable bei Objekt von diesem Typ nicht erlaubt");
+	}
+}
+{
+	mo = newArrowUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newCircleUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newCurveUserFunction(regList)
+	{
+		return mo;
+	}
+    |
+	mo = newPointUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newMarkerUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newMapUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newBarUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newDiscreteUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newDiscreteSequenceUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newAngleUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newStretchUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newBezierUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newStraightUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newAreaUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newFieldUserFunction(regList)
+	{
+		return mo;
+	}
+	|
+	mo = newTextUserFunction(regList)
+	{
+		return mo;
+	}
+}
+
+
+MathObject sequenceDefinitionBody(Object defHead, List vars, List regList) throws Exception : {
+	int startIndex = 0;
+	List basisElements = new LinkedList();
+	Set parts= new HashSet();
+	TermNode recursionTerm;
+	String localVarName;
+	ScalarVariable localVar;
+	List localVars = new LinkedList();
+	List localVarNames = new LinkedList();	
+	Set localParts= new HashSet();
+	List localRegList = new ArrayList(); 
+	Sequence seq;
+	UserFunction seqFunction, f;
+	TermNodeDoubleResult dummyResult = new TermNodeDoubleResult((DoubleResult)ScalarType.getDummyObject());
+}
+{  
+    
+    (
+	    <LT> 
+		(
+			<SCALAR>
+			{
+				dummyResult = new TermNodeDoubleResult((DoubleResult)ScalarType.getDummyObject());
+			}
+			|
+			<MATRIX>
+			{
+				dummyResult = new TermNodeDoubleResult((DoubleResult)MatrixType.getDummyObject());
+			}
+			|
+			<VECTOR>
+			{
+				dummyResult = new TermNodeDoubleResult((DoubleResult)VectorType.getDummyObject());
+			}
+			|
+			<DUALVECTOR>
+			{
+				dummyResult = new TermNodeDoubleResult((DoubleResult)DualVectorType.getDummyObject());
+			}
+		)
+		<GT>
+	)?
+    (
+    <SEQUENCE> { startIndex = 1; }
+    |
+    <SEQUENCE0> { startIndex = 0; }
+    )
+	"(" 
+	<Bezeichner> 
+	    {				
+			localVarName= token.image;
+			localVar= new ScalarVariable(localVarName);
+            localVar.setValue(new ScalarDoubleResult(1));
+	    }
+	  ","	    
+	  basisElements = basisList(localVars, localVarNames, parts, regList)	      
+	  ","
+	     {
+	      	localVars.add(localVar);
+			localVarNames.add(localVarName);
+			
+			if(defHead instanceof String && vars.isEmpty()) {  
+				if( broker.getMathObject(defHead) != null  ){
+					seqFunction = (UserFunction)broker.getMathObject(defHead);
+					TermNode seqTerm = seqFunction.getFunction();
+					seq = (Sequence)(((PathReference)seqTerm).getRootObject());
+					seq.redefine(startIndex, localVar, 
+      	                             basisElements, dummyResult, broker );	
+				}	
+				else {
+					seq = new Sequence((String)defHead, startIndex, localVar, 
+      	                             basisElements, dummyResult, broker, viewFactory ); 	
+      	            TermNode seqTerm = new PathReference(seq, new LinkedList(),  broker);
+		    		seqFunction= new UserFunction(seqTerm, new ScalarVariable[0], broker, viewFactory);   
+					broker.publishObject( seqFunction, (String)defHead ); 
+				}		                       		 
+			// in regList einfuegen, dann wird es bei Auftreten eines Fehlers
+			// wieder gelöscht
+			regList.add(seqFunction);   
+			    
+		}
+		else{
+            throw new ParseException("Der Name einer Folge muss ein Bezeichner sein.");            
+     	}
+	      }
+	  recursionTerm = sum(localVars, localVarNames, localParts, localRegList)       
+      ")"  
+      {
+         Set refObjPaths= new HashSet();
+        f = new UserFunction(recursionTerm, (Variable[]) vars.toArray(new Variable[0]), broker, viewFactory);
+				UserFunction.register(f, new ArrayList(localParts), localRegList, broker);
+				regList.add(f);
+                parts.add(f);        
+        seq.setRecursion( f );
+        regList.remove(seqFunction);
+        parts.remove( seq);
+      	seq.register(seq, new ArrayList(parts), regList, broker);
+		regList.add(seq);
+		List temp = new ArrayList();
+		temp.add(seq);
+		try {
+				  UserFunction.register(seqFunction, new ArrayList(temp), regList, broker);
+		}
+		catch( BrokerException e ) {
+				ExceptionManager.doError("Fehler beim Erzeugen der Funktion "+seqFunction,e);
+		}				
+     	regList.add(seqFunction);
+     	return seqFunction;
+      }    
+}
+
+
+MathObject listDefinitionBody(List regList) throws Exception : {
+	Class listElementClass;
+	Object dummy= null;
+	UserFunction moPath;
+	List l= new LinkedList();
+	List parts= new LinkedList();
+	List varNames= new ArrayList();
+	List vars= new ArrayList();
+	int startIndex = 1;
+}
+{
+	// Typ identifizieren
+	<LT> 
+	(
+		(
+			<FUNCTION> variableDeclaration(vars, varNames)
+		)
+		{
+			listElementClass= Class.forName("math4u2.mathematics.functions.Function");
+			dummy= new FunctionDummy(varNames.size());
+		}
+		|
+		<POINT>
+		{
+			listElementClass= Class.forName("math4u2.mathematics.affine.AffPoint");
+		}
+		|
+		<STRETCH>
+		{
+			listElementClass= Class.forName("math4u2.mathematics.affine.Stretch");
+		}
+		|
+		<PFEIL>
+		{
+			listElementClass= Class.forName("math4u2.mathematics.affine.Arrow");
+		}
+		|
+		<CIRCLE>
+		{
+			listElementClass= Class.forName("math4u2.mathematics.affine.Circle");
+		}
+	)
+	<GT>
+        
+        (
+        <LIST> { startIndex = 1; }
+        |
+        <LIST0> { startIndex = 0; }
+        )
+        (
+         LOOKAHEAD(2)
+        (
+	"(" "{"
+	[
+		moPath= listItemDefinition(listElementClass, varNames, regList)
+		{
+			parts.add(moPath);
+			l.add(moPath);
+		}
+
+
+		(
+			"," moPath= listItemDefinition(listElementClass, varNames, regList)
+			{
+				parts.add(moPath);
+				l.add(moPath);
+			}
+		)*
+	]
+	"}" ")"
+        )
+        |
+        (
+        "("
+        l = indexedListElements(listElementClass,startIndex,  vars, varNames, parts, regList)
+        ")"
+        )
+        )
+	// initialisieren
+	// durch Liste von Parametern
+	// durch for-Anweisung
+	{
+		MathList ml= new MathList(startIndex, listElementClass, l, broker, viewFactory);
+		ml.register(ml, parts, regList, broker);
+		regList.add(ml);
+		TermNode rTerm = new PathReference(ml, new LinkedList(),  broker);
+		UserFunction rFunction= new UserFunction(rTerm, new ScalarVariable[0], broker, viewFactory);
+		List temp = new ArrayList();
+		temp.add(ml);
+		try {
+				  UserFunction.register(rFunction, new ArrayList(temp), regList, broker);
+		}
+		catch( BrokerException e ) {
+				ExceptionManager.doError("Fehler beim Erzeugen der Funktion "+rFunction,e);
+		}				
+     	regList.add(rFunction);
+     	return rFunction;
+	}
+}
+
+
+List indexedListElements( Class ListElementClass, int startIndex, List vars, List varNames, List parts,  List regList ) throws Exception :
+{
+   String localVarName;
+   List localVars, localVarNames, result;
+   Variable localVar;
+   Variable [] varArray;
+   TermNode dimensionTerm, xTerm, yTerm, term;
+   int dimension;
+   UserFunction xFunction, yFunction;
+   MathObject mo;
+   Function f;
+}
+{
+   <Bezeichner>
+	// lokale ScalarVariable, Index-variable
+	{
+		localVarName= token.image;
+		for (int i= 0; i < varNames.size(); i++) {
+			if (localVarName.compareTo((String) (varNames.get(i))) == 0)
+				throw new ParseException(
+					token.beginColumn,
+					"Variablenname \"" + localVarName + "\" bereits verwendet");
+		}
+                //List vars = new ArrayList();
+                //localVar = new ScalarVariable(localVarName);
+                //vars.add(localVar);
+                Set refObjPaths= new HashSet();
+	}
+	"," dimensionTerm = sum(vars, varNames, refObjPaths, regList)
+	{
+		// pruefen, ob dimensionTerm Variable enthaelt, wenn ja: Exception
+                if ( dimensionTerm.hasVar() )
+                   throw new ParseException("Term fuer Dimension eines Vektors oder einer Matrix enthaelt eine Variable");
+
+                // Wert von dimensionTerm zu doubleDimension berechnen
+                double doubleDimension = dimensionTerm.evalScalar();
+
+                // pruefen, ob doubleDimension natuerliche Zahl ( ganz, >= 1 )
+                if ( doubleDimension <= 0 )
+                   throw new ParseException("Dimension eines Vektors ist <= 0");
+                if ( doubleDimension != (int)doubleDimension )
+                   throw new ParseException("Dimension eines Vektors ist keine natuerliche Zahl");
+
+                dimension = (int)doubleDimension;
+
+
+		
+		localVar= new ScalarVariable(localVarName);
+                localVar.setValue(new ScalarDoubleResult(1));
+		localVars = new ArrayList(vars);
+		localVars.add(localVar);
+		localVarNames= new ArrayList(varNames);
+		localVarNames.add(localVarName);
+	}
+	","
+       ( 
+        (
+         <POINT>
+            {
+		Set xRefObjPaths= new HashSet();
+	    }
+	    "(" xTerm= sum(localVars, localVarNames, xRefObjPaths, regList)
+	    {
+		Set yRefObjPaths= new HashSet();
+	    }
+	    "," yTerm= sum(localVars, localVarNames, yRefObjPaths, regList)
+
+	    ")"
+	    
+	    {
+		result = new ArrayList(); // leere Ergebnisliste
+
+              varArray = new Variable[localVars.size()];
+              localVars.toArray( varArray );
+
+              for( int index = startIndex; index < dimension + startIndex; index ++ ) {
+                // term  zu clonedTerm klonen
+                TermNode clonedXTerm = xTerm.getClone( varArray , varArray  ).substitute(new Variable[] {localVar}, new TermNode[] {new TermNodeNum(index)});
+                TermNode clonedYTerm = yTerm.getClone( varArray , varArray  ).substitute(new Variable[] {localVar}, new TermNode[] {new TermNodeNum(index)});
+
+                // in clonedTerm lokale Variable durch Wert von Index ersetzen
+                // clonedTerm hinten an result anhaengen
+
+                xFunction= new UserFunction(clonedXTerm, (ScalarVariable[]) vars.toArray(new ScalarVariable[0]), broker, viewFactory);
+		UserFunction.register(xFunction, new ArrayList(xRefObjPaths), regList, broker);
+		regList.add(xFunction);
+
+                 yFunction= new UserFunction(clonedYTerm, (ScalarVariable[]) vars.toArray(new ScalarVariable[0]), broker, viewFactory);
+		UserFunction.register(yFunction, new ArrayList(yRefObjPaths), regList, broker);
+		regList.add(yFunction);
+
+
+                List pointParts = new LinkedList();
+                pointParts.add(xFunction);
+                pointParts.add(yFunction);
+
+                mo= new AffPoint(xFunction,yFunction, broker, viewFactory);
+		AffPoint.register(mo, pointParts, regList, broker);
+		regList.add(mo);
+
+                //parts.add(new MathObjectPath(mo));
+
+                //result.add( mo);
+                
+                UserFunction moPath = objectToUserFunction( mo, regList, broker );
+                parts.add(moPath);
+                result.add(moPath);
+
+              }
+              return result;
+          }
+          )
+          |
+          (
+            term = sum(localVars, localVarNames, refObjPaths, regList)
+	{
+              result = new ArrayList(); // leere Ergebnisliste
+
+              varArray = new Variable[localVars.size()];
+              localVars.toArray( varArray );
+
+              for( int index = startIndex; index < dimension + startIndex; index ++ ) {
+                // term  zu clonedTerm klonen
+                TermNode clonedTerm = term.getClone( varArray , varArray  );
+                clonedTerm = clonedTerm.substitute(new Variable[] {localVar}, new TermNode[] {new TermNodeNum(index)});
+                // in clonenTerm lokale Variable durch Wert von Index ersetzen
+                // clonedTerm hinten an result anhaengen
+
+
+				f = new UserFunction(clonedTerm, (Variable[]) vars.toArray(new Variable[0]), broker, viewFactory);
+				UserFunction.register(f, new ArrayList(refObjPaths), regList, broker);
+				regList.add(f);
+                parts.add(f);
+                result.add( f );
+
+              }
+
+              return result;
+	}
+          )
+          )
+          
+            
+}
+
+
+
+
+
+List matrixRow(List vars, List varNames,Set refObjPaths, List regList ) throws Exception :
+{ LinkedList rowElements = new LinkedList();
+  TermNode element;
+}
+{
+      "{"   element = sum( vars, varNames, refObjPaths, regList )
+            { rowElements.add(element); }
+            (
+            "," element = sum( vars, varNames, refObjPaths, regList )
+                { rowElements.add(element); }
+            )*
+      "}"
+     {
+       return rowElements;
+      }
+}
+
+List basisList(List vars, List varNames,Set refObjPaths, List regList ) throws Exception :
+{ LinkedList rowElements = new LinkedList();
+  TermNode element;
+}
+{
+      "{"   ( element = sum( vars, varNames, refObjPaths, regList )
+               { rowElements.add(element); }
+            )?
+            (
+            "," element = sum( vars, varNames, refObjPaths, regList )
+                { rowElements.add(element); }
+            )*
+      "}"
+     {
+       return rowElements;
+      }
+}
+
+
+TermNode matrixNodeDefinition(List vars, List varNames, Set refObjPaths, List regList) throws Exception :
+{
+  List rowElements;
+  List rowList = new LinkedList();
+  int rowDim, colDim;
+  MathObject mo;
+  TermNode [][] elementArray;
+  TermNode [] elementVector;
+
+}
+{
+  (
+    <MATRIX>
+      "("   
+         (
+           "{"
+          (  rowElements = matrixRow(vars, varNames, refObjPaths, regList)
+              {  colDim = rowElements.size();
+                 rowList.add(rowElements); }
+              (
+            "," rowElements = matrixRow(vars, varNames, refObjPaths, regList)
+                {
+                  if ( rowElements.size() != colDim )
+                          {/*Ausnahme erzeugen*/}
+                  else
+                    rowList.add(rowElements); }
+            )*
+            "}"
+           )
+           |
+           (
+             rowList = indexedMatrixElements(vars, varNames, refObjPaths, regList)
+             {   colDim = ((List)(rowList.get(0))).size();
+             }
+           )
+         )
+       ")"
+     {
+       rowDim = rowList.size();
+       elementArray = new TermNode [rowDim][colDim];
+       for ( int r=0; r<rowDim; r++ ) {
+         for ( int c=0; c<colDim; c++ ) {
+           elementArray[r][c] = (TermNode)(((List)rowList.get(r)).get(c));
+         }
+       }
+       return new TermNodeMatrix(elementArray);
+    }
+    |
+      <DIAGMATRIX>
+      "("
+         ( rowElements = matrixRow(vars, varNames, refObjPaths, regList)
+           |
+           rowElements = indexedVectorElements(vars, varNames, refObjPaths, regList)
+         )
+      ")"
+      {
+       rowDim = rowElements.size();
+       colDim = rowDim;
+       elementVector = new TermNode [rowDim];
+       for ( int r=0; r<rowDim; r++ ) {
+             elementVector[r] = (TermNode)(rowElements.get(r));
+       }
+       return new TermNodeDiagMatrix(elementVector);
+      }
+      |
+      <EMATRIX>
+      "("
+         <Zahl>
+	   {  try {
+                 rowDim = Integer.parseInt(token.image);
+              }
+              catch (NumberFormatException e) {
+                   throw new ParseException(token.beginColumn, e.toString());
+              }
+	   }
+      ")"
+      {
+       return new TermNodeUnitMatrix(rowDim);
+      }
+    |
+      <VECTOR>
+      "("
+          ( rowElements = matrixRow(vars, varNames, refObjPaths, regList)
+            |
+            rowElements = indexedVectorElements(vars, varNames, refObjPaths, regList)
+          )
+      ")"
+      {
+       rowDim = rowElements.size();
+       colDim = 1;
+       elementVector = new TermNode [rowDim];
+       for ( int r=0; r<rowDim; r++ ) {
+           elementVector[r] = (TermNode)(rowElements.get(r));
+       }
+       return new TermNodeVector(elementVector);
+      }
+      |
+      <DUALVECTOR>
+      "("
+          (  rowElements = matrixRow(vars, varNames, refObjPaths, regList)
+             |
+             rowElements = indexedVectorElements(vars, varNames, refObjPaths, regList)
+          )
+      ")"
+      {
+       colDim = rowElements.size();
+       rowDim = 1;
+       elementVector = new TermNode[colDim];
+       for ( int c=0; c<colDim; c++ ) {
+           elementVector[c] = (TermNode)(rowElements.get(c));
+       }
+       return new TermNodeDualVector(elementVector);
+      }
+    )
+}
+
+
+
+
+
+
+List indexedVectorElements(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+   String localVarName;
+   List localVars, localVarNames;
+   Variable localVar;
+   TermNode dimensionTerm, term;
+   int dimension;
+}
+{
+   <Bezeichner>
+	// lokale ScalarVariable, Index-variable
+	{
+		localVarName= token.image;
+		for (int i= 0; i < varNames.size(); i++) {
+			if (localVarName.compareTo((String) (varNames.get(i))) == 0)
+				throw new ParseException(
+					token.beginColumn,
+					"Variablenname \"" + localVarName + "\" bereits verwendet");
+		}
+	}
+	"," dimensionTerm = sum(vars, varNames, refObjPaths, regList)
+	{
+		// pruefen, ob dimensionTerm Variable enthaelt, wenn ja: Exception
+                if ( dimensionTerm.hasVar() )
+                   throw new ParseException("Term fuer Dimension eines Vektors oder einer Matrix enthaelt eine Variable");
+
+                // Wert von dimensionTerm zu doubleDimension berechnen
+                double doubleDimension = dimensionTerm.evalScalar();
+
+                // pruefen, ob doubleDimension natuerliche Zahl ( ganz, >= 1 )
+                if ( doubleDimension <= 0 )
+                   throw new ParseException("Dimension eines Vektors ist <= 0");
+                if ( doubleDimension != (int)doubleDimension )
+                   throw new ParseException("Dimension eines Vektors ist keine natuerliche Zahl");
+
+                dimension = (int)doubleDimension;
+                // in den beiden Listen lokale ScalarVariable anhängen
+		localVar= new ScalarVariable(localVarName);
+                localVar.setValue(new ScalarDoubleResult(1));
+		localVars = new ArrayList(vars);
+		localVars.add(localVar);
+		localVarNames= new ArrayList(varNames);
+		localVarNames.add(localVarName);
+	}
+	"," term = sum(localVars, localVarNames, refObjPaths, regList)
+	{
+              List result = new ArrayList(); // leere Ergebnisliste
+
+              Variable [] varArray = new Variable[localVars.size()];
+              localVars.toArray( varArray );
+
+              for( int index = 1; index <= dimension; index ++ ) {
+                // term  zu clonedTerm klonen
+                TermNode clonedTerm = term.getClone( varArray , varArray  );
+                // in clonenTerm lokale Variable durch Wert von Index ersetzen
+                // clonedTerm hinten an result anhaengen
+
+                result.add( clonedTerm.substitute(new Variable[] {localVar}, new TermNode[] {new TermNodeNum(index)}));
+
+              }
+
+              return result;
+	}
+}
+
+List indexedMatrixElements(List vars, List varNames, Set refObjPaths, List regList) throws Exception : {
+   String localVarName1, localVarName2;
+   List localVars, localVarNames;
+   Variable localVar1, localVar2;
+   TermNode dimensionTerm1, dimensionTerm2, term;
+   int dimension1, dimension2;
+}
+{
+   <Bezeichner>
+	// lokale ScalarVariable, Index-variable
+	{
+		localVarName1= token.image;
+		for (int i= 0; i < varNames.size(); i++) {
+			if (localVarName1.compareTo((String) (varNames.get(i))) == 0)
+				throw new ParseException(
+					token.beginColumn,
+					"Variablenname \"" + localVarName1 + "\" bereits verwendet");
+		}
+	}
+	"," dimensionTerm1 = sum(vars, varNames, refObjPaths, regList)
+	{
+		// pruefen, ob dimensionTerm1 Variable enthaelt, wenn ja: Exception
+                if ( dimensionTerm1.hasVar() )
+                   throw new ParseException("Term fuer Dimension einer Matrix enthaelt eine Variable");
+
+                // Wert von dimensionTerm1 zu doubleDimension berechnen
+                double doubleDimension1 = dimensionTerm1.evalScalar();
+
+                // pruefen, ob doubleDimension1 natuerliche Zahl ( ganz, >= 1 )
+                if ( doubleDimension1 <= 0 )
+                   throw new ParseException("Dimension einer Matrix ist <= 0");
+                if ( doubleDimension1 != (int)doubleDimension1 )
+                   throw new ParseException("Dimension einer Matrix ist keine natuerliche Zahl");
+
+                dimension1 = (int)doubleDimension1;
+                // in den beiden Listen lokale ScalarVariable anhängen
+		localVar1= new ScalarVariable(localVarName1);
+                localVar1.setValue(new ScalarDoubleResult(1));
+		localVars= new ArrayList(vars);
+		localVars.add(localVar1);
+		localVarNames= new ArrayList(varNames);
+		localVarNames.add(localVarName1);
+	}
+        ","  <Bezeichner>
+	// lokale ScalarVariable, Index-variable
+	{
+		localVarName2= token.image;
+		for (int i= 0; i < localVarNames.size(); i++) {
+			if (localVarName2.compareTo((String) (localVarNames.get(i))) == 0)
+				throw new ParseException(
+					token.beginColumn,
+					"Variablenname \"" + localVarName2 + "\" bereits verwendet");
+		}
+	}
+	"," dimensionTerm2 = sum(vars, varNames, refObjPaths, regList)
+	{
+		// pruefen, ob dimensionTerm2 Variable enthaelt, wenn ja: Exception
+                if ( dimensionTerm2.hasVar() )
+                   throw new ParseException("Term fuer Dimension einer Matrix enthaelt eine Variable");
+
+                // Wert von dimensionTerm2 zu doubleDimension berechnen
+                double doubleDimension2 = dimensionTerm2.evalScalar();
+
+                // pruefen, ob doubleDimension2 natuerliche Zahl ( ganz, >= 1 )
+                if ( doubleDimension2 <= 0 )
+                   throw new ParseException("Dimension einer Matrix ist <= 0");
+                if ( doubleDimension2 != (int)doubleDimension2 )
+                   throw new ParseException("Dimension einer Matrix ist keine natuerliche Zahl");
+
+                dimension2 = (int)doubleDimension2;
+                // in den beiden Listen lokale ScalarVariable anhängen
+		localVar2= new ScalarVariable(localVarName2);
+                localVar2.setValue(new ScalarDoubleResult(1));
+		localVars.add(localVar2);
+		localVarNames.add(localVarName2);
+	}
+	"," term = sum(localVars, localVarNames, refObjPaths, regList)
+	{
+              List result = new ArrayList(); // leere Ergebnisliste
+
+              Variable [] varArray = new Variable[localVars.size()];
+              localVars.toArray( varArray );
+
+              for( int row = 1; row <= dimension1; row ++ ) {
+                List rowList = new LinkedList();
+                TermNode clonedRowTerm = term.getClone( varArray , varArray  ).substitute(new Variable[] {localVar1}, new TermNode[] {new TermNodeNum(row)});
+
+                for ( int col = 1; col <= dimension2; col++ ) {
+                    TermNode clonedTerm = clonedRowTerm.getClone( varArray , varArray  );
+                    // in clonenTerm lokale Variable durch Wert von Index ersetzen
+                    // clonedTerm hinten an result anhaengen
+                    TermNode sub = clonedTerm.substitute(new Variable[] {localVar2}, new TermNode[] {new TermNodeNum(col)});
+                    rowList.add(sub);
+                 }
+                 result.add(rowList);
+              }
+              return result;
+	}
+}
+
+
+UserFunction listItemDefinition(Class itemClass, List varNames, List regList)
+		throws Exception :{
+	UserFunction moPath;
+	Set refObjPaths = new HashSet();
+	TermNode rTerm;
+	List vars= new ArrayList();
+			for (int i= 0; i < varNames.size(); i++)
+				vars.add(new ScalarVariable((String) (varNames.get(i))));
+}
+		
+{	
+	(
+		moPath = newPointUserFunction(regList)
+		|
+		rTerm = sum(vars, varNames, refObjPaths, regList)	
+		{ 
+			UserFunction rFunction= new UserFunction(rTerm, (Variable[]) vars.toArray(new Variable[0]), broker, viewFactory);
+			UserFunction.register(rFunction, new ArrayList(refObjPaths), regList, broker);
+			regList.add(rFunction);
+			moPath = rFunction;
+     	}
+     )
+     {
+     	regList.add(moPath);
+     	return moPath;
+     }
+}
+
+
+
+
+
+
+
+
+

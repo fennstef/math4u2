@@ -205,7 +205,7 @@ public class parser implements parserConstants {
                         return (String)def;
                 }
 
-                return (String) (((MathObject)def).getKey());
+                return (String) (((MathObject)def).getIdentifier());
         }
 
         public static TermNode parsePath(String text, Broker broker) throws ParseException {
@@ -240,7 +240,7 @@ public class parser implements parserConstants {
                                    UserFunction.register(rFunction, new ArrayList(temp), regList, broker);
                                 }
                                 catch( BrokerException e ) {
-                                        ExceptionManager.doError("Fehler beim Erzeugen der Funktion "+rFunction.getKey(), e);
+                                        ExceptionManager.doError("Fehler beim Erzeugen der Funktion "+rFunction.getIdentifier(), e);
                                 }
                         regList.add(rFunction);
                         return rFunction;
@@ -327,7 +327,7 @@ public class parser implements parserConstants {
                          List methods = (List) ((Object[])defHead)[1];
 
                          //Erzeuge den Schlüssel
-                         String key = rpo.getKey()+"";
+                         String key = rpo.getIdentifier()+"";
                          Iterator iter = methods.iterator();
                          while(iter.hasNext()){
                                 if(iter.hasNext()) key += ".";

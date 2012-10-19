@@ -128,7 +128,7 @@ public class UserDefinedFunction extends Function implements HasGraph{
 		return null;
 	}//getName
 	
-	public Object getKey(){
+	public Object getIdentifier(){
 		return getName();
 	}
 	
@@ -158,9 +158,9 @@ public class UserDefinedFunction extends Function implements HasGraph{
 	public GraphInterface getGraph(DrawAreaInterface da, UserFunction f) {		
 		if(f.getArity()==0){
 			this.f=f;
-			return getViewFactory().createSimpleGraph(da);
+			return getViewFactory().getGraphFactory().createSimpleGraph(da, f);
 		}else if(f.getArity()==1){
-			return getViewFactory().createFunctionGraph(da, f);
+			return getViewFactory().getGraphFactory().createFunctionGraph(da, f);
 		}else{
 			throw new RuntimeException("Graph von "+f+" konnte nicht erzeugt werden.");
 		}

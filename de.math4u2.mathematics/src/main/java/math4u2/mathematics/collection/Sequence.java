@@ -220,7 +220,7 @@ public class Sequence implements MathObject, CreatesPath{
 	
 	
 	
-	public Object getKey() {
+	public Object getIdentifier() {
 			return name;
 	} //getKey
 

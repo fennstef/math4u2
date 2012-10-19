@@ -12,6 +12,7 @@ import math4u2.util.exception.ExceptionManager;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IFunction1;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.SimpleScalarDoubleValueHolder;
 
 /**
@@ -26,18 +27,16 @@ public class CurveGraph extends AbstractSimpleGraph {
 
 	private double xMin, xMax, yMin, yMax, width, height;
 
-	private String name;
 	private IScalarDoubleHolder minT;
 	private IScalarDoubleHolder maxT;
 	private IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> xFunction;
 	private IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> yFunction;
 
 	public CurveGraph(DrawAreaInterface da, IGraphSettings settings,
-			String name, IScalarDoubleHolder minT, IScalarDoubleHolder maxT,
+			IScalarStringHolder name, IScalarDoubleHolder minT, IScalarDoubleHolder maxT,
 			IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> xFunction,
 			IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> yFunction) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.minT = minT;
 		this.maxT = maxT;
 		this.xFunction = xFunction;
@@ -171,15 +170,11 @@ public class CurveGraph extends AbstractSimpleGraph {
 				ll.addFirst(new int[] { x, y });
 		} catch (Exception e) {
 			ExceptionManager.doError("Fehler beim Zeichnen der Kurve "
-					+ getKey(), e);
+					+ getIdentifier(), e);
 		}
-	} // computeCurve
-
-	public String getKey() {
-		return name;
-	}
+	} 
 
 	public void detach() throws Exception {
 	}
 
-} // CurveGraph
+} 

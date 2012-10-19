@@ -33,61 +33,61 @@ import math4u2.view.graph.util.SimpleScalarDoubleValueHolder;
 public class DrawArea extends JPanel implements DrawAreaInterface,
 		DrawAreaConstants {
 
-	private static int preferredDetail = 1;
+	protected static int preferredDetail = 1;
 
-	private String name = "da";
+	protected String name = "da";
 
-	private String title = "";
+	protected String title = "";
 
-	private Color gridColor = Color.lightGray, axisColor = Color.black;
+	protected Color gridColor = Color.lightGray, axisColor = Color.black;
 
-	private Stroke gridStroke = new BasicStroke(1),
+	protected Stroke gridStroke = new BasicStroke(1),
 			axesStroke = new BasicStroke(2);
 
 	// Faktoren fuer den Abstand der Gitterlinien
-	private double xFak = 1.0f, yFak = 1.0f;
+	protected double xFak = 1.0f, yFak = 1.0f;
 
 	// Nullstellige Funktionen, liefern die aktuellen Grenzen des
 	// Koordinatensystems
-	private IScalarDoubleHolder xMinFunct, xMaxFunct, yMinFunct, yMaxFunct,
+	protected IScalarDoubleHolder xMinFunct, xMaxFunct, yMinFunct, yMaxFunct,
 			xDistFunct, yDistFunct;
 
 	// Anzahl Pixel pro Einheit in beiden Achsenrichtung
 	// diese beiden Werte werden aus Performance-Gruenden gespeicher
-	private double xPixPerUnit, yPixPerUnit;
+	protected double xPixPerUnit, yPixPerUnit;
 
-	private MouseMotionListener mouseDisplayListener;
+	protected MouseMotionListener mouseDisplayListener;
 
 	// Popup Menu
-	private DrawAreaPopupMenu drawAreaPopupMenu;
+	protected DrawAreaPopupMenu drawAreaPopupMenu;
 
-	private boolean makeNoRenew = false;
+	protected boolean makeNoRenew = false;
 
-	private Border roundRect;
+	protected Border roundRect;
 
 	// Hoehe und Breite, die beim Erzeugen gesetzt wird
-	private int myHeight, myWidth;
+	protected int myHeight, myWidth;
 
 	// Hoehe und Breite in Pixel, die beim Zeichnen verwendet wird
-	private int height, width;
+	protected int height, width;
 
 	// Graphen, die gezeichnet werden
-	private List<SimpleGraphInterface> graphs = new LinkedList<SimpleGraphInterface>();
+	protected List<SimpleGraphInterface> graphs = new LinkedList<SimpleGraphInterface>();
 
-	private boolean fastZoom = false;
+	protected boolean fastZoom = false;
 
-	private int stroke = 2;
+	protected int stroke = 2;
 
 	static int detail = 1, detailA = 1;
 
-	private static int borderThickness = 6;
+	protected static int borderThickness = 6;
 
 	int rx1 = 0, rx2 = 0, ry1 = 0, ry2 = 0;
 
-	boolean aktion = false, drawRec = false, graphChanged = false,
+	protected boolean aktion = false, drawRec = false, graphChanged = false,
 			activate1To1Zoom = false;
 
-	private List<DrawAreaChangeListener> listeners = new LinkedList<DrawAreaChangeListener>();
+	protected List<DrawAreaChangeListener> listeners = new LinkedList<DrawAreaChangeListener>();
 
 	public DrawArea(String name, int width, int height) {
 		this.name = name;
@@ -265,9 +265,9 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 			SimpleGraphInterface gi = (SimpleGraphInterface) iter.next();
 			if (gi == null)
 				return false;
-			if (gi.getKey() == null)
+			if (gi.getIdentifier() == null)
 				return false;
-			if (gi.getKey().equals(key))
+			if (gi.getIdentifier().equals(key))
 				return true;
 		} // for iter
 		return false;
@@ -291,7 +291,7 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 	public SimpleGraphInterface getGraph(String name) {
 		for (Iterator iter = graphs.iterator(); iter.hasNext();) {
 			SimpleGraphInterface gi = (SimpleGraphInterface) iter.next();
-			if (name.equals(gi.getKey()))
+			if (name.equals(gi.getIdentifier()))
 				return gi;
 		}// for iter
 		return null;
@@ -306,7 +306,7 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 		SimpleGraphInterface graph = null;
 		for (Iterator iter = graphs.iterator(); iter.hasNext();) {
 			if (graphName.equals((graph = (SimpleGraphInterface) iter.next())
-					.getKey()))
+					.getIdentifier()))
 				break;
 		} // for iter
 		if (graph == null)
@@ -394,7 +394,7 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 		try {
 			graph.detach();
 		} catch (Exception e) {
-			ExceptionManager.doError("Graph " + graph.getKey()
+			ExceptionManager.doError("Graph " + graph.getIdentifier()
 					+ " kann nicht gelöscht werden.");
 		}
 		// Graphen
@@ -655,7 +655,7 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 	 *            Vergrößerungsfaktor im Vergleich zum Standardabstand
 	 * @return Abstand zweier Gitterpunkte
 	 */
-	private double getGridPointDist(double min, double max, double factor) {
+	protected double getGridPointDist(double min, double max, double factor) {
 		double diff = max - min;
 		double result = Math.pow(10.0,
 				Math.ceil(Math.log(diff) / Math.log(10.0)) - 1);

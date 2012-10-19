@@ -141,7 +141,11 @@ public abstract class AbstractGraph implements GraphInterface {
 	}//prepareDelete
 
 	public Object getKey() {
-		return "graph$" + getModel().getKey().toString();
+		return "graph$" + getModel().getIdentifier().toString();
+	} //getKey
+	
+	public String getIdentifier() {
+		return "graph$" + getModel().getIdentifier().toString();
 	} //getKey
 
 	public void setName(String name) {
@@ -166,4 +170,11 @@ public abstract class AbstractGraph implements GraphInterface {
 		throw new NotImplementedException();
 	}//getReturnType
 
+	public void detach() throws Exception {
+		prepareDelete();
+	}
+
+	public void renew() {
+		renew(this);
+	}
 } //AbstractGraph

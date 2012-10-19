@@ -22,15 +22,13 @@ import math4u2.view.graph.util.IVectorDoubleValueHolder;
  * Graph einer Gerade
  */
 public class StraightGraph extends AbstractSimpleGraph {
-	private IScalarStringHolder name;
 	private IVectorDoubleValueHolder point;
 	private IVectorDoubleValueHolder vector;
 
 	public StraightGraph(DrawAreaInterface da, IGraphSettings settings,
 			IScalarStringHolder name, IVectorDoubleValueHolder point,
 			IVectorDoubleValueHolder vector) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.point = point;
 		this.vector = vector;
 	}
@@ -51,13 +49,13 @@ public class StraightGraph extends AbstractSimpleGraph {
 				x = point.getVector()[0];
 			} catch (Exception e) {
 				ExceptionManager.doError("Fehler beim Zeichnen der Geraden "
-						+ getKey(), e);
+						+ getIdentifier(), e);
 				return;
 			}
 
 			if (dx == 0) {
 				if (dy == 0)
-					throw new RuntimeException("Die Strecke " + getKey()
+					throw new RuntimeException("Die Strecke " + getIdentifier()
 							+ " hat eine ungültige Steigung");
 				int ix = da.xCoordToPix(x);
 				g.drawLine(ix, 0, ix, da.getHeight());
@@ -75,10 +73,10 @@ public class StraightGraph extends AbstractSimpleGraph {
 					g.drawLine(xs, ys, xd, yd);
 				} catch (Exception e) {
 				}
-			} // else
+			} 
 			g.setColor(ca);
-		} // if visible
-	} // paintGraph
+		} 
+	} 
 
 	/** Berechnet für einen Abszissenwert die Ordinate */
 	public double _computePoint(double x) throws Exception {
@@ -87,13 +85,9 @@ public class StraightGraph extends AbstractSimpleGraph {
 		double[] p = point.getVector();
 		double m = v[1] / v[0];
 		return m * (x - p[0]) + p[1];
-	} // _computePoint
-
-	public String getKey() {
-		return name.getScalarOrNull();
 	}
 
 	public void detach() throws Exception {
 	}
 
-} // StraightGraph
+} 

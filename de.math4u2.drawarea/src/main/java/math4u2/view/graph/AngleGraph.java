@@ -7,6 +7,7 @@ import java.awt.geom.Arc2D;
 
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.IVectorDoubleValueHolder;
 
 /**
@@ -20,14 +21,12 @@ public class AngleGraph extends AbstractSimpleGraph {
 	private IScalarDoubleHolder x;
 	private IScalarDoubleHolder y;
 	private IScalarDoubleHolder radius;
-	private String key;
 
-	public AngleGraph(DrawAreaInterface da, IAreaGraphSettings settings, String key,
+	public AngleGraph(DrawAreaInterface da, IAreaGraphSettings settings, IScalarStringHolder name,
 			IVectorDoubleValueHolder vector1, IVectorDoubleValueHolder vector2,
 			IScalarDoubleHolder x, IScalarDoubleHolder y,
 			IScalarDoubleHolder radius) {
-		super(da, settings);
-		this.key = key;
+		super(da, settings, name);
 		this.vector1 = vector1;
 		this.vector2 = vector2;
 		this.x = x;
@@ -65,7 +64,7 @@ public class AngleGraph extends AbstractSimpleGraph {
 							.getScalar() + distance), 2 * distance
 							/ da.xPerPix(), 2 * distance / da.yPerPix(),
 							arcBegin, arc, Arc2D.OPEN);
-					if (aSetting.isFillArea()) {
+					if (hasFillColor(aSetting)) {
 						arcShape.setArcType(Arc2D.PIE);
 						g.setColor(aSetting.getFillColor());
 						g.fill(arcShape);
@@ -126,7 +125,7 @@ public class AngleGraph extends AbstractSimpleGraph {
 		} // if visible
 	} // paintGraph
 
-	public String getKey() {
-		return key;
+	private boolean hasFillColor(IAreaGraphSettings aSetting) {
+		return aSetting.getFillColor().getAlpha()!=0;
 	}
 }

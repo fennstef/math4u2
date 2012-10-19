@@ -146,6 +146,14 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 	public double getMax() throws MathException {
 		return maxFunction.evalScalar();
 	} // getMax
+	
+	public UserFunction getMinFunction(){
+		return minFunction;
+	}
+	
+	public UserFunction getMaxFunction(){
+		return maxFunction;
+	}
 
 	/**
 	 * @see math4u2.controller.MathObject#swapLinks(math4u2.controller.MathObject,
@@ -187,7 +195,7 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 			broker.propagateChange(minFunction);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'min' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_set_min
@@ -208,7 +216,7 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 			broker.propagateChange(maxFunction);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'max' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_set_max
@@ -228,7 +236,7 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 		try {
 			broker.propagateChange(xFunction);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'x' (" + getKey()
+			ExceptionManager.doError("Fehler bei der Methode 'x' (" + getIdentifier()
 					+ ").", e);
 		}
 		return null;
@@ -249,7 +257,7 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 		try {
 			broker.propagateChange(yFunction);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'y' (" + getKey()
+			ExceptionManager.doError("Fehler bei der Methode 'y' (" + getIdentifier()
 					+ ").", e);
 		}
 		return null;

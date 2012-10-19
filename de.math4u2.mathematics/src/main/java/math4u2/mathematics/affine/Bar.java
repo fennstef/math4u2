@@ -94,6 +94,17 @@ public class Bar extends AbstractArea {
 		broker.defineRelations(b, parts, relations, Broker.FIRST_OBJECT);
 	} //register
 	
+	public UserFunction getXVector(){
+		return xVector;
+	}
+	
+	public UserFunction getYVector(){
+		return yVector;
+	}
+	
+	public UserFunction getThickness(){
+		return thickFunc;
+	}
 	
 	public void setFreeze(boolean freeze) {
 		super.setFreeze(freeze);
@@ -153,7 +164,7 @@ public class Bar extends AbstractArea {
 		try {
 			broker.propagateChange(xVector);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("+getKey()+").",e);
+			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("+getIdentifier()+").",e);
 		}
 		return null;
 	} //operator_vektor1
@@ -170,7 +181,7 @@ public class Bar extends AbstractArea {
 		try {
 			broker.propagateChange(yVector);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("+getKey()+").",e);
+			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("+getIdentifier()+").",e);
 		}
 		return null;
 	} //operator_vektor2
@@ -181,7 +192,7 @@ public class Bar extends AbstractArea {
 	
 	public ListViewItemInterface getCompleteView(UserFunction f,
 			ListViewInterface alv, Broker broker) {
-		return viewFactory.createCompleteDefalutViewItem(f, alv, broker);
+		return viewFactory.createCompleteDefaultViewItem(f, alv, broker);
 	}//getCompleteView
 
 

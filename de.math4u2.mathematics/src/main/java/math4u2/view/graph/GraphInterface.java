@@ -6,7 +6,7 @@ import java.awt.Graphics;
 
 import math4u2.controller.MathObject;
 
-public interface GraphInterface extends MathObject {
+public interface GraphInterface extends MathObject, SimpleGraphInterface {
 	void paintGraph(Graphics g);
 
 	HasGraph getModel();

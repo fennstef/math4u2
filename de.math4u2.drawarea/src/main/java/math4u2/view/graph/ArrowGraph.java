@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import math4u2.util.exception.ExceptionManager;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.IVectorDoubleValueHolder;
 
 /**
@@ -20,12 +21,10 @@ public class ArrowGraph extends AbstractSimpleGraph {
 	private IScalarDoubleHolder startX;
 	private IScalarDoubleHolder startY;
 	private IVectorDoubleValueHolder vector;
-	private String name;
 	
-	public ArrowGraph(DrawAreaInterface da, IGraphSettings settings, String name,IScalarDoubleHolder startX,
+	public ArrowGraph(DrawAreaInterface da, IGraphSettings settings, IScalarStringHolder name,IScalarDoubleHolder startX,
 			IScalarDoubleHolder startY,IVectorDoubleValueHolder vector) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.startX = startX;
 		this.startY = startY;
 		this.vector = vector;
@@ -72,7 +71,7 @@ public class ArrowGraph extends AbstractSimpleGraph {
 						new int[] { yd, y1, y2 }, 3);
 			}//if
 		} catch (Exception e) {
-			ExceptionManager.doError("Fehler beim Zeichnen des Pfeil-Graphen "+getKey(),e);
+			ExceptionManager.doError("Fehler beim Zeichnen des Pfeil-Graphen "+getIdentifier(),e);
 		}
 		g.setColor(ca);
 
@@ -88,10 +87,6 @@ public class ArrowGraph extends AbstractSimpleGraph {
 	public void renew() {
 		dragVector.renew();
 	} //renew
-
-	public String getKey() {
-		return name;
-	}
 
 	public void detach() throws Exception {
 		dragVector.remove();

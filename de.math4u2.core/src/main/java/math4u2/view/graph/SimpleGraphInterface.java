@@ -14,7 +14,7 @@ public interface SimpleGraphInterface {
 
 	public Color getColor();
 	
-	public String getKey();
+	public String getIdentifier();
 	
 	public void detach() throws Exception;
 	

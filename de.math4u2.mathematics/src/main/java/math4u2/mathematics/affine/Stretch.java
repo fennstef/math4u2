@@ -182,7 +182,7 @@ public class Stretch extends AbstractAffineObject implements
 			broker.propagateChange(startPoint);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'start' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_start
@@ -216,7 +216,7 @@ public class Stretch extends AbstractAffineObject implements
 			broker.propagateChange(endPoint);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'ende' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_ende

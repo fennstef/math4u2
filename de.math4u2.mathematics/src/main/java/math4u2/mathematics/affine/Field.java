@@ -11,7 +11,6 @@ import math4u2.controller.MathObject;
 import math4u2.controller.relation.Relation;
 import math4u2.controller.relation.RelationFactory;
 import math4u2.controller.relation.RelationInterface;
-import math4u2.mathematics.functions.Function;
 import math4u2.mathematics.functions.UserFunction;
 import math4u2.view.graph.GraphInterface;
 import math4u2.view.graph.HasGraph;
@@ -22,7 +21,7 @@ import math4u2.view.gui.listview.ViewFactoryInterface;
 
 public class Field extends AbstractAffineObject {
 	/** vektorwertige Funktion fieldFunc(x,y), liefert das Feld */
-	private Function fieldFunc;
+	private UserFunction fieldFunc;
 	/** Referenzpunkt für Darstellungen */
 	private UserFunction refPoint;
 	/**
@@ -48,7 +47,7 @@ public class Field extends AbstractAffineObject {
 			ViewFactoryInterface viewFactory) {
 		super("feld", null, Color.black, HasGraph.SOLID_STROKE, isVisible,
 				broker, viewFactory);
-		this.fieldFunc = (Function) fieldFunc;
+		this.fieldFunc = (UserFunction) fieldFunc;
 		this.refPoint = (UserFunction) refPoint;
 		this.xDistFunc = (UserFunction) xDistFunc;
 		this.yDistFunc = (UserFunction) yDistFunc;
@@ -69,23 +68,23 @@ public class Field extends AbstractAffineObject {
 				layoutStr, isVisible, broker, viewFactory);
 	} // Konstruktor
 
-	public Function getFieldFunc() {
+	public UserFunction getFieldFunc() {
 		return fieldFunc;
 	}
 
-	public Function getXDistFunc() {
+	public UserFunction getXDistFunc() {
 		return xDistFunc;
 	}
 
-	public Function getYDistFunc() {
+	public UserFunction getYDistFunc() {
 		return yDistFunc;
 	}
 
-	public Function getCutoffFunc() {
+	public UserFunction getCutoffFunc() {
 		return cutoffFunc;
 	}
 
-	public Function getRefPoint() {
+	public UserFunction getRefPoint() {
 		return refPoint;
 	}
 
@@ -204,7 +203,7 @@ public class Field extends AbstractAffineObject {
 
 	public ListViewItemInterface getCompleteView(UserFunction f,
 			ListViewInterface alv, Broker broker) {
-		return viewFactory.createCompleteDefalutViewItem(f, alv, broker);
+		return viewFactory.createCompleteDefaultViewItem(f, alv, broker);
 	}// getCompleteView
 
 } // class Field

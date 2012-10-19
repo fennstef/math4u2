@@ -42,7 +42,7 @@ public abstract class BinaryStandardFunction extends StandardFunction {
 	 * @return Ableitungsfunktion
 	 */
 	public Function getDeriveFunction(Broker broker) throws Exception {
-		throw new Exception("Ableitungsfunktion fuer " + getKey()
+		throw new Exception("Ableitungsfunktion fuer " + getIdentifier()
 				+ " nicht verfuegbar");
 	}
 

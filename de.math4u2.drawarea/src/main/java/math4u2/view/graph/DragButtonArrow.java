@@ -3,6 +3,7 @@ package math4u2.view.graph;
 import math4u2.util.exception.ExceptionManager;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.IVectorDoubleValueHolder;
 
 /**
@@ -15,9 +16,9 @@ public class DragButtonArrow extends DragButtonAbstract {
 	private IScalarDoubleHolder startX;
 	private IScalarDoubleHolder startY;
 	private IVectorDoubleValueHolder vector;
-	private String name;
+	private IScalarStringHolder name;
 
-	public DragButtonArrow(DrawAreaInterface da, String name,
+	public DragButtonArrow(DrawAreaInterface da, IScalarStringHolder name,
 			IScalarDoubleHolder startX, IScalarDoubleHolder startY,
 			IVectorDoubleValueHolder vector) {
 		super(da);
@@ -43,7 +44,7 @@ public class DragButtonArrow extends DragButtonAbstract {
 			y = da.yCoordToPix((v[1]) + sy) - SIZE / 2;
 		} catch (Exception e) {
 			ExceptionManager.doError("Fehler beim Erstellen des Pfeil-Graphen "
-					+ name, e);
+					+ name.getScalarOrNull(), e);
 		}
 	}
 
@@ -58,7 +59,7 @@ public class DragButtonArrow extends DragButtonAbstract {
 			vector.setVector(new double[] { newX, newY }, true);
 		} catch (Exception e) {
 			ExceptionManager.doError("Fehler beim Setzen des Pfeil-Graphen "
-					+ name, e);
+					+ name.getScalarOrNull(), e);
 		}
 
 		b1.setVisible(false);

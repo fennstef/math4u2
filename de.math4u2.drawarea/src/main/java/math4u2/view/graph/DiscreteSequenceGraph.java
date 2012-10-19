@@ -11,18 +11,16 @@ import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.IVectorDoubleValueHolder;
 
 public class DiscreteSequenceGraph extends AbstractAreaSimpleGraph {
-	private String name;
 	private IScalarStringHolder layout;
 	private IVectorDoubleValueHolder xVector;
 	private IVectorDoubleValueHolder yVector;
 	private IScalarDoubleHolder radius;
 
 	public DiscreteSequenceGraph(DrawAreaInterface da,
-			IAreaGraphSettings settings, String name,
+			IAreaGraphSettings settings, IScalarStringHolder name,
 			IScalarStringHolder layout, IVectorDoubleValueHolder xVector,
 			IVectorDoubleValueHolder yVector, IScalarDoubleHolder radius) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.layout = layout;
 		this.xVector = xVector;
 		this.yVector = yVector;
@@ -79,10 +77,6 @@ public class DiscreteSequenceGraph extends AbstractAreaSimpleGraph {
 			}
 			g.setColor(ca);
 		}
-	}
-
-	public String getKey() {
-		return name;
 	}
 
 	public void detach() throws Exception {

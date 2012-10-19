@@ -231,7 +231,7 @@ public class MathList implements MathObject, CreatesPath, HasGraph,
 		}
 	} // get
 
-	public Object getKey() {
+	public Object getIdentifier() {
 		return name;
 	} // getKey
 
@@ -286,7 +286,7 @@ public class MathList implements MathObject, CreatesPath, HasGraph,
 			} else if (element instanceof UserFunction) {
 				buffer.append(((UserFunction) element).getTermString(this));
 			} else if (element instanceof MathObject) {
-				buffer.append(((MathObject) element).getKey() + "");
+				buffer.append(((MathObject) element).getIdentifier() + "");
 			} else {
 				buffer.append(element.toString());
 			} // else

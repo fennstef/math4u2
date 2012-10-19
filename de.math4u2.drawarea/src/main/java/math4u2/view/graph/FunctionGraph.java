@@ -7,8 +7,10 @@ import java.awt.geom.GeneralPath;
 
 import math4u2.util.exception.ExceptionManager;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
+import math4u2.view.graph.util.FixedScalarStringValueHolder;
 import math4u2.view.graph.util.IFunction1;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.SimpleScalarDoubleValueHolder;
 
 /**
@@ -40,9 +42,19 @@ public class FunctionGraph extends AbstractSimpleGraph{
 	private IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> evalFunction;
 
 	public FunctionGraph(DrawAreaInterface da, IGraphSettings settings, IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> evalFunction) {
-		super(da, settings);
+		super(da, settings, createNameFromKey(evalFunction));
 		this.evalFunction = evalFunction;
 	} //Konstruktor
+
+	private static IScalarStringHolder createNameFromKey(
+			final  IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> evalFunction) {
+		return new FixedScalarStringValueHolder() {
+			@Override
+			public String getScalarOrNull() {
+				return evalFunction.getKey();
+			}
+		};
+	}
 
 	public void paintGraph(Graphics gr) {
 		if (isVisible()) {
@@ -78,7 +90,7 @@ public class FunctionGraph extends AbstractSimpleGraph{
 					sdr.setScalar(da.xPixToCoord(x), false);
 					d[0] = evalFunction.eval(sdr).getScalarOrNan();
 				} catch (Throwable e) {
-					ExceptionManager.doError("Fehler beim Zeichnen des Funktions-Graphen "+getKey(),e);
+					ExceptionManager.doError("Fehler beim Zeichnen des Funktions-Graphen "+getIdentifier(),e);
 					exceptionCounter++;
 				}//catch
 				x += detail;
@@ -90,7 +102,7 @@ public class FunctionGraph extends AbstractSimpleGraph{
 						d[i] = Double.NaN;
 						if(exceptionCounter==0){
 							exceptionCounter++;
-							ExceptionManager.doError("Fehler beim Zeichnen des Funktions-Graphen "+getKey(),e);
+							ExceptionManager.doError("Fehler beim Zeichnen des Funktions-Graphen "+getIdentifier(),e);
 						}
 					}//catch
 					if (d[i] < yMin)
@@ -193,10 +205,6 @@ public class FunctionGraph extends AbstractSimpleGraph{
 		gp.lineTo(history[P1_X], history[P1_Y ]);
 		historySize=0;
 		return history[P1_X];
-	}
-
-	public String getKey() {
-		return evalFunction.getKey();
 	}
 
 	public void detach() throws Exception {

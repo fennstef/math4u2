@@ -64,16 +64,12 @@ public interface ViewFactoryInterface {
 	ListViewItemInterface createCompleteDiscreteSequenceViewItem(
 			UserFunction mo, ListViewInterface alv, Broker broker);
 
-	ListViewItemInterface createCompleteDefalutViewItem(UserFunction f,
+	ListViewItemInterface createCompleteDefaultViewItem(UserFunction f,
 			ListViewInterface alv, Broker broker);
 
 	ListViewItemInterface createCompleteMouseViewItem(UserFunction f,
 			ListViewInterface alv, Broker broker);
 
 	GraphInterfaceFactory getGraphFactory();
-
-	GraphInterface createFunctionGraph(DrawAreaInterface da, UserFunction f);
-
-	GraphInterface createSimpleGraph(DrawAreaInterface da);
 
 }

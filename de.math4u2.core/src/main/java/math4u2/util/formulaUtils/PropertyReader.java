@@ -45,7 +45,16 @@ public class PropertyReader {
     public void read(String filename) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(
                 ClassLoader.getSystemResourceAsStream(filename), "UTF-8"));
-        props.clear();        
+        readFromBufferedReader(in);
+    }//read
+    
+    public void read(File file) throws IOException {    	
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        readFromBufferedReader(in);
+    }//read
+
+	private void readFromBufferedReader(BufferedReader in) throws IOException {
+		props.clear();        
         String line;
         while ((line = in.readLine()) != null) {
             line = unescape(line);
@@ -62,7 +71,7 @@ public class PropertyReader {
         }
         in.close();
         dumpProperties(System.out);
-    }//read
+	}
 
     /**
      * Liefert den zugeörigen Wert zu einem vorgegebenen Schlüsselwert.

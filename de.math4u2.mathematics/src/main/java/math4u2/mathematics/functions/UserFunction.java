@@ -31,6 +31,7 @@ import math4u2.mathematics.types.VectorType;
 import math4u2.util.exception.ExceptionManager;
 import math4u2.view.graph.GraphInterface;
 import math4u2.view.graph.HasGraph;
+import math4u2.view.graph.SimpleGraphInterface;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.gui.listview.ListViewInterface;
 import math4u2.view.gui.listview.ListViewItemInterface;
@@ -137,6 +138,7 @@ public class UserFunction extends Function implements HasCompleteView,
 		this.variables = variables;
 		this.broker = broker;
 		isValid = false;
+		if(viewFactory==null) throw new NullPointerException();
 		this.viewFactory = viewFactory;
 	}
 
@@ -418,7 +420,7 @@ public class UserFunction extends Function implements HasCompleteView,
 				return getViewFactory().getGraphFactory().createVectorElementGraph(da, (UserFunction) this);
 			}// else
 		} else if (getArity() == 1) {
-			return getViewFactory().createFunctionGraph(da, this);
+			return getViewFactory().getGraphFactory().createFunctionGraph(da, this);
 		}
 		return null;
 	}// getGraph

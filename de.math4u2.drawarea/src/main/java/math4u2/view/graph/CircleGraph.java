@@ -6,21 +6,20 @@ import java.awt.Graphics2D;
 
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 
 /**
  * Kreis-Graph
  */
 public class CircleGraph extends AbstractAreaSimpleGraph {
-	private String name;
 	private IScalarDoubleHolder x;
 	private IScalarDoubleHolder y;
 	private IScalarDoubleHolder radius;
 
 	public CircleGraph(DrawAreaInterface da, IAreaGraphSettings settings,
-			String name, IScalarDoubleHolder x, IScalarDoubleHolder y,
+			IScalarStringHolder name, IScalarDoubleHolder x, IScalarDoubleHolder y,
 			IScalarDoubleHolder radius) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
@@ -50,10 +49,6 @@ public class CircleGraph extends AbstractAreaSimpleGraph {
 			g.setColor(ca);
 		} // if visible
 	} // paintGraph
-
-	public String getKey() {
-		return name;
-	}
 
 	public void detach() throws Exception {
 	}

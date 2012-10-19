@@ -23,13 +23,12 @@ public class PointGraph extends AbstractSimpleGraph {
 			IScalarStringHolder layout, IScalarDoubleHolder xPos,
 			IScalarDoubleHolder yPos, IScalarStringHolder name,
 			IScalarStringHolder index) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		db = new DragButtonPoint(da, layout, xPos, yPos, name, index);
 	} 
 
-	public String getKey() {
-		return "%%Handle_" + da.getName() + "_" + name;
+	public String getIdentifier() {
+		return "%%Handle_" + da.getName() + "_" + name.getScalarOrNull();
 	}
 
 	public void paintGraph(Graphics gr) {		

@@ -172,7 +172,7 @@ public class TextBubble extends AbstractArea {
 		} catch (MathException e) {
 			ExceptionManager.doError(
 					"Fehler beim Holen des Parameters 'start' in der Textblase "
-							+ getKey(), e);
+							+ getIdentifier(), e);
 			throw new RuntimeException();
 		}
 	} // operator_position
@@ -192,7 +192,7 @@ public class TextBubble extends AbstractArea {
 		} catch (BrokerException e) {
 			ExceptionManager.doError(
 					"Fehler beim Erneuern des Parameters 'start' in der Textblase "
-							+ getKey(), e);
+							+ getIdentifier(), e);
 		}
 		return null;
 	} // operator_set_position

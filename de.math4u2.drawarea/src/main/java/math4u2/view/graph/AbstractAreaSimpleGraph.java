@@ -1,21 +1,14 @@
 package math4u2.view.graph;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Stroke;
 
 import math4u2.view.graph.drawarea.DrawAreaInterface;
-import math4u2.view.graph.util.LineStyleConstants;
+import math4u2.view.graph.util.IScalarStringHolder;
 
 public abstract class AbstractAreaSimpleGraph extends AbstractSimpleGraph{
 
-	public AbstractAreaSimpleGraph(DrawAreaInterface da, IGraphSettings settings) {
-		super(da,settings);
-	}
-
-	public boolean isFillArea() {
-		return ((IAreaGraphSettings)settings).isFillArea();
+	public AbstractAreaSimpleGraph(DrawAreaInterface da, IGraphSettings settings, IScalarStringHolder name) {
+		super(da,settings,name);
 	}
 
 	public Color getFillColor() {
@@ -24,10 +17,6 @@ public abstract class AbstractAreaSimpleGraph extends AbstractSimpleGraph{
 
 	public Color getBorderColor() {
 		return ((IAreaGraphSettings)settings).getBorderColor();
-	}
-
-	public void setFillArea(boolean fillArea) {
-		((IAreaGraphSettings)settings).setFillArea(fillArea);
 	}
 
 	public void setFillColor(Color fillColor) {

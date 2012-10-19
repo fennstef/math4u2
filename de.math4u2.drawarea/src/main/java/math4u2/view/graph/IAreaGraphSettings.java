@@ -4,13 +4,9 @@ import java.awt.Color;
 
 public interface IAreaGraphSettings extends IGraphSettings{
 
-	boolean isFillArea();
-
 	Color getFillColor();
 
 	Color getBorderColor();
-
-	void setFillArea(boolean fillArea);
 
 	void setFillColor(Color fillColor);
 

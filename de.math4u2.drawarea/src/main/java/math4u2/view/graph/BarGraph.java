@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.IVectorDoubleValueHolder;
 
 /**
@@ -13,17 +14,15 @@ import math4u2.view.graph.util.IVectorDoubleValueHolder;
  * 
  * @author M. Weiss
  */
-public class BarGraph extends AbstractAreaSimpleGraph{
-	private String name;
+public class BarGraph extends AbstractAreaSimpleGraph {
 	private IVectorDoubleValueHolder xVector;
 	private IVectorDoubleValueHolder yVector;
 	private IScalarDoubleHolder thickness;
 
 	public BarGraph(DrawAreaInterface da, IAreaGraphSettings settings,
-			String name, IVectorDoubleValueHolder xVector,
+			IScalarStringHolder name, IVectorDoubleValueHolder xVector,
 			IVectorDoubleValueHolder yVector, IScalarDoubleHolder thickness) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.xVector = xVector;
 		this.yVector = yVector;
 		this.thickness = thickness;
@@ -79,14 +78,9 @@ public class BarGraph extends AbstractAreaSimpleGraph{
 			}
 			g.setColor(ca);
 		}
-	} // paintGraph
-
-	public String getKey() {
-		return name;
 	}
 
 	public void detach() throws Exception {
 
 	}
-
-} // BarGraph
+}

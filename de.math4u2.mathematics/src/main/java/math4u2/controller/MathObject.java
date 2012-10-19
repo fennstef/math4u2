@@ -21,7 +21,7 @@ public interface MathObject extends RootPathObject {
 	/**
 	 * Liefert den Schlüssel, mit dem das Objekt beim Broker verwaltet wird.
 	 */
-	Object getKey();
+	Object getIdentifier();
 
 	/**
 	 * Prüft, ob das aktuelle Objekt das Objekt oldObject ersetzen kann.

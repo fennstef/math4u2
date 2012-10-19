@@ -118,7 +118,7 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
-
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("angle");
 		IVectorDoubleValueHolder v1 = new SimpleVectorDoubleValueHolder(
 				new double[] { 1, -1 });
 		IVectorDoubleValueHolder v2 = new SimpleVectorDoubleValueHolder(
@@ -127,7 +127,7 @@ public class RunDrawArea {
 		IScalarDoubleHolder y = new SimpleScalarDoubleValueHolder(0);
 		IScalarDoubleHolder r = new SimpleScalarDoubleValueHolder(2);
 		SimpleGraphInterface graph = new AngleGraph(da,
-				new DefaultAreaGraphSettings(), "angle", v1, v2, x, y, r);
+				new DefaultAreaGraphSettings(), name, v1, v2, x, y, r);
 		graph.setColor(Color.red);
 		da.addGraph(graph);
 
@@ -140,16 +140,17 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("arrow");
 		SimpleScalarDoubleValueHolder x = new SimpleScalarDoubleValueHolder(1);
 		SimpleScalarDoubleValueHolder y = new SimpleScalarDoubleValueHolder(1);
 		IVectorDoubleValueHolder v = new SimpleVectorDoubleValueHolder(
 				new double[] { 1, -1 });
 		SimpleGraphInterface graph = new ArrowGraph(da,
-				new DefaultGraphSettings(), "arrow", x, y, v);
+				new DefaultGraphSettings(), name, x, y, v);
 		graph.setColor(Color.red);
 		da.addGraph(graph);
 
-		graph = new ArrowGraph(da, new DefaultGraphSettings(), "arrow",
+		graph = new ArrowGraph(da, new DefaultGraphSettings(), name,
 				new SimpleScalarDoubleValueHolder(0),
 				new SimpleScalarDoubleValueHolder(0), v);
 		graph.setColor(Color.green);
@@ -164,13 +165,14 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("bar");
 		SimpleScalarDoubleValueHolder t = new SimpleScalarDoubleValueHolder(0.9);
 		IVectorDoubleValueHolder vx = new SimpleVectorDoubleValueHolder(
 				new double[] { 0, 1, 2, 3, 4 });
 		IVectorDoubleValueHolder vy = new SimpleVectorDoubleValueHolder(
 				new double[] { 1, 4, -2, 3, -4 });
 		BarGraph graph = new BarGraph(da, new DefaultAreaGraphSettings(),
-				"bar", vx, vy, t);
+				name, vx, vy, t);
 		graph.setFillColor(Color.green);
 		graph.setBorderColor(Color.blue);
 		da.addGraph(graph);
@@ -184,9 +186,10 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("bezier");
 		SimpleScalarDoubleValueHolder t = new SimpleScalarDoubleValueHolder(0.9);
 		BezierGraph graph = new BezierGraph(da, new DefaultAreaGraphSettings(),
-				"bezier", new SimpleScalarDoubleValueHolder(0),
+				name, new SimpleScalarDoubleValueHolder(0),
 				new SimpleScalarDoubleValueHolder(0),
 				new SimpleScalarDoubleValueHolder(1),
 				new SimpleScalarDoubleValueHolder(10),
@@ -206,8 +209,9 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("circle");
 		CircleGraph graph = new CircleGraph(da, new DefaultAreaGraphSettings(),
-				"circle", new SimpleScalarDoubleValueHolder(0),
+				name, new SimpleScalarDoubleValueHolder(0),
 				new SimpleScalarDoubleValueHolder(1),
 				new SimpleScalarDoubleValueHolder(2));
 		graph.setFillColor(Color.green);
@@ -223,6 +227,7 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("curve");
 		IScalarDoubleHolder minT = new SimpleScalarDoubleValueHolder(-5);
 		IScalarDoubleHolder maxT = new SimpleScalarDoubleValueHolder(20);
 		IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> xFunction = new IFunction1<IScalarDoubleHolder, IScalarDoubleHolder>() {
@@ -249,7 +254,7 @@ public class RunDrawArea {
 			}
 		};
 		CurveGraph graph = new CurveGraph(da, new DefaultGraphSettings(),
-				"cure", minT, maxT, xFunction, yFunction);
+				name, minT, maxT, xFunction, yFunction);
 		graph.setColor(Color.blue);
 		da.addGraph(graph);
 
@@ -262,13 +267,14 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("discrete");
 		IVectorDoubleValueHolder xVector = new SimpleVectorDoubleValueHolder(
 				new double[] { 1, 1, 2, 3, 4 });
 		IVectorDoubleValueHolder yVector = new SimpleVectorDoubleValueHolder(
 				new double[] { 1, 2, 1, 4, 3 });
 		IScalarDoubleHolder radius = new SimpleScalarDoubleValueHolder(4);
 		DiscreteGraph graph = new DiscreteGraph(da,
-				new DefaultAreaGraphSettings(), "discrete", xVector, yVector,
+				new DefaultAreaGraphSettings(), name, xVector, yVector,
 				radius);
 		graph.setFillColor(Color.green);
 		graph.setBorderColor(Color.blue);
@@ -284,6 +290,7 @@ public class RunDrawArea {
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
 
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("discreteSeq");
 		IScalarStringHolder layout = new SimpleScalarStringValueHolder("SP");
 		IVectorDoubleValueHolder xVector = new SimpleVectorDoubleValueHolder(
 				new double[] { 1, 1, 2, 3, 4 });
@@ -291,7 +298,7 @@ public class RunDrawArea {
 				new double[] { 1, 2, 1, 4, 3 });
 		IScalarDoubleHolder radius = new SimpleScalarDoubleValueHolder(6);
 		DiscreteSequenceGraph graph = new DiscreteSequenceGraph(da,
-				new DefaultAreaGraphSettings(), "discrete", layout, xVector,
+				new DefaultAreaGraphSettings(), name, layout, xVector,
 				yVector, radius);
 		graph.setFillColor(Color.green);
 		graph.setBorderColor(Color.blue);
@@ -306,6 +313,7 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("fieldVector");
 		IScalarStringHolder layout = new SimpleScalarStringValueHolder("VN");
 		IScalarDoubleHolder refX = new SimpleScalarDoubleValueHolder(0);
 		IScalarDoubleHolder refY = new SimpleScalarDoubleValueHolder(0);
@@ -313,7 +321,6 @@ public class RunDrawArea {
 		IScalarDoubleHolder distY = new SimpleScalarDoubleValueHolder(0.5);
 		IScalarDoubleHolder cutoff = new SimpleScalarDoubleValueHolder(5);
 		IFunction2<IVectorDoubleValueHolder, IScalarDoubleHolder, IScalarDoubleHolder> fieldFunction = new IFunction2<IVectorDoubleValueHolder, IScalarDoubleHolder, IScalarDoubleHolder>() {
-
 			public String getKey() {
 				return "evalFunc";
 			}
@@ -327,7 +334,7 @@ public class RunDrawArea {
 		};
 
 		FieldVectorGraph graph = new FieldVectorGraph(da,
-				new DefaultGraphSettings(), "fieldVector", layout, refX, refY,
+				new DefaultGraphSettings(), name, layout, refX, refY,
 				distX, distY, cutoff, fieldFunction);
 		graph.setColor(Color.blue);
 		da.addGraph(graph);
@@ -367,12 +374,13 @@ public class RunDrawArea {
 		JFrame frame = createFrame();
 		final DrawArea da = createDrawArea();
 		frame.getContentPane().add(da);
+		IScalarStringHolder name = new SimpleScalarStringValueHolder("marker");
 		IScalarStringHolder layout = new SimpleScalarStringValueHolder(
 				"circle_cross");
 		IScalarDoubleHolder xPos = new SimpleScalarDoubleValueHolder(1);
 		IScalarDoubleHolder yPos = new SimpleScalarDoubleValueHolder(1);
 		MarkerGraph graph = new MarkerGraph(da, new DefaultGraphSettings(),
-				"marker", layout, xPos, yPos);
+				name, layout, xPos, yPos);
 		graph.setColor(Color.blue);
 		da.addGraph(graph);
 

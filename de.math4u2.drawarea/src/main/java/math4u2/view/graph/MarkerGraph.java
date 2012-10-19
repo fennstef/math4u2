@@ -18,15 +18,14 @@ public class MarkerGraph extends AbstractSimpleGraph {
 
 	private static final int RADIUS = 5;
 
-	private String name;
 	private IScalarDoubleHolder xPos;
 	private IScalarDoubleHolder yPos;
 	private IScalarStringHolder layout;
 
-	public MarkerGraph(DrawAreaInterface da, IGraphSettings settings, String name,
+	public MarkerGraph(DrawAreaInterface da, IGraphSettings settings, IScalarStringHolder name,
 			IScalarStringHolder layout, IScalarDoubleHolder xPos,
 			IScalarDoubleHolder yPos) {
-		super(da, settings);
+		super(da, settings, name);
 		this.layout = layout;
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -63,10 +62,6 @@ public class MarkerGraph extends AbstractSimpleGraph {
 			}
 			g.setColor(ca);
 		}
-	}
-
-	public String getKey() {
-		return name;
 	}
 
 	public void detach() throws Exception {

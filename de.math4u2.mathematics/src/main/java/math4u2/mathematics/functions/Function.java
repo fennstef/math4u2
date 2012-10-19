@@ -78,6 +78,10 @@ public abstract class Function implements MathObject, CreatesPath {
 	public ViewFactoryInterface getViewFactory() {
 		return viewFactory;
 	}
+	
+	public static void setViewFactory(ViewFactoryInterface viewFactory){
+		Function.viewFactory = viewFactory;
+	}
 
 	/**
 	 * Muss von Funktionen, die besondere Anforderung an die Argumentterme
@@ -220,7 +224,7 @@ public abstract class Function implements MathObject, CreatesPath {
 					f = (Function) (fncClass.getConstructors())[0]
 							.newInstance(new Object[] {});
 					if (f instanceof StandardFunction)
-						broker.publishObject(f, (String) f.getKey());
+						broker.publishObject(f, (String) f.getIdentifier());
 				} catch (BrokerException e) {
 					ExceptionManager.doError(e);
 				} catch (ClassNotFoundException e) {
@@ -269,7 +273,7 @@ public abstract class Function implements MathObject, CreatesPath {
 		// Überprüfung, ob alles in Ordnung ist
 		if (!(f instanceof Function))
 			throw new IllegalArgumentException("Das Objekt mit dem Schlüssel "
-					+ f.getKey() + " muß eine Funktion sein. Ist aber "
+					+ f.getIdentifier() + " muß eine Funktion sein. Ist aber "
 					+ f.getClass());
 		// for (Iterator iter = partsWithPath.iterator(); iter.hasNext();) {
 		// MathObjectPath mop = (MathObjectPath)iter.next();
@@ -408,7 +412,7 @@ public abstract class Function implements MathObject, CreatesPath {
 	 * Funktionen werden über ihre Namen verwaltet. getKey() liefert einen
 	 * String, der den Namen der Funktion enthält.
 	 */
-	public Object getKey() {
+	public Object getIdentifier() {
 		return name;
 	} // getKey
 

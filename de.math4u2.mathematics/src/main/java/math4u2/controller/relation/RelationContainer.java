@@ -419,7 +419,7 @@ public class RelationContainer{
 		//eigenes Objekt hinzufügen, wenn dieses gelöscht werden darf
 		if (!fromObject.testDelete())
 			throw new DeleteRelationException("Das Objekt mit dem Schlüssel '"
-					+ fromObject.getKey() + "' läßt sich nicht löschen.");
+					+ fromObject.getIdentifier() + "' läßt sich nicht löschen.");
 		objectsToDelete.add(fromObject);
 
 		Iterator iter = getAllRelationsIterator();
@@ -497,7 +497,7 @@ public class RelationContainer{
 	 */
 	public String toString(String indent) {
 		StringBuffer sb = new StringBuffer();
-		String name = (String) owner.getKey();
+		String name = (String) owner.getIdentifier();
 		if (name == null)
 			name = "?" + owner.toString().replaceAll("null:=", "");
 		//name = tryToGetFullName(owner, "");
@@ -541,8 +541,8 @@ public class RelationContainer{
 	 * @return Vollständiger Name
 	 */
 	public static String tryToGetFullName(MathObject mo, String partName) {
-		if (mo.getKey() != null) {
-			return (String) mo.getKey() + partName;
+		if (mo.getIdentifier() != null) {
+			return (String) mo.getIdentifier() + partName;
 		}//if
 		Iterator iter = mo.getRelationContainer().getAllRelationsIterator();
 		MathObject partner=null;
@@ -638,8 +638,8 @@ public class RelationContainer{
 					continue;
 				} else if (isDele2 == Role.DELETE_NO) {
 					throw new DeleteRelationException("Der Partner '"
-							+ r.getPartner(fromObject).getKey()
-							+ "' des Objekts '" + fromObject.getKey()
+							+ r.getPartner(fromObject).getIdentifier()
+							+ "' des Objekts '" + fromObject.getIdentifier()
 							+ "' erlaubt nicht das Löschen.");
 				} else if (isDele2 == Role.DELETE_ASK_PARTNER) {
 					throw new IllegalRelationConnectionException(

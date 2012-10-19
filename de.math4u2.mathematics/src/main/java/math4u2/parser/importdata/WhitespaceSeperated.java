@@ -117,7 +117,7 @@ public class WhitespaceSeperated implements ImportData {
 
 public static void exportData(MathObject obj, JFrame frame){
 		if(!(obj instanceof UserFunction)){
-			ExceptionManager.doError("Daten können nicht exportiert werden. (Objekt "+obj.getKey()+" ist vom Typ "+obj.getClass()+")");
+			ExceptionManager.doError("Daten können nicht exportiert werden. (Objekt "+obj.getIdentifier()+" ist vom Typ "+obj.getClass()+")");
 			return;
 		}//if
 		
@@ -125,7 +125,7 @@ public static void exportData(MathObject obj, JFrame frame){
 		try {
 			result = ((UserFunction)obj).eval();
 		} catch (MathException e) {
-			ExceptionManager.doError("Fehler beim Evaluieren der Funktion "+obj.getKey(),e);
+			ExceptionManager.doError("Fehler beim Evaluieren der Funktion "+obj.getIdentifier(),e);
 			return;
 		}//catch
 		
@@ -134,7 +134,7 @@ public static void exportData(MathObject obj, JFrame frame){
 			return;			
 		}//if
 		
-		fc.setDialogTitle("Export des Objekts "+obj.getKey());
+		fc.setDialogTitle("Export des Objekts "+obj.getIdentifier());
 		int returnVal = fc.showSaveDialog(frame);
 
 		if (returnVal != JFileChooser.APPROVE_OPTION) {

@@ -145,7 +145,7 @@ public abstract class Variable extends TermNode implements RootPathObject,
 		return name;
 	} // getTermString
 
-	public Object getKey() {
+	public Object getIdentifier() {
 		return name;
 	}//getKey
 

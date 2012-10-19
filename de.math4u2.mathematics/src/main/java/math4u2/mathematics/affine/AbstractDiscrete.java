@@ -136,6 +136,18 @@ public abstract class AbstractDiscrete extends AbstractArea {
 			return 0;
 		return ((ScalarDoubleResult) rFunc.eval()).value;
 	} // getRadius
+	
+	public UserFunction getRadiusFunction(){
+		return rFunc;
+	}
+	
+	public UserFunction getXVector(){
+		return xVector;
+	}
+	
+	public UserFunction getYVector(){
+		return yVector;
+	}
 
 	public Object operator_set_vektor1(Object[] values) {
 		TermNode tm;
@@ -146,7 +158,7 @@ public abstract class AbstractDiscrete extends AbstractArea {
 			broker.propagateChange(xVector);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_vektor1
@@ -164,7 +176,7 @@ public abstract class AbstractDiscrete extends AbstractArea {
 			broker.propagateChange(yVector);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_vektor2
@@ -182,7 +194,7 @@ public abstract class AbstractDiscrete extends AbstractArea {
 			broker.propagateChange(rFunc);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'rFunc' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_radius
@@ -193,7 +205,7 @@ public abstract class AbstractDiscrete extends AbstractArea {
 
 	public ListViewItemInterface getCompleteView(UserFunction f,
 			ListViewInterface alv, Broker broker) {
-		return viewFactory.createCompleteDefalutViewItem(f, alv, broker);
+		return viewFactory.createCompleteDefaultViewItem(f, alv, broker);
 	}// getCompleteView
 
 } // class AbstractDiscrete

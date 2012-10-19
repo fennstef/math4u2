@@ -32,7 +32,7 @@ public abstract class StandardFunction extends Function {
 	public MathObject constructSubstitution(MathObject oldObject)
 			throws Exception {
 		throw new Exception("Redefinition der Standard-Funktion "
-				+ (String) (oldObject.getKey()) + " nicht möglich");
+				+ (String) (oldObject.getIdentifier()) + " nicht möglich");
 	}
 
 	/**

@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Stroke;
 
 import math4u2.view.graph.drawarea.DrawAreaInterface;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.LineStyleConstants;
 
 /**
@@ -22,10 +23,12 @@ public abstract class AbstractSimpleGraph implements SimpleGraphInterface,
 
 	protected DrawAreaInterface da;
 	protected IGraphSettings settings;
+	private IScalarStringHolder name;
 
-	public AbstractSimpleGraph(DrawAreaInterface da, IGraphSettings settings) {
+	public AbstractSimpleGraph(DrawAreaInterface da, IGraphSettings settings, IScalarStringHolder name) {
 		this.da = da;
 		this.settings = settings;
+		this.name = name;
 	}
 
 	abstract public void paintGraph(Graphics gr);
@@ -114,8 +117,11 @@ public abstract class AbstractSimpleGraph implements SimpleGraphInterface,
 	public Stroke getStroke() {
 		return getStroke(da.getStroke(), getLineStyle());
 	}
-
-
+	
+	public String getIdentifier() {
+		return name.getScalarOrNull();
+	}
+	
 	public void detach() throws Exception {
 	}
 

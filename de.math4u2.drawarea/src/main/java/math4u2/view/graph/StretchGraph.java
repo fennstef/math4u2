@@ -14,15 +14,13 @@ import math4u2.view.graph.util.IVectorDoubleValueHolder;
  */
 
 public class StretchGraph extends AbstractSimpleGraph {
-	private IScalarStringHolder name;
 	private IVectorDoubleValueHolder start;
 	private IVectorDoubleValueHolder end;
 
 	public StretchGraph(DrawAreaInterface da, IGraphSettings settings,
 			IScalarStringHolder name, IVectorDoubleValueHolder start,
 			IVectorDoubleValueHolder end) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.start = start;
 		this.end = end;
 	} // Konstruktor
@@ -41,7 +39,7 @@ public class StretchGraph extends AbstractSimpleGraph {
 				ve = end.getVector();
 			} catch (Exception e) {
 				ExceptionManager.doError("Fehler beim Zeichnen der Strecke "
-						+ getKey(), e);
+						+ getIdentifier(), e);
 				return;
 			}
 			
@@ -141,10 +139,6 @@ public class StretchGraph extends AbstractSimpleGraph {
 			retval = false;
 
 		return new double[] { (retval ? 1.0 : 0), u1, u2 };
-	}
-
-	public String getKey() {
-		return name.getScalarOrNull();
 	}
 
 	public void detach() throws Exception {

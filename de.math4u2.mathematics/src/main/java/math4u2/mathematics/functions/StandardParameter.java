@@ -80,6 +80,6 @@ public abstract class StandardParameter extends StandardFunction {
 	 * @return Name des Parameters.
 	 */
 	public String buildTermString(String[] terms) {
-		return (String) getKey();
+		return (String) getIdentifier();
 	}
 }

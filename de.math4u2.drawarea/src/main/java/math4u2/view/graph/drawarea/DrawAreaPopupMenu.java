@@ -337,9 +337,9 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 
 				while (iter.hasNext()) {
 					final SimpleGraphInterface gi = (SimpleGraphInterface) iter.next();
-					if (gi.getKey() == null)
+					if (gi.getIdentifier() == null)
 						continue;
-					JMenuItem item = new JMenuItem(gi.getKey() + "");
+					JMenuItem item = new JMenuItem(gi.getIdentifier() + "");
 					item.addActionListener(new DeleteGraphAction(gi));
 					deleteGraph.add(item);
 				} 
@@ -370,7 +370,7 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 				drawArea.removeGraph(gi);
 				gi.detach();
 			} catch (Exception e1) {
-				ExceptionManager.doError("Fehler beim Löschvorgang von "+gi.getKey(),e1);
+				ExceptionManager.doError("Fehler beim Löschvorgang von "+gi.getIdentifier(),e1);
 			} 
 		} 
 	} //class DeleteGraphAction

@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import math4u2.util.exception.ExceptionManager;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.IVectorDoubleValueHolder;
 
 /**
@@ -15,16 +16,14 @@ import math4u2.view.graph.util.IVectorDoubleValueHolder;
  * @author M. Weiss
  */
 public class DiscreteGraph extends AbstractAreaSimpleGraph {
-	private String name;
 	private IVectorDoubleValueHolder xVector;
 	private IVectorDoubleValueHolder yVector;
 	private IScalarDoubleHolder radius;
 
 	public DiscreteGraph(DrawAreaInterface da, IAreaGraphSettings settings,
-			String name, IVectorDoubleValueHolder xVector,
+			IScalarStringHolder name, IVectorDoubleValueHolder xVector,
 			IVectorDoubleValueHolder yVector, IScalarDoubleHolder radius) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.xVector = xVector;
 		this.yVector = yVector;
 		this.radius = radius;
@@ -63,12 +62,7 @@ public class DiscreteGraph extends AbstractAreaSimpleGraph {
 			g.setColor(ca);
 		}
 	}
-
-	public String getKey() {
-		return name;
-	}
-
+	
 	public void detach() throws Exception {
 	}
-
-} // DiscreteGraph
+}

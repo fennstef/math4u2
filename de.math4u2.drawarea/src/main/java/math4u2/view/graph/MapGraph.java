@@ -18,8 +18,10 @@ import math4u2.util.exception.ExceptionManager;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.gradient.GradientPainter;
 import math4u2.view.graph.gradient.GradientSegment;
+import math4u2.view.graph.util.FixedScalarStringValueHolder;
 import math4u2.view.graph.util.IFunction2;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.IVectorDoubleValueHolder;
 import math4u2.view.graph.util.SimpleScalarDoubleValueHolder;
 
@@ -43,7 +45,7 @@ public class MapGraph extends AbstractSimpleGraph {
 	/** Schwarz Transparent für unteren Bereich */
 	private final int BLACK_TRANSPARENT = new Color(0, 0, 0, 100).getRGB();
 
-	public String getKey() {
+	public String getIdentifier() {
 		return evalFunction.getKey();
 	}
 
@@ -299,11 +301,21 @@ public class MapGraph extends AbstractSimpleGraph {
 			IVectorDoubleValueHolder bandVector,
 			IScalarDoubleHolder contourDelta,
 			IFunction2<IScalarDoubleHolder, IScalarDoubleHolder, IScalarDoubleHolder> evalFunction) {
-		super(da,settings);
+		super(da,settings, createNameFromKey(evalFunction));
 		this.bandVector = bandVector;
 		this.contourDelta = contourDelta;
 		this.evalFunction = evalFunction;
-	} // Konstruktor
+	}
+	
+	private static IScalarStringHolder createNameFromKey(
+			final  IFunction2<?, ?, ?> evalFunction) {
+		return new FixedScalarStringValueHolder() {
+			@Override
+			public String getScalarOrNull() {
+				return evalFunction.getKey();
+			}
+		};
+	}
 
 	public void paintGraph(Graphics gr) {
 		final Graphics2D g = (Graphics2D) gr;

@@ -50,7 +50,7 @@ public class PathReference extends TermNode implements MathObjectReference {
 		} catch (CreatePathException e) {
 			throw new RuntimeException(
 					"Der Methodenpfad konnte nicht erstellt werden ("
-							+ root.getKey() + ", " + methods + ").\n"
+							+ root.getIdentifier() + ", " + methods + ").\n"
 							+ e.getMessage());
 		}// catch
 
@@ -136,8 +136,8 @@ public class PathReference extends TermNode implements MathObjectReference {
 		String stepStr = "";
 		if (step != null)
 			stepStr = step.getPathString();
-		String rootKey = (String) root.getKey();
-		if (root.getKey() == null) {
+		String rootKey = (String) root.getIdentifier();
+		if (root.getIdentifier() == null) {
 			if (root instanceof UserFunction) {
 				rootKey = ((UserFunction) root).getTermString();
 			} else if (root instanceof AbstractAffineObject) {
@@ -174,7 +174,7 @@ public class PathReference extends TermNode implements MathObjectReference {
 	} // getReturnType
 
 	public String toString() {
-		return root.getKey() + "." + step;
+		return root.getIdentifier() + "." + step;
 	} // toString
 
 	// --------------------------------------------------------------

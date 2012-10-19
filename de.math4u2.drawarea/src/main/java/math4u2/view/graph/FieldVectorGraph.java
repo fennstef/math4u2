@@ -18,7 +18,6 @@ import math4u2.view.graph.util.SimpleScalarDoubleValueHolder;
  * 
  */
 public class FieldVectorGraph extends AbstractSimpleGraph {
-	private String name;
 	private IScalarStringHolder layout;
 	private IScalarDoubleHolder refX;
 	private IScalarDoubleHolder refY;
@@ -30,7 +29,7 @@ public class FieldVectorGraph extends AbstractSimpleGraph {
 	public FieldVectorGraph(
 			DrawAreaInterface da,
 			IGraphSettings settings,
-			String name,
+			IScalarStringHolder name,
 			IScalarStringHolder layout,
 			IScalarDoubleHolder refX,
 			IScalarDoubleHolder refY,
@@ -40,8 +39,7 @@ public class FieldVectorGraph extends AbstractSimpleGraph {
 			IFunction2<IVectorDoubleValueHolder, IScalarDoubleHolder, IScalarDoubleHolder> fieldFunction
 
 	) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.layout = layout;
 		this.refX = refX;
 		this.refY = refY;
@@ -223,12 +221,8 @@ public class FieldVectorGraph extends AbstractSimpleGraph {
 
 			g.setColor(ca);
 			g.setStroke(str);
-		} // if visible
-	} // paintGraph
-
-	public String getKey() {
-		return name;
-	}
+		} 
+	} 
 
 	public void detach() throws Exception {
 	}

@@ -166,14 +166,13 @@ public class Map extends AbstractAffineObject {
 	public double getContourDelta() {
 		return contourDelta;
 	}//getContourDelta
-
 	
 	public void setContourDelta(double contourDelta) {
 		this.contourDelta = contourDelta;
 		try {
 			broker.propagateChange(this);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler beim Erneuern ("+getKey()+").",e);
+			ExceptionManager.doError("Fehler beim Erneuern ("+getIdentifier()+").",e);
 		}
 	}//setContourDelta    
 
@@ -192,7 +191,7 @@ public class Map extends AbstractAffineObject {
 		try {
 			broker.propagateChange(mapFunc);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler beim Erneuern durch das Setzten der Kartenfunktion ("+getKey()+").",e);
+			ExceptionManager.doError("Fehler beim Erneuern durch das Setzten der Kartenfunktion ("+getIdentifier()+").",e);
 		}
 		return null;
 	} //operator_mapFunction
@@ -212,7 +211,7 @@ public class Map extends AbstractAffineObject {
 		try {
 			broker.propagateChange(bandVector);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler beim Erneuern durch das Setzen der Höhenlinien ("+getKey()+").",e);
+			ExceptionManager.doError("Fehler beim Erneuern durch das Setzen der Höhenlinien ("+getIdentifier()+").",e);
 		}
 		return null;
 	} //operator_bandVector

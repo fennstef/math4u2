@@ -7,13 +7,13 @@ import java.awt.geom.CubicCurve2D;
 
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IScalarDoubleHolder;
+import math4u2.view.graph.util.IScalarStringHolder;
 
 /**
  * Bezier-Graph
  */
 
 public class BezierGraph extends AbstractSimpleGraph {
-	private String name;
 	private IScalarDoubleHolder startPointX;
 	private IScalarDoubleHolder startPointY;
 	private IScalarDoubleHolder startDirX;
@@ -24,13 +24,12 @@ public class BezierGraph extends AbstractSimpleGraph {
 	private IScalarDoubleHolder endDirY;
 
 	public BezierGraph(DrawAreaInterface da, IGraphSettings settings,
-			String name, IScalarDoubleHolder startPointX,
+			IScalarStringHolder name, IScalarDoubleHolder startPointX,
 			IScalarDoubleHolder startPointY, IScalarDoubleHolder startDirX,
 			IScalarDoubleHolder startDirY, IScalarDoubleHolder endPointX,
 			IScalarDoubleHolder endPointY, IScalarDoubleHolder endDirX,
 			IScalarDoubleHolder endDirY) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.startPointX = startPointX;
 		this.startPointY = startPointY;
 		this.startDirX = startDirX;
@@ -67,11 +66,7 @@ public class BezierGraph extends AbstractSimpleGraph {
 			g.setColor(ca);
 		} // if visible
 	} // paintGraph
-
-	public String getKey() {
-		return name;
-	}
-
+	
 	public void detach() throws Exception {
 	}
 } // class BezierGraph

@@ -139,7 +139,7 @@ public class Arrow extends AbstractAffineObject {
 				pr.removeLastEval();
 			} catch (Exception e) {
 				ExceptionManager.doError("Fehler beim Holen des Vektors ("
-						+ getKey() + ").", e);
+						+ getIdentifier() + ").", e);
 			}
 			return (UserFunction) pr.eval();
 		} else
@@ -197,7 +197,7 @@ public class Arrow extends AbstractAffineObject {
 			broker.propagateChange(startPoint);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'start' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_start
@@ -226,7 +226,7 @@ public class Arrow extends AbstractAffineObject {
 			broker.propagateChange(vector);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'richtung' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_richtung

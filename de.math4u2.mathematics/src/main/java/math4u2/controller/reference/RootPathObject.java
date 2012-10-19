@@ -9,6 +9,6 @@ public interface RootPathObject {
 	/**
 	 * @return
 	 */
-	Object getKey();
+	Object getIdentifier();
 
 }

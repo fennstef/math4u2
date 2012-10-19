@@ -42,7 +42,7 @@ import math4u2.view.graph.HasGraph;
  * werden dürfen.
  * 
  * @author Fenn Stefan
- * @see MathObject#getKey()
+ * @see MathObject#getIdentifier()
  * @see RelationInterface
  */
 public class Broker {
@@ -342,7 +342,7 @@ public class Broker {
 	 */
 	public void defineRelations(MathObject object, List parts, List relations,
 			boolean isSwap) throws BrokerException {
-		Object newKey = object.getKey();
+		Object newKey = object.getIdentifier();
 		MathObject oldObject = getObject(newKey);
 		Set superSet = null;
 		if (oldObject != null)
@@ -406,17 +406,17 @@ public class Broker {
 	 * Trägt die neue Beziehung ein. Beide Objekte müssen beim Broker bekannt
 	 * sein. Die Objekte werden dabei mit getKey() neu gesucht.
 	 * 
-	 * @see MathObject#getKey()
+	 * @see MathObject#getIdentifier()
 	 */
 	public void addRelation(MathObject firstObject, MathObject secondObject,
 			RelationInterface relation, boolean isSwap) throws BrokerException {
 		//Hier werden die Objekt nochmals neu vom Broker refrenziert, wenn
 		// diese einen Schlüssel haben.
 		//Muß das unbeding sein ???
-		if (firstObject.getKey() != null)
-			firstObject = getObject(firstObject.getKey());
-		if (secondObject.getKey() != null)
-			secondObject = getObject(secondObject.getKey());
+		if (firstObject.getIdentifier() != null)
+			firstObject = getObject(firstObject.getIdentifier());
+		if (secondObject.getIdentifier() != null)
+			secondObject = getObject(secondObject.getIdentifier());
 
 		//sind die beiden Objekte im Broker definiert
 		if (firstObject == null)
@@ -473,7 +473,7 @@ public class Broker {
 		//Event werfen an alle Listener
 		for (Iterator iter = brokerListeners.iterator(); iter.hasNext();) {
 			BrokerListener listener = (BrokerListener) iter.next();
-			listener.objectDeleted(new BrokerEvent(mo, (String) mo.getKey()));
+			listener.objectDeleted(new BrokerEvent(mo, (String) mo.getIdentifier()));
 		} //for iter
 	} //deleteObject
 
@@ -798,8 +798,8 @@ public class Broker {
 				RelationContainer.disconnect((RelationInterface) iter2.next());
 			} //while
 			//Objekt aus der Brokerliste löschen
-			if(element==objectDic.get(element.getKey()))
-				objectDic.remove(element.getKey());
+			if(element==objectDic.get(element.getIdentifier()))
+				objectDic.remove(element.getIdentifier());
 			element.prepareDelete();
 		} //for iter
 	} //deleteProvedObjectSet
@@ -880,7 +880,7 @@ public class Broker {
 	 */
 private void makeSubstitution(MathObject newObject, MathObject oldObject,
             String name) throws BrokerException, ObjectNotInRelationException {
-        String key = (String) oldObject.getKey();
+        String key = (String) oldObject.getIdentifier();
         
         proveSubstitutionOperability(oldObject,newObject);
         
@@ -975,7 +975,7 @@ private void makeSubstitution(MathObject newObject, MathObject oldObject,
         } //for iter
 
         //neues Objekt beim Broker veröffentlichen, falls vorhanden
-        Object oldObjectKey = oldObject.getKey();
+        Object oldObjectKey = oldObject.getIdentifier();
         if (objectDic.get(oldObjectKey) != null){
             objectDic.put(oldObjectKey, newObject);
             newObject.setName(oldObjectKey.toString());
@@ -1046,7 +1046,7 @@ private void makeSubstitution(MathObject newObject, MathObject oldObject,
             }//if StandardFunction
             throw new BrokerException("Das Objekt mit dem Schlüssel "
                     + RelationContainer.tryToGetFullName(oldObject, "")
-                    + " konnte nicht mit " + newObject.getKey()
+                    + " konnte nicht mit " + newObject.getIdentifier()
                     + " substituiert werden.");
         }//if           
       
@@ -1063,7 +1063,7 @@ private void makeSubstitution(MathObject newObject, MathObject oldObject,
         	
 			throw new BrokerException(
 					"Das Objekt mit dem Schlüssel "
-							+ newObject.getKey()
+							+ newObject.getIdentifier()
 							+ " kann nicht substituiert werden. Das Objekt muß den gleichen Typen haben.\n\nZuvor: "
 							+ oldStr + "\nDanach: "
 							+ newStr
@@ -1087,7 +1087,7 @@ private void makeSubstitution(MathObject newObject, MathObject oldObject,
 			if(oldVars.length != newVars.length){
 				throw new BrokerException(
 						"Das Objekt mit dem Schlüssel "
-								+ newObject.getKey()
+								+ newObject.getIdentifier()
 								+ " kann nicht substituiert werden. Das Objekt muß genauso viele Argumente haben.\n\nZuvor: "
 								+ oldFunc.getDefinitionHeader()
 								+ "\nDanach: "
@@ -1142,7 +1142,7 @@ private void makeSubstitution(MathObject newObject, MathObject oldObject,
 
 			throw new BrokerException(
 					"Das Objekt mit dem Schlüssel "
-							+ newObject.getKey()
+							+ newObject.getIdentifier()
 							+ " kann nicht substituiert werden. "+message+"\n\nZuvor: "
 							+ oldStr
 							+ "\nDanach: "
@@ -1258,7 +1258,7 @@ private void makeSubstitution(MathObject newObject, MathObject oldObject,
 			MathObject objToCheck, boolean firstRun, List checkedObjs)
 			throws BrokerException, ObjectNotInRelationException {
 		if (!firstRun && (parentObj == objToCheck))
-			throw new BrokerException("Rekursion von " + parentObj.getKey()
+			throw new BrokerException("Rekursion von " + parentObj.getIdentifier()
 					+ " entdeckt in den Definitionen " + checkedObjs);
 		checkedObjs.add(objToCheck);
 

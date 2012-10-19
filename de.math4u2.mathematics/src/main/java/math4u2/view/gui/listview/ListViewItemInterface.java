@@ -6,5 +6,7 @@ import math4u2.mathematics.functions.UserFunction;
 public interface ListViewItemInterface extends MathObject {
 
 	UserFunction getCapsulatedModel();
+	MathObject getModel();
+	void setVisible(boolean b);
 
 }

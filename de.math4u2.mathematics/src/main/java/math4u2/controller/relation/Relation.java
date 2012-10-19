@@ -159,13 +159,13 @@ public class Relation implements RelationInterface, Comparable {
 
 	public String toString() {
 		if (relationName != null) {
-			Object key = objFirst.getKey();
+			Object key = objFirst.getIdentifier();
 			String strFirst;
 			if (key != null)
 				strFirst = key.toString();
 			else
 				strFirst = "!!!null!!!";
-			String strSecond = (String) objSecond.getKey();
+			String strSecond = (String) objSecond.getIdentifier();
 			strFirst = RelationContainer.tryToGetFullName(objFirst, "");
 			strSecond = RelationContainer.tryToGetFullName(objSecond, "");
 			if ((strFirst == null) || strFirst.equals(""))

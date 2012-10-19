@@ -163,7 +163,7 @@ public class Angle extends AbstractArea {
 				pr1.removeLastEval();
 			} catch (Exception e) {
 				ExceptionManager.doError("Fehler beim Holen der Vektoren ("
-						+ getKey() + ").", e);
+						+ getIdentifier() + ").", e);
 			}
 			vectors[0] = (UserFunction) pr1.eval();
 		} else
@@ -176,7 +176,7 @@ public class Angle extends AbstractArea {
 				pr2.removeLastEval();
 			} catch (Exception e) {
 				ExceptionManager.doError("Fehler beim Holen der Vektoren ("
-						+ getKey() + ").", e);
+						+ getIdentifier() + ").", e);
 			}
 			vectors[1] = (UserFunction) pr2.eval();
 		} else
@@ -231,7 +231,7 @@ public class Angle extends AbstractArea {
 			return apex.eval();
 		} catch (MathException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'scheitelpunkt' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 			throw new RuntimeException();
 		}
 	} // operator_scheitelpunkt
@@ -250,7 +250,7 @@ public class Angle extends AbstractArea {
 			broker.propagateChange(apex);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'scheitelpunkt' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_set_scheitelpunkt
@@ -270,7 +270,7 @@ public class Angle extends AbstractArea {
 			broker.propagateChange(vectorFirst);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_vektor1
@@ -290,7 +290,7 @@ public class Angle extends AbstractArea {
 			broker.propagateChange(vectorSecond);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'vektor2' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_vektor2
@@ -311,7 +311,7 @@ public class Angle extends AbstractArea {
 			broker.propagateChange(radius);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'radius' ("
-					+ getKey() + ").", e);
+					+ getIdentifier() + ").", e);
 		}
 		return null;
 	} // operator_set_radius

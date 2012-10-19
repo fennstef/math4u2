@@ -96,7 +96,7 @@ public abstract class AbstractAffineObject implements MathObject, HasGraph,
             if (broker != null)
                 broker.propagateChange(this);
         } catch (BrokerException e) {
-            ExceptionManager.doError("Fehler beim Erneuern durch das Ändern der Farbe ("+getKey()+").",e);
+            ExceptionManager.doError("Fehler beim Erneuern durch das Ändern der Farbe ("+getIdentifier()+").",e);
         } //catch
     } //setColor
 
@@ -110,7 +110,7 @@ public abstract class AbstractAffineObject implements MathObject, HasGraph,
             if (broker != null)
                 broker.propagateChange(this);
         } catch (BrokerException e) {
-            ExceptionManager.doError("Fehler beim Erneuern durch das Ändern der Linienstils ("+getKey()+").",e);
+            ExceptionManager.doError("Fehler beim Erneuern durch das Ändern der Linienstils ("+getIdentifier()+").",e);
         } //catch
     } //setLineStyle
 
@@ -134,7 +134,7 @@ public abstract class AbstractAffineObject implements MathObject, HasGraph,
 		this.freeze = freeze;
 	}//setFreeze
 	
-    public Object getKey() {
+    public Object getIdentifier() {
         return name;
     }//getKey
 
@@ -170,7 +170,7 @@ public abstract class AbstractAffineObject implements MathObject, HasGraph,
         try {
             broker.propagateChange(this);
         } catch (BrokerException e) {
-            ExceptionManager.doError("Fehler beim Erneuern ("+getKey()+").",e);
+            ExceptionManager.doError("Fehler beim Erneuern ("+getIdentifier()+").",e);
         } //catch
     } //propagateChange
 
@@ -201,7 +201,7 @@ public abstract class AbstractAffineObject implements MathObject, HasGraph,
                     rep = ((UserFunction) ((PathReference) tm).eval())
                             .getTermString();
                 } catch (MathException e) {
-                    ExceptionManager.doError("Fehler beim Holen des gekapselten Objekts ("+getKey()+").",e);
+                    ExceptionManager.doError("Fehler beim Holen des gekapselten Objekts ("+getIdentifier()+").",e);
                 }//catch
             }//if
             return rep;
@@ -245,7 +245,7 @@ public abstract class AbstractAffineObject implements MathObject, HasGraph,
 
             return ps;
         } catch (Exception e) {
-        	throw new RuntimeException("Fehler beim Aufbau des Methodenpfads ("+getKey()+").",e);
+        	throw new RuntimeException("Fehler beim Aufbau des Methodenpfads ("+getIdentifier()+").",e);
         }//catch
     }//createPathStep
 
@@ -263,7 +263,7 @@ public abstract class AbstractAffineObject implements MathObject, HasGraph,
                     new Class[] { MethodContext.class });
             return (Class) m.invoke(this, new Object[] { mc });
         } catch (Exception e) {
-            ExceptionManager.doError("Fehler beim Bestimmen des Rückgabetyps ("+getKey()+").",e);
+            ExceptionManager.doError("Fehler beim Bestimmen des Rückgabetyps ("+getIdentifier()+").",e);
             throw new RuntimeException(e);
         }//catch
     }//getReturnType

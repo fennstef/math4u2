@@ -18,13 +18,11 @@ import math4u2.view.graph.util.IVectorDoubleValueHolder;
 public class VectorElementGraph extends AbstractSimpleGraph {
 	private static final float HALF_THICKNESS = 0.35f;
 
-	private IScalarStringHolder name;
 	private IVectorDoubleValueHolder vector;
 
 	public VectorElementGraph(DrawAreaInterface da, IGraphSettings settings,
 			IScalarStringHolder name, IVectorDoubleValueHolder vector) {
-		super(da, settings);
-		this.name = name;
+		super(da, settings, name);
 		this.vector = vector;
 	}
 
@@ -55,13 +53,9 @@ public class VectorElementGraph extends AbstractSimpleGraph {
 
 		} catch (Exception e) {
 			ExceptionManager.doError("Fehler beim Zeichnen des Vektor-Graphen "
-					+ getKey(), e);
+					+ getIdentifier(), e);
 		}
 		g.setColor(ca);
-	}
-
-	public String getKey() {
-		return name.getScalarOrNull();
 	}
 
 	public void detach() throws Exception {

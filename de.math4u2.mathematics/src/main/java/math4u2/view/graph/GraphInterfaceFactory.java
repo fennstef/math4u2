@@ -50,5 +50,8 @@ public interface GraphInterfaceFactory {
 
 	GraphInterface createVectorElementGraph(DrawAreaInterface da,
 			UserFunction userFunction);
+	
+	GraphInterface createFunctionGraph(DrawAreaInterface da, UserFunction f);
 
+	GraphInterface createSimpleGraph(DrawAreaInterface da, UserFunction f);
 }

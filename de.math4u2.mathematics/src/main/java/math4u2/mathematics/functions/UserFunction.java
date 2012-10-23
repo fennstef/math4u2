@@ -451,6 +451,7 @@ public class UserFunction extends Function implements HasCompleteView,
 		}// if
 
 		Class returnType = getResultType();
+		
 		if (getArity() == 1) {
 			// Parameter muﬂ skalar sein
 			Variable var = variables[0];
@@ -466,7 +467,7 @@ public class UserFunction extends Function implements HasCompleteView,
 			if (getArity() == 0) {
 				if (HasGraph.class.isAssignableFrom(returnType)
 						|| VectorType.class.isAssignableFrom(returnType))
-					return true;
+					return true;				
 			}// if
 				// else {
 			// if ( getArity() == 2) {
@@ -674,6 +675,10 @@ public class UserFunction extends Function implements HasCompleteView,
 		return freeze;
 	}// isFreeze
 
+	public Broker getBroker(){
+		return broker;
+	}
+	
 	/***************************************************************************
 	 * Setzen des Namens
 	 */

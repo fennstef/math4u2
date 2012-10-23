@@ -28,7 +28,7 @@ public class parser implements parserConstants {
         static ViewFactoryInterface viewFactory;
         static String functionName; // sollte man als globale ScalarVariable beseitigen
 
-        private static void init(Broker broker, ViewFactoryInterface viewFactory){
+        public static void init(Broker broker, ViewFactoryInterface viewFactory){
                 parser.broker=broker;
                 parser.viewFactory = viewFactory;
         }

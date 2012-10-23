@@ -59,22 +59,29 @@ public enum PointDrawStyle {
 		}
 	}, ARROW_H {
 		@Override
-		public void  paint(Color color, Graphics2D g, int x, int y, int size, IScalarStringHolder name, IScalarStringHolder index) {
-			// Name schreiben
+		public void  paint(Color color, Graphics2D g, int x, int y, int size, IScalarStringHolder name, IScalarStringHolder index) {			
+			//NameSchreiben
 			g.setColor(color);
-			paintName(g, 0, 18, x, y, size, name, index);
-
-			// Äußerer Kreis
-			int radius = (int) (size * 0.30f);
+			paintName(g,0,25, x, y, size, name, index);
+			
 			g.setStroke(THICK_STROKE);
-			g.drawOval(x + size / 2 - radius, y + size / 2 - radius, radius * 2,
-					radius * 2);
-
-			// Innerer Kreis
-			float radius2 = size * 0.15f;
-			g.setStroke(THICK_STROKE);
-			g.fillOval((int) (x + size / 2 - radius2 + 1), (int) (y + size / 2
-					- radius2 + 1), (int) (radius2 * 2), (int) (radius2 * 2));
+			//Querbalken
+			g.drawLine(x + size/2, y, x + size/2, y + size);
+			
+			g.setStroke(MEDIUM_STROKE);
+			//Pfeil rechts
+			float sizeF = size;
+			GeneralPath gp = getArrowPath(x,y,sizeF);
+			gp.transform(AffineTransform.getTranslateInstance(-x-sizeF/2,-y-sizeF/2));
+			gp.transform(AffineTransform.getRotateInstance(Math.PI/2));
+			gp.transform(AffineTransform.getTranslateInstance(x+sizeF/2,y+sizeF/2));
+			g.draw(gp);
+			
+			//Pfeil links
+			gp.transform(AffineTransform.getTranslateInstance(-x-sizeF/2,-y-sizeF/2));
+			gp.transform(AffineTransform.getRotateInstance(Math.PI));
+			gp.transform(AffineTransform.getTranslateInstance(x+sizeF/2,y+sizeF/2));
+			g.draw(gp);
 		}
 	}, ARROW_V {
 		@Override

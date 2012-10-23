@@ -455,12 +455,11 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 		// Es wird nur die Zeichenfläche erneuert und nicht der Rand.
 		// Diese Methode erspart viel Rechenzeit.
 		repaint(borderThickness, borderThickness, width - 2 * borderThickness,
-				height - 2 * borderThickness);
+				height - 2 * borderThickness);		
 	} // graphHasChanged
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
 		// nur zeichnen wenn eine Änderung vorgenommen wird
 		if (!graphChanged) {
 			if (!isValid()) {

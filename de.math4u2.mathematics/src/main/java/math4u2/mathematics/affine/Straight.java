@@ -20,6 +20,7 @@ import math4u2.controller.reference.PathReference;
 import math4u2.controller.relation.Relation;
 import math4u2.controller.relation.RelationFactory;
 import math4u2.controller.relation.RelationInterface;
+import math4u2.mathematics.functions.Function;
 import math4u2.mathematics.functions.MathException;
 import math4u2.mathematics.functions.UserFunction;
 import math4u2.mathematics.results.MatrixDoubleResult;
@@ -137,7 +138,7 @@ public class Straight extends AbstractAffineObject {
 		vector.setFreeze(freeze);
 	}// setFreeze
 
-	public UserFunction getVector() throws MathException {
+	public Function getVector() throws MathException {
 		if (vector.getFunction() instanceof PathReference) {
 			PathReference pr = (PathReference) vector.getFunction();
 			try {
@@ -148,7 +149,7 @@ public class Straight extends AbstractAffineObject {
 				ExceptionManager.doError("Fehler beim Holen des Vektors ("
 						+ getIdentifier() + ").", e);
 			}
-			return (UserFunction) pr.eval();
+			return (Function) pr.eval();
 		} else
 			return vector;
 	} // getDirection

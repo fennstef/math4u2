@@ -208,5 +208,10 @@ public class FunctionGraph extends AbstractSimpleGraph{
 	}
 
 	public void detach() throws Exception {
+	}
+
+	@Override
+	public void renew() {
+		validate=false;
 	} 
 } //FunctionGraph

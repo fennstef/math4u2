@@ -65,7 +65,7 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 		y = (int) b1.getLocation().getY() + evt.getY();
 		if (!xPos.isFixed()) {
 			try {
-				xPos.setScalar(da.xPixToCoord(x), true);
+				xPos.setScalar(da.xPixToCoord(x), false);
 			} catch (Exception e) {
 				ExceptionManager.doError(
 						"Fehler beim Zeichnen des Punkt-Graphen " + getName(),
@@ -74,14 +74,22 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 		} 
 		if (!yPos.isFixed()) {
 			try {
-				yPos.setScalar(da.yPixToCoord(y), true);
+				yPos.setScalar(da.yPixToCoord(y), false);
 			} catch (Exception e) {
 				ExceptionManager.doError(
 						"Fehler beim Zeichnen des Punkt-Graphen " + getName(),
 						e);
 			} 
 		} 
-
+		//Set x again with propagate update
+		try {
+			xPos.setScalar(da.xPixToCoord(x), true);
+		} catch (Exception e) {
+			ExceptionManager.doError(
+					"Fehler beim Zeichnen des Punkt-Graphen " + getName(),
+					e);
+		}
+		
 		b1.setVisible(false);
 		b2.setVisible(true);
 	} // makeMouseDragged
@@ -115,6 +123,7 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 	}
 	
 	public String getName() {
+		if(index==null) return name.getScalarOrNull();
 		return name.getScalarOrNull() + "[" + index.getScalarOrNull() + "]";
 	}
 

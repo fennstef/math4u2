@@ -11,6 +11,10 @@ import math4u2.parser.parser;
 import math4u2.util.exception.ExceptionManager;
 import math4u2.util.exception.IExceptionFrame;
 import math4u2.util.exception.parser.ParseException;
+import math4u2.view.graph.GraphInterfaceFactory;
+import math4u2.view.gui.listview.ListViewInterface;
+import math4u2.view.gui.listview.ListViewItemInterface;
+import math4u2.view.gui.listview.ViewFactoryInterface;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +33,8 @@ public class TestSimpleMathExpressions {
 			}
 		});
 		broker = new Broker();
+		parser.init(broker, new EmptyViewFactory());
+		
 	}
 
 	@Test

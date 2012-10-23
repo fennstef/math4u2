@@ -95,4 +95,6 @@ public interface DrawAreaInterface{
     String getTitle();
 
 	void setTitle(String text);
+
+	void addChangeListener(DrawAreaChangeListener drawAreaChangeListener);
 } //DrawAreaInterface

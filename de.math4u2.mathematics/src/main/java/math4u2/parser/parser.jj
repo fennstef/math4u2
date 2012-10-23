@@ -38,7 +38,7 @@ public class parser {
 	static ViewFactoryInterface viewFactory;
 	static String functionName; // sollte man als globale ScalarVariable beseitigen
 
-	private static void init(Broker broker, ViewFactoryInterface viewFactory){
+	public static void init(Broker broker, ViewFactoryInterface viewFactory){
 		parser.broker=broker;
 		parser.viewFactory = viewFactory;
 	}
@@ -215,7 +215,7 @@ public class parser {
 			return (String)def;
 		}
 
-		return (String) (((MathObject)def).getKey());
+		return (String) (((MathObject)def).getIdentifier());
 	}
 	
 	public static TermNode parsePath(String text, Broker broker) throws ParseException {
@@ -250,7 +250,7 @@ public class parser {
 				   UserFunction.register(rFunction, new ArrayList(temp), regList, broker);
 				}
 				catch( BrokerException e ) {
-					ExceptionManager.doError("Fehler beim Erzeugen der Funktion "+rFunction.getKey(), e);
+					ExceptionManager.doError("Fehler beim Erzeugen der Funktion "+rFunction.getIdentifier(), e);
 				}				
      			regList.add(rFunction);
      			return rFunction;
@@ -502,7 +502,7 @@ Object definition(List regList, boolean publish, Broker broker) throws Exception
 			 List methods = (List) ((Object[])defHead)[1];
 
 			 //Erzeuge den Schlüssel
-			 String key = rpo.getKey()+"";
+			 String key = rpo.getIdentifier()+"";
 			 Iterator iter = methods.iterator();
 			 while(iter.hasNext()){
 				if(iter.hasNext()) key += ".";

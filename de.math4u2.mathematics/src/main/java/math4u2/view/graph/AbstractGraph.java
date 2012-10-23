@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Stroke;
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
 
@@ -137,7 +139,8 @@ public abstract class AbstractGraph implements GraphInterface {
 	} //testDelete
 
 	public void prepareDelete() {
-		da.removeGraph(this);
+		SimpleGraphInterface g = this;
+		da.removeGraph(g);
 	}//prepareDelete
 
 	public Object getKey() {

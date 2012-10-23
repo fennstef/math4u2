@@ -9,6 +9,7 @@ import java.util.HashMap;
 import math4u2.controller.BrokerException;
 import math4u2.controller.MathObject;
 import math4u2.view.graph.GraphInterface;
+import math4u2.view.graph.SimpleGraphInterface;
 
 public interface DrawAreaInterface extends MathObject {
 	boolean inMouseAction();
@@ -58,7 +59,7 @@ public interface DrawAreaInterface extends MathObject {
 
     void remove(Component b);
 
-    void removeGraph(GraphInterface graph);
+    void removeGraph(SimpleGraphInterface graph);
 
     void requestFocus();
 

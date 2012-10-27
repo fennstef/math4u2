@@ -17,14 +17,13 @@ import math4u2.view.graph.util.IScalarStringHolder;
 
 public class PointGraph extends AbstractSimpleGraph {
 	private DragButtonPoint db;
-	private IScalarStringHolder name;
 
 	public PointGraph(DrawAreaInterface da, IGraphSettings settings,
 			IScalarStringHolder layout, IScalarDoubleHolder xPos,
 			IScalarDoubleHolder yPos, IScalarStringHolder name,
 			IScalarStringHolder index) {
 		super(da, settings, name);
-		db = new DragButtonPoint(da, layout, xPos, yPos, name, index);
+		db = new DragButtonPoint(da, layout, xPos, yPos, this);
 	} 
 
 	public String getIdentifier() {

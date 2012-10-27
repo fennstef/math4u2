@@ -144,11 +144,14 @@ public abstract class AbstractGraph implements GraphInterface {
 	}//prepareDelete
 
 	public Object getKey() {
-		return "graph$" + getModel().getIdentifier().toString();
+		Object id = getModel().getIdentifier();
+		if(id==null) return null;
+		return id.toString();
 	} //getKey
 	
 	public String getIdentifier() {
-		return "graph$" + getModel().getIdentifier().toString();
+		if(getKey()==null) return null;
+		return getKey().toString();
 	} //getKey
 
 	public void setName(String name) {

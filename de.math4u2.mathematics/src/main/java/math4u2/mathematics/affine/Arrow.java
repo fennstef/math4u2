@@ -144,11 +144,15 @@ public class Arrow extends AbstractAffineObject {
 			return (UserFunction) pr.eval();
 		} else
 			return vector;
-	} // getDirection
+	} 
+	
+	public UserFunction getVectorFunction() throws MathException {
+		return vector;
+	} 
 
 	public MatrixDoubleResult getVectorEval() throws MathException {
 		return (MatrixDoubleResult) vector.eval();
-	} // getVectorEval
+	}
 
 	public void swapLinks(MathObject oldObject, MathObject newObject)
 			throws Exception {

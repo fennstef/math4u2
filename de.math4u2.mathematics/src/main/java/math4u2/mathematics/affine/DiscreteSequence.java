@@ -142,18 +142,30 @@ public class DiscreteSequence extends AbstractArea {
 		if (rFunc == null)
 			return 0;
 		return ((ScalarDoubleResult) rFunc.eval()).value;
-	} // getRadius
+	} 
+	
+	public UserFunction getRadiusFunction()  {
+		return rFunc;
+	} 
 
 	public double[] getXValues() throws MathException {
 		double mI = ((ScalarDoubleResult) maxIndexFunc.eval()).value;
 		return ((Sequence) xSequence.eval()).getScalarElementArray((int) Math
 				.floor(mI));
 	}
+	
+	public UserFunction getXVectorFunction(){
+		return xSequence;
+	}	
 
 	public double[] getYValues() throws MathException {
 		double mI = ((ScalarDoubleResult) maxIndexFunc.eval()).value;
 		return ((Sequence) ySequence.eval()).getScalarElementArray((int) Math
 				.floor(mI));
+	}
+	
+	public UserFunction getYVectorFunction(){
+		return ySequence;
 	}
 
 	public String bodyToString() {

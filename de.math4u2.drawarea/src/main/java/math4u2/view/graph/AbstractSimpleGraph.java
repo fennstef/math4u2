@@ -8,6 +8,7 @@ import java.awt.Stroke;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 import math4u2.view.graph.util.IScalarStringHolder;
 import math4u2.view.graph.util.LineStyleConstants;
+import math4u2.view.graph.util.SimpleScalarStringValueHolder;
 
 /**
  * Abstrakte Graphen-Klasse
@@ -23,7 +24,8 @@ public abstract class AbstractSimpleGraph implements SimpleGraphInterface,
 
 	protected DrawAreaInterface da;
 	protected IGraphSettings settings;
-	private IScalarStringHolder name;
+	protected IScalarStringHolder name;
+	protected IScalarStringHolder index;
 
 	public AbstractSimpleGraph(DrawAreaInterface da, IGraphSettings settings, IScalarStringHolder name) {
 		this.da = da;
@@ -57,6 +59,28 @@ public abstract class AbstractSimpleGraph implements SimpleGraphInterface,
 
 	public boolean isVisible() {
 		return settings.isVisible();
+	}
+
+	public IScalarStringHolder getName() {
+		if(name==null){
+			name = new SimpleScalarStringValueHolder("");
+		}
+		return name;
+	}
+
+	public void setName(IScalarStringHolder name) {
+		this.name = name;
+	}
+
+	public IScalarStringHolder getIndex() {
+		if(index==null){
+			index = new SimpleScalarStringValueHolder("");
+		}
+		return index;
+	}
+
+	public void setIndex(IScalarStringHolder index) {
+		this.index = index;
 	}
 
 	/**
@@ -128,3 +152,4 @@ public abstract class AbstractSimpleGraph implements SimpleGraphInterface,
 	public void renew() {
 	}
 }
+

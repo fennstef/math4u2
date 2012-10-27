@@ -3,6 +3,7 @@ package math4u2.view.graph;
 import java.awt.geom.GeneralPath;
 
 import math4u2.controller.Broker;
+import math4u2.mathematics.functions.UserDefinedFunction;
 import math4u2.mathematics.functions.UserFunction;
 import math4u2.view.graph.drawarea.DrawAreaInterface;
 
@@ -53,5 +54,5 @@ public interface GraphInterfaceFactory {
 	
 	GraphInterface createFunctionGraph(DrawAreaInterface da, UserFunction f);
 
-	GraphInterface createSimpleGraph(DrawAreaInterface da, UserFunction f);
+	GraphInterface createSimpleGraph(DrawAreaInterface da, UserDefinedFunction f, UserFunction uf);
 }

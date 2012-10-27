@@ -1,6 +1,5 @@
 package math4u2.view.graph.drawarea;
 
-
 import java.awt.AWTException;
 import java.awt.Cursor;
 import java.awt.Point;
@@ -77,11 +76,11 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 	public DrawAreaPopupMenu(DrawArea drawArea) {
 		this.drawArea = drawArea;
 		init();
-	} //Konstruktor
+	} // Konstruktor
 
 	/** hier werden alle Popup-Elemente initialisiert */
 	public void init() {
-		//Robot wird benötigt, um die Maus zu bewegen
+		// Robot wird benötigt, um die Maus zu bewegen
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
@@ -89,46 +88,43 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 					.doError(
 							"Wahrscheinlich falsche Java-Version (AWT-Robot) nicht gefunden",
 							e);
-		} //catch
+		} // catch
 
 		popupMenu.setInvoker(drawArea);
 		popupMenu.setLightWeightPopupEnabled(true);
 
-		//Zoom
+		// Zoom
 		zoomMotionListener = new ZoomMotionListener();
 		zoomMouseListener = new ZoomMouseListener();
-		zoom
-				.setToolTipText("linke Maustaste dr\u00fccken und Maus nach oben bzw. unten ziehen");
+		zoom.setToolTipText("linke Maustaste dr\u00fccken und Maus nach oben bzw. unten ziehen");
 		zoom.setText("Zoom");
 		zoom.setAccelerator(KeyStroke.getKeyStroke("typed Z"));
 		zoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				manageListener(zoomMouseListener, zoomMotionListener,
 						zoomCursor);
-			} //actionPerformed
+			} // actionPerformed
 		});
 		popupMenu.add(zoom);
 
-		//Zoom in X-Richtung
+		// Zoom in X-Richtung
 		xZoomMotionListener = new XZoomMotionListener();
 		xZoomMouseListener = new XZoomMouseListener();
-		xZoom
-				.setToolTipText("linke Maustaste dr\u00fccken und Maus nach oben bzw. unten ziehen");
+		xZoom.setToolTipText("linke Maustaste dr\u00fccken und Maus nach oben bzw. unten ziehen");
 		xZoom.setText("Zoom in X-Richtung");
 		xZoom.setAccelerator(KeyStroke.getKeyStroke("typed X"));
 		xZoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				manageListener(xZoomMouseListener, xZoomMotionListener,
 						xZoomCursor);
-			} //actionPerformed
+			} // actionPerformed
 		});
 		popupMenu.add(xZoom);
 
-		//Zoom in Y-Richtung
+		// Zoom in Y-Richtung
 		yZoomMotionListener = new YZoomMotionListener();
 		yZoomMouseListener = new YZoomMouseListener();
-		yZoom
-				.setToolTipText("linke Maustaste dr\u00fccken und Maus nach oben bzw. unten ziehen");
+		yZoom.setToolTipText("linke Maustaste dr\u00fccken und Maus nach oben bzw. unten ziehen");
 		yZoom.setText("Zoom in Y-Richtung");
 		yZoom.setAccelerator(KeyStroke.getKeyStroke(
 				java.awt.event.KeyEvent.VK_Y, 0));
@@ -140,11 +136,10 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 		});
 		popupMenu.add(yZoom);
 
-		//BoxZoom
+		// BoxZoom
 		boxZoomMotionListener = new BoxZoomMotionListener();
 		boxZoomMouseListener = new BoxZoomMouseListener();
-		boxZoom
-				.setToolTipText("linke Maustaste gedr\u00fcckt halten und Rechteck aufspannen");
+		boxZoom.setToolTipText("linke Maustaste gedr\u00fcckt halten und Rechteck aufspannen");
 		boxZoom.setText("Box-Zoom");
 		boxZoom.setAccelerator(KeyStroke.getKeyStroke(
 				java.awt.event.KeyEvent.VK_B, 0));
@@ -152,22 +147,20 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 			public void actionPerformed(ActionEvent evt) {
 				manageListener(boxZoomMouseListener, boxZoomMotionListener,
 						boxZoomCursor);
-			} //actionPerformed
+			} // actionPerformed
 		});
 		popupMenu.add(boxZoom);
 
-		//Zoom 1:1
+		// Zoom 1:1
 		oneMotionListener = new OneMotionListener();
 		oneMouseListener = new OneMouseListener();
-		oneZoom
-				.setToolTipText("linke Maustaste dr\u00fccken und Maus nach oben bzw. unten ziehen");
+		oneZoom.setToolTipText("linke Maustaste dr\u00fccken und Maus nach oben bzw. unten ziehen");
 		oneZoom.setText("Zoom 1:1");
-		oneZoom.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_1, 0));
+		oneZoom.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, 0));
 		oneZoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				manageListener(oneMouseListener, zoomMotionListener, zoomCursor);
-			} //actionPerformed
+			} // actionPerformed
 		});
 		popupMenu.add(oneZoom);
 
@@ -176,14 +169,14 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 			public void actionPerformed(ActionEvent evt) {
 				drawArea.activate1To1Zoom(((JCheckBoxMenuItem) evt.getSource())
 						.getState());
-			} //actionPerformed
+			} // actionPerformed
 		});
 		popupMenu.add(oneToOneZoomCheckBox);
 
-		//Seperator
+		// Seperator
 		popupMenu.add(new JSeparator());
 
-		//Verschieben
+		// Verschieben
 		translateMotionListener = new TranslateMotionListener();
 		translateMouseListener = new TranslateMouseListener();
 		translate
@@ -195,11 +188,11 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 			public void actionPerformed(ActionEvent evt) {
 				manageListener(translateMouseListener, translateMotionListener,
 						moveCursor);
-			} //actionPerformed
+			} // actionPerformed
 		});
 		popupMenu.add(translate);
 
-		//None
+		// None
 		none.setToolTipText("normaler Modus");
 		none.setText("normaler Modus");
 		none.setAccelerator(KeyStroke.getKeyStroke(
@@ -207,21 +200,21 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 		none.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				manageListener(null, null, defaultCursor);
-			} //actionPerformed
+			} // actionPerformed
 		});
 		popupMenu.add(none);
 
-		//Seperator
+		// Seperator
 		popupMenu.add(new JSeparator());
 
-		//Graphen löschen
+		// Graphen löschen
 		deleteGraph.setText("Lösche Graph");
 		popupMenu.add(deleteGraph);
 
-		//Seperator
+		// Seperator
 		popupMenu.add(new JSeparator());
 
-		//Einstellungen
+		// Einstellungen
 		properties1.setToolTipText("weitere Einstellungen");
 		properties1.setText("Einstellungen...");
 		properties1.addActionListener(new ActionListener() {
@@ -229,15 +222,14 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 				new PropertyFrame(drawArea,
 						(int) drawArea.getLocation().getX() + 50,
 						(int) drawArea.getLocation().getY() + 50);
-			} //actionPerformed
+			} // actionPerformed
 		});
 		popupMenu.add(properties1);
-		//DrawArea
+		// DrawArea
 		drawArea.addMouseListener(new PopupMouseListener());
-		//Shortcuts für alle Zooms
+		// Shortcuts für alle Zooms
 		drawArea.addKeyListener(new DrawAreaKeyListener());
-	} //init
-	
+	} // init
 
 	public void activate1To1Zoom(boolean b) {
 		if (drawArea.activate1To1Zoom == b)
@@ -249,7 +241,7 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 		oneToOneZoomCheckBox.setState(b);
 		drawArea.coordinateSystem(drawArea.getXMin(), drawArea.getXMax(),
 				drawArea.getYMin(), drawArea.getYMax());
-	} //setactivate1To1Zoom
+	} // setactivate1To1Zoom
 
 	/**
 	 * diese Methode sorgt dafür, dass der richtige MouseListener und
@@ -266,7 +258,7 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 		drawArea.addMouseMotionListener(mml);
 		drawArea.addMouseListener(ml);
 		drawArea.setCursor(c);
-	} //manageListener
+	} // manageListener
 
 	void standardPressAction(MouseEvent evt) {
 		if (evt.getModifiers() == MouseEvent.BUTTON1_MASK)
@@ -278,11 +270,11 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 		drawArea.setCursor(invisibleCursor);
 		if (drawArea.isFastZoom())
 			DrawArea.detailA = drawArea.getDetail();
-	}//standardPressAction
+	}// standardPressAction
 
-	//Listenerklassen
-	//-------------------------------------------------------------------
-	//-------------------------------------------------------------------
+	// Listenerklassen
+	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------
 
 	private final class DrawAreaKeyListener extends KeyAdapter {
 		public void keyPressed(KeyEvent evt) {
@@ -291,71 +283,76 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 				manageListener(zoomMouseListener, zoomMotionListener,
 						zoomCursor);
 				break;
-			} //Z
+			} // Z
 			case (KeyEvent.VK_X): {
 				manageListener(xZoomMouseListener, xZoomMotionListener,
 						xZoomCursor);
 				break;
-			} //X
+			} // X
 			case (KeyEvent.VK_Y): {
 				manageListener(yZoomMouseListener, yZoomMotionListener,
 						yZoomCursor);
 				break;
-			} //Y
+			} // Y
 			case (KeyEvent.VK_1): {
 				manageListener(oneMouseListener, zoomMotionListener, zoomCursor);
 				break;
-			} //1
+			} // 1
 			case (KeyEvent.VK_B): {
 				manageListener(boxZoomMouseListener, boxZoomMotionListener,
 						boxZoomCursor);
 				break;
-			} //B
+			} // B
 			case (KeyEvent.VK_V): {
 				manageListener(translateMouseListener, translateMotionListener,
 						moveCursor);
 				break;
-			} //V
+			} // V
 			case (KeyEvent.VK_SPACE): {
 				manageListener(null, null, defaultCursor);
 				break;
-			} //SPACE
+			} // SPACE
 			default:
 				break;
-			} //switch
-		} //keyPressed
-	} //class DrawAreaKeyListener
+			} // switch
+		} // keyPressed
+	} // class DrawAreaKeyListener
 
 	private final class PopupMouseListener extends MouseAdapter {
 		public void doPopup(MouseEvent evt) {
-			drawArea.requestFocus();
-			if (evt.isPopupTrigger()) {
-				deleteGraph.removeAll();
+			try {
+				drawArea.requestFocus();
+				if (evt.isPopupTrigger()) {
+					deleteGraph.removeAll();
 
-				Iterator iter = drawArea.getGraphList().iterator();
-				deleteGraph.setVisible(iter.hasNext());
+					Iterator iter = drawArea.getGraphList().iterator();
+					deleteGraph.setVisible(iter.hasNext());
 
-				while (iter.hasNext()) {
-					final SimpleGraphInterface gi = (SimpleGraphInterface) iter.next();
-					if (gi.getIdentifier() == null)
-						continue;
-					JMenuItem item = new JMenuItem(gi.getIdentifier() + "");
-					item.addActionListener(new DeleteGraphAction(gi));
-					deleteGraph.add(item);
-				} 
-				deleteGraph.doLayout();
-				popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-			} //if
-		} //doPopup
+					while (iter.hasNext()) {
+						final SimpleGraphInterface gi = (SimpleGraphInterface) iter
+								.next();
+						if (gi.getIdentifier() == null)
+							continue;
+						JMenuItem item = new JMenuItem(gi.getIdentifier() + "");
+						item.addActionListener(new DeleteGraphAction(gi));
+						deleteGraph.add(item);
+					}
+					deleteGraph.doLayout();
+					popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+				} // if
+			} catch (Throwable t) {
+				ExceptionManager.doError(t);
+			}
+		} // doPopup
 
 		public void mousePressed(MouseEvent evt) {
 			doPopup(evt);
-		} //mousePressed
+		} // mousePressed
 
 		public void mouseReleased(MouseEvent evt) {
 			doPopup(evt);
-		} //mouseReleased
-	} //class PopupMouseListener
+		} // mouseReleased
+	} // class PopupMouseListener
 
 	private final class DeleteGraphAction implements ActionListener {
 		private final SimpleGraphInterface gi;
@@ -363,37 +360,39 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 		private DeleteGraphAction(SimpleGraphInterface gi) {
 			super();
 			this.gi = gi;
-		} 
+		}
 
 		public void actionPerformed(ActionEvent e) {
-			try {	
+			try {
 				drawArea.removeGraph(gi);
 				gi.detach();
 			} catch (Exception e1) {
-				ExceptionManager.doError("Fehler beim Löschvorgang von "+gi.getIdentifier(),e1);
-			} 
-		} 
-	} //class DeleteGraphAction
+				ExceptionManager.doError(
+						"Fehler beim Löschvorgang von " + gi.getIdentifier(),
+						e1);
+			}
+		}
+	} // class DeleteGraphAction
 
 	private final class TranslateMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent evt) {
 			standardPressAction(evt);
-		} //mousePressed
+		} // mousePressed
 
 		public void mouseReleased(MouseEvent evt) {
 			if (drawArea.aktion) {
 				Point p = drawArea.getLocationOnScreen();
 				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
 						(int) (p.getY() + drawArea.getHeight() / 2));
-				drawArea.aktion=false;
-			} //if aktion
+				drawArea.aktion = false;
+			} // if aktion
 			drawArea.setCursor(moveCursor);
 			if (drawArea.isFastZoom()) {
-				drawArea.setDetail(DrawArea.detailA);				
-			} //if fastZoom
+				drawArea.setDetail(DrawArea.detailA);
+			} // if fastZoom
 			drawArea.graphHasChanged();
-		} //mouseReleased
-	} //class TranslateMouseListener
+		} // mouseReleased
+	} // class TranslateMouseListener
 
 	private final class TranslateMotionListener extends MouseMotionAdapter {
 		public void mouseDragged(MouseEvent evt) {
@@ -403,40 +402,39 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 				Point p = drawArea.getLocationOnScreen();
 				double valX = drawArea.xPerPix() * (evt.getX() - ax);
 				double valY = drawArea.yPerPix() * (evt.getY() - ay);
-				drawArea.coordinateSystem(drawArea.getXMin() - valX, drawArea
-						.getXMax()
-						- valX, drawArea.getYMin() + valY, drawArea.getYMax()
-						+ valY);
+				drawArea.coordinateSystem(drawArea.getXMin() - valX,
+						drawArea.getXMax() - valX, drawArea.getYMin() + valY,
+						drawArea.getYMax() + valY);
 				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
 						(int) (drawArea.getHeight() / 2 + p.getY()));
 				ay = (int) (drawArea.getHeight() / 2);
 				ax = (int) (drawArea.getWidth() / 2);
 				drawArea.graphHasChanged();
-			} //if aktion
-		} //mouseDragged
-	} //class TranslateMotionListener
+			} // if aktion
+		} // mouseDragged
+	} // class TranslateMotionListener
 
 	private final class OneMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent evt) {
 			drawArea.activate1To1Zoom(true);
 			standardPressAction(evt);
-		} //mousePressed
+		} // mousePressed
 
 		public void mouseReleased(MouseEvent evt) {
 			if (drawArea.aktion) {
 				Point p = drawArea.getLocationOnScreen();
 				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
 						(int) (p.getY() + drawArea.getHeight() / 2));
-				drawArea.aktion=false;
-			} //if aktion
+				drawArea.aktion = false;
+			} // if aktion
 			drawArea.setCursor(zoomCursor);
 			if (drawArea.isFastZoom()) {
-				drawArea.setDetail(DrawArea.detailA);				
-			} //if fastZoom
+				drawArea.setDetail(DrawArea.detailA);
+			} // if fastZoom
 			drawArea.graphHasChanged();
 			drawArea.activate1To1Zoom(false);
-		} //mouseReleased
-	} //class OneMouseListener
+		} // mouseReleased
+	} // class OneMouseListener
 
 	private final class OneMotionListener extends MouseMotionAdapter {
 		public void mouseDragged(MouseEvent evt) {
@@ -447,22 +445,22 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 				double k = (drawArea.getYMax() - drawArea.getYMin())
 						/ drawArea.getHeight() * drawArea.getWidth() / 2;
 				double m = (drawArea.getXMax() + drawArea.getXMin()) / 2;
-				double xMa = m+k;
-				double xMi = m-k;
-				
+				double xMa = m + k;
+				double xMi = m - k;
+
 				double valueY = (evt.getY() - ay)
 						* (drawArea.getYMax() - drawArea.getYMin())
-						/ ((double) drawArea.getHeight());				
-				drawArea.coordinateSystem(xMi, xMa, drawArea.getYMin() - valueY, drawArea
-						.getYMax()
-						+ valueY);
+						/ ((double) drawArea.getHeight());
+				drawArea.coordinateSystem(xMi, xMa,
+						drawArea.getYMin() - valueY, drawArea.getYMax()
+								+ valueY);
 				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
 						(int) (drawArea.getHeight() / 2 + p.getY()));
 				ay = (int) (drawArea.getHeight() / 2);
 				drawArea.graphHasChanged();
-			} //if aktion
-		} //mouseDragged
-	} //class OneMotionListener
+			} // if aktion
+		} // mouseDragged
+	} // class OneMotionListener
 
 	private final class BoxZoomMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent evt) {
@@ -470,7 +468,7 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 			drawArea.rx1 = ax;
 			drawArea.ry1 = ay;
 			drawArea.drawRec = true;
-		} //mousePressed
+		} // mousePressed
 
 		public void mouseReleased(MouseEvent evt) {
 			if (drawArea.aktion) {
@@ -480,20 +478,21 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 					double y1 = drawArea.yPixToCoord(evt.getY());
 					double x2 = drawArea.xPixToCoord(ax);
 					double y2 = drawArea.yPixToCoord(ay);
-					drawArea.coordinateSystem(Math.min(x1, x2), Math
-							.max(x1, x2), Math.min(y1, y2), Math.max(y1, y2));
-				} //if
+					drawArea.coordinateSystem(Math.min(x1, x2),
+							Math.max(x1, x2), Math.min(y1, y2),
+							Math.max(y1, y2));
+				} // if
 				drawAreaChanged();
-				drawArea.aktion=false;
-			} //if aktion
+				drawArea.aktion = false;
+			} // if aktion
 			drawArea.drawRec = false;
 			drawArea.setCursor(boxZoomCursor);
 			if (drawArea.isFastZoom()) {
 				drawArea.setDetail(DrawArea.detailA);
 				drawAreaChanged();
-			} //if fastZoom
-		} //mouseReleased
-	} //class BoxZoomMouseListener
+			} // if fastZoom
+		} // mouseReleased
+	} // class BoxZoomMouseListener
 
 	private final class BoxZoomMotionListener extends MouseMotionAdapter {
 		public void mouseDragged(MouseEvent evt) {
@@ -503,29 +502,29 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 				drawArea.rx2 = evt.getX();
 				drawArea.ry2 = evt.getY();
 				drawAreaChanged();
-			} //if aktion
-		} //mouseDragged
-	} //class BoxZoomMotionListener
+			} // if aktion
+		} // mouseDragged
+	} // class BoxZoomMotionListener
 
 	private final class YZoomMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent evt) {
 			standardPressAction(evt);
-		} //mousePressed
+		} // mousePressed
 
 		public void mouseReleased(MouseEvent evt) {
 			if (drawArea.aktion) {
 				Point p = drawArea.getLocationOnScreen();
 				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
 						(int) (p.getY() + drawArea.getHeight() / 2));
-				drawArea.aktion=false;
-			} //if aktion
+				drawArea.aktion = false;
+			} // if aktion
 			drawArea.setCursor(yZoomCursor);
 			if (drawArea.isFastZoom()) {
-				drawArea.setDetail(DrawArea.detailA);				
-			} //if fastZoom
+				drawArea.setDetail(DrawArea.detailA);
+			} // if fastZoom
 			drawAreaChanged();
-		} //mouseReleased
-	} //class YZoomMouseListener
+		} // mouseReleased
+	} // class YZoomMouseListener
 
 	private final class YZoomMotionListener extends MouseMotionAdapter {
 		public void mouseDragged(MouseEvent evt) {
@@ -536,37 +535,36 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 				double value = (evt.getY() - ay)
 						* (drawArea.getYMax() - drawArea.getYMin())
 						/ ((double) drawArea.getHeight());
-				drawArea.coordinateSystem(drawArea.getXMin(), drawArea
-						.getXMax(), drawArea.getYMin() - value, drawArea
-						.getYMax()
-						+ value);
+				drawArea.coordinateSystem(drawArea.getXMin(),
+						drawArea.getXMax(), drawArea.getYMin() - value,
+						drawArea.getYMax() + value);
 				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
 						(int) (drawArea.getHeight() / 2 + p.getY()));
 				ay = (int) (drawArea.getHeight() / 2);
 				drawAreaChanged();
-			} //if aktion
-		} //mouseDragged
-	} //class YZoomMotionListener
+			} // if aktion
+		} // mouseDragged
+	} // class YZoomMotionListener
 
 	private final class XZoomMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent evt) {
 			standardPressAction(evt);
-		} //mousePressed
+		} // mousePressed
 
 		public void mouseReleased(MouseEvent evt) {
 			if (drawArea.aktion) {
 				Point p = drawArea.getLocationOnScreen();
-				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()), (int) (p
-						.getY() + drawArea.getHeight() / 2));
-				drawArea.aktion=false;
-			} //if aktion
+				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
+						(int) (p.getY() + drawArea.getHeight() / 2));
+				drawArea.aktion = false;
+			} // if aktion
 			drawArea.setCursor(xZoomCursor);
 			if (drawArea.isFastZoom()) {
-				drawArea.setDetail(DrawArea.detailA);				
-			} //if fastZoom
+				drawArea.setDetail(DrawArea.detailA);
+			} // if fastZoom
 			drawAreaChanged();
-		} //mouseReleased
-	} //class XZoomMouseListener
+		} // mouseReleased
+	} // class XZoomMouseListener
 
 	private final class XZoomMotionListener extends MouseMotionAdapter {
 		public void mouseDragged(MouseEvent evt) {
@@ -577,36 +575,36 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 				double value = (evt.getY() - ay)
 						* (drawArea.getXMax() - drawArea.getXMin())
 						/ ((double) drawArea.getWidth());
-				drawArea.coordinateSystem(drawArea.getXMin() - value, drawArea
-						.getXMax()
-						+ value, drawArea.getYMin(), drawArea.getYMax());
+				drawArea.coordinateSystem(drawArea.getXMin() - value,
+						drawArea.getXMax() + value, drawArea.getYMin(),
+						drawArea.getYMax());
 				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
 						(int) (drawArea.getHeight() / 2 + p.getY()));
 				ay = (int) (drawArea.getHeight() / 2);
 				drawAreaChanged();
-			} //if aktion
-		} //mouseDragged
-	} //class XZoomMotionListener
+			} // if aktion
+		} // mouseDragged
+	} // class XZoomMotionListener
 
 	private final class ZoomMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent evt) {
 			standardPressAction(evt);
-		} //mousePressed
+		} // mousePressed
 
 		public void mouseReleased(MouseEvent evt) {
 			if (drawArea.aktion) {
 				Point p = drawArea.getLocationOnScreen();
-				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()), (int) (p
-						.getY() + drawArea.getHeight() / 2));
+				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
+						(int) (p.getY() + drawArea.getHeight() / 2));
 				if (drawArea.isFastZoom()) {
-					drawArea.setDetail(DrawArea.detailA);					
-				} //if fastZoom
-				drawArea.aktion=false;
+					drawArea.setDetail(DrawArea.detailA);
+				} // if fastZoom
+				drawArea.aktion = false;
 				drawAreaChanged();
-			} //if aktion
+			} // if aktion
 			drawArea.setCursor(zoomCursor);
-		} //mouseReleased
-	} //class ZoomMouseListener
+		} // mouseReleased
+	} // class ZoomMouseListener
 
 	private final class ZoomMotionListener extends MouseMotionAdapter {
 		public void mouseDragged(MouseEvent evt) {
@@ -622,25 +620,23 @@ public class DrawAreaPopupMenu implements DrawAreaConstants {
 						/ ((double) drawArea.getWidth());
 				valueX = (valueY / (drawArea.getYMax() - drawArea.getYMin()) * (drawArea
 						.getXMax() - drawArea.getXMin()));
-				drawArea.coordinateSystem(drawArea.getXMin() - valueX, drawArea
-						.getXMax()
-						+ valueX, drawArea.getYMin() - valueY, drawArea
-						.getYMax()
-						+ valueY);
+				drawArea.coordinateSystem(drawArea.getXMin() - valueX,
+						drawArea.getXMax() + valueX, drawArea.getYMin()
+								- valueY, drawArea.getYMax() + valueY);
 				robot.mouseMove((int) (drawArea.getWidth() / 2 + p.getX()),
 						(int) (drawArea.getHeight() / 2 + p.getY()));
 				ay = (int) (drawArea.getHeight() / 2);
-				drawAreaChanged();				
-			} //if aktion
-		} //mouseDragged
-	} //class ZoomMotionListener
+				drawAreaChanged();
+			} // if aktion
+		} // mouseDragged
+	} // class ZoomMotionListener
 
 	public void setCursorPosition(Point point) {
 		robot.mouseMove(point.x, point.y);
 	}
-	
-	public void drawAreaChanged(){
+
+	public void drawAreaChanged() {
 		drawArea.fireChangeEvent();
 	}
 
-} //class DrawAreaPopupMenu
+} // class DrawAreaPopupMenu

@@ -14,9 +14,8 @@ public class Folders {
 	/**
 	 * Hauptpfad zur Anwendung
 	 */
-	public static final String MATH4U2_FOLDER = FileUtils.urlToUriPath(ClassLoader
-			.getSystemResource(""));
-
+	public static final String MATH4U2_FOLDER = FileUtils
+			.urlToUriPath(ClassLoader.getSystemResource(""));
 
 	public static final File MATH4U2_FOLDER_FILE = new File(MATH4U2_FOLDER);
 
@@ -35,12 +34,14 @@ public class Folders {
 	/**
 	 * Pfad zu den temp-Dateien der Serververzeichnisse
 	 */
-	public static final String TEMP_FOLDER_SC = "math4u2/temp/sc/";
+	public static final File TEMP_FOLDER_SC = new File(
+			Folders.MATH4U2_FOLDER_FILE, "math4u2/temp/sc/");
 
 	/**
 	 * Pfad zu den temp-xml-Dateien
 	 */
-	public static final String TEMP_FOLDER_XML = "math4u2/temp/xml/";
+	public static final File TEMP_FOLDER_XML = new File(
+			Folders.MATH4U2_FOLDER_FILE, "math4u2/temp/xml/");
 
 	/**
 	 * Pfad zu Intialisierungs Xml-Datei

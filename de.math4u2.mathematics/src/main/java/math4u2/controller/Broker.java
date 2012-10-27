@@ -48,7 +48,7 @@ import math4u2.view.graph.HasGraph;
 public class Broker {
 
 	/** Map aller veröffentlichten Objekte */
-	private HashMap objectDic;
+	protected HashMap objectDic;
 
 	/** Alle Listener, die beim Broker angemeldet sind */
 	private List brokerListeners = new LinkedList();
@@ -779,7 +779,7 @@ public class Broker {
 	 * @param objToDel
 	 *            Menge der Objekte, die gelöscht werden sollen.
 	 */
-	private void deleteProvedObjectSet(Set objToDel)
+	protected void deleteProvedObjectSet(Set objToDel)
 			throws ObjectNotInRelationException {
 		for (Iterator iter = objToDel.iterator(); iter.hasNext();) {
 			MathObject element = (MathObject) iter.next();

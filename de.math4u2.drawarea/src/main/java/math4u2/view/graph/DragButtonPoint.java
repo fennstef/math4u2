@@ -18,22 +18,20 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 	private IScalarStringHolder layout;
 	private IScalarDoubleHolder xPos;
 	private IScalarDoubleHolder yPos;
-	private IScalarStringHolder name;
-	private IScalarStringHolder index;
-
+	private AbstractSimpleGraph parent;
+	
 	public DragButtonPoint(DrawAreaInterface da, IScalarStringHolder layout,
 			IScalarDoubleHolder xPos, IScalarDoubleHolder yPos,
-			IScalarStringHolder name, IScalarStringHolder index) {
+			AbstractSimpleGraph parent) {
 		super(da);
 		this.layout = layout;
 		this.xPos = xPos;
 		this.yPos = yPos;
-		this.name = name;
-		this.index = index;
+		this.parent = parent;
 
 		init();
 	}
-
+	
 	private int getXInt() throws Exception {
 		double xd = xPos.getScalar();
 		return da.xCoordToPix(xd) - SIZE / 2;
@@ -56,7 +54,7 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 			y = da.yCoordToPix(yPos.getScalar()) - SIZE / 2;
 		} catch (Exception e) {
 			ExceptionManager.doError("Fehler beim Erstellen des Punkt-Graphen "
-					+ name, e);
+					+ parent.getName().getScalarOrNull(), e);
 		}
 	}
 
@@ -71,7 +69,7 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 						"Fehler beim Zeichnen des Punkt-Graphen " + getName(),
 						e);
 			} 
-		} 
+		}
 		if (!yPos.isFixed()) {
 			try {
 				yPos.setScalar(da.yPixToCoord(y), false);
@@ -83,7 +81,11 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 		} 
 		//Set x again with propagate update
 		try {
-			xPos.setScalar(da.xPixToCoord(x), true);
+			if(!xPos.isFixed()){
+				xPos.setScalar(da.xPixToCoord(x), true);
+			}else if(!yPos.isFixed()){
+				yPos.setScalar(da.yPixToCoord(y), true);
+			}
 		} catch (Exception e) {
 			ExceptionManager.doError(
 					"Fehler beim Zeichnen des Punkt-Graphen " + getName(),
@@ -106,7 +108,7 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 			y = limitRangeY(y);			
 			
 			PointDrawStyle style = PointDrawStyle.valueOf(layout.getScalarOrNull().toUpperCase());
-			style.paint(c, g, x, y, SIZE, name, index);
+			style.paint(c, g, x, y, SIZE, parent.getName(), parent.getIndex());
 		} catch (Exception e) {
 			ExceptionManager.doError("Fehler beim Zeichnen des Punkt-Graphen "
 					+ getName(), e);
@@ -123,8 +125,8 @@ public class DragButtonPoint extends DragButtonAbstract implements DrawAreaConst
 	}
 	
 	public String getName() {
-		if(index==null) return name.getScalarOrNull();
-		return name.getScalarOrNull() + "[" + index.getScalarOrNull() + "]";
+		if(parent.getIndex().getScalarOrNull().equals("")) return parent.getName().getScalarOrNull();
+		return parent.getName().getScalarOrNull() + "[" + parent.getIndex().getScalarOrNull() + "]";
 	}
 
 }

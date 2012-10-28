@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.7 Elementare Anweisungen</location>
+		<title>4.7.1 Benutzeroberfläche konfigurieren</title>
+		<step>
+			<title>4.7.1 Benutzeroberfläche konfigurieren</title>
+			<description>
+<strong>defaults(): Voreinstellungen setzen</strong>
+<br/>Mit der <code>defaults()</code>-Anweisung werden global gültige Voreinstellungen gesetzt.
+
+<p/>Die Anweisung <code>defaults( hide = true )</code> bewirkt, dass bei allen folgenden Objektdefinitionen
+wie z.B. <code>newObject( def = f(x):=x )</code> für die Sichtbarkeit die Voreinstellung 
+<code>hide=true</code> gilt.
+<br/>
+<ul>
+	<li>
+Voreinstellung für die Sichtbarkeit von Definitionen
+<br/><code>hide = true</code> oder <code>false</code> Voreinstellung: <code>false</code>
+	</li>
+</ul>
+
+<p/><strong>expand(): Listen ein/ausklappen</strong>
+<br/>Mit der <code>expand()</code>-Anweisung wird festgelegt, in welchem Zustand 
+sich die beiden Listen der Steuerleiste (links: Definitionsliste, 
+rechts: Detailliste) befinden.
+
+<p/>Mit <code>expand( left = one; right = all )</code> legt man fest, dass von der 
+linken Liste (Definitionsliste) ein Element sichtbar ist (bei der Definitionsliste 
+immer das oberste) und dass von der rechten Liste (Detailliste) alle Elemente 
+sichtbar sind.
+
+<p/>Mögliche Werte sind für die Attribute <code>left</code> und <code>right</code> sind:
+<br/><code>all</code><tab/>Alle Elemente sichtbar (Voreinstellung).
+<br/><code>one</code><tab/>Ein Element sichtbar. Bei der Definitionsliste: das oberste, bei Detailliste: das ausgewählte.
+<br/><code>none</code><tab/>Kein Element sichtbar.
+			</description>
+		</step>
+	</body>
+</math4u2>

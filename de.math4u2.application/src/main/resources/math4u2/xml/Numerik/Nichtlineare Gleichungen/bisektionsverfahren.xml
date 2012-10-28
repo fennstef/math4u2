@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Max Weiß (Fachhochschule Augsburg) -->
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.1</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Nichtlineare Gleichungen</location>
+		<title>Bisektionsverfahren</title>
+		<summary/>
+		<step>
+			<title>Bisektionsverfahren</title>
+			<description>Oben ist rot der Graph einer Funktion <f>f(x)</f> zu sehen.
+			<br/>Nehmen wir an, dass wir über <f>f(x)</f> folgendes wissen:
+			<ul>
+					<li>
+						<f>f(x)</f> ist stetig im Intervall [ <f>a[0]</f>; <f>b[0]</f> ] (hier konkret im Intervall [ 2; 6 ]) und</li>
+					<li>
+						<f>f(x)</f> hat an einer Intervallgrenze einen negativen Wert (hier: <f>f(a[0])</f>) und an der anderen Intervallgrenze einen positiven Wert (hier: <f>f(b[0])</f>).</li>
+				</ul>Dann sagt der Zwischenwertsatz für stetige Funktionen: Die Funktion <f>f(x)</f> nimmt in diesem Intervall sämtliche Werte zwischen <f>f(a[0])</f>  und <f>f(b[0])</f> an, insbesondere gibt es mindestens eine Stelle in diesem Intervall, an der <f>f(x)</f> den Wert <f>0</f> hat, also mindestens eine Nullstelle der Funktion <f>f(x)</f>, vielleicht gibt es in diesem Intervall auch mehrere Nullstellen.</description>
+			<layout>
+				<row perc="70">
+					<col perc="100" name="da"/>
+				</row>
+				<row perc="30">
+					<col perc="100" name="intervalle"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+		          expand( left = false; right = false );
+						    newObject( def = da.xMin := -2);
+						    newObject( def = da.xMax := 8);
+						    newObject( def = da.yMin := -2);
+						    newObject( def = da.yMax := 3);
+						    newObject( def = intervalle.xMin := da.xMin);
+						    newObject( def = intervalle.xMax := da.xMax);
+						    newObject( def = intervalle.yMin := -1);
+						    newObject( def = intervalle.yMax := 8);
+						    da.setTitle( title = "Funktion");
+						    intervalle.setTitle( title = "Intervalle");
+						    newObject( def = a1:= 2);
+						    newObject( def = b1 := 6);
+						    newObject( def = a:= a1);
+						    newObject( def = b:= b1 );
+						    newObject( def = m1 := (a1 + b1)/2 );
+						    newObject( def = pa1 := punkt( a1, 0 ) );
+						    newObject( def = pb1 := punkt( b1, 0 ) );
+						    newObject( def = pm1 := punkt( m1, 0 ) );
+						    newObject( def = mey:=vektor({0,-1}) );
+						    newObject( def = sa1:= gerade( pa1, mey ); color = magenta; linestyle = dot; target = da );
+						    newObject( def = sb1:= gerade( pb1, mey ); color = magenta; linestyle = dot ; target = da);
+						    intervalle.addGraph( name = sa1);
+						    intervalle.addGraph( name = sb1);
+
+						    newObject( def = ff1:= flaeche( { pa1, pb1, punkt( b1, 1), punkt(a1, 1) } ) ; color = magenta; target = intervalle );
+						    
+						    newObject( def = fl(x):=-0.2*(x-3)*(x+1)^2; color = red; hide = true);
+						    newObject( def = graphl:=kurve(t,-20, 1.5, t, fl(t)); color = red; target = da ; hide = true);
+						    newObject( def = fr(x):=-(x+5.4)/(x-10)-2; color = blue; hide = true);
+						    newObject( def = graphr:=kurve(t,1.5, 20, t, fr(t)); color = red; target = da; hide = true );   
+						    newObject( def = ftext:=text(punkt(6.5, fr(6.5)), "<f>y</f>=<f>f(x)</f>", B_SE); bordercolor = red; target = da );
+						    newObject( def = ltext:=text(punkt(a, 0), "<f>a[0]</f> mit <f>f(a[0])$lt 0</f>", C_N); target = da);
+						    newObject( def = rtext:=text(punkt(b, 0), "<f>b[0]</f> mit <f>f(b[0])$gt 0</f>", C_S); target = da);
+						   
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Das Bisektionsverfahren ist eine einfache Vorgehensweise, diese Nullstelle (eine von diesen Nullstellen) schrittweise immer genauer einzugrenzen.
+		      
+		   </description>
+		</step>
+		<step>
+			<description>Wir berechnen die Mitte <f>m=(a[0]+b[0])/2</f> des Intervalls und den zugehörigen Funktionswert <f>f(m)</f>. Dann entscheiden wir, wo wir die Nullstelle weiter suchen: 
+<ul>
+					<li>Wenn <f>f(m)=0</f> gilt, haben wir die (oder eine) Nullstelle gefunden und hören auf.</li>
+					<li>Wenn <f>f(b[0])*f(m)$lt0</f> gilt, dann liegt im rechten Teilintervall ein Vorzeichenwechsel vor, dann muss dort eine Nullstelle sein.</li>
+					<li>Ansonsten muss im linken Teilintervall ein Vorzeichenwechsel und somit eine Nullstelle liegen.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+				         deleteObject( name = ftext);
+				          newObject( def = sm1:= gerade( pm1, mey ); color = blue; linestyle = dot ; target = da);
+				          newObject( def = mtext:=text(pm1, "<f>m=(a+b)/2</f> mit <f>f(m)</f>", C_N); target = da);
+
+				          						    intervalle.addGraph( name = sm1);
+				       </script>
+			</seq>
+		</step>
+		<step>
+			<description>Somit haben wir die Suche nach der Nullstelle auf ein Intervall eingegrenzt, das nur noch halb so breit ist wie das ursprüngeliche Intervall [ <f>a[0]</f>; <f>b[0]</f> ].
+			<br/>In der Regel wird das noch zu ungenau sein, wir gehen deshalb mit dem resultierenden Teilintervall wieder entsprechend vor:</description>
+			<seq>
+				<script>
+                        						    deleteObject( name = mtext);
+                        						    
+                        			newObject( def = dec1:=fr(m1)*fr(b1) );
+                        						    newObject( def = a2:= cond(dec1, m1,a1) ) ;
+						    newObject( def = b2 :=cond(dec1, b1, m1));
+						    newObject( def = a:=a2);
+						    newObject( def = b:=b2);
+						    newObject( def = m2 := ( a2 + b2 )/2 );
+						    newObject( def = pa2 := punkt( a2, 1 ) );
+						    newObject( def = pb2 := punkt( b2, 1 ) );
+						    newObject( def = pm2 := punkt(m2, 1 ) );
+						    newObject( def = sa1:= gerade( pa2, mey ); color = magenta; linestyle = dot; target = da );
+						    newObject( def = sb1:= gerade( pb2, mey ); color = magenta; linestyle = dot ; target = da);
+						     newObject( def = ff2:= flaeche( { pa2, pb2, punkt( b2, 2), punkt(a2, 2) } ) ; color = magenta; target = intervalle );   
+						     newObject( def = ltext:=text(punkt(a, 0), "<f>a[1]</f> mit <f>f(a[1])$lt 0</f>", C_N); target = da);
+						    newObject( def = rtext:=text(punkt(b, 0), "<f>b[1]</f> mit <f>f(b[1])$gt 0</f>", C_S); target = da);
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+		    <description>2. Schritt: MItte des Intervalls berechen.</description>
+			<seq>
+				<script>  	   
+				   
+		       
+						    newObject( def = sm1:= gerade( pm2, mey ); color = blue; linestyle = dot ; target = da);
+						   
+		      </script>
+			</seq>
+		</step>
+		<step>
+		    <description>Suche in dem Teilintervall fortsetzen, in dem ein Vorzeichenwechsel stattfindet (falls wir nicht zufällig mit der Mitte eine Nullstelle exakt getroffen haben).</description>
+			<seq>
+				<script>  
+					      						  //  newObject( def = rtext:=text(punkt(m2, 0), "<f>b</f> mit <f>f(b)$gt 0</f>", C_S); target = da);
+		       newObject( def = b3:= m2);
+						    newObject( def = a3:=a2);
+						     newObject( def = a:=a3);
+						    newObject( def = b:=b3);
+
+						    newObject( def = m3 := ( a3 + b3 )/2 );
+						    newObject( def = pa3 := punkt( a3, 2 ) );
+						    newObject( def = pb3 := punkt( b3, 2 ) );
+						    newObject( def = pm3 := punkt(m3, 2 ) );
+						    newObject( def = sa1:= gerade( pa3, mey ); color = magenta; linestyle = dot; target = da );
+						    newObject( def = sb1:= gerade( pb3, mey ); color = magenta; linestyle = dot ; target = da);
+
+						    newObject( def = ff3:= flaeche( { pa3, pb3, punkt( b3, 3), punkt(a3, 3) } ) ; color = magenta; target = intervalle );   
+						    newObject( def = ltext:=text(punkt(a, 0), "<f>a[2]</f> mit <f>f(a[2])$lt 0</f>", C_N); target = da);
+						    newObject( def = rtext:=text(punkt(b, 0), "<f>b[2]</f> mit <f>f(b[2])$gt 0</f>", C_S); target = da);
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+		   <description>3. Schritt: MItte des Intervalls berechen.</description>
+			<seq>
+				<script>
+		         						    newObject( def = sm1:= gerade( pm3, mey ); color = blue; linestyle = dot ; target = da);
+		      </script>
+			</seq>
+		</step>
+		<step>
+		   <description>Suche in dem Teilintervall fortsetzen, in dem ein Vorzeichenwechsel stattfindet ...</description>
+			<seq>
+				<script>  	  
+									      						   // newObject( def = rtext:=text(punkt(m3, 0), "<f>b</f> mit <f>f(b)$gt 0</f>", C_S); target = da);    
+		       newObject( def = a4:= m3);
+						    newObject( def = b4:=b3);
+						     newObject( def = a:=a4);
+						    newObject( def = b:=b4);
+
+						    newObject( def = m4 := ( a4 + b4 )/2 );
+						    newObject( def = pa4 := punkt( a4,3 ) );
+						    newObject( def = pb4 := punkt( b4, 3 ) );
+						    newObject( def = pm4 := punkt(m4, 3 ) );
+						    newObject( def = sa1:= gerade( pa4, mey ); color = magenta; linestyle = dot; target = da );
+						    newObject( def = sb1:= gerade( pb4, mey ); color = magenta; linestyle = dot ; target = da);
+						    newObject( def = sm1:= gerade( pm4, mey ); color = blue; linestyle = dot ; target = da);
+						    newObject( def = ff4:= flaeche( { pa4, pb4, punkt( b4, 4), punkt(a4, 4) } ) ; color = magenta; target = intervalle );   
+						    newObject( def = ltext:=text(punkt(a, 0), "<f>a[3]</f> mit <f>f(a[3])$lt 0</f>", C_N); target = da);
+						    newObject( def = rtext:=text(punkt(b, 0), "<f>b[3]</f> mit <f>f(b[3])$gt 0</f>", C_S); target = da);
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+		<description>4. Schritt: MItte des Intervalls berechen.</description>
+			<seq>
+				<script>
+		         						    newObject( def = sm1:= gerade( pm4, mey ); color = blue; linestyle = dot ; target = da);
+		      </script>
+			</seq>
+		</step>
+		<step>
+		  <description>Suche in dem Teilintervall fortsetzen, in dem ein Vorzeichenwechsel stattfindet ...</description>
+			<seq>
+				<script>  	   
+      
+		       newObject( def = a5:= m4);
+						    newObject( def = b5:=b4);
+						     newObject( def = a:=a5);
+						    newObject( def = b:=b5);
+
+						    newObject( def = m5 := ( a5 + b5 )/2 );
+						    newObject( def = pa5 := punkt( a5,4 ) );
+						    newObject( def = pb5 := punkt( b5, 4 ) );
+						    newObject( def = pm5 := punkt(m5, 5 ) );
+						    newObject( def = sa1:= gerade( pa5, mey ); color = magenta; linestyle = dot; target = da );
+						    newObject( def = sb1:= gerade( pb5, mey ); color = magenta; linestyle = dot ; target = da);
+						    newObject( def = sm1:= gerade( pm5, mey ); color = blue; linestyle = dot ; target = da);
+						    newObject( def = ff5:= flaeche( { pa5, pb5, punkt( b5, 5), punkt(a5, 5) } ) ; color = magenta; target = intervalle );   
+						    newObject( def = ltext:=text(punkt(a, 0), "<f>a[4]</f> mit <f>f(a[4])$lt 0</f>", C_N); target = da);
+						    newObject( def = rtext:=text(punkt(b, 0), "<f>b[4]</f> mit <f>f(b[4])$gt 0</f>", C_S); target = da);
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+		<description>5. Schritt: MItte des Intervalls berechen.</description>
+			<seq>
+				<script>
+		         						    newObject( def = sm1:= gerade( pm5, mey ); color = blue; linestyle = dot ; target = da);
+		      </script>
+			</seq>
+		</step>
+		<step>
+				  <description>Suche in dem Teilintervall fortsetzen, in dem ein Vorzeichenwechsel stattfindet ...</description>
+			<seq>
+				<script>  	       
+		       newObject( def = b6:= m5);
+						    newObject( def = a6:=a5);
+						     newObject( def = a:=a6);
+						    newObject( def = b:=b6);
+
+						    newObject( def = m6 := ( a6 + b6 )/2 );
+						    newObject( def = pa6 := punkt( a6,5 ) );
+						    newObject( def = pb6 := punkt( b6, 5 ) );
+						    newObject( def = pm6 := punkt(m6,5 ) );
+						    newObject( def = sa1:= gerade( pa6, mey ); color = magenta; linestyle = dot; target = da );
+						    newObject( def = sb1:= gerade( pb6, mey ); color = magenta; linestyle = dot ; target = da);
+						    newObject( def = sm1:= gerade( pm6, mey ); color = blue; linestyle = dot ; target = da);
+						    newObject( def = ff6:= flaeche( { pa6, pb6, punkt( b6, 6), punkt(a6, 6) } ) ; color = magenta; target = intervalle );   
+						    newObject( def = ltext:=text(punkt(a, 0), "<f>a[5]</f> mit <f>f(a[5])$lt 0</f>", C_N); target = da);
+						    newObject( def = rtext:=text(punkt(b, 0), "<f>b[5]</f> mit <f>f(b[5])$gt 0</f>", C_S); target = da);
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+		  		<description>6. Schritt: ......</description>
+			<seq>
+				<script>  	      
+		       newObject( def = a7:= m6);
+						    newObject( def = b7:=b6);
+						     newObject( def = a:=a7);
+						    newObject( def = b:=b7);
+
+						    newObject( def = m7 := ( a7 + b7 )/2 );
+						    newObject( def = pa7 := punkt( a7,6 ) );
+						    newObject( def = pb7 := punkt( b7, 6 ) );
+						    newObject( def = pm7 := punkt(m7,6) );
+						    newObject( def = sa1:= gerade( pa7, mey ); color = magenta; linestyle = dot; target = da );
+						    newObject( def = sb1:= gerade( pb7, mey ); color = magenta; linestyle = dot ; target = da);
+						    newObject( def = sm1:= gerade( pm7, mey ); color = blue; linestyle = dot ; target = da);
+						    newObject( def = ff7:= flaeche( { pa7, pb7, punkt( b7, 7), punkt(a7, 7) } ) ; color = magenta; target = intervalle );   
+						    newObject( def = ltext:=text(punkt(a, 0), "<f>a[6]</f> mit <f>f(a[6])$lt 0</f>", C_N); target = da);
+						    newObject( def = rtext:=text(punkt(b, 0), "<f>b[6]</f> mit <f>f(b[6])$gt 0</f>", C_S); target = da);
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+		   <description>In der Regel werden wir so die Nullstelle nie exakt treffen, wir können sie aber beliebig genau eingrenzen:
+		   <br/>Mit jedem Schritt wird die Intervallbreite halbiert, nach dem <f>k</f>-ten Schritt hat die Intervallbreite also die Größe <f>(b[0]-a[0])/2^k</f>.
+		   <br/>Berechnen wir für das letzte Intervall noch den Mittelpunkt <f>m[k]=(a[k]+b[k])/2</f>, dann ist <f>m[k]</f> eine Näherung für die gesuchte Nullstelle <f>x[0]</f> mit <f>|m[k]-x[0]|$lt(b[0]-a[0])/2^(k+1)</f>.</description>
+		</step>
+	</body>
+</math4u2>

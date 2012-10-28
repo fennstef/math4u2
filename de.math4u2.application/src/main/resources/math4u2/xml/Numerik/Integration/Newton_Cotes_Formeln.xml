@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.1</version>
+		
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+	<author>Dr. Weiss</author>
+		<location>Numerik/Integration</location>
+		<title>Newton-Cotes-Formeln</title>
+		<summary>Abgeschlossene Newton-Cotes-Formeln: Trapezregel, Simpson-Regel, 3/8-Regel, Boole-Regel</summary>
+		<keywords><keyword>Newton-Cotes-Formeln</keyword><keyword>Simpson-Regel</keyword><keyword>3/8-Regel</keyword><keyword>Boole-Regel</keyword></keywords>
+		<step><title>Warum numerisch integrieren?</title>
+			<description>In vielen Fällen kann man bestimmte Integrale <f>int(x,a,b,f(x))</f> nicht über eine Stammfunktion <f>F(x)</f> der Funktion <f>f(x)</f> berechnen, weil eine Stammfunktion nicht gefunden werden kann oder weil vom Integranden <f>f(x)</f> nur Funktionswerte an bestimmten Stützstellen vorliegen, nicht aber ein geschlossener Funktionsterm. <br/>In diesen Fällen ist man auf eine näherungsweise numerische Berechnung der Integrale angewiesen.</description>
+			<layout>
+				<row perc="50">
+					<col perc="50" name="integ"/>
+					<col perc="50" name="trap"/>
+				</row>
+				<row perc="50">
+					<col perc="50" name="simp"/>
+					<col perc="50" name="bool"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				     expand( left = false; right = false );
+			         integ.setTitle( title = "Integral" );
+			         integ.coordinateSystem( xMin = -1; xMax = 9; yMin = -1.5; yMax = 7 );
+			         			        trap.coordinateSystem( xMin = -1; xMax = 9; yMin = -1.5; yMax = 7 );
+			          simp.coordinateSystem( xMin = -1; xMax = 9; yMin = -1.5; yMax = 7 );
+				       bool.coordinateSystem( xMin = -1; xMax = 9; yMin = -1.5; yMax = 7 );	
+			          newObject( def = a:= punkt( 3, fix(-0.7) ); style= ARROW_H; target = integ  );
+			        newObject( def = b:= punkt( 5, fix(-0.7) ); style= ARROW_H; target = integ );
+			        
+			        newObject( def = ag:= gerade( a, e2y ); target = integ; color = gray; linestyle = dot );
+			      
+			        newObject( def = bg:= gerade( b, e2y ); target = integ; color = gray; linestyle = dot );
+			        
+			        newObject( def = ax := a.x );
+			        newObject( def = bx := b.x );
+			      
+			        newObject( def = f(x):=2+sin(2*sin(x)+2*x); target = integ);
+			          	newObject( def = intfl:=flaeche({punkt(ax,0),punkt(bx,0),kurve(t,bx,ax,t,f(t))}); color = gray; target = integ; hide = true );
+			          	newObject( def = ftext:=text(punkt(6.5, f(6.5)), "<f>y=f(x)</f>", B_NW);  fillcolor = 160.220.220.210;target = integ );
+
+			          	
+				   </script>
+			</seq>
+		</step>
+		<step><description><strong>Experimentieren Sie!</strong> Im Folgenden können Sie die Integrationsgrenzen jederzeit mit der Maus verschieben. Machen Sie sich so die Bedeutung und die Konsequenzen der verwendeten Ideen klar.</description>
+		  <seq>
+		  		     <script>
+		  	   deleteObject( name = ftext);
+		        integ.addGraph( name = a, b);
+		        newObject( def = atext:=text(a, "Hier linke<br/>Integrationsgrenze<br/>verschieben", B_NW); fillcolor = 160.220.220.210; target = integ );
+			          	newObject( def = btext:=text(b, "Hier rechte<br/>Integrationsgrenze<br/>verschieben", B_NE);  fillcolor = 160.220.220.210;target = integ );
+		     </script>
+		  </seq>
+		</step>
+		<step>
+			<description>Die Grundidee im folgenden ist es stets, die Funktion <f>f(x)</f> im Integrationsintervall durch eine "einfachere" Funktion <f>f[einfacher](x)</f> anzunähern und dann ersatzweise das Integral über diese "einfachere" Funktion zu berechnen: <f>int(x,a,b,f(x)) $asymp int(x,a,b,f[einfacher](x))</f> .
+
+		   </description>
+			<seq>
+				<script>
+		      deleteObject( name = atext, btext);
+		      </script>
+			</seq>
+		</step>
+		<step><title>Trapez-Regel</title>
+			<description>Die simpelste Idee bei der Wahl einer einfacheren Funktion ist es wohl, eine lineare Funktion zu wählen, die an den Endpunkten des Integrationsintervalls die gleichen Werte <f>f(a)</f> bzw. <f>f(b)</f> liefert wie die ursprüngliche Funktion. Rechts oben ist das gezeigt.</description>
+			<seq>
+				<script>
+		      
+			        trap.setTitle( title = "Trapez-Regel" );
+			        trap.addGraph( name = f, a, b, ag, bg );
+			        newObject( def = ma:=marker(ax, f(ax) ); target = trap );
+		       newObject( def = mb:=marker(bx, f(bx) ); target = trap );
+		       newObject( def = ger:=gerade( ma, ma.r-mb.r); color = green;  target = trap );
+		       newObject( def = atext:=text(ma, "<f>y=f(a)</f>", B_NW); fillcolor = 160.220.220.210; target = trap );
+			          	newObject( def = btext:=text(mb, "<f>y=f(b)</f>", B_NE);  fillcolor = 160.220.220.210;target = trap );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Dadurch wird die für das Integral relevante graue Fläche durch die Fläche des grünen Trapezes zu ersetzen, wie es jetzt oben rechts gezeigt ist.</description>
+			<seq>
+				<script>
+			      
+			        newObject( def = trapfl:=flaeche({ punkt(ax,0), punkt(bx,0), mb, ma } ); color = green; target = trap );
+			        
+
+			        			        
+			      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Das Integral wird also angenähert durch den Flächeninhalt <f>I[trapez]</f> des Trapezes. Diesen erhält man als Produkt der Breite <f>(b-a)</f> mit der mittleren Höhe <f>1/2*(f(a)+f(b))</f> zu <f>I[trapez]=(b-a)*(1/2*(f(a)+f(b)))=(b-a)/2*(f(a)+f(b))</f>. Insgesamt hat man die
+				<br/><strong>Trapez-Regel : </strong><f bgcolor="green">int(x,a,b,f(x)) $asymp I[trapez]=h/2*(f(a)+f(b))</f> ; <f>h=b-a</f>
+		    </description>
+			<seq>
+				<script>
+		            deleteObject( name = atext, btext );
+		        </script>
+			</seq>
+		</step>
+		<step>
+			<description>Natürlich hängt die Qualität dieser Näherung davon ab, über welchem Intervall man das Integral berechnen will.
+		  </description>
+		</step>
+		<step>
+			<description>Wenn die Funktion dort fast wie eine Gerade verläuft, dann erhält man eine gute Näherung.</description>
+			<seq>
+				<par>
+					<script>
+		          animate( name = a.x; to = 4; end = 3 );
+		          animate( name = b.x; to = 5; end = 3 );
+		       </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Es kann auch sein, dass sich Fehler kompensieren und die Trapezregel ein gutes Resultat liefert, obwohl der Funktionsverlauf durch die Gerade schlecht angenähert wird. Dies ist aber ein Zufall, und darauf kann man sich natürlich nicht verlassen.</description>
+			<seq>
+				<par>
+					<script>
+		          animate( name = a.x; to = 3.7; end = 3 );
+		          animate( name = b.x; to = 6.4; end = 3 );
+		       </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Oft wird die Trapezregel ein relativ falsches Ergebnis liefern, z.B. hier</description>
+			<seq>
+				<par>
+					<script>
+		          animate( name = a.x; to = 5; end = 3 );
+		          animate( name = b.x; to = 6.7; end = 3 );
+		       </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Oder hier.
+		   		</description>
+			<seq>
+				<par>
+					<script>
+		          animate( name = a.x; to = 2.4; end = 3 );
+		          animate( name = b.x; to = 4.9; end = 3 );
+		       </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Der Ausweg ist klar: Man muss eine Ersatzfunktion wählen, die eine Funktion mit gekrümmtem Graphen besser annähern kann. Gleichzeitig soll die Ersatzfunktion natürlich "einfach" integrierbar sein. 
+<br/>Der im folgenden gezeigte Weg: Wir wählen als Ersatzfunktion ein Interpolationspolynom mit äquidistanten Stützstellen im Integrationsintervall, die erste Stützstelle an der linken Grenze und letzte an der rechten. <br/>Je nach Grad des Polynoms entstehen so verschiedene Formeln: 
+<ul>
+					<li>Interpolationspolynom vom Grad <f>2</f>: <em>Simpson-Regel</em>
+					</li>
+					<li>Interpolationspolynom vom Grad <f>4</f>: <em>Boole-Regel</em>
+					</li>
+				</ul>Auch die Trapezregel passt in dieses Konzept:
+<ul>
+					<li>Interpolationspolynom vom Grad <f>1</f>: Trapezregel</li>
+				</ul>Nun genauer zur Konstruktion der Simpson-Regel.
+			</description>
+		</step>
+		<step><title>Simpson-Regel</title>
+			<description>Bei der Simpson-Regel hat man insgesamt drei Stützstellen: Eine an der linken Integrationsgrenze: <f>x[0]=a</f>,  eine in der Mitte des Intervalls bei  <f>x[1]=(a+b)/2</f> und eine an der rechten Integrationsgrenze: <f>x[2]=b</f>.  Diese Stützstellen werden durch ein Polynom <f>p[2](x)</f> vom Grad <f>2</f> interpoliert. Oben ist der Graph dieses Polynoms, eine Parabel, blau eingezeichnet. Zur daraus resultierenden "Simpson-Regel" gelangt man wie folgt:</description>
+			<seq>
+				<script>
+                     simp.setTitle( title = "Simpson-Regel" );
+				      
+				      
+				       newObject( def = simph := (bx - ax)/2 );
+                     newObject( def = simppos(i) := ax + i*simph );
+				       newObject( def = simpM1 := matrix(i,3,k,3, simppos(i-1)^(k-1) ); );
+					newObject( def = simpB1 := vektor(k,3,f(simppos(k-1) ))) ;
+					newObject( def = simpK1 := solvelin(simpM1, simpB1 ) );
+					newObject( def = simpPoly1(x):= sum(i,1,3, simpK1[i]*x^(i-1) ) ; color = blue;  target = simp );
+					
+			        simp.addGraph( name = a, b, ag, bg, f, ma, mb );
+				       newObject( def = mab:= marker( (ax+bx)/2, f((ax+bx)/2) ); target = simp );
+				       newObject( def = p2text:=text(punkt(5.5, simpPoly1(5.5)), "<f>y=p[2](x)</f>", B_NW);  fillcolor = 160.220.220.210;target =simp  );
+
+                     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir machen für das Interpolationspolynom <f>p[2](x)</f>  den Ansatz von Lagrange:
+		   <br/>
+				<f>p[2](x)=f(x[0])*l[0](x)+f(x[1])*l[1](x)+f(x[2])*l[2](x)</f> darin sind die Funktionen <br/><f>l[0](x)=((x-x[1])*(x-x[2]))/((x[0]-x[1])*(x[0]-x[2]))   , l[1](x)=((x-x[0])*(x-x[2]))/((x[1]-x[0])*(x[1]-x[2])) , l[2](x)=((x-x[0])*(x-x[1]))/((x[2]-x[0])*(x[2]-x[1]))  </f>  die sog. Lagrange-Faktoren.
+			</description>
+			<seq>
+			    <script>
+			       deleteObject( name = p2text );
+			    </script>
+			</seq>
+			
+		</step>
+		
+		<step>
+			<description>Das entstehende Integral (Inhalt der blauen Fläche)
+		   <br/>
+				<f>int(x,a,b,p[2](x))=int(x,a,b,(f(x[0])*l[0](x)+f(x[1])*l[1](x)+f(x[2])*l[2](x)))</f> kann zunächst umgeschrieben werden in eine Summe von Integralen:
+		   <br/>
+				<f>int(x,a,b,p[2](x))=int(x,a,b,f(x[0])*l[0](x))+int(x,a,b,f(x[1])*l[1](x))+int(x,a,b,f(x[2])*l[2](x))</f>. 
+				<br/>Die Funktionswerte <f>f(x[0]), f(x[1]), f(x[2])</f> verhalten sich darin bezüglich der Integration wie Zahlenfaktoren und können deshalb vor die Integrale gezogen werden. Man hat also:<br/>
+				<f>int(x,a,b,p[2](x))=f(x[0])*int(x,a,b,l[0](x))+f(x[1])*int(x,a,b,l[1](x))+f(x[2])*int(x,a,b,l[2](x))</f>
+			</description>
+			<seq>
+				<script>
+				       newObject( def = simpfl1:=flaeche({punkt(ax,0),punkt(simppos(2),0),kurve(t,simppos(2),ax,t,simpPoly1(t))}); color = blue; target = simp; hide = true );
+				   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Übrig bleiben die Integrale über die Lagrangefaktoren <f>l[0](x), l[1](x)</f> und <f>l[2](x)</f>.
+		   <br/>Wichtig ist: Diese Integrale hängen nicht mehr von der zu integrierenden Funktion <f>f(x)</f> ab, sondern nur noch vom Integrationsintervall, letztlich nur noch von dessen Breite <f>b-a</f>. Wir können Sie also ohne Kenntnis von <f>f(x)</f> berechnen.
+		   </description>
+		</step>
+		<step>
+		   <description>Meist rechnet man an dieser Stelle mit dem Abstand <f>h=(b-a)/2</f> der Stützstellen und erhält der Reihe nach:
+				<br/><f>int(x,a,b,l[0](x))=int(x,a,b,((x-x[1])*(x-x[2]))/((x[0]-x[1])*(x[0]-x[2])))=int(x,a,a+2*h,((x-(a+h))*(x-(a+2*h)))/((-h)*(-2*h)))=1/3*h</f>, 
+				<br/>
+				<f>int(x,a,b,l[1](x))=int(x,a,b,((x-x[0])*(x-x[2]))/((x[1]-x[0])*(x[1]-x[2])))=int(x,a,a+2*h,((x-a)*(x-(a+2*h)))/(h*(-h)))=4/3*h</f> und
+				<br/>
+				<f>int(x,a,b,l[2](x))=int(x,a,b,((x-x[0])*(x-x[1]))/((x[2]-x[0])*(x[2]-x[1])))=int(x,a,a+2*h,((x-a)*(x-(a+h)))/((2*h)*h))=1/3*h</f>.
+		   </description>
+		</step>
+		<step>
+		   <description>
+		     Damit hat man <f>int(x,a,b,p[2](x))=f(x[0])*1/3*h+f(x[1])*4/3*h+f(x[2])*1/3*h</f> und schließlich die
+		   <br/><strong>Simpson-Regel :</strong><f bgcolor="blue">int(x,a,b,f(x)) $asymp  h/3*(f(x[0])+4*f(x[1])+f(x[2]))</f>; <f>h=(b-a)/2</f> 
+		   </description>
+		</step>
+		<step>
+		   <description>Im aktuell gewählten Intervall liefert die Simpson-Regel offensichtlich eine bessere Näherung für das gesuchte Integral als die Trapezregel, eben weil die zugrunde liegende Parabel <f>p[2](x)</f> dem Verlauf des Integranden <f>f(x)</f> besser folgen kann.
+		   </description>
+		   <seq>
+		   <par>
+		         <script>
+		            animate( name = a.x; to = 2.4; end = 1 );
+		            animate( name = b.x; to = 4.9; end = 1 );
+		         </script>
+		      </par>
+		   </seq>
+		</step>
+		<step>
+		 <description>Auch hier integriert die Simpson-Regel beser als die Trapezregel, allerdings schon mit einem deutlich sichtbaren Fehler.
+		   </description>
+		   <seq>
+		   <par>
+		         <script>
+		            animate( name = a.x; to = 5.1; end = 1 );
+		            animate( name = b.x; to = 6.7; end = 1 );
+		         </script>
+		      </par>
+		  		   </seq>
+		</step>
+		<step>
+		 <description>Und es gibt durchaus Situationen, in denen beide Regeln ein ähnlich falsches Ergebnis liefern.
+		 <br/><br/>Der Ausweg: Ein Interpolationspolynom verwenden, das durch noch mehr Stützpunkte noch besser an den Verlauf des Integranden <f>f(x)</f> angepasst wird.
+		 <br/>Wir machen gleich einen größeren Schritt und gehen zum Interpolationspolynom <f>p[4](x)</f> vom Grad <f>4</f>.
+		   </description>
+		   <seq>
+		      
+		      
+
+<par>
+		         <script>
+		            animate( name = a.x; to = 3.7; end = 1 );
+		            animate( name = b.x; to = 7.43; end = 1 );
+		         </script>
+		      </par>
+
+		   </seq>
+		</step>
+		
+		<step><title>Boole-Regel</title>
+		   <description>Das Interpolationspolynom vom Grad <f>4</f> erhalten wir mit dem Ansatz von Lagrange als<br/><f>p[4](x)=f(x[0])*l[0](x)+f(x[1])*l[1](x)+f(x[2])*l[2](x)+f(x[3])*l[3](x)+f(x[4])*l[4](x)</f>.
+<br/>Die <f>5</f> Stützstellen haben einen Abstand <f>h=(b-a)/4</f> und liegen bei <f>x[i]=a+h*i</f>; <f>i=0,1,$hdots,4</f>;  <br/>Oben sehen Sie den Graphen rot eingezeichnet. Der weitere Argumentatiosngang verläuft wie vorher:</description>
+			<seq>
+				<script>
+		            bool.setTitle( title = "Boole-Regel" );
+				      bool.coordinateSystem( xMin = -1; xMax = 9; yMin = -1.5; yMax = 7 );
+				      
+
+				      newObject( def = boolh := (bx - ax)/4 );
+                     newObject( def = boolpos(i) := ax + i*boolh );
+                     newObject( def = boolM := matrix(i,5,k,5, boolpos(i-1)^(k-1) ); );
+					newObject( def = boolB := vektor(k,5,f(boolpos(k-1) ))) ;
+				newObject( def = boolK := solvelin(boolM, boolB ) );
+				newObject( def = boolPoly(x):= sum(i,1,5, boolK[i]*x^(i-1) ) ; color = red; target = bool );
+				
+				
+                      bool.addGraph( name = a, b, ag, bg, f , ma, mb, mab);
+                      newObject( def = ms:= marker( boolpos(1), f(boolpos(1)) ); target = bool );
+                      newObject( def = mss:= marker( boolpos(3), f(boolpos(3)) ); target =bool );
+                       newObject( def = p4text:=text(punkt(4, boolPoly(4)), "<f>y=p[4](x)</f>", B_NW);  fillcolor = 160.220.220.210;target =bool  );
+
+
+		       </script>
+			</seq>
+		</step>
+		<step>
+		   <description>Das Integral über das Polynom <f>p[4](x)</f> (Inhalt der roten Fläche) wird zu einer Summe von Integralen. Unter den Integralen stehen die Lagrange-Faktoren, vor den Integralen als Faktoren die Funktionswerte an den entsprechenden Stützstellen:
+<br/><f>int(x,a,b,p[4](x))=f(x[0])*int(x,a,b,l[0](x))+f(x[1])*int(x,a,b,l[1](x))+f(x[2])*int(x,a,b,l[2](x))+f(x[3])*int(x,a,b,l[3](x))+f(x[4])*int(x,a,b,l[4](x))</f>
+	
+		   </description>
+		   <seq>
+		     <script>
+		        deleteObject( name = p4text );
+		        newObject( def = boolfl:=flaeche({punkt(ax,0),punkt(bx,0),kurve(t,bx,ax,t,boolPoly(t))}); color = red; target = bool; hide = true );
+		     </script>
+		   </seq>
+		</step>
+		<step><description>Die Integrale über die Lagrange-Faktoren führt man aus, man erhält
+		<br/><f> int(x,a,b,p[4](x))=f(x[0])*14/45*h+f(x[1])*64/45*h+f(x[2])*24/45*h+f(x[3])*64/45*h+f(x[4])*14/45*h</f>; Dies ergibt die 
+		<br/><strong>Boole-Regel :</strong><f bgcolor="red">int(x,a,b,f(x)) $asymp 2*h/45*(7*f(x[0])+32*f(x[1])+12*f(x[2])+32*f(x[3])+7*f(x[4]))</f>; <f>h=(b-a)/4</f>
+		</description>		
+				</step>
+				<step>
+		   <description>Und wieder: Im aktuell gewählten Intervall liefert die Boole-Regel offensichtlich eine bessere Näherung für das gesuchte Integral als die Simpson-Regel oder die Trapez-Regel</description>
+		   <seq>
+		   <par>
+		         <script>
+		            animate( name = a.x; to = 4.8382645; end = 1 );
+		            animate( name = b.x; to = 6.7317553; end = 1 );
+		         </script>
+		      </par>
+		   </seq>
+		</step><step>
+		   <description>In Situationen, in denen vorher nur zufällig ein gutes Ergebnis entstand, erhalten wir jetzt ein vernünftiges Ergebnis, weil der Funktionsverlauf jetzt durch das Polynom <f>p[4](x)</f> angemessen angenähert werden kann.</description>
+		   <seq>
+		   <par>
+		         <script>
+		             animate( name = a.x; to = 5.1143985; end = 1 );
+		            animate( name = b.x; to = 7.4418144; end = 1 );
+		         </script>
+		      </par>
+		   </seq>
+		</step><step>
+		   <description>Aber es gibt auch Situationen, in denen die Boole-Regel ähnlich schlechte Ergebnisse liefert wie die anderen beiden.</description>
+		   <seq>
+		   <par>
+		         <script>
+		            animate( name = a.x; to = 0.4; end = 1 );
+		            animate( name = b.x; to = 7.8; end = 1 );
+		         </script>
+		      </par>
+		   </seq>
+		  		</step>
+
+								<step><title>Die abgeschlossenen Newton-Cotes-Formeln</title>
+			<description>In der folgenden Tabelle sind die bisherigen Ergebnisse zusammengefasst. Die Regel, die bei gleicher Argumentation aus einem Interpolationspolynom vom Grad <f>3</f> entsteht, ist ergänzt. Sie wird als 3/8-Regel bezeichnet.<br/><br/>
+
+				<table>
+					<tr>
+						<td>Name</td>
+						<td>Quadratur-Formel</td>
+						<td>Grad <f>n</f></td>
+					</tr>
+					<tr>
+						<td>Trapez-Regel</td>
+						<td>
+							<f>Q[1](f)=h/2*(f(x[0])+f(x[1]))</f>
+						</td>
+						<td><f>1</f></td>
+					</tr>
+					<tr>
+						<td>Simpson-Regel</td>
+						<td>
+							<f>Q[2](f)=h/3*(f(x[0])+4*f(x[1])+f(x[2]))</f>
+						</td>
+						<td><f>2</f></td>
+
+					</tr>
+					<tr>
+						<td>3/8-Regel</td>
+						<td>
+							<f>Q[3](f)=(3*h)/8*(f(x[0])+3*f(x[1])+3*f(x[2])+f(x[3]))</f>
+						</td>
+						<td><f>3</f></td>
+
+					</tr>
+					<tr>
+						<td>Boole-Regel</td>
+						<td>
+							<f>Q[4](f)=(2*h)/45*(7*f(x[0])+32*f(x[1])+12*f(x[2])+32*f(x[3])+7*f(x[4]))</f>
+						</td>
+						<td><f>4</f></td>
+
+					</tr>
+				</table>
+			</description>
+		</step>
+		<step><description>Experimentieren Sie!
+		<br/>Sie werden feststellen: Mit zunehmender Breite des Integrationsintervalls kann auch die Boole-Regel deutlich falsche Ergebnisse liefern.
+		</description>
+				</step>
+				<step><title>Alternativen bei der Wahl der Stützstellen</title>
+				<description><title2>Offene Newton-Cotes-Formeln</title2>Bei den offenen Newton-Cotes-Formeln werden die Stützstellen äquidistant im Inneren des Integrationsbereichs verteilt, d.h. an den Intervallgrenzen sind keine Stützstellen. Das weitere Vorgehen ist wie oben: Stützpunkte durch Polynom interpolieren, über dieses Polynom einen Näherungsert für das Integral berechnen.
+<br/><br/>Die Newton-Cotes-Formeln entstehen in jedem Fall durch die Wahl äquidistanter Stützstellen <f>x[i]</f> und Integration des zugehörigen Interpolationspolynoms. Dadurch entstehen Formeln sind Summen <f>sum(i,0,n,f(x[i])*w[i])</f> von gewichteten Funktionswerten.
+<title2>Gaußsche Quadraturformeln</title2>Hier wird die Lage der Stutzstellen <f>x[i]</f> mit den zugehörigen Gewichten <f>w[i]</f> so gewählt, dass 	die entstehenden Formeln Polynome eines möglichst hohen Grades exakt integrieren, kurz: Die Wahl erfolgt so, dass der Genauigkeitsgrad der Quadraturformel möglichst groß ist.			</description>
+				</step>
+		<step>
+		<title>Auswege für große Integrationsintervalle:</title>
+		<description><title2>Gefährlich: Grad des Interpolationspolynoms beliebig erhöhen</title2>Bei großen Integrationsintervallen und/oder Funktionen, deren Werte sich schnell verändern, liegt zunächst die Idee auf der Hand, Polynome eines noch höheren Grades zu verwenden und ansonsten analog vorzugehen. Aber: bei äquidistanten Stützstellen zeigen die Interpolationspolynome hohen Grads starke Schwingungen an den Rändern und die Interpolationsfehler werden dort groß. Interpolationspolynome eines hohen Grads mit äquidistanten Stütztstellen und daraus resultierende Integationsformeln sollten deshalb nicht verwendet werden.
+<br/><br/><title2>Zusammengesetzte Newton-Cotes-Formeln</title2>Der Ausweg besteht in der Aufteilung des Integrationsintervalls in mehrere Teilintervalle (oft von gleicher Breite). Für jedes Teiintervall verwendet man eine der obigen Formeln, zuletzt addiert man die Ergebnisse zum Endergebnis. So entstehen die sog. <em>zusammengesetzten Newton-Cotes-Formeln</em>, konkret z.B. die <em>zusammengesetzte Simpson-Regel</em>.
+<br/><br/><title2>Romberg-Integration</title2>Ein Trick, wie man aus mehreren relativ ungenauen Ergebnissen, die man über die zusammengesetzten Newton-Cotes-Formeln berechent, durch Extrapolation ein wesentlich genaueres Ergebnis erhalten kann.
+		   		</description>
+		</step>
+	</body>
+</math4u2>

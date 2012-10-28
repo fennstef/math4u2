@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Approximation</location>
+		<title>Diskrete Polynom-Approximation</title>
+		<step>
+			<title>Aufgabenstellung</title>
+			<description>Die oben gezeigten <f>10</f> Punkte sollen durch ein Polynom approximiert werden.
+			<br/>Sie können die Punkte mit der Maus bewegen.
+		   </description>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false; right=false);
+					da.coordinateSystem(xMin=-4; xMax=16; yMin=-4; yMax=14);				
+					newObject( def = Grad:= 2 );
+					newObject( def = m:=10 );
+					newObject( def = P:=&lt;punkt&gt;liste(i,m, punkt(i,i+sin(i)+sin(2*i)) ) ; color = red; target = da );				  
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Grad festlegen</title>
+			<description>Wählen Sie den Grad für das Approximations-Polynom:
+		   <br/>Grad = <f>1</f> ergibt die Approximationsgerade, Grad = <f>2</f> die Approximationsparabel, ...
+		   <br/>Grad = <f><conf>Grad(style=text;width=3;pattern=#0)</conf>Grad</f>
+			</description>
+			<seq/>
+		</step>
+		<step>
+			<title>Polynom erstellen</title>
+			<description>Das Normalgleichungs-System ist jetzt aufgestellt und gelöst, oben ist der Graph der resultierenden Approximation eingezeichnet.
+		   <br/>Experimentieren Sie durch Verschieben der Punkte.
+		   <br/>Beobachten Sie, wie der eingestellte Grad das Verhalten der Approximation bestimmt.</description>
+			<seq>
+				<script>
+				  newObject( def = ma := matrix(i,Grad+1, k, Grad+1, sum( ii,1,m,P[ii].x^(i+k-2) ) ););
+				  newObject( def = b:=vektor( i, Grad+1, sum( ii, 1, m, P[ii].y*P[ii].x^(i-1) ) ) ; );
+				  newObject( def = pot(x) := vektor(i, Grad+1, x^(i-1) ) ; ) ;
+				  newObject( def = koeff := solvelin(ma, b) ; );
+				  newObject( def = f(x) := pot(x) &lt;*&gt; koeff; target = da; );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>Spezialfälle</title>
+			<description>Extremfälle für den Grad des Approximationspolynoms sind: Grad = <f>0</f>  und Grad = <f>9</f>.
+		   <br/>Was ergibt sich im ersten Fall, was im zweiten?
+		   <br/>Überprüfen sie Ihre Vermutung, indem Sie die Lektion nochmal starten und den entsprechenden Wert eingeben.</description>
+		</step>
+	</body>
+</math4u2>

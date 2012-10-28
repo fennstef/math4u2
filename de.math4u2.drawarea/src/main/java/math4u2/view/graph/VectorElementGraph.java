@@ -53,7 +53,7 @@ public class VectorElementGraph extends AbstractSimpleGraph {
 
 		} catch (Exception e) {
 			ExceptionManager.doError("Fehler beim Zeichnen des Vektor-Graphen "
-					+ getIdentifier(), e);
+					+ getKey(), e);
 		}
 		g.setColor(ca);
 	}

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Geometrie/Kurven/Anwendung</location>
+		<title>Zeichendefinition durch Konturenbeschreibung</title>
+		<summary>Definition eines Schriftzeichens durch Beschreibung der Kontur mit Hilfe von zusammengesetzten Kurven.</summary>
+		<keywords>
+			<keyword>Schriftzeichen</keyword>
+			<keyword>Zeichen</keyword>
+			<keyword>Kontur</keyword>
+			<keyword>Kurven</keyword>
+		</keywords>
+		<step>
+			<title>PostScript-Zeichensätze</title>
+			<description>Die Zeichen eines PostScript-Zeichensatzes (Adobe) werden durch Linien und kubische Bézier-Kurven beschrieben. Eine Linie wiederum wir durch ihren Start- und Endpunkt festgelegt, eine kubische Bezier-Kurve durch vier Steuerpunkte. Letztlich wird ein Zeichen also durch eine Reihe von Punkten definiert.
+			<br/>Im folgenden Schritt werden die zu den Punkten gehörigen Kurven der Reihe nach eingeblendet.
+			</description>
+			<seq>
+				<script>
+		       deleteAll();
+					expand(left=false; right=false);
+					newObject( def = t := 0);
+					da.coordinateSystem( xMin = -20; xMax = 200; yMin = -20; yMax = 250 );
+					newObject( def = sf := 0 );
+					newObject( def = scal:= 1);
+					newObject( def = transx(a, s,x,y):=a*x+s*a*y );
+					newObject( def = transy(a, s,x,y):=a*y );
+					
+					
+					newObject( def = m := matrix({  { 0, 22, 44, 66, 96, 120, 120, 120, 108, 88,   76,   64,   52,   20,   26,   58,   90,  110,  120,  120,  120,  120,  98,  76,  54,  24,  0,  0,  0,  12,  32,  40,  48,  56,  96,  92,  60,  30,  8,  0,  0,  0,  0 },
+					                                                  { 0, 0,   0,   0,   0,   24,   54,    76,   98,  103, 106, 109, 112, 120,  170, 170, 170, 162, 132, 147,  162,  177,  177,  177,  177,  177,  153,  123,  100,  78,  72,  70,  68,  66,  58,  6,  6,  6,  15,  45,  30,  15,  0 } } ) ) ;
+					 newObject( def = pl:=&lt;punkt>liste(i,m.spalten, punkt(fix(transx(scal, sf, m[1,i], m[2,i])) ,fix(transy(scal, sf, m[1,i], m[2,i]) ))); color = gray; target = da );                                                 
+					
+					
+					                                             
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt ist insgesamt eine geschlossene Kurve entstanden.</description>
+			<seq>
+				<script>
+				modifyObject( name = pl; color = lightgray);
+		        newObject( def = i :=1);
+		        newObject( def = tt:=1);
+		        newObject( def = m1 := marker( pl[i].x,pl[i].y ) ; color = black; target = da );
+		        newObject( def = m2 := marker( pl[i+1].x,pl[i+1].y ) ; color = black; target = da );
+		        newObject( def = m3 := marker( pl[i+2].x,pl[i+2].y ) ; color = black; target = da );
+		        newObject( def = m4 := marker( pl[i+3].x,pl[i+3].y ) ; color = black; target = da );
+		        animate( name = tt; to = 1; end = 4); 
+		         newObject( def = b1:= bezier( pl[1], pl[2], pl[3], pl[4] ) ; target = da; color = red );  
+		         newObject( def = i:= 4);   
+					animate( name = tt; to = 1; end = 4); 
+					newObject( def = b2:= bezier( pl[4], pl[5], pl[6], pl[7] ) ; target = da; color =blue);   
+					newObject( def = i:= 7); 
+					animate( name = tt; to = 1; end = 3); 
+					newObject( def = b3:= bezier( pl[7], pl[8], pl[9], pl[10] ) ; target = da; color = green );  
+					newObject( def = i:= 10);
+					newObject( def = b4:= bezier( pl[10], pl[11], pl[12], pl[13] ) ; target = da; color = black );  
+					newObject( def = i:= 13);
+					animate( name = tt; to = 4; end = 2); 
+					newObject( def = b5:= bezier( pl[13], pl[14], pl[15], pl[16] ) ; target = da; color = red );   
+					newObject( def = i:= 16);
+					animate( name = tt; to = 5; end = 1);   
+					newObject( def = b6:= bezier( pl[16], pl[17], pl[18], pl[19] ) ; target = da; color =blue);   
+					newObject( def = i:= 19);
+					animate( name = tt; to = 6; end =1); 
+					newObject( def = b7:= bezier( pl[19], pl[20], pl[21], pl[22] ) ; target = da; color = green );  
+					newObject( def = i:= 22);
+					animate( name = tt; to = 7; end = 1); 
+					newObject( def = b8:= bezier( pl[22], pl[23], pl[24], pl[25] ) ; target = da; color = black );   
+					newObject( def = i:= 25);
+					animate( name = tt; to = 8; end = 0.5); 
+					newObject( def = b9:= bezier( pl[25], pl[26], pl[27], pl[28] ) ; target = da; color = red );     
+					newObject( def = i:= 28);
+					animate( name = tt; to = 9; end = 0.5); 
+					newObject( def = b10:= bezier( pl[28], pl[29], pl[30], pl[31] ) ; target = da; color =blue);   
+					newObject( def = i:= 31);
+					animate( name = tt; to = 10; end = 0.5); 
+					newObject( def = b11:= bezier( pl[31], pl[32], pl[33], pl[34] ) ; target = da; color = green );  
+					newObject( def = i:= 34);
+					animate( name = t; to = 11; end = 0.5); 
+					newObject( def = b12:= bezier( pl[34], pl[35], pl[36], pl[37] ) ; target = da; color = black );  
+					newObject( def = i:= 37); 
+					animate( name = t; to = 12; end = 0.5); 
+					newObject( def = b13:= bezier( pl[37], pl[38], pl[39], pl[40] ) ; target = da; color =blue);   
+					newObject( def = i:= 40);
+					animate( name = tt; to = 13; end = 0.5); 
+					newObject( def = b14:= bezier( pl[40], pl[41], pl[42], pl[43] ) ; target = da; color = green );  
+					deleteObject( name = m1, m2, m3, m4 );
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>Durch Füllen entsteht das eigentliche Zeichen.</description>
+			<seq>
+				<script>
+		            newObject( def = fl:=flaeche({b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14});bordercolor = 0.0.0.0; fillcolor =fillgray; target = da);
+		        </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Steuerpunkte der Kurven sind normalerweise natürlich nicht sichtbar.</description>
+			<seq>
+				<script>
+		         modifyObject( name = pl; visible = false );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Man kann die Form des Zeichens veränder, indem man die Steuerpunkte einer Transformation unterwirft, hier z.B. einer Kombination einer Skalierung in beide Richtungen mit einer Scherung in <f>x</f>-Richtung.
+		    <br/>Scherfaktor:<tab/>
+				<f>
+					<conf>sf(style=slider; width=8; pattern = "##0.00"; min = 0; max=1)</conf>sf</f>
+				<br/>Skalierungsfaktor:<tab/>
+				<f>
+					<conf>scal(style=slider; width=8; pattern = "##0.00"; min = 0; max = 2)</conf>scal</f>
+			</description>
+			<seq>
+				<script>
+		          modifyObject( name = pl; visible = true );
+		          modifyObject( name = fl; visible = false );
+		          animate( name = scal; to= 1.4; end = 2 );
+		          animate( name = scal; to= 0.5; end = 2 );
+		          animate( name = scal; to= 1.2; end = 2 );
+		          animate( name = sf; to= 0.5; end = 2 );
+		          animate( name = sf; to= -0.2; end = 2 );
+		           animate( name =sf; to= 0.2; end = 2 );
+
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>Sichtbar ist letztlich wieder nur die gefüllte Fläche:
+		   <br/>Scherfaktor:<tab/>
+				<f>
+					<conf>sf(style=slider; width=8; pattern = "##0.00";  min = 0;max=1)</conf>sf</f>
+				<br/>Skalierungsfaktor:<tab/>
+				<f>
+					<conf>scal(style=slider; width=8; pattern = "##0.00"; min = 0; max = 2)</conf>scal</f>
+			</description>
+			<seq>
+				<script>
+		          modifyObject( name = pl; visible = false );
+		          modifyObject( name = fl; visible =true );
+		          animate( name = scal; to= 1.4; end = 2 );
+		          animate( name = scal; to= 0.5; end = 2 );
+		          animate( name = scal; to= 1.2; end = 2 );
+		          animate( name = sf; to= 0.5; end = 2 );
+		          animate( name = sf; to= -0.2; end = 2 );
+		           animate( name =sf; to= 0.2; end = 2 );
+
+
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<title>Experimente</title>
+			<description>Jetzt können Sie die Steuerpunkte def Kurven mit der Maus bewegen und so das Zeichen verändern.</description>
+			<seq>
+				<script>
+		           newObject( def = sf := 0);
+		           newObject( def = scal := 1 );
+		            deleteObject( name = fl, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, pl);
+		            newObject( def = pl:=&lt;punkt>liste(i,m.spalten, punkt(transx(scal, sf, m[1,i], m[2,i]) ,transy(scal, sf, m[1,i], m[2,i]) )); color = gray; target = da);      
+		           newObject( def = b1:= bezier( pl[1], pl[2], pl[3], pl[4] ) ; target = da; color = red );    
+					newObject( def = b2:= bezier( pl[4], pl[5], pl[6], pl[7] ) ; target = da; color =blue);   
+					newObject( def = b3:= bezier( pl[7], pl[8], pl[9], pl[10] ) ; target = da; color = green );  
+					newObject( def = b4:= bezier( pl[10], pl[11], pl[12], pl[13] ) ; target = da; color = black );  
+					newObject( def = b5:= bezier( pl[13], pl[14], pl[15], pl[16] ) ; target = da; color = red );    
+					newObject( def = b6:= bezier( pl[16], pl[17], pl[18], pl[19] ) ; target = da; color =blue);   
+					newObject( def = b7:= bezier( pl[19], pl[20], pl[21], pl[22] ) ; target = da; color = green );  
+					newObject( def = b8:= bezier( pl[22], pl[23], pl[24], pl[25] ) ; target = da; color = black );   
+					newObject( def = b9:= bezier( pl[25], pl[26], pl[27], pl[28] ) ; target = da; color = red );     
+					newObject( def = b10:= bezier( pl[28], pl[29], pl[30], pl[31] ) ; target = da; color =blue);   
+					newObject( def = b11:= bezier( pl[31], pl[32], pl[33], pl[34] ) ; target = da; color = green );   
+					newObject( def = b12:= bezier( pl[34], pl[35], pl[36], pl[37] ) ; target = da; color = black );   
+					newObject( def = b13:= bezier( pl[37], pl[38], pl[39], pl[40] ) ; target = da; color =blue);   
+					newObject( def = b14:= bezier( pl[40], pl[41], pl[42], pl[43] ) ; target = da; color = green );  
+					newObject( def = fl:=flaeche({b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14});bordercolor = 0.0.0.0; fillcolor =fillgray; target = da);
+
+    
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<title>TrueType-Zeichensätze</title>
+			<description>Die Zeichen eines Truetype-Zeichensatzes werden ebenfalls durch Linien und Kurven beschrieben. Im Unterschied zu den PostScript-Zeichensätzen werden hier als Kurven quadratische B-Splines verwendet.</description>
+		</step>
+	</body>
+</math4u2>

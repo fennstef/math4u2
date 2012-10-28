@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>	<body>
+	     <author>Dr. M. Weiss</author>
+		<location>Analysis/Grundlagen/Koordinatentransformationen</location>
+		<title>Koordinatentrafo: Übung 1</title>
+		<step>
+			<title>Lineare Koordinatentransformationen 1</title>
+			<description>Gesucht ist der Funktionsterm <f>f(x)</f> einer Parabel <f>y=f(x)</f> mit folgenden Eigenschaften:
+              <ul>
+					<li>Die Parabel verläuft durch die oben gezeigten Punkte <f>P1</f> und <f>P2</f>.</li>
+					<li>Die Parabel berührt die grüne Parallele zur <f>x</f>-Achse mit <f>y=4</f>.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+					deleteAll();
+					expand( left = false; right =true );
+					da.coordinateSystem(xMin=-1; xMax=7; yMin=-1; yMax=8;);
+					newObject( def = P1:=punkt(fix(1),fix(2)); color = blue; target = da );
+					newObject( def = P2:=punkt(fix(5),fix(2)); color = blue; target = da );
+					newObject( def = g:=gerade(punkt(0,4),vektor({1,0})); color = green; target = da );
+					newObject( def = c := 0; select = true );
+					newObject( def = b := 0; select = true );
+					newObject( def = a := 0; select = true );
+					newObject( def = f(x):=a*(x-b)^2+c; target = da; select = true );				
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+		Der Funktionsterm kann mit drei Parametern <fh>a</fh>, <fh>b</fh> und <fh>c</fh> in der Form
+			<br/><f>$fd(f)</f> geschrieben werden. 
+			<br/>Ermitteln Sie die Werte der Parameter und geben Sie diese oben rechts ein.
+		</description>
+		</step>
+		<step>
+			<description>... Falls Sie nicht zurechtkommen: Im nächsten Schritt wird die Lösung gezeigt.</description>
+		</step>
+		<step>
+			<title>Die Lösung:</title>
+			<description>Der Funktionsterm <f>$fd(f)</f> beschreibt die gesuchte Parabel bei den jetzt oben angezeigten Parameterwerten.
+			<br/>Experimentieren Sie ein bisschen!
+			<br/>Wenn nötig: in den folgenden Schritten eine Begründung, zuletzt noch zwei weitere Aufgabenstellungen...
+			</description>
+			<seq>
+				<script>
+			      newObject( def = a := -0.5 );
+			      newObject( def = b := 3 );
+			      newObject( def = c := 4 );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Schrittweise Konstruktion der Lösung:</title>
+			<description>
+			  Wir starten mit der Normalparabel, also den Funktionsterm <f>$fd(f_1)</f>.
+			</description>
+			<seq>
+				<script>
+					newObject(def = f_1(x):=x^2; color = red; target = da; lineStyle=dash;);
+					newObject(def=a:=1;);
+					newObject(def=b:=0;);
+					newObject(def=c:=0;);		      
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+			 Zuerst bringen wir den Scheitel an die richtige Stelle. 
+			 <br/>Der liegt zum einen auf der grünen Gerade, 
+			 <br/>Da die Punkte <fh>P1</fh> und <fh>P2</fh> die gleiche <f>y</f>-Koordinate haben, liegt der Scheitel auch auf der Mittelsenkrechten auf deren Verbindugsstrecke. 
+			 <br/>Der Scheitel hat also die Koordinaten <f>(3,4)</f>.
+			</description>
+			<seq>
+				<script>
+					newObject( def = s:=strecke(P1,P2); color = blue; target = da);
+					newObject( def = m:=gerade(punkt(3,0), vektor({0,1})); color = magenta; target = da);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir verschieben durch <f>b=3</f> den Scheitel der Parabel um <f>3</f> nach rechts....
+		  </description>
+			<seq>
+				<script>
+					newObject(def=f1(x):=(x-3)^2; color=red; lineStyle=dash;);					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="b" to="3" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>und anschließend durch <f>c = 4</f> um <f>4</f> nach oben.</description>
+			<seq>
+				<script>
+				newObject(def= f1(x):=(x-3)^2+4; color=red; lineStyle=dash;);
+			</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="c" to="4" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>
+			Damit die Parabel durch die beiden Punkte geht, muss sie nach unten geöffnet sein.
+			  <br/>Wir setzen zunächst <f>a = -1</f> ....</description>
+			<seq>
+				<script>
+			      deleteObject( name = s,m );
+				  newObject(def=f1(x):=-1*(x-3)^2+4; color=red; lineStyle=dash;);
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="a" to="-1" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt ist das Ergebnis noch zu stark gekrümmt. Zwei Einheiten links und rechts vom Scheitel hat sich der Funktionswert um <f>-4</f> verändert, 
+			um die Punkte zu treffen, sollte die Änderung nur <f>-2</f> sein.
+			<br/>Dies erreichen wir, indem wir <f>a = -0.5</f> setzen.</description>
+			<seq>
+				<script>
+					newObject(def=f1(x):=-0.5*(x-3)^2+4; color=red; lineStyle=dash;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="a" to="-0.5" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description><title2>Fazit:</title2>Der Funktionsterm <f>$fd(f)</f> beschreibt die gesuchte Parabel bei den oben eingestellten Parameterwerten. Experimentieren Sie ein bisschen!
+			</description>
+			<seq>
+				<script>
+					newObject(def=a:=-0.5;);
+					newObject(def=b:=3;);
+					newObject(def=c:=4;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description><title2>Genauso:</title2>Gesucht ist der Funktionsterm <f>f(x)</f> einer Parabel <f>y=f(x)</f> mit folgenden Eigenschaften:
+              <ul>
+					<li>Die Parabel verläuft durch die oben gezeigten Punkte <f>P1</f> und <f>P2</f>.</li>
+					<li>Die Parabel berührt die grüne Parallele zur <f>x</f>-Achse mit <f>y=-2</f>.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+					deleteObject( name = f1);
+					newObject( def = da.yMin := -4 );
+					newObject( def = da.yMax := 5 );
+					newObject( def = P2:=punkt(1*3, 1*2) );
+					newObject( def = g:=gerade(punkt(0, -2), vektor({1,0})); color = green; target = da );			      
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+		  Der Funktionsterm kann mit drei Parametern in der Form
+				<br/>
+				<f>$fd(f)</f> geschrieben werden. 
+			<br/>Ermitteln Sie über geeignete lineare Transformationen die richtigen Werte der Parameter und geben Sie diese ein.			
+		  </description>
+		</step>
+		<step>
+			<description><title2>Andere Struktur des Funktionsterms:</title2>Eigenschaften wie vorher, also
+              <ul>
+					<li>Die Parabel verläuft durch die oben gezeigten Punkte <f>P1</f> und <f>P2</f>.</li>
+					<li>Die Parabel berührt die grüne Parallele zur <f>x</f>-Achse mit <f>y=-2</f>.</li>
+				</ul>
+				<br/>Der Funktionsterm <f>$fd(f)</f> hat wieder drei Parameter, ihre Rolle ist aber teilweise anders.
+			<br/>Ermitteln Sie über geeignete lineare Transformationen die richtigen Werte der Parameter und geben Sie diese  oben ein.			</description>
+			<seq>
+				<script>
+					newObject(def=f(x):=(a*(x-b))^2+c;);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

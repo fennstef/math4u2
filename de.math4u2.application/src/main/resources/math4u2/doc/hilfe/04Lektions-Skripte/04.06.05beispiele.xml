@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.6 Aktionen eines Schritts festlegen</location>
+		<title>4.6.5 Beispiele</title>
+		<step>
+			<title>4.6.6 Beispiele</title>
+			<description>
+Die folgenden Beispiele zeigen einige Grundmuster.			
+
+<p/><strong>Mehrere Anweisungen nacheinander ausführen</strong>			
+<br/>Häufig werden in einem Schritt einer Lektion der Reihe nach einige 
+elementare Aktionen durchgeführt:
+<br/>Nacheinander wird das Koordinatensystem <code>da</code> angepasst, der 
+Parameter <code>a</code> und dann der Punkt <code>p1</code> erzeugt.
+<br/>
+<code><![CDATA[
+<seq>
+	<script>
+		// Koordinatensystem da anpassen
+		da.coordinateSystem(xMin=-9.0;xMax=9.0;yMin=-5.0;yMax=5.0;);
+		
+		// Parameter a erzeugen.
+		newObject( def = a:= 3 );
+		
+		/* Punkt p1 haengt von Parameter a ab.
+		er wird durch target = da Fenster mit Namen da
+		(Standard-Fenster) gezeichnet. */		
+		newObject( def = p1:=punkt(a,8); target = da );
+	</script>
+</seq>
+]]></code>
+
+<p/><strong>Elementare Animation</strong>
+<br/>Bewegungen auf dem Bildschirm entstehen oft durch Animation eines Parameters.		
+<br/>
+<code><![CDATA[
+<seq>
+	<script>
+		// a erzeugen.
+		newObject( def = a:= 0 );
+		
+		// p1 haengt von a ab.
+		newObject( def = p1:=punkt(a,sin(a)); target = da );
+		
+		// a animieren, p1 bewegt sich auf sin-Kurve
+		animate( name = a; to = 6.24; end = 10 );
+	</script>
+</seq>
+]]></code>
+
+<p/><strong>Mehrere Parameter parallel animieren</strong>
+<br/>Kompliziertere Bewegungsmuster entstehen durch parallele Animation mehrerer Parameter:	
+<br/>
+<code><![CDATA[
+<seq>
+	<script>
+		// a erzeugen.
+		newObject( def = a:= 3 );
+		
+		// b erzeugen.
+		newObject( def = b := 1 );
+		
+		// p1 haengt von a und b ab.
+		newObject( def = p1:=punkt(a,sin(b)); target = da );
+	</script>
+	<par>
+		<script>
+			/* ************************************
+			* a und b werden parallel verändert,
+			* a bis zum Wert -3 in 10 Sekunden,
+			* b bis zum Wert 30 in 20 Sekunden
+			**************************************/
+			animate( name = a; to = -3; end = 10 );
+			animate( name = b; to = 30; end = 20 );
+		</script>
+	</par>
+</seq>
+]]></code>
+
+<p/><strong>Sequenz mit Wechsel zwischen Animation und Objekterzeugung</strong>
+<br/>
+<code><![CDATA[
+<seq>
+	<script>
+		newObject( def = a:= 3 );
+		newObject( def = p1:=punkt(a,a); target = da );
+		animate( name = a; to = -3; end = 10 ); // p1 bewegt sich
+		// p1 steht still
+		newObject( def = b:= 0 );
+		newObject( def = p2:=punkt(sin(b),cos(b)); target = da );
+		animate( name = b; to = 20; end = 10 ); // p2 bewegt sich
+		// p2 steht still
+	</script>
+</seq>
+]]></code>
+
+			</description>
+		</step>
+	</body>
+</math4u2>

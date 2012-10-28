@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Max Weiß (Fachhochschule Augsburg) -->
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>M. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Analysis/Funktionen/Winkelfunktionen</location>
+		<title>Winkelfunktionen - kurz</title>
+		<summary>Die Winkelfunktionen Sinus, Cosinus und Tangens</summary>
+		<keywords>
+			<keyword>Sinus</keyword>
+			<keyword>sin</keyword>
+			<keyword>Cosinus</keyword>
+			<keyword>cos</keyword>
+			<keyword>Tangens</keyword>
+			<keyword>tan</keyword>
+		</keywords>
+
+		<step>
+			<title>Die Winkelfunktionen</title>
+			<description>Winkel im rechten Fenster über p einstellen!  Schritte: Sinus - Cosinus - Tangens - Überblick</description>
+			<layout>
+				<row perc="100">
+					<col perc="30" name="kreisF"/>
+					<col perc="70" name="funktionen"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					newObject( def = pi05m:=text(punkt(0.5*pi,0),"<f>pi/2</f>", C_N); target = funktionen; hide = true );
+					newObject( def = pi1m:=text(punkt(pi,0),"<f>pi</f>", C_N); target = funktionen; hide = true );
+					newObject( def = pi15m:=text(punkt(3/2*pi,0),"<f>3/2*pi</f>", C_N); target = funktionen; hide = true );
+					newObject( def = pi2m:=text(punkt(2*pi,0),"<f>2*pi</f>", C_N); target = funktionen; hide = true );
+					newObject( def = pi25m:=text(punkt(5/2*pi,0),"<f>5/2*pi</f>", C_N); target = funktionen; hide = true );
+					newObject( def = pi3m:=text(punkt(3*pi,0),"<f>3*pi</f>", C_N); target = funktionen; hide = true );
+					newObject( def = kreisF.yMax := fix(3.5) );
+					newObject( def = kreisF.xMax := fix(2));
+					newObject( def = kreisF.xMin := fix(-2) );
+					newObject( def = funktionen.yMax := fix(3.5) );
+					newObject( def = funktionen.xMax := fix(8.3) );
+					newObject( def =  funktionen.xMin := fix(-1));
+					kreisF.setTitle( title="Einheitskreis" );
+					expand( left = false; right = false );
+					newObject( def = ek := kreis( punkt(0,0), 1 ); target = kreisF; hide = true );
+					newObject( def = p := punkt( 1, fix(2.5) ); color = orange; style = ARROW_H; target = funktionen; hide = true );
+					newObject( def = g := gerade( p,e2y ) ; linestyle = dash; color = gray; target = funktionen; hide = true );
+					newObject( def = phi := p.x );
+					newObject( def = origo := punkt(0,0); hide = true );
+					newObject( def = rad := strecke( origo, punkt( cos(p.x), sin(p.x) ) ) ; target = kreisF; hide = true );
+					newObject( def = winkel1:=flaeche({punkt(0,0),kurve(t,0,phi, 0.3*cos(t), 0.3*sin(t))}); color = magenta; target = kreisF; hide = true );
+					newObject( def = sinS := strecke( punkt( cos(phi), 0 ), punkt( cos(phi), sin( phi ) ) ); color = red; target = kreisF; hide = true );
+					newObject( def = cosS := strecke( origo, punkt( cos(phi), 0 ) ); color = green; target = kreisF; hide = true );
+					newObject( def = phiS := strecke( origo, punkt( p.x, 0 ) ); color = magenta; target = funktionen; hide = true );  
+					newObject( def = t1:=text(p,"Hier Winkel verändern", B_SE); bordercolor = orange; fillcolor = 255.255.255.220; target = funktionen);   
+					kreisF.zoom1To1(active=true);
+					funktionen.zoom1To1(active=true);
+				
+					animate(name=p.x; to=4; end=1;);
+					animate(name=p.x; to=1; end=1;);
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Sinus</strong>
+			</description>
+			<seq>
+				<script>
+					deleteObject( name = t1);
+			    	funktionen.setTitle( title="Sinus" );
+			      
+ 			    	newObject( def = sinPfeil := pfeil( punkt(cos(p.x), 0), vektor( {0,sin(p.x)} ) ) ; color = red; target = kreisF; hide = true );
+					newObject( def = sinPfeil2 := pfeil( punkt( p.x, 0 ), vektor( { 0, sin(p.x) } ) ) ; color = red; target = funktionen; hide = true );
+					newObject( def = sinK := kurve(t, 0, p.x, t, sin(t) ) ; color = red; target = funktionen; hide = true );
+			    	newObject( def = sinG := gerade( punkt( 0, sin(p.x) ) , vektor({1,0}) ); linestyle = dot; color = red; target = kreisF; hide = true );
+					funktionen.addGraph( name = sinG );
+					
+					animate(name=p.x; to=4; end=1;);
+					animate(name=p.x; to=1; end=1;);
+			 </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Cosinus</strong>
+			</description>
+			<seq>
+				<script>
+					funktionen.setTitle( title="Cosinus" );
+					deleteObject( name = sinPfeil, sinPfeil2, sinG, sinK);
+					newObject( def = cosPfeil := pfeil( origo, vektor( {cos(p.x), 0} ) ) ; color = green; target = kreisF; hide = true );
+					newObject( def = cosPfeil2 := pfeil( punkt( phi, 0 ), vektor( {0, cos(p.x)} ) ) ; color = green; target = funktionen; hide = true );
+					newObject( def = cosK := kurve(t, 0, p.x, t, cos(t) ) ; color = green; target = funktionen; hide = true );
+					newObject( def = cosG := gerade( punkt( 0, cos(phi) ), vektor( { 1, 0 } ) ) ; linestyle = dot; color = green; taget = funktionen; hide = true );
+					newObject( def = cosGG := gerade( punkt( cos(phi), 0 ), vektor( { 0, 1 } ) ) ; linestyle = dot; color = green; taget = kreisF; hide = true );
+
+					funktionen.addGraph( name = cosG );
+					
+					animate(name=p.x; to=4; end=1;);
+					animate(name=p.x; to=1; end=1;);
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Tangens</strong>
+			</description>
+			<seq>
+				<script>
+		   		    funktionen.setTitle( title="Tangens" );
+		   		    deleteObject( name = cosPfeil, cosK, cosG, cosGG, cosPfeil2);
+	   		        newObject( def = tanPfeil := pfeil( punkt(1, 0), vektor( {0,tan(phi)} ) ) ; color = blue; target = kreisF; hide = true );
+					newObject( def = tanPfeil2 := pfeil( punkt( phi, 0 ), vektor( { 0, tan(phi) } ) ) ; color = blue; target = funktionen ; hide = true);
+					newObject( def = tanG := gerade( punkt( 0, tan(phi) ), vektor( { 1, 0 } ) ) ; linestyle = dot; color = blue; taget = kreisF; hide = true );
+					newObject( def = tanSS := strecke( origo, punkt( 1, tan(phi) ) ) ; target = kreisF ; hide = true);
+					funktionen.addGraph( name = tanG; hide = true );
+					newObject( def = tangens(x):= tan(x); color = blue; target = funktionen);
+
+					animate(name=p.x; to=4; end=1;);
+					animate(name=p.x; to=1; end=1;);
+	   		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Überblick</strong>
+			</description>
+			<seq>
+				<script>
+		   		    funktionen.setTitle( title = "Winkelfunktionen" );
+		   		    deleteObject( name = tanPfeil, tanPfeil2, tanG );
+	   		        newObject( def = tanS := strecke( punkt(1, 0 ), punkt(1, tan( phi ) ) ); color = blue; target = kreisF; hide = true );
+					newObject( def = sinus(x) := sin(x); color = red; target = funktionen );
+		   		    newObject( def = cosinus(x) := cos(x); color = green; target = funktionen );
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. Weiss</author>
+		<location>Analysis/Entwicklung/Potenzreihen/Beispiele</location>
+		<title>Logarithmusreihe</title>
+		<summary>Taylor-Entwicklung des natürlichen Logarithmus, Logarithmusreihe</summary>
+		<keywords>
+			<keyword>Logarithmus</keyword>
+			<keyword>Taylor-Entwicklung</keyword>
+			<keyword>Potenzreihe</keyword>
+			<keyword>Konvergenzradius</keyword>
+			<keyword>Konvergenzradius2</keyword>
+		</keywords>
+		<step>
+			<title>Logarithmusreihe</title>
+			<description>Der natürliche Logarithmus <f>ln(x)</f> ist beliebig oft differenzierbar. In der folgenden Tabelle 
+			sind die niedrigsten Ableitungen angegeben. Für die Taylor-Entwicklung wählt man hier den Entwicklungspunkt <f>c = 1</f>, 
+			an dieser Stelle muss man die Werte der Ableitungen berechnen:
+</description>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false;right=false);					
+					da.coordinateSystem(
+						xMin=-1;					
+						xMax=4;
+						yMin=2;
+						yMax=2;
+					);
+					newObject(def = da.yMin:=fix(-2*da.yMax));
+					newObject(def = g(x) :=ln(x); target = da);
+					newObject(def = p_4(x) :=0+1/1!*(x-1)+(-1)/2!*(x-1)^2+2/3!*(x-1)^3+(-2*3)/4!*(x-1)^4 );
+					newObject(def = f0(x):=ln(x));
+					newObject(def = 
+							f1(x):=1/x);
+					newObject(def = f2(x):=(-1)/x^2);
+					newObject(def = f3(x):=2/x^3);
+					newObject(def = f4(x):=(-2*3)/x^4);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<table>
+					<tr>
+						<td bgcolor="lightGray">Ordnung der Ableitung</td>
+						<td>0</td>
+						<td>1</td>
+						<td>2</td>
+						<td>3</td>
+						<td>4</td>
+					</tr>
+					<tr>
+						<td bgcolor="lightGray">Term</td>
+						<td>
+							<f>$fb(f0)</f>
+						</td>
+						<td>
+							<f>$fb(f1)</f>
+						</td>
+						<td>
+							<f>$fb(f2)</f>
+						</td>
+						<td>
+							<fb>$fb(f3)</fb>
+						</td>
+						<td>
+							<f>$fb(f4)</f>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="lightGray">Wert für <f>c=1</f>
+						</td>
+						<td>
+							<f>0</f>
+						</td>
+						<td>
+							<f>1</f>
+						</td>
+						<td>
+							<f>-1</f>
+						</td>
+						<td>
+							<f>2</f>
+						</td>
+						<td>
+							<f>-2*3</f>
+						</td>
+					</tr>
+				</table>
+			</description>
+		</step>
+		<step>
+			<description>Mit diesen Werten für die Ableitungen erhält man aus der allgemeinen Formel für das Taylor-Polynom z.B. 
+			vom Grad <f>4</f> mit Entwicklungspunkt <f>c=1</f> zunächst:
+			<br/><f>$fd(p_4)</f>. 
+		</description>
+		</step>
+		<step>
+			<description>Die Koeffizienten kann man noch etwas vereinfachen, dann hat man
+			<br/><f>$fd(p_4)</f>.
+		</description>
+			<seq>
+				<script>
+					newObject( def = p_4(x) :=(x-1)/1-(x-1)^2/2+(x-1)^3/3-(x-1)^4/4 ; color = green; );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Taylor-Polynome für verschiedene Ordnungen</title>
+			<description>Beginnend mit der Ordnung <f>1</f> erhält man also der Reihe nach:
+		   <br/>
+				<br/>Ordnung 1: <f bgcolor="100.100.255">$fd(p_1)</f>
+			</description>
+			<seq>
+				<script>
+			       newObject( def = p_1(x) :=(x-1)/1; color = blue; target = da);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ordnung 2: <f bgcolor="magenta">$fd(p_2)</f>
+			</description>
+			<seq>
+				<script>
+			       newObject( def = p_2(x) :=(x-1)/1-(x-1)^2/2; color = magenta; target = da);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ordnung 3: <f bgcolor="red">$fd(p_3)</f>
+			</description>
+			<seq>
+				<script>
+			       newObject( def = p_3(x) :=(x-1)/1-(x-1)^2/2+(x-1)^3/3; color = red; target = da);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ordnung 4: <f bgcolor="green">$fd(p_4)</f>
+			</description>
+			<seq>
+				<script>
+			        modifyObject( name = p_4; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Offensichtlich wird die Näherung mit zunehmender Ordnung des Polynoms immer besser, d.h. der grüne 
+			Graph zur Ordnung <f>4</f> liegt überall näher am Graphen der Logarithmusfunktion (schwarz) als der blaue Graph 
+			zur Ordnung <f>1</f>.</description>
+		</step>
+		<step>
+			<title>Summenschreibweise</title>
+			<description>Um dies genauer verfolgen zu können, soll das Taylor-Polynom wie 
+				<br/><f>$fd(p_4)</f>
+				<br/>allgemein in Summenschreibweise dargestellt werden.</description>
+			<seq>
+				<script>
+				   newObject( def = ordnung := 4 );
+				   newObject( def = p_logarithmus(x) := sum(i, 1,ordnung, (-1)^(i+1)*(x-1)^(i)/i) ; color = red; );
+				   da.deleteGraph(name = p_1,p_2,p_3,p_4);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Folgende Gesetzmäßigkeiten deuten sich an:
+		<ul>
+					<li>Die Beiträge zu aufeinander folgenden Potzenzen wechseln jeweils das Vorzeichen.</li>
+					<li>Der Nenner eines Beitrags stimmt jeweils mit der Potenz überein.</li>
+				</ul>Damit erhält man allgemein:</description>
+		</step>
+		<step>
+			<description>
+				<f>$fd(p_logarithmus)</f> .
+				<br/>Konkret ist jetzt als Ordnung wieder der Wert <f>4</f> eingestellt.
+				</description>
+			<seq>
+				<script>
+   				   modifyObject( name = p_logarithmus; target = da);
+   				   deleteObject( name = p_4, p_3, p_2, p_1 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>In der folgenden Animation wird die Ordnung des Taylor-Polynoms schrittweise von <f>1</f> bis auf <f>20</f> erhöht.
+			</description>
+			<seq>
+				<script>
+			     newObject( def = ordnung := 1;  select = true);
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Aktueller Wert : <f>
+					<conf>ordnung(style=deval; width=3; pattern = ##0)</conf>ordnung</f>
+			</description>
+			<seq>
+				<script>
+			       newObject( def = ordnung := 1 );
+			       newObject( def = p_logarithmus(x) := sum(i, 1,floor(ordnung), (-1)^(i+1)*(x-1)^(i)/i); color = red; target = da);
+			    </script>
+				<animate object="main" parameterName="ordnung" to="20" end="30"/>
+			</seq>
+		</step>
+		<step>
+			<title>Konvergenzintervall</title>
+			<description>Offensichtlich ist das Taylorpolynom <f>$fh(p_logarithmus)</f>auch bei zunehmender Ordnung nur in einem bestimmten 
+			Intervall der <f>x</f>-Achse eine "vernünftige" Näherung der ursprünglichen Funktion <f>$fb(g)</f>. 
+			<br/>Dieses Intervall ist oben blau eingezeichnet. <br/>Vom Entwicklungspunkt <f>c=1</f> aus gesehen erstreckt es sich 
+			um <f>1</f> nach links und um <f>1</f> nach rechts.
+			</description>
+			<seq>
+				<script>
+			       newObject( def = ki := strecke( punkt(0,0), punkt(2,0) ); color = blue; target = da );
+			       newObject( def = kl := flaeche( { punkt(-20,-20),punkt(-20,20),punkt(0,20),punkt(0,-20) } ); color = pink; target = da; );
+			       newObject( def = kr:= flaeche( { punkt(2,-20),punkt(20,-20),punkt(20,20),punkt(2,20) } ); color = pink; target = da; );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Konvergenzradius</title>
+			<description>Man könnte dieses Konvergenzintervall auch abgrenzen, indem man um den Entwicklungspunkt einen 
+			Kreis mit dem Radius <f>1</f> schlägt. <br/>
+				<br/>Der Radius <f>r</f> dieses Kreises (im konkreten Fall: <f>r=1</f>) wird als Konverganzradius der 
+			Taylorentwicklung bezeichnet.</description>
+		</step>
+		<step>
+			<title>Fazit</title>
+			<description>Das Taylorpolynom des natürlichen Logarithmus <f>ln(x)</f>
+				 mit Entwicklungspunkt <f>c=1</f> ist: 
+			<br/><f>$fd(p_logarithmus)</f>. 
+			</description>
+			<seq>
+				<script>
+			       newObject( def = p_logarithmus(x) := sum(i, 1,ordnung, (-1)^(i+1)*(x-1)^(i)/i); color = red; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Funktionswerte konvergieren mit zunehmender Ordnung für <f>|x-1| &lt; 1</f> gegen <f>ln(x)</f>, für 
+			<f>|x-1| &gt; 1</f> gibt es keine Konvergenz. <br/>
+				<br/>Der <strong>Konvergenzradius</strong>  ist also <f>1</f>.</description>
+		</step>
+		<step>
+			<description>Experimentieren Sie durch Änderung der Ordnung: <f>
+					<conf>ordnung(style=dtext; width=3;pattern = ##0)</conf>ordnung</f>
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Test</location>
+		<title>DeleteTest01</title>
+		<summary/>
+		<step>
+			<title>Romberg-Verfahren</title>
+			<description>Das Romberg-Verfahren beschäftig sich mit der näherungsweisen numerischen Berechnung bestimmter Integrale.
+		  <br/>Als Beispiel ist hier die Funktion <f>$fd(f)</f> gewählt, die Integrationsgrenzen sind <f>-1</f> und <f>3</f> , zu berechnen ist also der Inhalt der grau hinterlegten Fläche.</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="funk"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			       deleteAll();
+			       expand( left = false; right = false );
+			       newObject( def = integ:=7.0669473644; hide = true );
+			       newObject( def = funk.xMax:=5*1);
+			       newObject( def =funk.xMin:=-3*1 );
+			       newObject( def = f(x):=2+sin(2*sin(x)+2*x); target = funk);
+			       newObject( def = low:=-1);
+			       newObject( def = up:=3);
+			       newObject( def = intfl:=flaeche({punkt(low,0),punkt(up,0),kurve(t,up,low,t,f(t))}); color = gray; target = funk; hide = true );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<title2>Zusammengesetzte Trapezregel:</title2>Ausgangspunkt des Romberg-Verfahrens ist die (näherungsweise) Berechnung des Integrals mit Hilfe der zusammengesetzten Trapezregel. Dabei wird das Integrationsintervall in mehrere Teilintervalle gleicher Breite aufgeteilt. In jedem Intervall wird der tatsächliche Beitrag zum Integral durch den Flächeninhalt eines Trapezes angenähert.</description>
+		</step>
+		<step>
+			<description>Aktuell ist die Situation gezeigt, in der das Integrationsintervall in zwei Teilintervalle aufgeteilt ist. In diesem Fall ist die Näherung durch die zusammengesetzte Trapezregel nicht besonders gut: Im linken Trapez könnten sich die Fehler gerade ausgleichen, das rechte Trapez liefert offensichtlich einen wesentlich größeren Wert als der entsprechende Anteil des Integrals.</description>
+			<seq>
+				<script>
+				deleteObject( name = intfl );
+				newObject( def = trapez(i):=(up-low)/(2*i)*(f(low)+2*sum(k,1,i-1,f(low+(up-low)/floor(i)*k))+f(up)) ;   ); 
+			   newObject( def = nInput:=2 ; hide = true);
+			   newObject( def =n:=floor(min(max(2,nInput), 16)) ; hide = true );
+			   newObject( def =  hh:=(up-low)/n; hide = true);
+			   newObject( def =xpos(i):=low+i*hh ; hide = true );
+			   newObject( def =  gpos(n):=min(low+n*hh, up) ; hide = true);
+			   newObject( def = vy := vektor({0,1}); hide = true );
+			   newObject( def = pl0:=&lt;punkt&gt;liste(i,17,punkt( gpos(i-1) , 0 ) ) ; hide = true);
+			   newObject( def = plf:= &lt;punkt&gt;liste(i,17,punkt(gpos(i-1) , f( gpos(i-1)) ) ) ; hide = true );
+			   newObject( def = g0:=gerade(pl0[1],vy); color = magenta; target = funk; linestyle = dot; hide = true );
+			   newObject( def = tt0:=flaeche({punkt(gpos(0),0),punkt(gpos(1),0),punkt(gpos(1),f(gpos(1))), punkt(gpos(0), f(gpos(0)))}); color = cyan; target = funk; hide = true);	   
+			   newObject( def = g1:=gerade(pl0[2],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			   newObject( def = tt1:=flaeche({punkt(gpos(1),0),punkt(gpos(2),0),punkt(gpos(2),f(gpos(2))), punkt(gpos(1), f(gpos(1)))}); color = cyan; target = funk; hide = true );
+			   newObject( def = g2:=gerade(pl0[3],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			   newObject( def = tt2:=flaeche({punkt(gpos(2),0),punkt(gpos(3),0),punkt(gpos(3),f(gpos(3))), punkt(gpos(2), f(gpos(2)))}); color = cyan; target = funk ; hide = true);
+			</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir die Anzahl der Teilintervalle auf <f>4</f>verdoppeln, ist die Situation schon ein wenig besser,</description>
+			<seq>
+				<script>
+			       newObject( def = nInput:=4 );
+			       newObject( def = g3:=gerade(pl0[4],vy); color = magenta; target = funk; linestyle = dot; hide = true  );
+			   newObject( def = tt3:=flaeche({punkt(gpos(3),0),punkt(gpos(4),0),punkt(gpos(4),f(gpos(4))), punkt(gpos(3), f(gpos(3)))}); color = cyan; target = funk; hide = true );
+			    newObject( def = g4:=gerade(pl0[5],vy); color = magenta; target = funk; linestyle = dot  ; hide = true);
+			    newObject( def = tt4:=flaeche({punkt(gpos(4),0),punkt(gpos(5),0),punkt(gpos(5),f(gpos(5))), punkt(gpos(4), f(gpos(4)))}); color = cyan; target = funk; hide = true );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>deutlich besser wird es, wenn wir die Anzahl nochmals auf <f>8</f> verdoppeln, </description>
+			<seq>
+				<script>
+			       newObject( def = nInput:=8 );
+			       newObject( def = g5:=gerade(pl0[6],vy); color = magenta; target = funk; linestyle = dot; hide = true  );
+			    newObject( def = tt5:=flaeche({punkt(gpos(5),0),punkt(gpos(6),0),punkt(gpos(6),f(gpos(6))), punkt(gpos(5), f(gpos(5)))}); color = cyan; target = funk ; hide = true);   
+			     newObject( def = g6:=gerade(pl0[7],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			    newObject( def = tt6:=flaeche({punkt(gpos(6),0),punkt(gpos(7),0),punkt(gpos(7),f(gpos(7))), punkt(gpos(6), f(gpos(6)))}); color = cyan; target = funk ; hide = true);
+			    newObject( def = g7:=gerade(pl0[8],vy); color = magenta; target = funk; linestyle = dot; hide = true  );
+			    newObject( def = tt7:=flaeche({punkt(gpos(7),0),punkt(gpos(8),0),punkt(gpos(8),f(gpos(8))), punkt(gpos(7), f(gpos(7)))}); color = cyan; target = funk; hide = true );
+			    newObject( def = g8:=gerade(pl0[9],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			    newObject( def = tt8:=flaeche({punkt(gpos(8),0),punkt(gpos(9),0),punkt(gpos(9),f(gpos(9))), punkt(gpos(8), f(gpos(8)))}); color = cyan; target = funk; hide = true );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>noch besser bei <f>16</f>.</description>
+			<seq>
+				<script>
+			   newObject( def = nInput:=16 );
+			     newObject( def = g9:=gerade(pl0[10],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			    newObject( def = tt9:=flaeche({punkt(gpos(9),0),punkt(gpos(10),0),punkt(gpos(10),f(gpos(10))), punkt(gpos(9), f(gpos(9)))}); color = cyan; target = funk ; hide = true);    
+			     newObject( def = g10:=gerade(pl0[11],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			    newObject( def = tt10:=flaeche({punkt(gpos(10),0),punkt(gpos(11),0),punkt(gpos(11),f(gpos(11))), punkt(gpos(10), f(gpos(10)))}); color = cyan; target = funk ; hide = true);
+			     newObject( def = g11:=gerade(pl0[12],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			    newObject( def = tt11:=flaeche({punkt(gpos(11),0),punkt(gpos(12),0),punkt(gpos(12),f(gpos(12))), punkt(gpos(11), f(gpos(11)))}); color = cyan; target = funk; hide = true );
+			     newObject( def = g12:=gerade(pl0[13],vy); color = magenta; target = funk; linestyle = dot; hide = true  );
+			    newObject( def = tt12:=flaeche({punkt(gpos(12),0),punkt(gpos(13),0),punkt(gpos(13),f(gpos(13))), punkt(gpos(12), f(gpos(12)))}); color = cyan; target = funk; hide = true );
+			    newObject( def = g13:=gerade(pl0[14],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			    newObject( def = tt13:=flaeche({punkt(gpos(13),0),punkt(gpos(14),0),punkt(gpos(14),f(gpos(14))), punkt(gpos(13), f(gpos(13)))}); color = cyan; target = funk; hide = true );
+			    newObject( def = g14:=gerade(pl0[15],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			    newObject( def = tt14:=flaeche({punkt(gpos(14),0),punkt(gpos(15),0),punkt(gpos(15),f(gpos(15))), punkt(gpos(14), f(gpos(14)))}); color = cyan; target = funk ; hide = true);
+			    newObject( def = g15:=gerade(pl0[16],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			    newObject( def = tt15:=flaeche({punkt(gpos(15),0),punkt(gpos(16),0),punkt(gpos(16),f(gpos(16))), punkt(gpos(15), f(gpos(15)))}); color = cyan; target = funk; hide = true );
+			    newObject( def = g16:=gerade(pl0[17],vy); color = magenta; target = funk; linestyle = dot ; hide = true );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt wollen wir der Frage genauer nachgehen, wie sich eine Verdoppelung der Anzahl der Teilintervalle auf die Qualität des Ergebnisses auswirkt. Dazu ist jetzt oben rechts ein zweites Koordinatensystem eingerichtet. </description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="funk"/>
+					<col perc="50" name="integral"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			        	integral.setTitle(title ="Trapezregel");
+			        newObject( def = nMax := 400 );
+			        newObject( def = integral.xMax:=1.1 );
+			        newObject( def = integral.xMin:=-0.05 );
+			        newObject( def =  integral.yMax:=9);
+			        newObject( def = integral.yMin:=-1 );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir starten mit <f>4</f> Trapezen. Weil im konkreten Fall das Integrationsintervall die Breite <f>4</f> hat, hat jedes Trapez die Breite <f>h=1</f>. 
+		  <br/>Im rechten Koordinatensystem tragen wir nach rechts diese Breite <f>h=1</f> an, nach oben den errechneten Wert <f>T4</f>aus den <f>4</f> Trapezen und erhalten so den Punkt <f>t4</f>. 	    
+		  </description>
+			<seq>
+				<script>
+			        newObject( def = nInput:=4 );
+			     	newObject( def = T4 := trapez(4);  hide = true );
+			        newObject( def = t4:=punkt(fix((up-low)/4),fix(T4)); color = red; target = integral;  hide = true);
+			          newObject( def = sh := strecke( punkt(1,0), t4); linestyle = dot; target = integral);
+			           newObject( def = sy := strecke( punkt(0,T4), t4); linestyle = dot; target = integral);
+			        newObject( def = htext:=text(punkt(1,0), "<f>4</f> Trapeze, <br/>Trapezbreite jeweils: <f>h=1</f>", B_NW); target = integral );
+			      
+			        newObject( def = ytext:=text(punkt(0,T4), "Ergebnis <f>T4</f>aus <f>4</f> Trapezen", B_SE); target = integral );
+			        newObject( def = ii(h):=trapez(min(floor((up-low)/h),nMax)) ; hide = true);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt halbieren wir den Abstand <f>h</f>, konkret erhalten wir <f>h=0.5</f> , wir haben dann doppelt so viele Trapeze, also <f>8</f>.
+		<br/>Rechts tragen wir über der Breite <f>h=0.5</f>  den aus den <f>8</f> Trapezen berechneten Wert auf und erhalten den Punkt <f>t8</f>.
+		<br/>
+			</description>
+			<seq>
+				<script>
+			        newObject( def = nInput:=8 );
+			        newObject( def = T8 := trapez(8); hide = true );
+			        newObject( def = t8:=punkt(fix((up-low)/8),fix(T8)); color = red; target = integral; hide = true );
+			        newObject( def = sh := strecke( punkt(0.5,0), t8); linestyle = dot; target = integral);
+			           newObject( def = sy := strecke( punkt(0,T8), t8); linestyle = dot; target = integral);
+			        newObject( def = htext:=text(punkt(0.5,0), "<f>8</f> Trapeze, <br/>Breite jeweils: <f>h=0.5</f>", B_NW); target = integral );
+			      
+			        newObject( def = ytext:=text(punkt(0,T8), "Ergebnis <f>T8</f>aus <f>8</f> Trapezen", B_SE); target = integral );
+
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Analog: Breite <f>h</f> halbieren, über der Breite <f>h=0.25</f>  den aus den <f>16</f> Trapezen berechneten Wert auftregen: Punkt <f>t16</f>. 
+		</description>
+			<seq>
+				<script>
+				   deleteObject( name = sh, sy, htext, ytext);
+			        newObject( def = nInput:=16 );
+			        newObject( def = T16 := trapez(16) ; hide = true);
+			        newObject( def = t16:=punkt(fix((up-low)/16),fix(T16)); color = red; target = integral; hide = true);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>und nochmal: Breite <f>h</f> halbieren, über der Breite <f>h=0.125</f>  den aus den <f>32</f>  Trapezen berechneten Wert auftregen: Punkt <f>t32</f>.
+		<br/>(Auf das Zeichnen der <f>32</f>  Trapeze im linken Fenster haben wir verzichtet.) 
+		</description>
+			<seq>
+				<script>
+			        newObject( def = nInput:=32 );
+			        newObject( def = T32 := trapez(32) ; hide = true);
+			        newObject( def = t32:=punkt(fix((up-low)/32),fix(T32)); color = red; target = integral ; hide = true);
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Fürs folgende können wir auf das Bild im linken Fenster verzichten, wir konzentrieren uns auf die Werte rechts.</description>
+		</step>
+		<step>
+			<description>In dieser Darstellung kann man schon erkennen, dass die verschiedenen Trapezsummen leicht unterschiedliche Werte ergeben. Dies war aber zu erwarten, da man vermutlich mit jeder Verdoppelung der Trapez-Anzahl das Integral immer besser annähert.
+<br/>Um diese Unterschiede besser zu sehen, zoomen wir jetzt auf den interessanten Bereich:</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="integral"/>
+				</row>
+			</layout>
+		</step>
+		<step>
+			<description>Wir suchen jetzt nach einer Gesetzmäßigkeit, nach der die Punkte plaziert sind. 
+			<br/>Die Punkte liegen offensichtlich nicht auf einer Gerade. Für andere Aussagen haben wir noch zu wenige Information.	</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="integral.yMin" to="7.02" end="5"/>
+					<animate object="main" parameterName="integral.yMax" to="7.33" end="5"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Wir zeichnen noch ein paar Punkte konkret ein: Der Punkt <f>t5</f> markiert das Resultat aus <f>5</f>  Trapezen, <f>t10</f> markiert das Resultat aus <f>10</f>  Trapezen, entsprechend <f>t64</f>.
+</description>
+			<seq>
+				<script>
+			       newObject( def = T5 := trapez(5); hide = true );
+			       newObject( def = T9 := trapez(9); hide = true );
+			       newObject( def = T10 := trapez(10) ; hide = true);
+			       newObject( def = T11 := trapez(11); hide = true );
+			       newObject( def = T13 := trapez(13) ; hide = true);
+			       newObject( def = T18 := trapez(18) ; hide = true);
+			       newObject( def = T20 := trapez(20); hide = true );
+			       newObject( def = T22 := trapez(22); hide = true );
+			       newObject( def = T26 := trapez(26); hide = true );
+			       newObject( def = T40 := trapez(40) ; hide = true);
+			       newObject( def = T64 := trapez(64) ; hide = true);
+			       newObject( def = T128 := trapez(128) ; hide = true);
+			       newObject( def = t5:=punkt(fix((up-low)/5),fix(T5)); color = red; target = integral ; hide = true);
+			       newObject( def = t10:=punkt(fix((up-low)/10),fix(T10)); color = red; target = integral ; hide = true);
+			       newObject( def = t64:=punkt(fix((up-low)/64),fix(T64)); color = red; target = integral ; hide = true);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<title2>Extrapolation mit einer Parabel</title2>Wenn man jetzt die Lage der Punkte betrachtet, hat man den Eindruck, dass die Punkte auf einer Parabel liegen könnten, deren Scheitel auf der <f>y</f>-Achse liegt, d.h. auf einer Parabel mit der Gleichung <f>y=s+s[2]*x^2</f> mit reellen Koeffizienten <f>s</f> und <f>s[2]</f> (der Term <f>s[1]*x</f> fehlt, weil die Parabel symmetrisch zur <f>y</f>-Achse sein soll). Wir überprüfen dies wie folgt: 
+<br/>Wir konstruieren eine Parabel, die zwei Punkte <f>e1</f> und <f>e2</f> interpoliert und deren Scheitel auf der <f>y</f>-Achse liegt. </description>
+			<seq>
+				<script>
+			       newObject( def = aa(x1,y1,x2,y2):=(y1-y2)/(x1^2-x2^2) ; hide = true;);
+			       newObject( def =  bb(x1,y1,x2,y2):=(x1^2*y2-x2^2*y1)/(x1^2-x2^2); hide = true;);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt sind die beiden Punkte und die dazu eindeutig gegebene Parabel (blau) rechts eingezeichnet.
+		  <br/>Wenn man die Punkte bewegt, verändert sich die Parabel, sie hat aber stets ihren Scheitel auf der <f>y</f>-Achse ...</description>
+			<seq>
+				<script>
+			        newObject( def = e1:=punkt(0.1,7.1); target = integral);
+			       newObject( def = e2:=punkt(0.4,7.2);target = integral);
+			       newObject( def = a2:=aa(e1.x,e1.y,e2.x,e2.y); hide = true);
+			       newObject( def = b2:=bb(e1.x,e1.y,e2.x,e2.y); hide = true);
+			       newObject( def = extrapolation2(h):=a2*h^2+b2; color = blue; hide = true; target = integral);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir jetzt die beiden Punkte <f>e1</f> und <f>e2</f> mit zwei der berechneten Punkte zur Deckung bringen, können wir so überprüfen, ob die Punkte aus der Trapezregel tatsächlich auf einer solchen Parabel liegen.
+<br/>Probieren Sie es aus!</description>
+		</step>
+		<step>
+			<description>Wir interpolieren jetzt konkret die Punkte <f>t4</f> und <f>t8</f> ...</description>
+			<seq>
+				<script> 
+		   newObject( def = deltax := (integral.xMax - integral.xMin)/15 );
+                   newObject( def = deltay := (integral.yMax - integral.yMin)/15 );
+                   newObject( def = pfVek := vektor( { -deltax, deltay } ) );
+				 // newObject( def = pf1 := pfeil( punkt( t4.x+deltax, t4.y - deltay), pfVek ); color = green; target = integral );
+				  //newObject( def = pf2 := pfeil( punkt( t8.x+deltax, t8.y - deltay), pfVek ); color = green; target = integral );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+			          newObject( def = delta1 := 1; hide = true );
+			          newObject( def = delta2 := 1; hide = true );
+			          newObject( def = e1.y := T8-delta1*deltay; hide = true);
+			          newObject( def = e1.x := (up-low)/8+delta1*deltax; hide = true);
+			          newObject( def = e2.y := T4-delta2*deltay; hide = true);
+			          newObject( def = e2.x := (up-low)/4+delta2*deltax; hide = true);
+			      </script>
+				<animate object="main" parameterName="delta1" to="0" end="5"/>
+				<animate object="main" parameterName="delta2" to="0" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Extrapolation:</strong> Tatsächlich: Die Punkte liegen auf einer Parabel - nein, nicht alle: <f>t5</f> liegt nicht genau auf der Parabel. Aber stellen wir diesen Ausreißer kurz zurück und stellen fest:
+<br/>Mit den beiden Ergebnissen für <f>t4</f> (<f>4</f> Trapeze) und <f>t8</f> (<f>8</f> Trapeze) kann man die Parabel festlegen, auf dieser Parabel liegen die Punkte <f>t16</f>, <f>t32</f> und <f>t64</f> (jedenfalls näherungsweise), man kann also anscheinend aus den (relativ ungenauen) Ergebnissen <f>t4</f> und <f>t8</f> die (wesentlich genaueren) Ergebnisse <f>t16</f>, <f>t32</f> und <f>t64</f> berechnen.</description>
+		</step>
+		<step>
+			<description>Und: Je näher ein Punkt an der vertikalen Achse liegt, desto mehr Trapeze sind in seine Berechnung eingegangen, umso genauer ist das Ergebnis. Wenn wir nun den Schnittpunkt der blauen Parabel mit der vertikalen Achse betrachten (blauer Pfeil), dann sollte dieser einem besonders genauen Ergebnis entsprechen.</description>
+			<seq>
+				<script>
+				modifyObject( name = t5; visible = false );
+				modifyObject( name = t10; visible = false );
+				modifyObject( name = t16; visible = false );
+				modifyObject( name = t32; visible = false );
+             newObject( def = simps(x,x2):= (4*x-x2)/3 );
+           newObject( def = S8 := simps( T8,T4 ); );
+            //  newObject( def = ePf := pfeil( punkt( deltax, S8+2*deltay ), vektor( {-deltax, -2*deltay} ) ) ; color = blue; target = integral );
+              newObject( def = t2h:=text(t4, "<f>T4</f>: Ergebnis aus 4 Trapezen", C_W); target = integral );
+				   newObject( def = t4h:=text(t8, "<f>T8</f>: Ergebnis aus 8 Trapezen", C_E); target = integral );
+				   newObject( def = tp4:=text(punkt(0.7, extrapolation2(0.7)), "Interpoliert mit Parabel <br/><f>y=s+s[2]*x^2</f>", B_NW); target = integral );
+				   				   newObject( def = s4he:=text(punkt(0,S8), "Daraus extrapolierter Wert<br/>wird mit <f>S8</f> bezeichnet", C_E);target = integral);
+           </script>
+			</seq>
+		</step>
+		<step>
+			<description>Dieser Vorgang des Schließens von zwei (ungenauen) Ergebnissen auf ein (vermutlich) genaueres wird als Extrapolation bezeichnet.
+		</description>
+		</step>
+		<step>
+			<description>Um dies genauer protokollieren zu können, richten wir rechts ein weiteres Koordinatensystem ein.
+		</description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="integral"/>
+					<col perc="50" name="extrap1"/>
+				</row>
+			</layout>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="extrap1.xMax:=0.65"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="extrap1.xMin:=-0.05"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="extrap1.yMax:=7.33"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="extrap1.yMin:=7.02"/>
+				</call>
+				<script>
+		     extrap1.setTitle( title = "Extrapolation" );
+		     newObject( def = so1:=strecke( punkt(integral.xMin - 1, extrap1.yMax),  punkt(integral.xMax -0.1, extrap1.yMax) ); color = green; target = integral; hide = true );
+			        newObject( def = so2:=strecke( punkt(integral.xMin - 1, extrap1.yMin),  punkt(integral.xMax -0.1, extrap1.yMin) ); color = green;target = integral; hide = true );
+			        newObject( def = so3:=strecke(  punkt(integral.xMax -0.1, extrap1.yMax) ,  punkt(integral.xMax, integral.yMax) ); color = green;target = integral; hide = true );
+			        newObject( def = so4:=strecke( punkt(integral.xMax -0.1, extrap1.yMin), punkt(integral.xMax, integral.yMin) ); color = green; target = integral; hide = true );
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir markieren den extrapolierten Wert im rechten Koordinatensystem durch den Punkt <f>s8</f> wie folgt:
+			<br/><f>s8</f> hat die gleiche <f>x</f>-Koordinate wie <f>t8</f>, seine <f>y</f>-Koordinate ist der extrapolierte Wert.</description>
+			<seq>
+				<script>  
+				   
+				   newObject( def = s8:=punkt( (up - low)/8 ,S8 ) ; color = blue; target = extrap1 );
+
+				   newObject( def = s4h:=text(s8, "Daraus extrapoliert:
+					<f>S8</f>", C_W);target = extrap1 );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Genauso verfahren wir jetzt mit den Punkten <f>t8</f> und <f>t16</f>: Wir interpolieren sie durch die blaue Parabel und extrapolieren zu <f>h=0</f>.
+			<br/>Den extrapolierten Wert bezeichnen wir mit <f>S16</f>markieren wir rechts durch den Punkt <f>s16</f>.</description>
+			<seq>
+				<script>
+				deleteObject( name = t2h,t4h,s4h,s4he);
+				     modifyObject( name = t5; visible = true );
+				modifyObject( name = t10; visible = true );
+				modifyObject( name = t16; visible = true );
+				modifyObject( name = t32; visible =true );
+
+					newObject( def = e1.y := T16; hide = true);
+			          newObject( def = e1.x := (up-low)/16; hide = true);
+			          newObject( def = e2.y := T8; hide = true);
+			          newObject( def = e2.x := (up-low)/8; hide = true);
+		              
+				    newObject( def = pf1 := pfeil( punkt( t8.x+deltax, t8.y - deltay), pfVek ); color = green; );
+				  newObject( def = pf2 := pfeil( punkt( t16.x+deltax, t16.y - deltay), pfVek ); color = green; );
+
+			       newObject( def = S16 := simps( T16,T8 ); );
+			       newObject( def = ePf := pfeil( punkt( deltax, S16+2*deltay ), vektor( {-deltax, -2*deltay} ) ) ; color = blue;  );
+				   newObject( def = s16:=punkt((up - low)/16,S16); color = blue; target = extrap1 );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Entsprechend verfahren wir mit <f>t16</f> und <f>t32</f> ...</description>
+			<seq>
+				<script>
+								newObject( def = e1.y := T32; hide = true);
+			          newObject( def = e1.x := (up-low)/32; hide = true);
+			          newObject( def = e2.y := T16; hide = true);
+			          newObject( def = e2.x := (up-low)/16; hide = true);
+
+				 newObject( def = pf1 := pfeil( punkt( t16.x+deltax, t16.y - deltay), pfVek ); color = green;  );
+				  newObject( def = pf2 := pfeil( punkt( t32.x+deltax, t32.y - deltay), pfVek ); color = green; );
+
+				    newObject( def = S32 := simps( T32,T16 ); );
+				    newObject( def = ePf := pfeil( punkt( deltax, S32+2*deltay ), vektor( {-deltax, -2*deltay} ) ) ; color = blue;  );
+				   newObject( def = s32:=punkt((up - low)/32,S32); color = blue; target = extrap1 );
+
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>und mit weiteren Punktpaaren.</description>
+			<seq>
+				<script>
+				    integral.deleteGraph( name = e1);
+				    integral.deleteGraph( name = e2);
+				    deleteObject( name = pf1);
+				    deleteObject( name = pf2);
+				    deleteObject( name = ePf);
+				    newObject( def = S18 := simps( T18,T9 ); );
+				   newObject( def = s18:=punkt((up - low)/18,S18); color = blue; target = extrap1 );
+				    newObject( def = S20 := simps( T20,T10 ); );
+				   newObject( def = s20:=punkt((up - low)/20,S20); color = blue; target = extrap1 );
+				    newObject( def = S22 := simps( T22,T11 ); );
+				   newObject( def = s22:=punkt((up - low)/22,S22); color = blue; target = extrap1 );
+				    newObject( def = S26 := simps( T26,T13 ); );
+				   newObject( def = s26:=punkt((up - low)/26,S26); color = blue; target = extrap1 );
+				   newObject( def = S40 := simps( T40,T20 ); );
+				    newObject( def = S64 := simps( T64,T32 ); );
+				   newObject( def = s64:=punkt((up - low)/64,S64); color = blue; target = extrap1 );
+				    newObject( def = S128 := simps( T128,T64 ); );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Im rechten Koordinatensystem sieht es so aus, als ob aus den verschiedenen Extrapolationen immer der selbe Wert resultiert.
+		  <br/>Wenn wir etwas zoomen, sehen wir, dass das nicht ganz richtig ist...
+		  </description>
+		</step>
+		<step>
+			<par>
+				<animate object="main" parameterName="extrap1.yMin" to="7.06635" end="5"/>
+				<animate object="main" parameterName="extrap1.yMax" to="7.067177" end="5"/>
+			</par>
+		</step>
+		<step>
+			<description>Die grünen Linien zeigen, wie stark wir den kleinen Abschnitt der <f>y</f>-Werte im linken Koordinatensystem rechts vergrößert haben.
+		<br/>Jetzt sieht man: Die verschiedenen Extrapolationen liefern verschiedene Ergebnisse.
+		<br/>Vermutlich liefert die Extrapolation <f>s64</f> aus den genauen Ergebnissen <f>t32</f> und <f>t64</f> einen genaueren Wert als z.B. die Extrapolation <f>s16 </f>aus den Ergebnissen <f>t8</f> und <f>t16</f>.
+		<br/>Und wieder scheinen die Punkte (mit Ausnahme von <f>s8</f>) auf einer Kurve zu liegen.</description>
+		</step>
+		<step>
+			<description>Um es kurz zu machen: Die Punkte liegen diesmal nicht auf einer Parabel, sondern annähernd auf dem Graphen einer Funktion mit <f>extrapolation4(h)</f>.
+			</description>
+			<seq>
+				<script>
+				   newObject( def = bool(x,x2) := ( 16*x-x2 ) / 15 );
+			       newObject( def = aa4(x1,y1,x2,y2):=(y1-y2)/(x1^4-x2^4) );
+			       newObject( def = bb4(x1,y1,x2,y2):=(x1^4*y2-x2^4*y1)/(x1^4-x2^4) );
+			       newObject( def = c1 := punkt(   (up-low)/16 , S16 )   ) ;
+			       newObject( def = c2 := punkt( (up-low)/32  , S32  ) ) ;
+			       newObject( def = a4:=aa4(c1.x,c1.y,c2.x,c2.y) );
+			       newObject( def = b4:=bb4(c1.x,c1.y,c2.x,c2.y) );
+			       newObject( def = extrapolation4(h):=a4*h^4+b4 ; color = magenta; target = extrap1 );
+			        newObject( def = sp4:=text(punkt(0.28, extrapolation4(0.28)), "Interpoliert mit Funktion <br/><f>y=b+b[4]*x^4</f>", B_NE); target = extrap1 );
+
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt geht das Spiel ähnlich wieder von vorne los:
+			<br/>Wir extrapolieren mit der neuen Gesetzmäßigkeit die Punkte <f>s16</f> und <f>s32</f>. Man sieht wieder den gleichen Effekt: Die zugehörige Extrapolationskurve schneidet die vertikale Achse annähernd bei dem <f>y</f>-Wert, der auch durch das genauere Ergebnis <f>s64</f> gegeben ist.
+<br/>Wieder liefert die Extrapolation aus zwei "ungenauen" Ergebnissen ein "genaueres".
+			</description>
+			<seq>
+				<script>
+			  newObject( def = deltax := (extrap1.xMax - extrap1.xMin)/15 );
+                   newObject( def = deltay := (extrap1.yMax - extrap1.yMin)/15 );
+                   newObject( def = pfVek := vektor( { deltax, deltay } ) );
+                    newObject( def = B32 := bool( S32, S16 ); );
+				  newObject( def = pf1 := pfeil( punkt( s16.x-deltax,s16.y -deltay), pfVek ); color = green; target = extrap1 );
+				  newObject( def = pf2 := pfeil( punkt( s32.x-deltax, s32.y - deltay), pfVek ); color = green; target = extrap1 );
+				   newObject( def = ePf := pfeil( punkt( deltax, B32+2*deltay ), vektor( {-deltax, -2*deltay} ) ) ; color = magenta; target = extrap1  );
+
+
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Neues Koordinatensystem, extrapolierten Wert eintragen.</description>
+			<layout>
+				<row perc="100">
+					<col perc="33" name="integral"/>
+					<col perc="33" name="extrap1"/>
+					<col perc="33" name="extrap2"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			   extrap1.setTitle(title="Extrapolation 1");
+			   extrap2.setTitle(title="Extrapolation 2");
+			   newObject( def = extrap2.xMin := -0.01 );
+		           newObject( def = extrap2.xMax := 0.16 );
+			   newObject( def = extrap2.yMin := 7.06635);
+			   newObject( def = extrap2.yMax :=7.067177 );
+			   newObject( def = b32 := punkt( (up - low)/32, B32 ) ; color = magenta; target = extrap2 );
+			    newObject( def = b4he:=text(punkt(0,B32), "Daraus extrapolierter Wert<br/>wird mit <f>B32</f> bezeichnet", C_E);target = extrap1);
+			     newObject( def = b4h:=text(b32, "Daraus extrapoliert:
+					<f>B32</f>", C_W);target = extrap2 );
+
+			   
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Andere Punktpaare extrapolieren, Werte entsprechend eintragen.</description>
+			<seq>
+				<script>
+				    
+					     deleteObject( name = pf1, b4he, b4h);
+					     deleteObject( name = pf2);
+					     deleteObject( name = ePf );
+					     newObject( def = B16 := bool( S16, S8 ); );
+					     
+					     newObject( def = B40 := bool( S40, S20 ); );
+					     newObject( def = B64 := bool( S64, S32); );
+					     newObject( def = B128 := bool( S128, S64 ); );
+					     newObject( def = b16 := punkt( (up - low)/16, B16 ) ; color = magenta; target = extrap2 );
+					    
+					     newObject( def = b64 := punkt( (up - low)/64, B64 ) ; color = magenta; target = extrap2 );
+					     newObject( def = b128:= punkt( (up-low)/128, B128) ;   color = magenta; target = extrap2 );
+					     newObject( def = b40:= punkt( (up-low)/40,  B40 ) ;   color = magenta; target = extrap2 );
+			        newObject( def = so21:=strecke( punkt(extrap1.xMin - 1, extrap2.yMax),  punkt(extrap1.xMax -0.1, extrap2.yMax) ); color = green; target = extrap1 );
+			        newObject( def = so22:=strecke( punkt(extrap1.xMin - 1, extrap2.yMin),  punkt(extrap1.xMax -0.1, extrap2.yMin) ); color = green;target = extrap1);
+			        newObject( def = so23:=strecke(  punkt(extrap1.xMax -0.1, extrap2.yMax) ,  punkt(extrap1.xMax, extrap1.yMax) ); color = green;target = extrap1 );
+			        newObject( def = so24:=strecke( punkt(extrap1.xMax -0.1, extrap2.yMin), punkt(extrap1.xMax, extrap1.yMin) ); color = green; target = extrap1 );
+			     
+			     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Extrapolierte Werte sind scheinbar identisch, deshalb genauer zoomen...</description>
+		</step>
+		<step>
+			<seq>
+				<par>
+					<animate object="main" parameterName="extrap2.yMin" to="7.066944" end="5"/>
+					<animate object="main" parameterName="extrap2.yMax" to="7.066949" end="5"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Und wieder: die extrapolierten Ergebnisse scheinen einer bestimmten Gesetzmäßigkeit zu genügen.
+		   		<br/>Diesmal: <f>extrapolation6(h)</f>
+				<br>Natürlich kann man jetzt aus zwei Ergebnissen wieder ein genaueres extrapolieren ....</br>
+			</description>
+			<seq>
+				<script>
+		   newObject( def =aa6(x1,y1,x2,y2):=(y1-y2)/(x1^6-x2^6) );
+			   newObject( def = bb6(x1,y1,x2,y2):=(x1^6*y2-x2^6*y1)/(x1^6-x2^6) );
+			   newObject( def = a26 := aa6( b32.x, b32.y, b64.x,b64.y) );
+			   newObject( def = b26 := bb6( b32.x, b32.y, b64.x,b64.y) );
+			   newObject( def = extrapolation6(h):=a26*h^6+b26; target = extrap2 );
+			    newObject( def = bp4:=text(punkt(0.1, extrapolation6(0.1)), "Interpoliert mit Funktion <br/><f>y=d+d[6]*x^6</f>", B_SW); target = extrap2 );
+				
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Konkret rechnet man z.B. folgende Werte:<ul>
+					<li>Mit der Trapezregel Werte T8, T16, T32 und T64</li>
+					<li>daraus durch eine erste Extrapolation: S16, S32 und S64</li>
+					<li>daraus in einer zweiten Extrapolation: B32, B64</li>
+					<li>und aus diesen beiden Werten in einer letzten Extrapolation das Ergebnis.</li>
+				</ul>Die entsprechenden Formeln finden sich im Skript oder in Büchern zur numerischen Mathematik.</description>
+			<layout>
+				<row perc="100">
+					<col perc="25" name="integral"/>
+					<col perc="25" name="extrap1"/>
+					<col perc="25" name="extrap2"/>
+					<col perc="25" name="extrap3"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			   extrap3.setTitle(title="Extrapolation 3");
+			   newObject( def = extrap3.xMin := -0.01 );
+		           newObject( def = extrap3.xMax := 0.16 );
+		             newObject( def = extrap3.yMin := 7.066944 );
+		           newObject( def = extrap3.yMax := 7.066949 );
+		           newObject( def = extrap2.yMin := 7.066944 );
+		           newObject( def = extrap2.yMax := 7.066949 );
+
+                    newObject( def = ergebnis := punkt( (up - low)/64, ( 64*B64-B32 ) / 63 ) ; color = black; target = extrap3 );
+
+						
+					   
+				       break();
+				  </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+			   deleteAll();
+				       
+				  </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

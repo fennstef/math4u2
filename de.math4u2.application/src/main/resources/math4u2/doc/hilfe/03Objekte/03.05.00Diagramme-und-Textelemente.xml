@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.5 Diagramme und Textelemente</location>
+		<title>3.5.0 Diagramme und Textelemente</title>
+		<step>
+			<title>3.5 Diagramme und Textelemente</title>
+			<description>					
+<strong>Diagramme</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td><code>punkte(vx,vy,radius)</code></td>
+		<td>
+Diskretes Punkt-Diagramm. Der Vektor <code>vx</code> enthält die x-Werte
+<br/>für die Position der Punkte, der Vektor <code>vy</code> die y-Werte für die
+<br/>Position der Punkte. 
+<br/>Die Funktion <code>radius</code> legt fest, wie gross die einzelnen Punkte markiert werden.
+		</td>
+	</tr>
+	<tr>
+		<td><code>punktFolge(xf, yf, s, r, layout)</code></td>
+		<td>
+Zeichnet eine Folge von Punkten. Dabei ist:
+<br/><code>xf</code>: Folge der x-Koordinaten
+<br/><code>yf</code>: Folge der y-Koordinaten
+<br/><code>s</code>: Index des letzten Punktes, der gezeichnet wird.
+<br/><code>r</code>: Größe der Darstellung der Punkte in Pixel.
+<br/>Die Art der Darstellung wir durch <code>layout</code> festgelegt. Mögliche
+<br/>Konstanten für <code>layout</code> sind:
+<br/><strong>P</strong> Die diskrete Folge der Punkte wird gezeichnet.
+<br/><strong>S</strong> Die Punkte der Folge werden durch einen Streckenzug
+<br/>verbunden, dieser wird gezeichnet.
+<br/><strong>PS</strong> oder <strong>SP</strong> : Punkte und Streckenzug werden gezeichnet.
+		</td>
+	</tr>
+	<tr>
+		<td><code>balken(vx,vy,breite)</code></td>
+		<td>			
+Balkendiagramm. Der Vektor <code>vx</code> enthält die x-Werte für die
+<br/>Position der Balken, der Vektor <code>vy</code> die y-Werte für die Höhe der
+<br/>Balken.
+<br/>Die Funktion <code>breite</code> regelt die Breite der Balken.
+		</td>
+	</tr>
+	<tr>
+		<td><code>karte(f,konfvek)</code></td>
+		<td>
+Farbliche Darstellung der zweistelligen Funktion mit dem
+<br/>Namen <code>f</code>. Der dargestellte Wertebereich und die Lage von
+<br/>Höhenlinien wird durch den Vektor <code>konfvek</code> festgelegt.
+		</td>
+	</tr>
+	<tr>
+		<td><code>feld(f, p, distx, disty, cutoff)</code>
+			<br/><code>feld(f, p, distx, disty, cutoff, layout)</code>	
+		</td>
+		<td>
+Darstellung der zweisteligen vektorwertigen Funktion mit
+<br/>dem Namen <code>f</code> als Vektorfeld.
+<br/>Der Punkt <code>p</code> und die Abstände <code>distx</code> und <code>disty</code> legen ein
+<br/>Puntgitter fest.
+<br/>An den Punkten dieses Gitters wird der Vektor-Wert der
+<br/>Funktion <code>f</code> als Pfeil dargstellt, sofern der Betrag des Vektors
+<br/>nicht größer als der Wert von <code>cutoff</code> ist.
+<br/>Bei Bedarf kann die Art der Darstellung durch verschiedene
+<br/>Werte von <code>layout</code> angepasst werden.
+		</td>
+	</tr>
+</table>
+
+<p/><strong>Text-Elemente</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>	
+	<tr>
+		<td><code>text(p1,"meinText",POSTIT)</code></td>
+		<td>
+Text-Element am Verankerungspunkt <code>p1</code> mit Text <code>meintext</code>,
+<br/>Aussehen ja nach Layout-Konstante:
+<br/>
+<br/>Notizzettel: <code>POSTIT</code>.
+<br/><strong>B</strong>ubble (Sprechblase): Sie wird durch die Himmelsrichtung
+<br/>festgelegt, in der sie von Verankerungspunkt aus erscheinen:
+<br/><code>B_SE</code> (<strong>S</strong>outh-<strong>E</strong>ast), <code>B_SW</code>, <code>B_NW</code>, <code>B_NE</code>.
+<br/>
+<br/><strong>A</strong>rrow (Pfeil): Er wird festgelegt durch die Himmelsrichtung, in
+<br/>die er zeigt: <code>A_N</code>, <code>A_E</code>, <code>A_S</code>, <code>A_W</code>.
+<br/>
+<br/>Pfeile für die <strong>K</strong>oordinatenachsen:
+<br/><code>K_N</code>, <code>K_E</code>, <code>K_S</code>, <code>K_W</code>.
+<br/>
+<br/>Markierung für Koordinatenachsen in den Himmelsrichtungen:
+<br/><code>C_N</code>, <code>C_E</code>, <code>C_S</code> und <code>C_W</code>.
+		</td>
+	</tr>
+</table>
+			</description>
+		</step>
+	</body>
+</math4u2>

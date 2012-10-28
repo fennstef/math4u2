@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Geometrie/Kurven</location>
+		<title>Parametrisierte Kurven</title>
+		<summary>Darstellung einer Kurve in Parameterform</summary>
+		<keywords>
+			<keyword>Kurve</keyword>
+			<keyword>Parameterform</keyword>
+			<keyword>Koordinatenfunktion</keyword>
+		</keywords>
+		<step>
+			<title>Parameterform: Grundidee</title>
+			<description>Häufig liegt der Beschreibung einer Kurve folgende Idee zugrunde:
+			<br/>Gegeben ist ein Intervall, ordne jedem Element <f>t</f> dieses Intervalls einen Punkt <f>P(t)</f> der Ebene (der des Raums) zu. Durchläuft der Parameter <f>t</f> jetzt das vorgegebene Intervall, so bewegt sich <f>P(t)</f> auf eine Kurve der Ebene (bzw. des Raums). Im folgenden werden wir uns auf Kurven der Ebene beschränken.
+<br/>In der Technik und der Physik ist dieser Parameter <f>t</f> häufig die Zeit. Wir werden deshalb im Folgenden auch von einem Zeitintervall und einem Zeitpunkt <f>t</f> sprechen.
+		</description>
+			<seq>
+				<script>
+		      deleteAll();
+			       expand( left = false; right = true );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Zeitintervall</strong>
+				<br/>Als Zeitintervall ist hier das Intervall [<f>0</f> ; <f>1</f>] gewählt.
+		<br/>Im Fenster oben rechts sehen Sie das Zeitintervall farbig unterlegt.
+		<br/>Für spätere Experimente können Sie mit der Maus über den Doppelpfeil einen Zeitpunkt dieses Intervalls einstellen.
+		<br/>Die Wahl des Zeitintervalls ist relativ willkürlich. Ein anderes häufig verwendetes Intervall ist [<f>0</f> ; <f>2*pi</f>].
+		</description>
+			<layout>
+				<row perc="50">
+					<col perc="50" name="dxkoor"/>
+					<col perc="50" name="dzeit"/>
+				</row>
+				<row perc="50">
+					<col perc="50" name="dkurve"/>
+					<col perc="50" name="dykoor"/>
+				</row>
+			</layout>
+			<seq>
+				<script>			     
+			   dzeit.setTitle(title="Zeitintervall");
+			    newObject(def = dzeit.xMin := fix(-0.2));
+                   newObject(def = dzeit.xMax :=fix( 1.2));
+                   newObject(def = dzeit.yMin := fix(-1));
+                   newObject(def = dzeit.yMax := fix(3));
+                    newObject( def = S:=punkt(0.35, fix(-0.5)); style = ARROW_H;color = cyan; taget = dzeit );
+                   newObject( def = t := min(max(S.x, 0), 1));
+                   newObject( def = st:=strecke(punkt(0,0), punkt(1,0)); color = magenta; target = dzeit );
+                   newObject( def = S1:=marker(t, 0); color = magenta; target = dzeit);
+                   newObject(def = dkurve.xMin := -3.5);
+                   newObject(def = dkurve.xMax :=3.5);
+                   newObject(def = dkurve.yMin := -2);
+                   newObject(def = dkurve.yMax := 2);
+                   newObject(def = dykoor.xMin := fix(dzeit.xMin));
+                   newObject(def = dykoor.xMax := fix(dzeit.xMax));
+                   newObject(def = dykoor.yMin := fix(dkurve.yMin));
+                   newObject(def = dykoor.yMax := fix(dkurve.yMax));
+                    newObject(def = dxkoor.xMin := fix(dkurve.xMin));
+                   newObject(def = dxkoor.xMax := fix(dkurve.xMax));
+                   newObject(def = dxkoor.yMin := fix(dzeit.xMin));
+                   newObject(def = dxkoor.yMax := fix(dzeit.xMax));
+                   newObject( def =tt:=  text(S,"Hier Zeit <fh>t</fh> einstellen", B_NE); target = dzeit );
+                    newObject( def = th:=text( punkt(dzeit.xMax,0), "Zeit <f>t</f>", K_W);  fillcolor = fillwhite; target = dzeit );
+
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Um die Lage des Punktes <f>P(t)</f> zum Zeitpunkt <fh>t</fh> formal zu beschreiben, legt man zunächst ein Koordinatensystem fest. Dann kann man die Lage des Punktes <f>P(t)</f> zum Zeitpunkt <fh>t</fh> mit <f>P(t)=P(fx(t), fy(t))</f> durch Angabe der beiden Koordinaten <f>fx(t)</f> und <f>fy(t)</f> festlegen. 
+<br/>Insgesamt ist die Kurve dann beschrieben durch die <f>x</f>-Koordinatenfunktion <f>fx(t)</f> und die <f>y</f>-Koordinatenfunktion <f>fy(t)</f>, beide sind über dem gewälten Zeitintervall definiert.
+		   </description>
+			<seq>
+				<script>deleteObject( name = tt );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>y-Koordinatenfunktion</strong>
+				<br/>Im Koordinatensystem unten rechts wird die Funktion <fh>fy(t)</fh> für die <f>y</f>-Koordinate der Kurvenpunkte dargestellt.
+		<br/>Auf der horizontalen Achse ist wieder das Zeitintervall aufgetragen.
+		<br/>Jedem Zeitpunkt dieses Intervalls ist ein Wert für die <f>y</f>-Koordinate des entsprechenden Kurvenpunkts zugeordnet. Der Graph dieser Funktoin ist blau eingezeichnet.
+		<br/>Aktuell ist die Funktion <f>$fd(fy)</f> gewählt. Später werden wir duch Verändern dieser Funktion verschiedene Kurven erzeugen.</description>
+			<seq>
+				<script>
+		                             
+		                             dykoor.setTitle(title="y-Koordinatenfunktion");
+		                             dykoor.addGraph( name = st);
+                   					dykoor.addGraph( name = S1);                    
+                   					newObject( def = fy(t):=sin(2*pi*t) ; color = blue);
+                   									 newObject( def = fyk:=kurve(t,0,1,t,fy(t)); color = blue; target = dykoor );				
+                   									  newObject( def = sy:=strecke( punkt(t,0), punkt(t, fy(t)) ); color = magenta; linestyle = dot; target = dykoor); 	
+                   									  newObject( def = tya:=text( punkt(0,dykoor.yMax), "Koordinate <f>y(t)</f>", K_S); target = dykoor; fillcolor = fillwhite; bordercolor = blue );
+                   									  dykoor.addGraph( name = th );
+
+                   									  		
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>x-Koordinatenfunktion</strong>
+				<br/>Im Koordinatensystem oben links wird die Funktion für die <f>x</f>-Koordinate der Kurvenpunkte dargestellt.
+		   <br/>Hier ist das Zeitintervall auf der vertikalen Achse aufgetragen. </description>
+			<seq>
+				<script>
+		                            dxkoor.setTitle(title="x-Koordinatenfunktion");			
+		                            newObject( def = S2:=marker(0, t); color = magenta; target = dxkoor);
+                    newObject( def = st2:=strecke(punkt(0,0), punkt(0,1)); color = magenta; target = dxkoor);
+                      newObject( def = txa:=text( punkt(dxkoor.xMax,0), "Koordinate <f>x(t)</f>", K_W); target = dxkoor;  fillcolor = fillwhite; bordercolor = red );
+                       newObject( def = tv:=text( punkt(0,dxkoor.yMax), "Zeit <f>t</f>", K_S);  fillcolor = fillwhite; target = dxkoor );
+
+
+                    
+                    		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jedem Zeitpunkt dieses Intervalls ist hier ein Wert für die x-Koordinate des entsprechenden Kurvenpunkts zugeordnet. Der Graph dieser Funktoin ist rot eingezeichnet.
+		<br/>Aktuell ist hier die Funktion <f>$fd(fx)</f> gewählt. Auch diese Funktion werden wir später verändern und so verschiedene Kurven erzeugen.
+		<br/>Nehmen Sie sich kurz Zeit, die ungewöhnliche Rollenverteilung der Achsen in diesem Koordinatensystem zu rekonstruieren.</description>
+			<seq>
+				<script> 
+		      newObject( def = fx(t):=cos(2*pi*t); color = red );
+                    newObject( def = fxk:=kurve(t,0,1,fx(t), t); color = red; target = dxkoor );				
+                     newObject( def = sx:=strecke( punkt(0,t), punkt(fx(t), t) ); color = magenta; linestyle = dot; target = dxkoor); 
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Kurvenpunkt zum Zeitpunkt t</strong>
+				<br/>Im Koordinatensystem unten links ist jetzt der aktuelle Kurvenpunkt <f>P(fx(t), fy(t))</f> dargestellt.
+				<br/>Er erhält seine x-Koordinate durch den Wert <fh>fx(t)</fh> der <f>x</f>-Koordinatenfunktion zum Zeitpunkt <fh>t</fh>  (rot gepunktet) und
+				<br/>seine <f>y</f>-Koordinate durch den Wert <fh>fy(t)</fh> der <f>y</f>-Koordinatenfunktion zum Zeitpunkt <fh>t</fh> (blau gepunktet). 
+				<br/>Verstellen Sie den Zeitpunkt <fh>t</fh> und beobachten Sie die Bewegung des Kurvenpunkts!</description>
+			<seq>
+				<script>
+
+                   dkurve.setTitle(title="Kurve");
+                   newObject( def = ttt:= text(punkt( 1,1.5), "in diesem Fenster<br/>können Sie<br/>zoomen", POSTIT); target = dkurve);
+
+	 newObject( def = syf:=strecke(punkt(t, fy(t)), punkt(-20, fy(t)) ); color = blue; linestyle = dot; target = dykoor); 
+
+
+				 newObject( def = sxf:=strecke( punkt(fx(t), t) , punkt( fx(t), -20)); color = red; linestyle = dot; target = dxkoor); 
+
+				 newObject( def = gx:=gerade( punkt(fx(t), 0), e2y); color = red; linestyle = dot; target = dkurve);
+				  newObject( def = gy:=gerade( punkt(0, fy(t)), e2x); color = blue; linestyle = dot; target = dkurve);
+				  newObject( def = mk := marker(fx(t), fy(t)); target = dkurve );
+				    newObject( def = tpkt:=text( mk, "Punkt <f>(x(t), y(t))</f>", B_SW); target = dkurve;  fillcolor = fillwhite; bordercolor = gray);
+
+				
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Kurve</strong>
+				<br/>Jetzt sind alle Punkte grau markiert, die der aktuelle Kurvenpunkt durchläuft, wenn der Zeitpunkt <fh>t</fh> das Intervall von <f>0</f> bis <f>1</f> durchläuft. Diese Menge wird als Graph der Kurve oder kurz als Kurve bezeichnet.</description>
+			<seq>
+				<script>  deleteObject( name = ttt );
+				newObject( def = krv:=kurve(t,0,1,fx(t), fy(t)); color = gray; target = dkurve );
+				animate( name = S.x; to = 0; end = 1);
+				animate( name = S.x; to = 1; end = 6 );
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<title>Experimente: Kreise und Kreissegmente</title>
+			<description>Oben rechts sind nun die aktuell verwendeten Koordinatenfunktionen angezeigt.
+		   <br/>Ändern Sie die Terme dort so, dass als Kurve ein Kreis entsteht, der um <f>1</f> nach rechts verschoben ist, d.h. dessen Mittelpunkt die Koordinaten (<f>1</f> ; <f>0</f>) hat. Eingabe mit RETURN abschließen!
+		   <br/>Die Lösung wird im nächsten Schritt gezeigt.</description>
+			<seq>
+				<script>
+				
+		       modifyObject( name = fx; select = true );
+		       modifyObject( name = fy; select = true );
+		       animate( name = S.x; to = 0.3; end = 2);
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Lösung:</strong>  Um den Kreis um <f>1</f> nach rechts zu schieben, addiert man zur ursprünglichen <f>x</f>-Koordinatenfunktion ( also zu fx(t) = cos(2*pi*t) ) die <f>1</f> und erhält die jetzt oben angezeigte Funktion <f>fx(t)</f>.
+		   </description>
+			<seq>
+				<script>
+		        newObject( def = fx(t):=cos(2*pi*t)+1 );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ändern Sie die Terme jetzt so, dass als Kurve ein Kreis entsteht, der zusätzlich um <f>1</f> nach unten verschoben ist, d.h. dessen Mittelpunkt die Koordinaten (<f>1</f> ; <f>-1</f>) hat.
+		   <br/>Die Lösung wird im nächsten Schritt gezeigt.
+
+		   </description>
+		</step>
+		<step>
+			<description>
+				<strong>Lösung:</strong> Zur Verschiebung in <f>y</f>-Richung um <f>-1</f> wird von der urspränglichen <f>y</f>-Koordinatenfunktion <f>1</f> abgezogen.</description>
+			<seq>
+				<script>
+		        newObject( def = fy(t):=sin(2*pi*t)-1 );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt wieder der ursprüngliche Kreis. Ändern Sie die Terme jetzt so, dass als Kurve nur der Halbkreis oberhalb der horizontalen Achse entsteht.
+			<br/>Tipp: Das Zeitintervall soll nicht verändert werden, während der verfügbaren Zeit soll jetzt aber nur die Hälfte der ursprünglichen Kurve durchlaufen werden.</description>
+			<seq>
+				<script>
+		     newObject( def = fx(t):=cos(2*pi*t));
+		        newObject( def = fy(t):=sin(2*pi*t) ;);	       
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Lösung:</strong> Die Kurve wird mit der Hälfte der ursprünglichen Geschwindigkeit durchlaufen, wenn wir in beiden Koordinatenfunktionen den Term <f>2*pi*t</f> durch den Term <f>1*pi*t</f> (oder <f>pi*t</f>) ersetzen.</description>
+			<seq>
+				<script>
+		        newObject( def = fy(t):=sin(1*pi*t) );
+		        newObject( def = fx(t):=cos(1*pi*t) );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ändern Sie die Terme jetzt so, dass als Kurve nur der Viertelkreis im ersten Quadranten entsteht.
+</description>
+			<seq>
+				<script>
+		     newObject( def = fx(t):=cos(2*pi*t));
+		        newObject( def = fy(t):=sin(2*pi*t) ;);	       
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Lösung:</strong> Die Kurve muss mit einem Viertel ihrer ursprünglichen Geschwindigkeit durchlaufen werden.</description>
+			<seq>
+				<script>
+		        newObject( def = fy(t):=sin(0.5*pi*t) );
+		        newObject( def = fx(t):=cos(0.5*pi*t) );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ändern Sie die Terme jetzt so, dass als Kurve nur der Viertelkreis im 2. Quadranten entsteht.
+</description>
+			<seq>
+				<script>
+		     newObject( def = fx(t):=cos(0.5*pi*t));
+		        newObject( def = fy(t):=sin(0.5*pi*t) ;);	       
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Lösung:</strong> Hier gibt es verschiedene Lösungsideen. 
+				<br/>Die einfachste ist wohl, dass der Halbkreis im 2. Quadranten aus dem Halbkreis im 1. Quadranten durch eine Spiegelung an der vertikalen Achse entsteht, d.h. dadurch , dass man bei der <f>x</f>-Koordinate jeweils das Vorzeichen wechselt.</description>
+			<seq>
+				<script>
+		        newObject( def = fy(t):=sin(0.5*pi*t) );
+		        newObject( def = fx(t):=-cos(0.5*pi*t) );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt eine andere Lösungsidee, dazu nochmal die Ausgangssituation. Der Viertelkreis im 1. Quadranten wird jetzt gezeichnet, wenn <fh>t</fh> das Zeitintervall [<f>0</f>;<f>1</f>] durchläuft. Daran anschließend könnte man den Viertelkreis im 2. Quadranten auch zeichnen, wenn man <fh>t</fh> weiter von <f>1</f> bis zu <f>2</f> erhöhen würde.
+<br/>Den Viertelkreis im 2. Quadranten alleine können wir mit Zeiten <fh>t</fh> im Intervall [<f>0</f>;<f>1</f>] dadurch erzeugen, dass wir in den Koordinatenfunktoinen den Faktor <fh>t</fh> durch <fh>(t+1)</fh> ersetzen. Dieser Wert durchläuft dann das gewünschte Intervall [<f>1</f>; <f>2</f>].
+</description>
+			<seq>
+				<script>
+		     newObject( def = fx(t):=cos(0.5*pi*t));
+		        newObject( def = fy(t):=sin(0.5*pi*t) );	       
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Lösung:</strong> Hier die oben angedeutete Lösung.
+				<br/>Erzeugen Sie jetzt auf jeweils zwei Arten: Viertelkreis im 3. und 4. Quadranten.</description>
+			<seq>
+				<script>
+		        newObject( def = fy(t):=sin(0.5*pi*(t+1)) );
+		        newObject( def = fx(t):=cos(0.5*pi*(t+1)) );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Experimente: Ellipsen</title>
+			<description>Jetzt wieder der ursprüngliche Kreis, allerdings ist die <f>x</f>-Koordinatenfunktion jetzt mit einem Parameter <f>a</f> multipliziert, dieser hat zunächst den Wert <f>1</f>.
+		   <br/>Experimentieren Sie durch Verändern des Wertes von <f>a</f> über den Schieberegler oben rechts.</description>
+			<seq>
+				<script>
+		      newObject( def = a:=1; select = true );
+		     newObject( def = fx(t):=a*cos(2*pi*t));
+		        newObject( def = fy(t):=sin(2*pi*t) ; select = false);
+		        modifyObject( name = fy; select = false );	       
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt wieder die ursprünglichen Koordinatenfunktionen des Einheitskreises. 
+			<br/>Ändern Sie die Terme so, dass Ellipsen mit verschiedenen Halbachsen entstehen, Kreise mit verschiedenen Radien, verschieben Sie die Ellipsen und Kreise.
+</description>
+			<seq>
+				<script>
+		     newObject( def = fx(t):=cos(2*pi*t));
+		        newObject( def = fy(t):=sin(2*pi*t) ;);	
+		        deleteObject( name = a );       
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Experimente: Funktionsgraphen</title>
+			<description>Funktionsgraphen lassen sich als parametrisierte Kurven zeichnen, wenn man für die <f>y</f>-Koordinatenfunktion die spezielle Wahl <f>$fd(fx)</f> trifft.
+		  <br/>
+			</description>
+			<seq>
+				<script>
+		         newObject( def = fx(t):=t );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Kubische Kurven</title>
+			<description> Als kubische Kurven werden parametrisierte Kurven dann bezeichnet, wenn beide Koordinatenfunktionen kubische Polynome (genauer: Polynome vom <f>Grad $le 3</f>) sind.
+<br/>Jetzt sind zwei kubische Koordinatenfunktionen eingestellt. 
+<br/>Experimentieren Sie! Versuchen Sie, durch Einsetzen anderer kubischer Polynome der Kurve einen bestimmten Verlauf zu geben (Startpunkt, Endpunkt, Richtung beim Startpunkt, Richtung beim Endpunkt). Schwierig, schwierig.</description>
+			<seq>
+				<script>
+		           newObject( def = fx(t):= 13*t^3-24*t^2+12*t-0.5 );
+		           newObject( def = fy(t):= 16*t^3-20*t^2+6*t-1 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die oben gestellte Aufgabe (Startpunkt, Endpunkt, Richtung beim Startpunkt, Richtung beim Endpunkt) ist durch Experimente wohl nicht lösbar, weil man in den beiden Koordinatenfunktionen insgesamt 8 Koeffizienten verändern kann. 
+<br/>Andererseits enthalten Start- und Endpunkt jeweils zwei Koordinaten, also insgesamt 4 Anforderungen, die Richtung bei Start- und Endpunkt mit jeweils zwei Komponenten  weitere 4 Anforderungen. 
+<br/>Insgesamt sollen also 8 willkürliche Anforderungen durch eine geeignete Wahl vom 8 Koeffizienten erfüllt werden, die Aufgabe könnte also durch Aufstellen und Lösen eines geeigneten Gleichungssystems für die 8 Koeffizienten lösbar sein.
+		   </description>
+		</step>
+		<step>
+			<description>In der Praxis geht man bei kubischen Kurven zur Festlegung der Koordinatenfunktionen oft einen anderen Weg (d.h. nicht den über ein Gleichungssystem). Ein wichtiges Beispiel für diesen Weg sind die Hermite-Kurven.</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>M. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Kurven</location>
+		<title>Verbindugsstrecke</title>
+		<step>
+			<title>Verbindungsstrecke als parametrisiertes Kurvenstück</title>
+			<description>Das einfachste Beispiel für ein parametrisiertes Kurvenstück, das über geometrische Größen beeinflusst werden kann, ist die Verbindungsstrecke von zwei Punkten.
+<br/>Konkret soll hier die Verbindungsstrecke der beiden Punkte <fh>p1</fh> und <fh>p2</fh> als parametrisiertes Kurvenstück s erzeugt werden.
+<br/>Das Kurvenstück s soll mit dem Kurvenparamterwert t=0 biem Punkt <fh>p1</fh> starten und mit dem Kurvenparameterwert t=1 beim Punkt <fh>p2</fh> ankommen.</description>
+			<layout>
+				<row perc="100">
+					<col perc="25" name="da1"/>
+					<col perc="75" name="da2"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				deleteAll();
+				expand(left=false);
+				da1.coordinateSystem(xMin=-0.2; xMax=1.2; yMin=-0.2; yMax=1.2);
+				da2.coordinateSystem(xMin=-2; xMax=4; yMin=-1; yMax=3);
+				newObject(def=p1:=punkt(0.5,1); target=da2);
+				newObject(def=p2:=punkt(2,0.5); target=da2);		
+			</script>
+			</seq>
+		</step>
+		<step>
+			<title>
+		    Anforderungen an die Gewichtsfunktionen
+		  </title>
+			<description>Die Koordinatenfunktionen des Kurvenstücks <fh>s</fh> entstehen, indem man die aktuellen Koordinaten der relevanten geometrischen Größen, hier die beiden Koordinaten <fh>p1.x</fh> und <fh>p1.y</fh> des Punktes <f>p1</f> und <fh>p2</fh> mit entsprechenden Gewichtsfunktionen versehen in den Funktionsterm einbringt.
+<br/>Für die Koordinatenfunktion <fh>sx(t)</fh> der x-Koordinate der Kurve s machen wir also den Ansatz:
+<br/>
+				<f>sx</f> ,entsprechend für die Koordinatenfunktion der y-Koordinate:
+<br/>
+				<f>sy</f> .
+<br/>Wenn die Kurve <fh>s</fh> für t=0 bei <fh>p1</fh> starten soll, muss gelten: 
+<br/>f1(t=0)=1 und f2(t=0)=0, 
+<br/>umgekehrt soll die Kurve <fh>s</fh> für t=1 bei <fh>p2</fh> ankommen, also muss gelten:
+<br/>f1(t=1)=0 und f2(t=1)=1 .
+<br/>Alle Funktionspaare <fh>f1</fh>, <fh>f2</fh>, die diese Randbedingungen erfüllen, erzeugen Kurven, die <fh>p1</fh> und <fh>p2</fh> verbinden. 
+<br/>Die einfachsten Funktionen mit diesen Eigenschaften sind die beiden linearen Funktionen <f>f1</f>  und <f>f2</f>.</description>
+			<seq>
+				<script>
+				newObject(d=f2(t):=t; c=blue);
+				newObject(d=f1(t):=1-t; c=red);
+				newObject(d=sx(t):=p1.x*f1(t)+p2.x*f2(t));
+				newObject(d=sy(t):=p1.y*f1(t)+p2.y*f2(t));
+				newObject(d=s:=kurve(t,0,1,sx(t),sy(t)); c=lightGray);
+			</script>
+			</seq>
+		</step>
+		<step>
+			<title>Die Gewichtsfunktionen</title>
+			<description>Im linken Fenster sind jetzt die beiden Gewichtsfunktionen gezeigt:
+		<br/>
+				<table>
+					<tr>
+						<td>Punkt</td>
+						<td>Gewichtsfunktion</td>
+						<td>Farbe</td>
+					</tr>
+					<tr>
+						<td>
+							<f>p1</f>
+						</td>
+						<td>
+							<f>f1</f>
+						</td>
+						<td bgcolor="red"/>
+					</tr>
+					<tr>
+						<td>
+							<f>p2</f>
+						</td>
+						<td>
+							<f>f2</f>
+						</td>
+						<td bgcolor="blue"/>
+					</tr>
+				</table>
+				<br/>
+				<br/>Damit konstuieren wir die beiden Koordinatenfunktionen: 
+		<br/>
+				<table>
+					<tr>
+						<td>Koordinate</td>
+						<td>Funktion</td>
+					</tr>
+					<tr>
+						<td>x</td>
+						<td>
+							<f>sx</f>
+						</td>
+					</tr>
+					<tr>
+						<td>y</td>
+						<td>
+							<f>sy</f>
+						</td>
+					</tr>
+				</table>
+				<br/>
+				<br/>und schließlich die Kurve <f>s</f>. Sie ist rechts grau eingezeichnet ...</description>
+			<seq>
+				<script>
+				da1.addGraph(n=f1;);
+				da1.addGraph(n=f2;);				
+				da2.addGraph(n=s;);			
+			</script>
+			</seq>
+		</step>
+		<step>
+			<title>Entstehung einzelner Kurvenpunkte</title>
+			<description>Um die Entstehung der Kurve besser nachvollziehen zu können, wollen wir jetzt noch einen Kurvenpunkt herausgreifen, der zu einem bestimmten Zeitpunkt t gezeichnet wird.
+<br/>Durch Bewegen des Punktes <fh>A</fh> können Sie im linken Fenster einen Zeitpunkt t wählen, dieser ist durch die gestrichelte Gerade markiert.
+<br/>Im rechten Fenster sehen Sie den Punkt <fh>pt</fh> eingezeichnet, der dann durch die Werte der Koordinatenfuktionen <fh>sx(t)</fh> und <fh>sy(t)</fh> festgelegt ist.</description>
+			<seq>
+				<script>
+				newObject(d=A:=punkt(0,1*0.5); t=da1);
+				newObject(d=g:=gerade(punkt(A.x,A.x),e2y); c=green; style=dash; t=da1);
+				newObject(d=pt:=punkt(sx(A.x),sy(A.x)); t=da2);
+			</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

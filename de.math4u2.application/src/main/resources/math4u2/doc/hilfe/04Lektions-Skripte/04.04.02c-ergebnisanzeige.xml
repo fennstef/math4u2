@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.4 description-Tag: Text und Formelsatz</location>
+		<title>4.4.2c Anzeige des aktuellen Ergebnisses</title>
+		<step>
+			<title>4.4.2c Anzeige des aktuellen Ergebnisses</title>
+			<description>
+Nullstellige Funktionen mit dem Ergebnis Skalar, Vektor, Dualvektor oder Matrix können durch eine
+Anzeige ihres aktuellen Ergebnisses ersetzt werden.
+<br/>Anders als bei den oben beschriebenen Ein-/Ausgabeelementen kann hier der Wert nicht verändert
+werden. 
+
+<br/><br/>Als Formen (<code>style</code>) stehen zur Verfügung:
+	
+<br/><br/>
+<table>
+	<tr>
+		<td><code>eval</code></td><td>Ergebnis anzeigen</td>
+	</tr><tr>
+		<td><code>deval</code></td><td>Ergebnis mit Namen anzeigen</td>
+	</tr>
+</table>
+<br/><br/>
+Hier wird zu einer Matrix <code>m1</code> die Inverse <code>m2</code> berechnet und beide Matrizen 
+werden angezeigt:
+
+<br/><code><![CDATA[
+<step>
+	<description>
+		<f>
+			<conf>m1(style=eval;width=4);m2(style=eval;width=4)</conf>
+			B:=m1*m2
+		</f>
+	</description>
+	<seq>
+		<script>
+			newObject( def = m1:= matrix({{1,0,0},{0,2,0},{0,0,1}}));
+			newObject( def = m2:= inverse(m1));
+		</script>
+	</seq>
+</step>
+]]></code>
+<br/>
+math4u2-Anzeige:
+<br/><img src="math4u2/doc/images/skript/formelsatz07.jpg"/>
+<br/>Zur gezielten Formatierung kann auch hier ein Formatierungs-Muster angegeben werden.
+			</description>
+		</step>
+	</body>
+</math4u2>

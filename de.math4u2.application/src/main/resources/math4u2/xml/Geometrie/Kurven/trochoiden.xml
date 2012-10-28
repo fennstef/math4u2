@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>unknown</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Kurven</location>
+		<title>Trochoiden</title>
+		<step>
+			<title>Trochoiden</title>
+			<description>Text<br/>
+</description>
+
+			<seq>
+				<call object="main" action="deleteAll"/>
+				<call object="main" action="expandLists">
+					<param type="boolean" value="false"/>
+				</call>
+				<script>
+				
+              
+			  newObject( def= da.xMin :=-5 );
+			  newObject( def= da.xMax := 5 );
+			  newObject( def= da.yMin := -2.6 );
+			  newObject( def= da.yMax := 2.6 );
+
+
+			  newObject( def= O:=punkt(1,1); target=da);
+			  newObject(def=R:=2);
+			  newObject(def=F:=kreis(O,R); target = da);
+			  newObject(def=phi:=0);
+			  newObject(def=r:=1);
+			  newObject(def=rdiff:=vektor({(R+r)*cos(phi), (R+r)*sin(phi)}));
+			  newObject(def=rM:=O.r+rdiff);
+			  newObject(def=M:=punkt(rM.x,rM.y); target = da );
+			  newObject(def=K:=kreis(M,r); target = da );
+			  newObject(def=a:=0.7);
+			  newObject(def=rPx(t):=(R+r)*cos(t)-a*cos((R+r)/r*t) );
+			  newObject(def=rPy(t):=(R+r)*sin(t)-a*sin((R+r)/r*t) );
+			  newObject(def=rPr:=vektor({rPx(phi),rPy(phi) }));
+			  newObject(def=rP:=O.r+rPr);
+			  newObject(def=P:=punkt(rP.x,rP.y); target = da );
+			  newObject(def=trochoide:=kurve(t,0,phi,O.x + rPx(t),O.y + rPy(t)); color = green; target = da);
+			  			</script>
+			  				
+			</seq>
+		</step>
+		<step>
+		<title>Animation</title>
+		<seq>
+		<animate object="main" parameterName="phi" to="20" end="40"/>
+		</seq>
+		</step>
+		<step>
+		<title>Anderes Verhältnis</title>
+		<seq>
+		  <script>
+		     newObject( def=phi:=0; );
+		     newObject( def=R:=2.1;);
+		  </script>
+		  <animate object="main" parameterName="phi" to="20" end="40"/>
+		</seq>
+		</step>
+	</body>
+</math4u2>

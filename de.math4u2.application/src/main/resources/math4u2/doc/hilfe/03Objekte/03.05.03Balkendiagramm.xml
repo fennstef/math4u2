@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.5 Diagramme und Textelemente</location>
+		<title>3.5.3 Balkendiagram</title>
+		<step>
+			<title>3.5.3 Balkendiagramm</title>
+			<description>
+<strong>Balkendiagramm definieren</strong>
+<br/>Ein Balkendiagramm wird wie <code>balk1:=balken(vx,vy)</code> definiert 
+durch die Angabe von zwei Vektoren:
+Die Elemente des Vektors <code>xv</code> geben die Positionen der Balken an, die 
+Elemente des Vektors <code>yv</code> bestimmen die Höhe der Balken.
+
+<p/><strong>Beispiel</strong>
+<br/>Ein Balkendiagramm, bei dem man die Höhe der Balken interaktiv mit der 
+Maus einstellen kann, erzeugt man wie folgt:
+<p/>Das Einstellen erfolgt über (Steuer-)Punkte, eine entsprechende Anzahl wird 
+in eine Liste erzeugt:
+<br/><code>pl:=&lt;punkt>liste(i,10,punkt(fix(i), 2))</code>.
+<br/>Die x-Koordinaten der Punkte sind mit <code>fix(i)</code> festgelegt (Zwangsbedingung), 
+die Punkte können mit der Maus nur in y-Richtung bewegt werden. 
+Mit <code>vx:=vektor(i,10,pl[i].x)</code> sammeln wir die x-Koordinaten der Punkte, in
+<code>vy:=vektor(i,10,pl[i],y)</code> die y-Koordinaten.
+
+<p/>Jetzt erzeugen wir mit <code>b:=balken(vx,vy)</code> das Balkendiagramm.
+Wenn wir <code>pl</code> und <code>b</code> zeichnen, können wir die Höhe der Balken über 
+die erzeugten Steuerpunkte verändern. Zusätzlich wird hier über die nullstelligen 
+Funktionen <code>ma</code> und <code>mi</code> der maximale und der minimale Wert
+aus <code>vy</code> berechnet und angezeigt.
+
+<p/><img src="math4u2/doc/images/objekte/balken01.jpg"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

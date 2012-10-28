@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>logReg</name>
+				<import>java.util</import>
+				<import>java.awt.image</import>
+				<with-graph/>
+				<result-type>MatrixType</result-type>
+				<arguments>
+					<!-- Start der Iteration -->
+					<argument type="ScalarType" name="x0"/>
+					<!-- Anzahl an Iterationen, die nicht gezeichnet werden soll -->
+					<argument type="ScalarType" name="n0"/>
+					<!-- Angabe, wie weit gezeichnet werden soll -->
+					<argument type="ScalarType" name="xEnd"/>
+				</arguments>
+				<method><![CDATA[
+		public void paint(Graphics2D g, DrawAreaInterface da){
+			System.out.print("p");
+			g.setColor(getColor());			
+			HashMap map = (HashMap) cache;
+			double x0 = ((Double)map.get("x0")).doubleValue();
+			double n0 = ((Double)map.get("n0")).doubleValue();
+			double xEnd = ((Double)map.get("xEnd")).doubleValue();	
+	
+			double oldXMin = 0;
+			double oldXMax = 0;
+			double oldYMin = 0;
+			double oldYMax = 0;	
+			double oldX0 = 0;
+			double oldN0 = 0;			
+			if(map.get("oldXMin")!=null){
+				oldXMin = ((Double)map.get("oldXMin")).doubleValue();
+				oldYMin = ((Double)map.get("oldYMin")).doubleValue();
+				oldXMax = ((Double)map.get("oldXMax")).doubleValue();
+				oldYMax = ((Double)map.get("oldYMax")).doubleValue();
+				oldX0 = ((Double)map.get("oldX0")).doubleValue();
+				oldN0 = ((Double)map.get("oldN0")).doubleValue();
+			}			
+	
+			int width = da.getWidth();
+			int height = da.getHeight();
+			double xMax = da.getXMax();
+			double xMin = da.getXMin();
+			double yMax = da.getYMax();
+			double yMin = da.getYMin();
+	
+			if(oldXMax!=xMax || oldYMax!=yMax || oldXMin!=xMin || oldYMin!=yMin || oldX0!=x0 || oldN0!=n0){
+				map.put("oldXMax",new Double(xMax));
+				map.put("oldYMax",new Double(yMax));
+				map.put("oldXMin",new Double(xMin));
+				map.put("oldYMin",new Double(yMin));
+				map.put("oldX0",new Double(x0));
+				map.put("oldN0",new Double(n0));
+								
+				double[][] pixels = new double[width][];
+				for(int i=0; i<width; i++){
+					double r = da.xPixToCoord(i);	
+					double x = x0;
+					if(x<0) x=0;
+					if(x>1) x=1;
+					
+					int maxSize=3000;
+					LinkedList list = new LinkedList();
+					double oldX = x;
+					int hits = 0;
+					
+					for(int j=0; j<n0; j++){
+						x = r * (1-x)*x;
+					}//for j
+	
+					for(int j=0; j<maxSize; j++){
+
+						x = r * (1-x)*x;
+						int y = da.yCoordToPix(x);
+						if(y<0 || y>height) continue;
+		
+						list.add(new Double(x));
+						hits++;
+						if(hits==60){
+							break;
+						}
+						if(oldX==x) break;
+					}//for j
+
+	
+					pixels[i] = new double[list.size()];
+					int k=0;
+					for(Iterator iter = list.iterator(); iter.hasNext();k++){
+						pixels[i][k]=((Double)iter.next()).doubleValue();
+					}//for iter
+				}//for i				
+	
+				BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				for(int i=0; i<width-10; i++){
+					for(int j=0; j<pixels[i].length; j++){
+						int y = da.yCoordToPix(pixels[i][j]);
+						if(y<0 || y>height) continue;
+	
+						try{
+						image.setRGB(i,y,0xFF000000);				
+						}catch(Throwable t){}
+					}//for j
+				}//for i
+				System.out.println("update");
+				map.put("pixels", image);
+			}			
+			BufferedImage image = (BufferedImage)map.get("pixels");
+			int imgWidth = da.xCoordToPix(xEnd);			
+			g.drawImage(image,0,0,imgWidth,height,0,0,imgWidth,height,null);
+		}//paint
+	]]></method>
+				<method><![CDATA[
+		public Object eval(Object[] args) throws MathException{			
+			int k=0;
+			double x0 = ((Result) args[k++]).getScalar();
+			double n0 = ((Result) args[k++]).getScalar();
+			double xEnd = ((Result) args[k++]).getScalar();	
+			System.out.println("eval"+x0);
+			
+			if(cache==null) cache = new HashMap();
+			HashMap map = (HashMap) cache;
+			map.put("x0", new Double(x0));
+			map.put("n0", new Double(n0));	
+			map.put("xEnd", new Double(xEnd));
+			return null;
+		}
+	]]></method>
+			</function>
+		</define>
+	</head>
+	<body>
+		<author>Fenn/Weiss</author>
+		<location>/Test</location>
+		<title>Logistische Abbildung - Ein Weg ins Chaos</title>
+		<summary/>
+		<step>
+			<title>Logistische Abbildung - Ein Weg ins Chaos</title>
+			<description>Die logistische Abbildung wurde ursprünglich vom belgischen Mathematiker und Sozilogen Pierre François Verhulst (1804 - 1949) eingeführt. Er modellierte damit das Wachstumsverhalten einer Population bei begrenzten Ressourcen.  
+<br/>Die logistische Abbildung ist ein Beispiel dafür, wie komplexes, chaotisches Verhalten aus einer einfachen nichtlinearen Abbildung (Gleichung) entstehen kann.
+		   </description>
+			<seq>
+				<script>
+		    deleteAll();
+		      expand(left=none;right=none);
+newObject( def = da.xMin := fix(-0.4) );
+newObject(  def = da.xMax := fix(5) );
+newObject(  def = da.yMin := fix(-0.24) );
+newObject(  def = da.yMax := fix(1.125) );
+newObject(  def = a := 0.4 );
+newObject(def=logistReg2 := logReg(a,500, 4.02); target=da);	
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

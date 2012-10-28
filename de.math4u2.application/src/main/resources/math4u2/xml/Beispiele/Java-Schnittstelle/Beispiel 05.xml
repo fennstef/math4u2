@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>random</name>
+				<import>java.util</import>	
+				<result-type>ScalarType</result-type>
+				<arguments>
+					<argument type="ScalarType" name="x"/>
+				</arguments>	
+				<method><![CDATA[
+					public Object eval(Object[] args) throws MathException{
+						//Parameter holen
+						int k=0;
+						double x = ((Result) args[k++]).getScalar();
+						//Variable für das Ergebniss
+						double result = 0;						
+				
+						//Zufallszahl berechnen				
+						Random random = new Random(Double.doubleToLongBits(x));
+						result = random.nextDouble();
+						
+						//Ergebnisrückgabe
+						return new ScalarDoubleResult(result);
+					}
+				]]></method>				
+			</function>
+		</define>
+	</head>
+	<body>
+		<location>/Beispiele/Java-Schnittstelle</location>
+		<title>Beispiel 05</title>
+		<step>
+			<title>Beispiel 5: Imports von Klassen</title>
+			<description>
+Xml-Lektion hierzu:
+<code><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>random</name>
+				<result-type>ScalarType</result-type>
+				<arguments>
+					<argument type="ScalarType" name="x"/>
+				</arguments>
+				<import>java.util</import>		
+				<method><![CDATA[
+					public Object eval(Object[] args) throws MathException{
+						//Parameter holen
+						int k=0;
+						double x = ((Result) args[k++]).getScalar();
+						//Variable für das Ergebniss
+						double result = 0;						
+				
+						//Zufallszahl berechnen
+						Random random = new Random(Double.doubleToLongBits(x));
+						result = random.nextDouble();
+						
+						//Ergebnisrückgabe
+						return new ScalarDoubleResult(result);
+					}
+				]]>]]&gt;<![CDATA[</method>
+			</function>
+		</define>
+	</head>
+	<body>
+		<location>/Beispiele/Java-Schnittstelle</location>
+		<title>Beispiel 05</title>
+		<step>
+			<description>				
+			</description>
+			<seq>
+				<script>
+					newObject(def=f(x) := myFunc(x); target=da;);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>
+]]></code>						
+			</description>
+			<seq>
+				<script>
+					newObject(def=f(x) := random(x); target=da;);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,264 @@
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>unknown</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Approximation</location>
+		<title>Fourier-Transformation - kurz</title>
+		<summary>Diskrete Fourier-Transformation zum Experimentieren</summary>
+		<step>
+			<title>Fourier-Transformation</title>
+			<description>Stellen Sie die diskreten Funktionswerte ein und beobachten Sie das Verhalten der Fourier-Koeffizienten.</description>
+			<layout>
+				<row perc="60">
+					<col perc="100" name="funk"/>
+				</row>
+				<row perc="40">
+					<col perc="50" name="cosinus"/>
+					<col perc="50" name="sinus"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false;right=false);
+
+					newObject(
+						def = funk.xMax := 5*1;
+					);					
+					
+					newObject(
+						def = funk.xMin := -5*1;
+					);	
+					
+					newObject(
+						def = funk.yMax := 3*1;
+					);	
+					
+					newObject(
+						def = funk.yMin := -3*1;
+					);	
+					
+					newObject(
+						def = sinus.xMax := 5.5*1;
+					);		
+					
+					newObject(
+						def = sinus.xMin := -0.5*1;
+					);	
+					
+					newObject(
+						def = sinus.yMax := 2.5*1;
+					);	
+					
+					newObject(
+						def = sinus.yMin := -1.5*1;
+					);	
+					
+					newObject(
+						def = cosinus.xMax := 5.5*1;
+					);	
+					
+					newObject(
+						def = cosinus.xMin := -0.5*1;
+					);	
+					
+					newObject(
+						def = cosinus.yMax := 2.5*1;
+					);	
+					
+					newObject(
+						def = cosinus.yMin := -1.5*1;
+					);	
+					
+					newObject(
+						def = fll:=flaeche({punkt(-20,-20),punkt(-pi,-20),punkt(-pi,20),punkt(-20,20)});
+						color = lightGray;
+						target = funk;
+						hide = true;
+					);																																																									
+					
+					newObject(
+						def = flrr:=flaeche({punkt(pi,-20),punkt(3*pi,-20),punkt(3*pi,20),punkt(pi,20)});
+						color = lightGray;
+						target = funk;
+						hide = true;
+					);	
+					
+					newObject(
+						def = xpos(i):=-pi+2*pi/8*i; hide = false;
+					);
+					
+					newObject(
+						def = x0g:=gerade(punkt(xpos(0),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);
+					
+					newObject(
+						def = x1g:=gerade(punkt(xpos(1),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);
+					
+					newObject(
+						def = x2g:=gerade(punkt(xpos(2),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);
+					
+					newObject(
+						def = x3g:=gerade(punkt(xpos(3),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);			
+					
+					newObject(
+						def = x4g:=gerade(punkt(xpos(4),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);	
+					
+					newObject(
+						def = x5g:=gerade(punkt(xpos(5),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);	
+					
+					newObject(
+						def = x6g:=gerade(punkt(xpos(6),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);																							
+					
+					newObject(
+						def = x7g:=gerade(punkt(xpos(7),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);		
+
+					newObject(
+						def = x8g:=gerade(punkt(xpos(8),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk; hide = true;
+					);	
+					
+					
+					newObject( def =f:= &lt;punkt>liste(i,8,punkt(fix(xpos(i)),0));
+						target = funk; hide = true;
+					);
+
+					
+					newObject( def = af(i):=1/(2-signum(i))*0.25*sum(k,1,8,f[k].y*cos(i*xpos(k)) ));
+					newObject( def = bf(i):=0.25*sum(k,1,8,f[k].y*sin(i*xpos(k)) ));												
+
+					newObject(def = a0f:=af(0));
+					newObject(def = a1f:=af(1));					
+					newObject(def = a2f:=af(2));																		
+					newObject(def = a3f:=af(3));
+					newObject(def = a4f:=af(4));
+					newObject(def = b1f:=bf(1));					
+					newObject(def = b2f:=bf(2));																		
+					newObject(def = b3f:=bf(3));																		
+					
+					
+					newObject(
+						def = frt(x):=a0f+a1f*cos(x)+a2f*cos(2*x)+a3f*cos(3*x)+a4f/2*cos(4*x)+b1f*sin(x)+b2f*sin(2*x)+b3f*sin(3*x);
+						color = green;
+						target = funk;
+					);		
+					
+																									
+					newObject(
+						def = a0s:=strecke(punkt(0,0),punkt(0,a0f));
+						color = red;
+						target = cosinus; hide = true;
+					);
+				
+																			
+					newObject(
+						def = a1s:=strecke(punkt(1,0),punkt(1,a1f));
+						color = red;
+						target = cosinus; hide = true;
+					);
+					
+										
+										
+					newObject(
+						def = a2s:=strecke(punkt(2,0),punkt(2,a2f));
+						color = red;
+						target = cosinus; hide = true;
+					);	
+					
+										
+										
+					newObject(
+						def = a3s:=strecke(punkt(3,0),punkt(3,a3f));
+						color = red;
+						target = cosinus; hide = true;
+					);
+					
+										
+					newObject(
+						def = a4s:=strecke(punkt(4,0),punkt(4,a4f));
+						color = red;
+						target = cosinus; hide = true;
+					);		
+					
+										
+										
+					newObject(
+						def = b1s:=strecke(punkt(1,0),punkt(1,b1f));
+						color = blue;
+						target = sinus; hide = true;
+					);		
+					
+										
+					
+					
+					newObject(
+						def = b2s:=strecke(punkt(2,0),punkt(2,b2f));
+						color = blue;
+						target = sinus; hide = true;
+					);	
+					
+										
+															
+					newObject(
+						def = b3s:=strecke(punkt(3,0),punkt(3,b3f));
+						color = blue;
+						target = sinus; hide = true;
+					);		
+					
+					
+					
+					newObject( def = a:=&lt;punkt>liste0(i,5,punkt(fix(i), fix(af(i))  )) ; color = red; target = cosinus );					
+					
+					newObject( def =b:=&lt;punkt>liste(i,3,punkt(fix(i), fix(bf(i))  )) ; color = blue; target =sinus );	
+					
+													
+					
+													
+					funk.setTitle(title="Funktionswerte");
+					cosinus.setTitle(title="Cosinus - Koeffizienten");
+					
+				cosinus.addGraph(name=a0s,a1s,a2s,a3s,a4s);
+				sinus.setTitle(title="Sinus - Koeffinzienten");
+				sinus.addGraph(name=b1s,b2s,b3s);																	
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

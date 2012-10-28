@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.4 description-Tag: Text und Formelsatz</location>
+		<title>4.4.1 Text Strukturieren</title>
+		<step>
+			<title>4.4.1 Text strukturieren</title>
+			<description>
+<title2>Überschriften</title2>
+Einzelne Abschnitte eines Textbereichs können wie bei <code><![CDATA[<title2>Die Koordinatensysteme</title2>]]></code>
+mit einer Überschrift versehen werden.
+
+<title2>Text hervorheben</title2>
+<ul>
+	<li>Tabulator:<tab/><code>&lt;tab/></code></li>
+	<li>Zeilenumbruch:<tab/><code>&lt;br/></code></li>
+	<li><em>kursiv</em>:<tab/><tab/><code>&lt;em></code>kursiv<code>&lt;/em></code></li>
+	<li><strong>fett</strong>:<tab/><tab/><code>&lt;strong></code>fett<code>&lt;/strong></code></li>
+	<li><code>typewriter</code>:<tab/><code>&lt;code></code>typewriter<code>&lt;/code></code></li>
+	<li><command>command</command>:<tab/><code>&lt;command></code>command<code>&lt;/command></code></li>
+</ul>
+
+<p/>
+
+<title2>Aufzählungen und Tabellen</title2>
+<br/><command>Punkt-Aufzählung:</command> <code><![CDATA[<ul>...</ul>]]></code>
+<br/>Die einzelnen Abschnitte der Aufzählung werden in ein <code><![CDATA[<li>...</li>]]></code>-Tag eingeschlossen:
+<code><![CDATA[
+<ul>
+	<li>erster Abschnitt</li>
+	<li>zweiter Abschnitt</li>
+	...
+	<li>letzter Abschnitt</li>
+</ul>
+]]></code>
+
+<br/><command>Tabelle:</command> <code><![CDATA[<table>...</table>]]></code>
+<br/>Pro Zeile der Tabelle wird ein <code><![CDATA[<tr>...</tr>]]></code>-Tag angeführt, in diesem für jede Spalte
+ein <code><![CDATA[<td>...</td>]]></code>-Tag, insgesamt entsteht eine Struktur wie:
+<code><![CDATA[
+<table>
+	<tr>
+		<td>Erste Zeile, erste Spalte</td>
+		<td>Erste Zeile, zweite Spalte</td>
+	</tr>
+	<tr>
+		<td>Zweite Zeile, erste Spalte</td>
+		<td>Zweite Zeile, zweite Spalte</td>
+	</tr>
+	...
+</table>
+
+]]></code>
+Jede Zelle kann für sich strukturierten Text mit Formeln enthalten.
+			</description>
+		</step>
+	</body>
+</math4u2>

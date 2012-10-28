@@ -45,7 +45,7 @@ public class MapGraph extends AbstractSimpleGraph {
 	/** Schwarz Transparent für unteren Bereich */
 	private final int BLACK_TRANSPARENT = new Color(0, 0, 0, 100).getRGB();
 
-	public String getIdentifier() {
+	public String getKey() {
 		return evalFunction.getKey();
 	}
 

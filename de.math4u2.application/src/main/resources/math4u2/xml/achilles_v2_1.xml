@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M.Weiss</author>
+		<location>/Analysis/Reihen</location>
+		<title>Geometrische Reihe</title>
+		<summary/>
+		<step>
+			<title>Die Geschichte von Achilles und der Schildkröte</title>
+			<description>Nachdem Achilles das Maß aller Dinge ist, ist die Längeneinheit für die Strecke "1 Achilles", das ist die Strecke, die Achilles in einer Stunde laufen kann. Die Schildkröte bekommt einen Vorsprung von einem "Achilles".
+			</description>
+			<layout>
+				<row perc="100.0">
+					<col perc="25" name="bahn"/>
+					<col perc="75" name="geraden"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			   deleteAll();
+			   bahn.setTitle(title = "Rennstrecke");		
+			   geraden.setTitle(title="Ort-Zeit-Diagramm");	   
+				expand(left=false;right=false);
+				bahn.coordinateSystem(xMin=-4;xMax=4;yMin=-0.7;yMax=2;);
+							geraden.coordinateSystem(xmin=-0.3;xmax=2;ymin=-0.7;ymax=2;);
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title/>
+			<seq>
+				<script>
+
+
+
+newObject(def=b := 1;);
+newObject( def = t:= 0);
+
+
+			newObject( def = va:=1  );
+			newObject( def = ach(t):=1*t; color = magenta);
+			newObject( def = vs:=0.3 );
+			
+
+newObject(
+	def=ts:=text(punkt(0,0),"Start",C_W);
+	fillcolor=fillgray;
+	target=bahn;
+	hide = true;
+);
+
+
+
+
+newObject(
+	def=A:=punkt(fix(0),fix(ach(t)));
+	color=255.102.102;
+	target=bahn;
+	hide = true;
+);
+
+newObject(
+	def=tt:=text(A,"Achilles",B_SE);
+	fillcolor=fillmagenta;
+	target=bahn;
+	hide = true;
+);
+
+
+
+newObject(
+	def=pf:=text(punkt(0,bahn.yMax),"Laufrichtung",A_S);
+	fillcolor=253.255.154;
+	bordercolor=0.0.0;
+	target=bahn;
+	hide = true;
+);
+
+newObject( def = at:=text(punkt(geraden.xMax,0), "Zeit <f>t</f>", K_W); target = geraden );
+			newObject( def = st:=text( punkt(0,geraden.yMax), "Strecke <f>s</f>", K_S); target = geraden );
+			newObject( def = achgt:=text(punkt(0.6, ach(0.6)), "Weg-Zeit-Diagramm von Achilles", B_SE); fillcolor = fillmagenta; target = geraden );
+			geraden.addGraph( name = ach );
+			
+			newObject( def = tts:=text(punkt(0,1), "1 Achilles", C_E);target = geraden; fillcolor = fillgreen );
+			newObject( def = ttt:=text(punkt(1,0), "1 Stunde", C_S); target = geraden; fillcolor = fillgreen );
+
+
+
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		         newObject( def = sch(t):=b + vs*t; color = blue );
+
+
+
+newObject( def = fv(x):=b; color = red; target = bahn; hide = true);
+newObject(
+	def=S:=punkt(fix(0),fix(sch(t)));
+	color=102.51.255;
+	target=bahn;
+	hide = true;
+);
+newObject(
+	def=ss:=text(S,"Schildkroete",B_NW);
+	fillcolor=fillblue;
+	target=bahn;
+	hide = true;
+);
+
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		      deleteObject( name = tts, ttt );
+		      geraden.addGraph( name = fv );
+		         newObject( def = schgt:=text(punkt(1.1, sch(1.1)), "Weg-Zeit-Diagramm der Schildkröte", B_NW); fillcolor = fillblue; target = geraden );
+
+			
+			geraden.addGraph( name = sch );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>Ort-Zeit-Diagramme einrichten</title>
+			<description>
+				<strong>Achilles</strong>
+				<br/>Achilles startet zum Zeitpunkt <f>t=0</f>, er läuft mit konstanter Geschwindigkeit <f>va = 1</f>, für Achilles wird der zurückgelegte Weg <f>$fh(ach)</f> in Abhängigkeit von der Zeit <fh>t</fh> also beschieben durch die Funktion <f>$fd(ach)</f>, der Graph dieser Funktion ist eine Gerade durch den Ursprung.
+			</description>
+			<seq>
+				<script>
+			      
+
+			deleteObject( name = pf );
+			
+			
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Schildkröte</strong>
+				<br/>Die Schildkröte läuft auch mit konstanter Geschwindigkeit <f>vs&gt;0</f>, allerdings langsamer als Achilles, d.h. kurz <f>vs&lt;va</f>. Sie startet mit einem Vorsprung <fh>b</fh>. Der zurückgelegte Weg wird für die Schildkröte beschrieben durch die Funktion <f>$fd(sch)</f>, der Graph dieser Funktion ist ebenfalls eine Gerade, sie verläuft wegen des Vorsprungs nicht durch den Ursprung.
+			</description>
+			<seq>
+				<script/>
+			</seq>
+		</step>
+		<step>
+			<title>Schnittpunkt der Geraden liefert Zeitpunkt des Treffens</title>
+			<description>Die beiden Geraden schneiden sich wegen <f>vs&lt;va</f>, ihr Schnittpunkt beschreibt genau den Zeitpunkt <f>t~stern</f>, in dem Achilles die Schildkröte einholt. Wir berechnen diesen Zeitpunkt aus der Gleichung <f>va*t~stern=b+vs*t~stern</f> und erhalten<br/>
+				<f>t~stern=b/(va - vs)</f> : Zeitpunkt, an dem Achilles die Schildkröte einholt.
+			</description>
+			<seq>
+				<script>
+				 newObject( def = t~stern := b/(1-vs) );
+				  newObject( def = t~sternpunkt := punkt(t~stern, ach(t~stern)); hide = true );
+				  newObject( def = tspgerade := gerade( t~sternpunkt, e2y); color = orange; target = geraden );
+			       newObject( def = tsp:=text(t~sternpunkt, "<f>t~stern</f>: Achilles<br/>holt die<br/>Schildkröte ein", C_S); target = geraden );
+
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Die Zenon'sche Argumentation nachrechnen</title>
+			<description>Damit ist das Problem eigentlich geklärt. Jetzt wollen wir der Frage nachgehen, wieso die Argumentation Zenons für seine Zeitgenossen gedanklich so problematisch war.<br/>Kurz vorweg: Es zeigt sich, dass die Argumentation auf das Konzept der <em>Konvergenz einer Zahlenfolge</em> führt - und dieses Konzept war damals noch vollkommen unbekannt.</description>
+			<seq>
+				<script>
+			       deleteObject( name = schgt, achgt, tsp );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir geben den Startschuss ...</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+			newObject( def = aa := 0; hide = true );
+			
+			newObject( def = tp:=punkt(t, fix(0)); color = green; target = geraden );
+			newObject( def = tg := gerade( tp, e2y); color = green; linestyle = dash ; target = geraden);
+			newObject( def = t1:= b/va );
+			newObject( def = t:=aa*t1; hide = true);
+			             animate( name = aa; to = 1 ; end = 10);
+			newObject(def=tt1:=text(punkt(t1, 0),"<f>t[0]</f>: Achilles erreicht Startposition der Schildkroete",B_SW);fillcolor=fillgreen;
+	                   target=geraden;);
+
+
+		</script>
+			</seq>
+		</step>
+		<step>
+			<description>Achilles hat die Startposition der Schildkröte erreicht. Dieser Zeitpunkt soll mit <f>t[0]</f> bezeichnet werden. Er berechnet sich aus der Gleichung <f>va*t[0]=b</f>, also: <br/>
+				<f>t[0]=b/va=1/1=1</f> : Achilles erreicht die Startposition der Schildkröte.
+</description>
+		</step>
+		<step>
+			<description>Dummerweise hat sich die Schildkröte auch bewegt und das Rennen geht weiter...</description>
+			<seq>
+				<script>
+		     				  newObject( def = fv(x):=b+t1*vs;  hide = true );
+		     				  				  newObject(def=tt1:=text(punkt(t1, 0),"<f>t[0]</f>",C_S);fillcolor=fillgreen;	                   target=geraden;);
+		     
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		       newObject( def = t2:= b/va*(1+vs/va));
+
+
+	                   			newObject( def = aa := 0; hide = true );
+	                   newObject( def = t:=t1+aa*(t2-t1); hide = true);
+	                                animate( name = aa; to = 1 ; end = 5);
+
+
+			newObject(def=tt2:=text(punkt(t2, 0),"<f>t[1]</f>: Achilles erreicht die Stelle,<br/>an der die Schildkröte zum Zeitpunkt <f>t[0]</f> war. ",B_NW);fillcolor=fillgreen;
+	                   target=geraden;);
+
+		       
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>Achilles erreicht die Position, an der die Schildkröte zum Zeitpunkt <f>t[0]</f> war. <br/>Die neue Position der  Schildkröte ergibt sich aus <f>sch(t[0])=b+vs*t[0]=b+vs*1=1+vs</f>
+				<br/>Der entsprechende Zeitpunkt <f>t[1]</f> berechnet sich dann aus <f>va*t[1]=1*t[1]=b*(1+vs/va)</f>, also: <br/>
+				<f>t[1]=1+vs</f> : Achilles erreicht die Position, die die Schildkröte hatte, als er deren Startposition erreicht hatte.
+
+			</description>
+		</step>
+		<step>
+			<description>Wieder hat sich die Schildkröte auch bewegt und Achilles setzt ihr nach ...</description>
+			<seq>
+				<script>
+		     				  newObject(def=tt2:=text(punkt(t2, 0),"<f>t[1]</f>",C_S);fillcolor=fillgreen;
+	                   target=geraden;);
+	                     newObject( def = fv(x):=b+t2*vs; hide = true );
+	                   		     
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		         newObject( def = t3:= b/va*(1+vs/va+(vs/va)^2));
+				 
+	                   newObject( def = aa := 0; hide = true );
+	                   newObject( def = t:=t2+aa*(t3-t2); hide = true);
+	                                animate( name = aa; to = 1 ; end = 2);
+
+
+
+			newObject(def=tt3:=text(punkt(t3, 0),"<f>t[2]</f>: Achilles erreicht die Stelle,<br/>an der die Schildkröte zum Zeitpunkt <f>t[1]</f> war. ",B_NW);fillcolor=fillgreen;
+	                   target=geraden;hide = true;);
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wieder nicht erwischt!<br/>Achilles erreicht die Position, an der die Schildkröte zum Zeitpunkt <f>t[1]</f> war. 
+			<br/>
+				<f>sch(t[1])=b+vs*t[2]=1+vs*(1+vs)=1+vs+vs^2</f>, es muss also gelten <f>va*t[2]=b*(1+vs/va+(vs/va)^2)</f>, also <br/>
+				<f>t[2]=1+vs+vs^2</f>
+			</description>
+		</step>
+		<step>
+			<description>Setzt man die Argumentation entsprechend fort, so erhält man als weitere Zeitpunkte: 
+			<br/>
+				<f>t[3]=b/va*(1+vs/va+(vs/va)^2+(vs/va)^3)</f>, 
+			<br/>
+				<f>t[4]=b/va*(1+vs/va+(vs/va)^2+(vs/va)^3+(vs/va)^4)</f>, ...
+			</description>
+			<seq>
+				<script>
+			       newObject(def=tt3:=text(punkt(t3, 0),"<f>t[2]</f>",C_S);fillcolor=fillgreen;
+	                   target=geraden;);
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<title>Das allgemeine Folgenglied</title>
+			<description>Die Zeitpunkte <f>t[0]=1</f>, <f>t[1]=1+vs</f>, <f>t[2]=1+vs+vs^2</f>, <f>t[3]=1+vs+vs^2+vs^3</f>, ... berechnen sich nach einer einfachen Gesetzmäßigkeit, der Zeitpunkt für den Argumentationsschritt Nummer <f>n</f> ergibt sich als <f>t[n]=1+vs+vs^2+vs^3+$hdots+vs^n</f> oder in Summenschreibweise als <f>t[n]=sum(i,0,n,vs^i)</f>
+			</description>
+		</step>
+		<step>
+			<title>Konvergenz, Grenzwert</title>
+			<description>
+			   Die Vorschrift <f>t[n]</f>, nach der für jeden Argumentationsschritt <f>n</f> die entsprechende Zeit berechnet wird, wird als <em>Zahlenfolge</em> bezeichnet.  
+			   <br/>
+				<f>lim(vars(n), (1+vs+vs^2+$hdots+vs^n), $infin)=t~stern=1/(1-vs)</f>
+			</description>
+		</step>
+		<step>
+			<title>Geometrische Reihe, Grenzwert</title>
+			<description>Man würde gerne schreiben: <f>sum(i,0,unendlich,vs^n) = 1/(1-vs)</f>   Begriff der Reihe<br/>
+		  ... konvergiert für <f>0$le c$lt1</f>
+				<f>sum(i,0,unendlich,c^n) = 1/(1-c)</f>
+			</description>
+		</step>
+		<step>
+			<description>Erste Folgenglieder eintragen, monoton wachsend, nach oben beschränkt, weitere Glieder eintragen, </description>
+			<layout>
+				<row perc="100.0">
+					<col perc="70" name="geraden"/>
+					<col perc="30" name="folgeZf"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+		          folgeZf.setTitle( title = "Folge");
+		          newObject( def = af := 8 );
+			        folgeZf.coordinateSystem(xmin=-1;xmax=11;ymin=-2;ymax=8;);
+			        newObject( def = folgeZf.yMin := -af/4);
+			        newObject( def = folgeZf.yMax := af );
+			       
+
+			        newObject( def = aat:=text(punkt(10.5,0), "Zeit <fh>t</fh>", K_W); target = folgeZf );
+			newObject( def = nt:=text( punkt(0,af*0.85), "Index <fh>n</fh>", K_S); target = folgeZf );
+			folgeZf.addGraph(name = tspgerade );
+		          newObject( def = c:= vs/va );
+			        newObject( def = vi:=vektor(i,20,i-1) );
+			        //newObject( def = vt:= b/va*vektor( { 1, sum(j,0,1,c^j), sum(j,0,2,c^j), sum(j,0,3,c^j), sum(j,0,4,c^j) ,sum(j,0,5,c^j) } ) );
+			        //newObject( def = vt:=b/va*vektor(i,20, (1-c^(i+1))/(1-c)) );
+			        newObject( def = vt:=b/va*vektor(i,20, sum(j,0,i-1,c^j)  ) );
+		           newObject(def=ttt0:=text(punkt(vt[1], vi[1]),"<f>t[0]</f>",C_S);fillcolor=fillgreen;
+	                   target=folgeZf;hide = true;);
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		           newObject(def=ttt1:=text(punkt(vt[2], vi[2]),"<f>t[1]</f>",C_S);fillcolor=fillgreen;
+	                   target=folgeZf;hide = true;);
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		           newObject(def=ttt2:=text(punkt(vt[3], vi[3]),"<f>t[2]</f>",C_S);fillcolor=fillgreen;
+	                   target=folgeZf;hide = true;);
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+			       
+
+
+			        
+			        newObject( def = folg := punkte(vt,vi,4); target = folgeZf );
+			        animate( name = af; to= 22; end = 10 );
+			         
+			     </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		         deleteObject( name = ttt0,ttt1,ttt2 );
+		         newObject(def=ttg:=text(punkt(b/(va-vs), -0.5),"<f>Grenzwert</f>",B_SE);fillcolor=orange;
+	                   target=folgeZf;);
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Summenfolge
+		  </description>
+			<layout>
+				<row perc="100.0">
+					<col perc="100" name="folgeZf"/>
+				</row>
+			</layout>
+		</step>
+		<step>
+			<description>
+				<f>lim( vars(n), b/va*(1+vs/va+(vs/va)^2+(vs/va)^3+$hdots+(vs/va)^n), $infin) = tt = b/(va-vs) = b/va*1/(1-vs/va)</f>
+				<br/>Dividiert man auf beiden Seiten durch <f>b/va</f>, so hat man kürzer <f>lim( vars(n),(1+vs/va+(vs/va)^2+(vs/va)^3+$hdots+(vs/va)^n), $infin) =1/(1-vs/va)</f>
+				<br/>Damit es übersichtlicher wird, ersetzt man den Quotienten durch <f>c:=vs/va</f>, dann hat man die Folgenglieder <f>s[n]=1+c+c^2+$hdots+c^n</f>, Diese Folge wird als geometrische Reihe bezeichnet. Wir haben ihren Grenzwert berechnet. Es gilt <f>lim(vars(n), 1+c+c^2+$hdots+c^n, $infin) = 1/(1-c)</f> für <f>0&lt;c&lt;1</f>.
+<br/>Der Weg zu diesem Ergebnis war allerdings ziemlich unüblich. Deshalb im Folgenden ein wesentlich kürzerer Weg, den man zur Behandlung der geometrischen Reihe oft einschlägt: 
+
+		   </description>
+		</step>
+		<step>
+			<description>Zenons Argumentation beschreibt eine <em>Folge</em> von <em>unendlich vielen</em> Zeitpunkten <f>t[n]</f>. Zwar verstreicht von einem Zeitpunkt <f>t[n]</f> zum nächsten Zeitpunkt  <f>t[n+1]</f>immer ein bestimmtes Zeitintervall, dieses Intervall wird aber mit wachsendem <f>n</f> sehr schnell klein. Die Zeitpunkte <f>t[n]</f> selbst bilden eine <em>monoton wachsende</em> Folge. Zum anderen liegen sämtliche Zeitpunkte <f>t[n]</f> vor dem uns bekannten Zeitpunkt <f>tt</f>, zu dem Achilles die Schildkröte einholt. Die Folge ist also <em>nach oben beschränkt</em>. Sie hat <f>tt</f> als <em>Grenzwert</em>.
+Insgesamt eine ganze Reihe von anspruchsvollen Begriffen: <em>Folge</em>, <em>unenlich viele</em>, <em>monoton wachsend</em>, <em>nach oben beschränkt</em>, <em>Grenzwert</em> - kein Wunder, dass er da leicht Verwirrung stiften konnte.		</description>
+		</step>
+		<step>
+			<description>Zugegeben, der soeben beschrittene Weg zur Einführung der geometrischen Reihe und zur Berechnung ihres Grenzwerts ist etwas "unüblich". 
+		  <br/>Deshalb im Folgenden der gängige Weg.
+		  </description>
+		</step>
+		<step>
+			<description>Zur Berechnung der Folgenglieder und des Grenzwerts verwendet man meist folgenden "Trick":
+		  <br/>Man formt das <f>(n+1)</f>-te Folgenglied einmal um in <f>s[n+1]=1+c+c^2+$hdots+c^(n+1)=1+c*(1+c+$hdots+c^n)=1+c*s[n]</f>,
+		  <br/>zum anderen formt man es um in <f>s[n+1]=(1+c+c^2+$hdots+c^n)+c^(n+1)=s[n]+c^(n+1)</f>,
+		  <br/>setzt die beiden rechten Seiten gleich: <f>1+c*s[n]=s[n]+c^(n+1)</f> und löst dies nach <f>s[n]</f> auf. Man erhält
+		  <br/>
+				<f>s[n]=(1-c^(n+1))/(1-c)</f>
+				<br>Weil für <f>0&lt;c&lt;1</f> gilt:<f>lim(vars(n), c^(n+1), $infin) = 0</f> gilt <f>lim(vars(n), (1-c^(n+1))/(1-c), $infin) = 1/(1-c)</f>
+				</br>
+			</description>
+		</step>
+		<step>
+			<title>Geometrische Reihe</title>
+			<description>Damit können wir die wichtigsten Fakten zur geometrischen Reihe zusammenfassen:
+		   <br/>
+				<br/>
+				<strong>Allgemeines Folgenglied:</strong> Das allgemeine Folgenglied (die sog. <f>n</f>-te <em>Partialsumme</em>) der geometrischen Reihe lautet <br/>
+				<f>s[n]=1+c+c^2+$hdots+c^(n)=sum(i,0,n,c^i)=(1-c^(n+1))/(1-c)</f>
+				<br/>
+				<strong>Konvergenz:</strong> Für <f>0$le c $lt1</f> konvergiert die geometrische Reihe. 
+		   		   		   <br/>
+				<strong>Grenzwert:</strong> Es gilt dann: 
+<f>lim(vars(n),s[n], $infin)=  lim( vars(n),sum(i,0,n,c^i), $infin) =  lim(vars(n),  (1-c^(n+1))/(1-c), $infin) =1/(1-c) </f>. Schreibe dafür kurz <f>sum(i,0,$infin, c^i) = 1/(1-c)</f>
+			</description>
+		</step>
+	</body>
+</math4u2>

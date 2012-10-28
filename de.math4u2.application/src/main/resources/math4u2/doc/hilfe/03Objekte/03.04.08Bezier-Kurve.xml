@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.08 Bezier-Kurve</title>
+		<step>
+			<title>3.4.8 Bezier-Kurve</title>
+			<description>			
+Eine Bezier-Kurve ist ein Kurvenstück, dessen Verlauf durch vier Steuerpunkte festgelegt wird.
+
+<p/><strong>Bezier-Kurve definieren</strong>
+<br/>Definiert man zunächst vier Punkte <code>pkt1:=punkt(1,2)</code>, <code>pkt2:=punkt(2,0)</code>,
+<code>pkt3:=punkt(3,3)</code> und <code>pkt4:=punkt(4,2)</code>, dann erhält man mit
+<code>bez1:=bezier(pkt1,pkt2,pkt3,pkt4)</code> die Bezier-Kurve, die beim Punkt <code>pkt1</code> startet,
+sich zunächst auf den Punkt <code>pkt2</code> zubewegt, die beim Punkt <code>pkt4</code> endet, dabei 
+kommt sie aus der Richtung, die durch <code>pkt3</code> festgelegt ist.
+
+<p/><strong>Methoden einer Bezier-Kurve</strong>
+<br/>Zu einer Bezier-Kurve <code>bez</code> liefern <code>bez.p1</code>, 
+<code>bez.p2</code>, <code>bez.p3</code> und <code>bez.p4</code> der Reihe 
+nach die vier Steuerpunkte der Kurve.
+
+<p/><strong>Beispiel</strong>
+<br/>Bei vielen Zeichenwerkzeugen werden Kurven stückweise aus Bezier-Kurven 
+aufgebaut. Zum Steuern des Verlaufs hat man dort meist
+<ul>
+	<li>den Startpunkt <code>st</code>,</li>
+	<li>dort einen Pfeil <code>st_pf</code>, mit dem man einstellen kann, in welcher Richtung die Kurve den Startpunkt
+verläßt,</li>
+	<li>den Endpunkt <code>ed</code> und</li>
+	<li>dort einen Pfeil <code>ed_pf</code>, mit dem man einstellen kann, in welcher Richtung die Kurve am Endpunkt
+ankommt.</li>
+</ul>
+
+<p/>Eine vergleichbare Situation erhalten wir wie folgt:
+<br/>Wir definieren zwei Punkte <code>st:=punkt(1,1)</code> 
+und <code>ed:=punkt(3,4)</code>, die beiden Vektoren 
+<code>st_v:=vektor({1,1})</code> und <code>ed_v:=vektor({-1,2})</code> und Pfeile 
+zur graphischen Darstellung der Vektoren <code>st_pf:=pfeil(start, start_v)</code> und
+<code>ed_pf:=pfeil(end, end_v)</code>.
+<br/>Dann können wir die Kurve
+<br/><code>bez2:=bezier(st,punkt(st.x+st_v.x,ed.x+ed_v.x),punkt(ed.x-ed_v.x, ed.y-ed_v.y),ed)</code>
+<br/>wie gewohnt mit der Maus manipulieren (wenn wir alle Elemente zeichnen).
+			</description>
+		</step>
+	</body>
+</math4u2>

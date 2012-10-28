@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.7 Tags</title>
+		<step>
+			<title>3.6.7 Tags</title>
+			<description>
+Im Allgemeinen sieht die Anbindung via Java-Schnittstelle folgendermaßen aus:
+<code><![CDATA[
+...
+<math4u2>
+	<head>
+		..
+		<define>
+			<function>
+				<name>einFunktionsname</name>
+				<import>packageVerzeichnis</import>
+				...
+				<import>ein.package.verzeichnis</import>
+				<with-graph/>
+				<result-type>einTyp</result-type>
+				<arguments>
+					<argument type="einTyp" name="einName"/>
+					...
+					<argument type="einTyp" name="einName"/>
+				</arguments>				
+				<method><![CDATA[
+					...
+				]]>]]&gt;<![CDATA[</method>
+				...
+				<method><![CDATA[
+					...
+				]]>]]&gt;<![CDATA[</method>				
+			</function>
+			...
+			<function>
+				...
+			</function>
+		</define>
+	</head>
+...
+]]></code>
+<p/>
+Beschreibung der Tags:
+<p/><table>
+	<tr>
+		<td bgcolor="#F4C86C">Tag-Name</td>
+		<td bgcolor="#F4C86C">Kardinalität</td>
+		<td bgcolor="#F4C86C">Beschreibung</td>
+	</tr>
+	<tr>
+		<td><code>define</code></td>
+		<td>1</td>
+		<td>
+Innerhalb diesen Tags werden alle Funktionsdefinitionen durchgeführt.
+<br/>Funktionen können dabei auch Graphen sein, die sich auf der Zeichenfläche
+<br/>darstellen können.
+		</td>
+	</tr>
+	<tr>
+		<td><code>function</code></td>
+		<td>1..<f>$infin</f></td>
+		<td>
+Definition einer Funktion. Diese Funktion kann später im &lt;script>-Tag
+<br/>oder direkt in Math4u2 mit <code>f:=einFunktionsname(a0, ..., an)</code> 
+<br/>aufgerufen werden, wenn im Tag &lt;name> der Wert "einFunktionsname" steht. 
+<br/>Dabei müssen die Parameter <code>a...</code> vom gleichen Typ sein, wie 
+<br/>es in dem jeweiligen &lt;argument>-Tag definiert wurde.
+		</td>
+	</tr>
+	<tr>
+		<td><code>name</code></td>
+		<td>1</td>
+		<td>Name der Funktion, mit der man später die Funktion aufrufen kann.</td>
+	</tr>
+	<tr>
+		<td><code>import</code></td>
+		<td>0..<f>$infin</f></td>
+		<td>
+Wird innerhalb des &lt;method>-Tags eine Klasse ohne Package-Präfix benutzt, so
+<br/>muss das Verzeichnis in der diese Klasse liegt hier angegeben werden. Dabei
+<br/>muss der Seperator der Verzeichnisse trennt der typische 
+<br/>Java-Trenner '<code>.</code>' sein. Das Package-Verzeichnis <code>java.awt.*</code>
+<br/>und einige Math4u2 interne Package-Verzeichnisse werden automatisch importiert.
+<br/>Wird eine Klasse nicht gefunden oder wurde der benötigte Import vergessen, so
+<br/>erscheint die Fehlermeldung <strong>[source error] no such class: NichtGefundeneKlasse</strong>.
+		</td>
+	</tr>
+	<tr>
+		<td><code>with-graph</code></td>
+		<td>0..1</td>
+		<td>
+Wenn dieses Tag vorkommt, kann die Funktion auf die Zeichenfläche
+<br/>gezogen werden bzw. im &lt;script>-Tag mit 
+<br/><code>newObject(..., target=zeichenflächenname)</code>
+<br/>gezeichnet werden. Dabei muss die Methode <code>paint(...)</code>
+<br/>überschrieben werden. Näheres hierzu finden sie im Kaptiel "Methoden".
+		</td>
+	</tr>
+	<tr>
+		<td><code>result-type</code></td>
+		<td>1</td>
+		<td>
+Ergebnistyp der Funktion. Dadurch wird bei jeder Funktionsdefinition eine
+<br/>Typkontrolle durchgeführt. Selbst wenn sich selbstdefinierte Funktionen
+<br/>verschachteln, wird überprüft, ob der Rückgabetyp mit dem Parametertyp
+<br/>übereinstimmt.
+<br/>Die verschiedenen Typen werden im Kapitel "Typen" genauer erklärt.
+		</td>
+	</tr>
+	<tr>
+		<td><code>arguments</code></td>
+		<td>1</td>
+		<td>
+Innerhalb dieses Tags wird definiert welche Parameter die Funktion benötigt.
+		</td>
+	</tr>
+	<tr>
+		<td><code>argument</code></td>
+		<td>0..<f>$infin</f></td>
+		<td>
+Es werden die Attribute <code>type</code> für Argumenttyp/Parametertyp und 
+<br/><code>name</code> für Argumentname/Parametername benötigt. Als Typ sind 
+<br/>alle Typen erlaubt, die im Kapitel "Typen" genannt werden.
+<br/>Der Parametername wird nur zum Zweck einer lesbaren Ausgabe benötigt.
+		</td>
+	</tr>
+	<tr>
+		<td><code>method</code></td>
+		<td>1..<f>$infin</f></td>
+		<td>
+Pro &lt;method>-Tag kann eine Java-Methode geschrieben werden.
+<br/>Näheres dazu wird im Kapitel "Methoden" beschrieben.
+		</td>
+	</tr>
+</table>
+<p/>
+<strong>Bemerkung: </strong>Unter <strong>Kardinalität</strong> versteht man, wie 
+oft ein Tag hintereinander erscheinen darf.
+			</description>
+		</step>
+	</body>
+</math4u2>

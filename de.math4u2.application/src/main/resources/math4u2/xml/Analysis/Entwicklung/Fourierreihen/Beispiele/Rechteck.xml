@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Analysis/Entwicklung/Fourierreihen/Beispiele</location>
+		<title>Rechteck</title>
+		<summary>Zeigt die Fourier-Entwicklung der Rechteck-Funktion</summary>
+		<keywords>
+			<keyword>Rechteck</keyword>
+			<keyword>Fourier-Reihe</keyword>
+			<keyword>Gibb</keyword>
+			<keyword>Gibbsches Phänomen</keyword>
+		</keywords>
+		<step>
+			<title>Ungerade Rechteckfunktion</title>
+			<description>Die oben gezeigt periodische Rechteckfunktion soll durch eine Fouriersumme angenähert werden.
+          </description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="gesamt"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			       deleteAll();
+			       expand( left = false; right = false );
+			       newObject( def = gesamt.xMin := -5 );
+			       newObject( def = gesamt.xMax := 5 );
+			       newObject( def = gesamt.yMin := -2 );
+			       newObject( def = gesamt.yMax := 2);
+			       newObject( def = rechteck(x) :=sin(x)/abs(sin(x)) ; target = gesamt; );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Symmetriebetrachtung:</strong>
+				<br/>In der konkret gewählten Situation handelt es sich um eine ungerade Rechteckfunktion 
+				(ihr Graph ist punktsymmetrisch zum Ursprung).
+				<br/>Mit geeigneten Symmetriebetrachtungen kann man die Ermittlung der Fourierkoeffizienten deutlich abkürzen:
+		</description>
+			<seq>
+				<script>
+					newObject( def = O:=punkt( 0, 0); color = blue; target = gesamt );          
+					newObject( def = gg := gerade( O, vektor({0,1}) ); color = red; target = gesamt);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Keine cos-Beiträge: </strong> Zur Approximation einer ungeraden Funktion kann keine 
+				gerade Funktion einen sinnvollen Beitrag liefern, so z.B. nicht die oben blau eingetragene 
+				Funktion <f>cos(x)</f> oder die grün gezeichnete Funktion <f>cos(2*x)</f> (deren Graphen 
+				sind achsensymmetrisch zur y-Achse).
+				<br/>Insgesamt kann man so aus Symmetriegründen feststellen, dass alle Fourier-Koeffizienten 
+				zu den geraden Ansatzfunktionen, also zu den Cosinus-Funktionen <f>$void=0</f> sind.</description>
+			<seq>
+				<script>
+					newObject( def = c1(x):= cos(x); color = blue; target = gesamt);
+					newObject( def = c2(x):= cos(2*x); color = green; target = gesamt);
+					newObject( def = tc1:=text(punkt(-0.7, cos(-0.7)), "<f>y=cos(x)</f>", B_NW); target = gesamt);
+					newObject( def = tc2:=text(punkt(1.8, cos(3.6)), "<f>y=cos(2*x)</f>", B_SE); target = gesamt);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Keine geradzahligen sin-Oberschwingungen: </strong> Weiter ist der Graph unserer 
+				Rechteckfunktion achsensymmetrisch bezüglich der jetzt rot eingezeichneten Geraden.
+				<br/>Dann kann zur Approximation keine Funktion einen sinnvollen Beitrag liefern, deren 
+				Graph punktsymmetrisch ist bezüglich des Punktes <f>p</f>, so z.B. nicht die jetzt oben 
+				eingezeichneten Funktionen <f>$fb(s2)</f> oder <f>$fb(s4)</f>.
+       </description>
+			<seq>
+				<script>
+					deleteObject( name = c1);
+					deleteObject( name = tc1);
+				    deleteObject( name = c2);
+					deleteObject( name = tc2);
+           
+					newObject( def = p:=punkt( pi/2, 0); color = blue; target = gesamt );
+					newObject( def = gg := gerade( p, vektor({0,1}) ); color = red; target = gesamt);
+					newObject( def = s2(x):= sin(2*x); color = orange; target = gesamt);
+					newObject( def = s4(x):= sin(4*x); color = magenta; target = gesamt);
+					newObject( def = ts4:=text(punkt(-1.2, sin(-4.8)), "<f>y=sin(4*x)</f>", B_NW); target = gesamt);
+					newObject( def = ts2:=text(punkt(2.3, sin(4.6)), "<f>y=sin(2*x)</f>", B_SE); target = gesamt);
+					deleteObject( name = O );
+          </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Grund- und ungeradzahlige Oberschwingungen: </strong> Es verbleiben also die 
+				Ansatzfunktionen die Grundschwingung <f>sin(x)</f> und deren ungeradzahlige 
+				Oberschwingungen <f>sin(3*x)</f>, <f>sin(5*x)</f>, ... 
+				<br/>Für deren Koeffizienten erhält man: <f>b_1=4/pi</f>, <f>b_3 = 4/(3*pi)</f> 
+				und <f>b_5=4/(5*pi)</f>, ..., das ergibt:
+			</description>
+			<seq>
+				<script>
+				deleteObject( name = ts4);
+				deleteObject( name = ts2);
+		        deleteObject( name = s2);
+		        deleteObject( name = s4);
+		        deleteObject( name = gg );
+		        deleteObject( name = p );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Grundschwingung: </strong>
+				<f bgcolor="red">$fd(f_1)</f>
+			</description>
+			<seq>
+				<script>
+					newObject(def=f_1(x) :=4/pi*sin(x); color=red;);
+					gesamt.addGraph(n=f_1);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Mit dritter Oberschwingung:</strong>
+				<f bgcolor="green">$fd(f_3)</f>
+			</description>
+			<seq>
+				<script>
+					newObject(def=f_3(x) :=4/pi*(sin(x)+1/3*sin(3*x)); color=green;);
+					gesamt.addGraph(n=f_3);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Mit fünfter Oberschwingung:</strong>
+				<f bgcolor="cyan">$fd(f_5)</f>
+			</description>
+			<seq>
+				<script>
+					newObject(def=f_5(x) :=4/pi*(sin(x)+1/3*sin(3*x)+1/5*sin(5*x)); color=cyan;);
+					gesamt.addGraph(n=f_5);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Allgemeine Fourier-Summe: </strong> Die Fourier-Summen des Rechtecks hat 
+				allgemein die Form
+					
+				<br/>
+				<br/>
+				<f>$fd(f)</f>.
+				<br/>Sie können als obere Summationsgrenze jede natürliche Zahl oder <f>0</f> eingeben:  <f>
+					<conf>n(style=dtext;width=4;pattern = ##0)</conf>n</f>.
+				<br/>Experimentieren Sie mit Werten wie <f>0, 10, 100, 1000</f>.</description>
+			<seq>
+				<script>
+					deleteObject(n=f_1,f_3,f_5);
+					newObject(def=n:=1);
+					newObject(def=f(x) :=4/pi*sum(i, 0, n, sin( (2*i+1)*x)/(2*i+1)); color=red; target=gesamt;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>In der folgenden Animation wird die obere Summationsgrenze schrittweise von <f>0</f> bis <f>30</f> erhöht. ...</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+			       newObject( def = upper:=0);
+			       newObject( def = n := floor(upper) );
+				   animate(n=upper; from=0; to=30; end=30);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Das Gibbsche Phänomen: </strong>Wenn wir immer mehr Summanden aufsummieren, werden die Problemstellen der 
+				Rechteckfunktion immer deutlicher: An den Stellen, an denen die Rechteckfunktion unstetig ist (an den sog. Sprungstellen), 
+				kann sie durch eine (überall stetige) Fouriersumme nicht angemessen angenähert werden. </description>
+		</step>
+		<step>
+			<description>
+				<strong>Blick auf Detail:</strong> Wir richten unser Augenmerk genauer auf eine der kritischen Sprungstellen des Sägezahns. 
+				Der links blau markierte Ausschnitt ist jetzt rechts vergrößert dargestellt.
+			</description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="gesamt"/>
+					<col perc="50" name="detail"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					gesamt.setTitle(title="Gesamt");
+					detail.setTitle(title="Detail");
+					newObject(def = gesamt.xMin := -1);
+					newObject(def = gesamt.xMax := 4);
+					newObject(def = detail.xMin := 2.8);
+					newObject(def = detail.xMax := 3.2);
+					newObject(def = detail.yMin := 0.7);
+					newObject(def = detail.yMax := 1.3);
+					newObject( def = dx:= (detail.xMax - detail.xMin)/40 );
+					newObject( def = dy:= (detail.yMax - detail.yMin)/40 );
+                   
+					newObject(
+						def = r:=kurvenzug( { punkt(detail.xMin+dx, detail.yMin+dx),
+							punkt(detail.xMax-dx, detail.yMin+dx),
+						   	punkt(detail.xMax-dx, detail.yMax-dy),
+							punkt(detail.xMin+dx, detail.yMax-dy),
+							punkt(detail.xMin+dx, detail.yMin+dy) } );
+						color= blue;
+						target=gesamt;
+					);		
+                   	
+					detail.addGraph(name = r,f,rechteck);						
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir erhöhen in der folgenden Animation die obere Summationsgrenze bis <f>100</f>. ...</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(n=upper; to=100; end=15);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				An der Sprungstelle zeigt die Fouriersumme ein Verhalten, das sich kurz so beschreiben läßt:
+				<ul>
+					<li>Mit zunehmender Anzahl von Summenden bleibt der Fehler gleich groß.</li>
+					<li>Der Bereich, in dem der Fehler "groß" ist, wird immer schmaler.</li>
+				</ul>Dieses Verhalten wird als Gibbsches Phänomen bezeichnet.
+			</description>
+		</step>
+		<step>
+			<description>
+				<strong>Experimentieren Sie: </strong> Sie können die obere Summationsgrenze wieder selbst wählen. 
+				Wählen Sie z.B. die Werte <f>5,  50, 500</f>.<br/>
+				<br/>
+				<f>$fd(f)</f>, <f>
+					<conf>n(style=dtext; width=4;pattern=##0 )</conf>n</f>
+			</description>
+			<seq>
+				<script>
+			         newObject( def = n := 30 );
+			         newObject( def = f(x) :=4/pi*sum(i, 0, n, sin( (2*i+1)*x)/(2*i+1)) );
+			      </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

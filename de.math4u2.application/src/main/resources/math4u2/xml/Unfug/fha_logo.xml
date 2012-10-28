@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Unfug</location>
+		<title>math4u2 meets FHA</title>
+		<summary></summary>
+		<step>
+			<title>math4u2 V1</title>
+			<seq>
+				<script>
+				   expand(left=false;right=false);
+				   deleteAll();
+				   da.coordinateSystem(xMin=-25; xMax=35; yMin=-20; yMax=15;);
+				   da.zoom1To1(active = true );
+				    newObject( def = time1 := -87);
+				    newObject( def = da.xMin := fix(min(time1-15, -25)) );
+				    newObject( def = da.xMax := fix(da.xMin+70) );
+				    newObject( def = time := min( time1, 29.3) );
+				    
+				    newObject( def = wegweiser:= text(punkt(-40, 4), "FH Augsburg", A_W); target = da );
+				    
+				    
+				  newObject( def = kx(t):= t+2*sin(t/5)+10*sin(t) );
+				  newObject( def = ky(t):= 3*sin(t/7)+10*cos(t) );
+				  newObject( def = kxv(t):= derive(kx(t)) );
+				  newObject( def = kyv(t) := derive( ky(t)) );
+				  
+				   newObject( def = pos:=vektor({kx(time), ky(time)}) );
+				   newObject( def = pos4 := vektor({kx(time1), ky(time1)}) );
+
+				   
+				   newObject( def = p1 := punkt(-12.5,5); );
+				   newObject( def = v1:=pos-p1.r );
+                   newObject( def =  vv1:=v1/|v1|*2*arctan(|v1|)/pi );
+                    newObject( def =  p11:=punkt(vv1.x+p1.x,vv1.y+p1.y) );
+                    newObject( def =  k11:=kreis(p1,2) ; fillcolor = 255.102.000; target = da);
+                    newObject( def = k12:= kreis(p11,1); fillcolor = 0.255.204; target = da );
+                    newObject( def = k13:= kreis(p11,0.3); fillcolor = black; target = da );
+                                       
+                     newObject( def = p2 := punkt(0,5); );
+				   newObject( def = v2:=pos-p2.r );
+                   newObject( def =  vv2:=v2/|v2|*2*arctan(|v2|)/pi );
+                    newObject( def =  p22:=punkt(vv2.x+p2.x,vv2.y+p2.y) );
+                    newObject( def =  k21:=kreis(p2,2) ; fillcolor = 255.102.000; target = da);
+                    newObject( def = k22:= kreis(p22,1); fillColor = 000.255.204; target = da );
+                    newObject( def = k23:= kreis(p22,0.3); fillcolor = black; target = da );
+                    
+                    newObject( def = p3 := punkt(12,5); );
+				   newObject( def = v3:=pos-p3.r );
+                   newObject( def =  vv3:=v3/|v3|*2*arctan(|v3|)/pi );
+                    newObject( def =  p32:=punkt(vv3.x+p3.x,vv3.y+p3.y) );
+                    newObject( def =  k31:=kreis(p3,2) ; fillcolor = 255.102.000; target = da);
+                    newObject( def = k32:= kreis(p32,1); fillcolor =000.255.204; target = da );
+                    newObject( def = k33:= kreis(p32,0.3); fillcolor = black; target = da );
+                    
+                    newObject( def = p4 := punkt(23,5); );
+				   newObject( def = v4:=pos4-p4.r );
+                   newObject( def =  vv4:=v4/|v4|*2*arctan(|v4|)/pi );
+                    newObject( def =  p42:=punkt(vv4.x+p4.x,vv4.y+p4.y) );
+                    newObject( def =  k41:=kreis(p4,2) ; fillcolor = 255.102.000; target = da);
+                    newObject( def = k42:= kreis(p42,1); fillcolor =000.255.204; target = da );
+                    newObject( def = k43:= kreis(p42,0.3); fillcolor = black; target = da );
+
+                   // nase 1
+                   newObject( def = pl1 := &lt;punkt>liste({punkt(-8,7.5), punkt(-5.5, 7.5), punkt(-2.5, -7), punkt(-11, -7), punkt(-11, -5.5), punkt(-5.5, -5.5) }) );
+                   newObject( def = n1 := flaeche({pl1[1], pl1[2], pl1[3], pl1[4], pl1[5], pl1[6] }); fillcolor = 255.102.000; target = da );
+                   // nase 2
+                   newObject( def = pln2 := &lt;punkt>liste({punkt(8,7.5), punkt(5.5, 7.5), punkt(2.5, -7), punkt(11, -7), punkt(11, -5.5), punkt(5.5, -5.5) }) );
+                   newObject( def = n2 := flaeche({pln2[1], pln2[2], pln2[3], pln2[4], pln2[5], pln2[6] });fillcolor = 255.102.000;  target = da );
+                   // nase 3
+                   newObject( def = pln3 := &lt;punkt>liste({punkt(20,7.5), punkt(17.5, 7.5), punkt(14.5, -7), punkt(23, -7), punkt(23, -5.5), punkt(17.5, -5.5) }) );
+                   newObject( def = n3 := flaeche({pln3[1], pln3[2], pln3[3], pln3[4], pln3[5], pln3[6] }); fillcolor = 255.102.000; target = da );
+
+                   
+
+                   
+                   // mund 1
+                   newObject( def = pl2 := &lt;punkt>liste({punkt(-6, -8.2), punkt(-6, -9.5), punkt(-11, -9.5), punkt(-11, -8.2) } ) ) ;
+                   newObject( def = m11 := flaeche({pl2[1], pl2[2], pl2[3], pl2[4]}); fillcolor = 255.102.000; target = da );
+                   
+                   newObject( def = pl3 := &lt;punkt>liste({punkt(-6, -10.4), punkt(-6, -11.6), punkt(-11, -11.6), punkt(-11, -10.4) } ) ) ;
+                   newObject( def = m12 := flaeche({pl3[1], pl3[2], pl3[3], pl3[4]}); fillcolor = 255.102.000; target = da );
+                   
+                   // mund 2
+                   
+                   newObject( def = bm1:= bezier( punkt(4.5, -8.2), punkt(4.5, -13), punkt(10.5, -13), punkt(10.5, -8.2) ) ; );
+                   newObject( def = sm1:= strecke( punkt( 10.5, -8.2), punkt(4.5, -8.2) ) ;  );
+                   newObject( def = bm2:= bezier( punkt(5.8, -9.2), punkt(5.8, -11.1), punkt(9.1, -11.1), punkt(9.1, -9.2) ) ;  );
+                   newObject( def = sm2:= strecke( punkt( 9.1, -9.2), punkt(5.8, -9.2) ) ;  );
+
+                   newObject( def = m21 := flaeche({bm1, sm1, bm2, sm2}); fillcolor = 255.102.000;  target = da );
+
+
+                   
+                   // mund 3
+                   newObject( def = am3 := vv4.y );
+                   newObject( def = pm311:= punkt( 17.5, -8.2 ) );
+                   newObject( def = pm312:= punkt( 19.5, -8.2+am3 ) );
+                   newObject( def = pm313:= punkt( 20.5, -8.2+am3 ) );
+                   newObject( def = pm314:= punkt( 22.5, -8.2 ) );
+                   newObject( def = bm21:= bezier( pm311, pm312, pm313, pm314 ) ;  );
+                   newObject( def = pm321:= punkt( 17.5, -9.5 ) );
+                   newObject( def = pm322:= punkt( 19.5, -9.5+am3 ) );
+                   newObject( def = pm323:= punkt( 20.5, -9.5+am3 ) );
+                   newObject( def = pm324:= punkt( 22.5, -9.5 ) );
+                   newObject( def = bm22:= bezier( pm324, pm323,pm322,  pm321 ) ; );
+                   newObject( def = m31 := flaeche({bm21, bm22}); fillcolor = 255.102.000;  target = da );
+
+
+                
+		         newObject( def = a:=1 );
+		          newObject( def = fa :=0.5*sin(5*time)+ 0.7);
+		          newObject( def = rv := vektor({kxv(time),kyv(time)}) );
+		          newObject( def = rvv := 3*rv/|rv| );
+		          newObject( def = rvn := vektor({ rvv.y, -rvv.x } ) );
+		          newObject( def = pos1 := punkt( kx(time),ky(time) ) );
+		          newObject( def = pos1v := pos1.r+rvv );
+		          newObject( def = pos1hf := pos1.r -rvv + fa*rvn );
+		          newObject( def = pos1vf := pos1.r + 2* rvv + 2*fa*rvn );
+
+		          newObject( def = b1 := bezier( punkt(pos1.x, pos1.y), punkt(pos1hf.x, pos1hf.y), punkt(pos1vf.x, pos1vf.y), punkt(pos1v.x, pos1v.y) ) );
+		          newObject( def = fl1 := flaeche({b1}); target = da; color = magenta );
+		          
+		          newObject( def = pos2hf := pos1.r -rvv - fa*rvn );
+		          newObject( def = pos2vf := pos1.r + 2* rvv - 2*fa*rvn );
+
+		          newObject( def = b2 := bezier( punkt(pos1.x, pos1.y), punkt(pos2hf.x, pos2hf.y), punkt(pos2vf.x, pos2vf.y), punkt(pos1v.x, pos1v.y) ) );
+		          newObject( def = fl2 := flaeche({b2}); target = da; color = magenta );
+		          
+		          newObject( def = pos3r := pos1.r + 0.4*rvv );
+		          newObject( def = pos3 := punkt( pos3r.x, pos3r.y ) );
+		          newObject( def = pos3v := pos3r+0.3*rvv );
+		          newObject( def = pos3hf := pos3r -rvv + 0.5*fa*rvn );
+		          newObject( def = pos3vf := pos3r + rvv + fa*rvn );
+
+		          newObject( def = b3 := bezier( punkt(pos3.x, pos3.y), punkt(pos3hf.x, pos3hf.y), punkt(pos3vf.x, pos3vf.y), punkt(pos3v.x, pos3v.y) ) );
+		          newObject( def = fl3 := flaeche({b3}); target = da; color = red );
+		          
+		          newObject( def = pos4hf := pos3r -rvv - 0.5*fa*rvn );
+		          newObject( def = pos4vf := pos3r + rvv - fa*rvn);
+		          
+		          newObject( def = b4 := bezier( punkt(pos3.x, pos3.y), punkt(pos4hf.x, pos4hf.y), punkt(pos4vf.x, pos4vf.y), punkt(pos3v.x, pos3v.y) ) );
+		          newObject( def = fl4 := flaeche({b4}); target = da; color = red );
+		          
+		         		          
+
+		          
+		          newObject( def = pos5vf := pos1.r + 4*rvv +2* fa*rvn);
+		          newObject( def = pos5hf := pos3r -0.5*rvv + 2*fa*rvn );
+
+		          
+		          newObject( def = b5 := bezier( punkt(pos3.x, pos3.y), punkt(pos5hf.x, pos5hf.y), punkt(pos5vf.x, pos5vf.y), punkt(pos1v.x, pos1v.y) ) );
+		          newObject( def = fl5 := flaeche({b5}); target = da; color = blue );
+		          
+		           newObject( def = pos6vf := pos1.r + 4*rvv -2* fa*rvn);
+		          newObject( def = pos6hf := pos3r -0.5*rvv - 2*fa*rvn );
+
+		          
+		          newObject( def = b6 := bezier( punkt(pos3.x, pos3.y), punkt(pos6hf.x, pos6hf.y), punkt(pos6vf.x, pos6vf.y), punkt(pos1v.x, pos1v.y) ) );
+		          newObject( def = fl6 := flaeche({b6}); target = da; color = blue );
+		          
+		          newObject( def = kopf := marker( pos1v.x, pos1v.y); target = da );
+		          newObject( def = flr := pos1v + rvv + 0.2*rvn );
+		          newObject( def = fuehlerr:= strecke( punkt(pos1v.x, pos1v.y ) , punkt( flr.x, flr.y) ) ; target = da );
+		          newObject( def = fuehlerrpunkt:= marker( flr.x, flr.y); target = da );
+		          newObject( def = fll := pos1v + rvv - 0.2*rvn );
+		          newObject( def = fuehlelr:= strecke( punkt(pos1v.x, pos1v.y ) , punkt( fll.x, fll.y) ) ; target = da );
+		          newObject( def = fuehlerlpunkt:= marker( fll.x, fll.y); target = da );
+		          newObject( def = bubble:= text(punkt(pos1v.x, pos1v.y), "Das ist math4u2 V1", B_NE); target = da );
+		          
+		      </script>
+			</seq>
+		</step>
+		<step>
+		   <title>math4u2 V2.1</title>
+			<seq>
+			    <script>
+			        deleteObject( name = bubble);
+			    </script>
+			    <animate object="main" parameterName="time1" to="-86.4" end="6"/>
+				<script>
+				
+		          newObject( def = bubble:= text(punkt(fll.x, fll.y), "Das ist die neue Version V2.1:    &lt;f>sum(i,0, 17, sqrt(  (x^2+3) / (derive(f(x)) )*det(  matrix({{1,2,3},{0,5,7},{2,2,2}}) ) )  ) &lt;/f>", B_SE); target = da );
+		       </script>
+			</seq>
+		</step>
+		<step>
+		   <title>math4u2 meets FHA</title>
+			<seq>
+				<script>
+		     				    deleteObject( name = bubble );
+		     				</script>
+				<animate object="main" parameterName="time1" to="54" end="60"/>
+			</seq>
+		</step>
+	</body>
+</math4u2>

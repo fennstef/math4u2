@@ -87,6 +87,6 @@ public abstract class StandardVector extends StandardFunction {
 	 * @return Name des Parameters.
 	 */
 	public String buildTermString(String[] terms) {
-		return (String) getIdentifier();
+		return (String) getKey();
 	}
 }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Geometrie/Kurven</location>
+		<title>Parametrisierte Kurven - kurz</title>
+		<summary>Darstellung einer Kurve in Parameterform</summary>
+		<keywords>
+			<keyword>Kurve</keyword>
+			<keyword>Parameterform</keyword>
+			<keyword>Koordinatenfunktion</keyword>
+		</keywords>
+		<step>
+			<description><title2>Fenster-Layout:</title2><em>Rechts oben</em> : Das Zeitintervall (Parameterintervall) der Kurve.
+			<br/><em>Rechts unten</em> : Die Koordinatenfunktion <f>fy(t)</f> für die <f>y</f>-Koordinaten der Kurvenpunkte.
+			<br/><em>Links oben</em> : Die Koordinatenfunktion <f>fx(t)</f> für die <f>x</f>-Koordinaten der Kurvenpunkte. Hier ist die Zeit <f>t</f> nach oben und der Funktoinswert nach rechts angetragen.
+<br/><em>Links unten</em> : Die resultierende Kurve.
+			</description>
+			<layout>
+				<row perc="50">
+					<col perc="50" name="dxkoor"/>
+					<col perc="50" name="dzeit"/>
+				</row>
+				<row perc="50">
+					<col perc="50" name="dkurve"/>
+					<col perc="50" name="dykoor"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+		      deleteAll();
+			       expand( left = false; right = true );
+		   		     
+			   dzeit.setTitle(title="Zeitintervall");
+			    newObject(def = dzeit.xMin := fix(-0.2));
+                   newObject(def = dzeit.xMax :=fix( 1.2));
+                   newObject(def = dzeit.yMin := fix(-1));
+                   newObject(def = dzeit.yMax := fix(3));
+                  
+                    newObject( def = S:=punkt(0.2, fix(-0.5)); style = ARROW_H;color = magenta; taget = dzeit );
+                   newObject( def = t := min(max(S.x, 0), 1));
+                   newObject( def = st:=strecke(punkt(0,0), punkt(1,0)); color = magenta; target = dzeit );
+                   newObject( def = S1:=marker(t, 0); color = magenta; target = dzeit);
+                   newObject(def = dkurve.xMin := -3.5);
+                   newObject(def = dkurve.xMax :=3.5);
+                   newObject(def = dkurve.yMin := -2);
+                   newObject(def = dkurve.yMax := 2);
+                   newObject(def = dykoor.xMin := fix(dzeit.xMin));
+                   newObject(def = dykoor.xMax := fix(dzeit.xMax));
+                   newObject(def = dykoor.yMin := fix(dkurve.yMin));
+                   newObject(def = dykoor.yMax := fix(dkurve.yMax));
+                    newObject(def = dxkoor.xMin := fix(dkurve.xMin));
+                   newObject(def = dxkoor.xMax := fix(dkurve.xMax));
+                   newObject(def = dxkoor.yMin := fix(dzeit.xMin));
+                   newObject(def = dxkoor.yMax := fix(dzeit.xMax));
+			   		                             dykoor.setTitle(title="y-Koordinatenfunktion");
+		                             dykoor.addGraph( name = st);
+                   					dykoor.addGraph( name = S1);                    
+                   					newObject( def = fy(t):=sin(2*pi*t) ; color = blue);
+                   									 newObject( def = fyk:=kurve(t,0,1,t,fy(t)); color = blue; target = dykoor );				
+                   									  newObject( def = sy:=strecke( punkt(t,0), punkt(t, fy(t)) ); color = magenta; linestyle = dot; target = dykoor); 			
+		       		                            dxkoor.setTitle(title="x-Koordinatenfunktion");			
+		                            newObject( def = S2:=marker(0, t); color = magenta; target = dxkoor);
+                    newObject( def = st2:=strecke(punkt(0,0), punkt(0,1)); color = magenta; target = dxkoor);
+                    		    
+		      newObject( def = fx(t):=cos(2*pi*t); color = red );
+                    newObject( def = fxk:=kurve(t,0,1,fx(t), t); color = red; target = dxkoor );				
+                     newObject( def = sx:=strecke( punkt(0,t), punkt(fx(t), t) ); color = magenta; linestyle = dot; target = dxkoor); 
+
+		      
+                   dkurve.setTitle(title="Kurve");
+
+	 newObject( def = syf:=strecke(punkt(t, fy(t)), punkt(-20, fy(t)) ); color = blue; linestyle = dot; target = dykoor); 
+
+
+				 newObject( def = sxf:=strecke( punkt(fx(t), t) , punkt( fx(t), -20)); color = red; linestyle = dot; target = dxkoor); 
+
+				 newObject( def = gx:=gerade( punkt(fx(t), 0), e2y); color = red; linestyle = dot; target = dkurve);
+				  newObject( def = gy:=gerade( punkt(0, fy(t)), e2x); color = blue; linestyle = dot; target = dkurve);
+				  newObject( def = mk := marker(fx(t), fy(t)); target = dkurve );
+				
+			    newObject( def = krv:=kurve(t,0,1,fx(t), fy(t)); color = gray; target = dkurve );
+			    newObject( def =tt:=  text(S,"Hier Zeit <fh>t</fh> einstellen", B_NE); target = dzeit );
+			    newObject( def = ttt:= text(punkt( 1,-0.5), "in diesem Fenster<br/>können Sie<br/>zoomen", POSTIT); target = dkurve);
+			     newObject( def = th:=text( punkt(dzeit.xMax,0), "Zeit <f>t</f>", K_W);  fillcolor = fillwhite; target = dzeit );
+			     dykoor.addGraph( name = th );
+			     newObject( def = tv:=text( punkt(0,dxkoor.yMax), "Zeit <f>t</f>", K_S);  fillcolor = fillwhite; target = dxkoor );
+			     newObject( def = tya:=text( punkt(0,dykoor.yMax), "Koordinate <f>y(t)</f>", K_S); target = dykoor; fillcolor = fillwhite; bordercolor = blue );
+			     newObject( def = txa:=text( punkt(dxkoor.xMax,0), "Koordinate <f>x(t)</f>", K_W); target = dxkoor;  fillcolor = fillwhite; bordercolor = red );
+			     newObject( def = tpkt:=text( mk, "Punkt <f>(x(t), y(t))</f>", B_SW); target = dkurve;  fillcolor = fillwhite; bordercolor = gray);
+
+			    
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description><title2>Experimente:</title2>Experimentieren Sie durch Verändern der Funktionsterme der beiden Koordinatenfunktionen <fh>fx</fh> und <fh>fy</fh>.
+		   <br/>Terme oben rechts eingeben, Eingabe durch RETURN bestätigen. Die Funktionsvariable heißt t.</description>
+			<seq>
+				<script>
+		         deleteObject( name = tt, ttt );
+		         modifyObject( name = fx; select = true );
+		         modifyObject( name = fy; select = true );
+		      </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

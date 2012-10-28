@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. Weiss</author>
+		<location>Analysis/Entwicklung/Potenzreihen/Beispiele</location>
+		<title>Logarithmusreihe - kurz</title>
+		<summary>Taylor-Entwicklung des natürlichen Logarithmus, Logarithmusreihe</summary>
+		<step>
+			<title>Logarithmusreihe</title>
+			<description>Das allgemeine <strong>Taylorpolynom</strong> zur Funktion <f>ln(x)</f> mit 
+			Entwicklungspunkt <f>c=1</f> ist: 
+			<br></br><f>$fd(p_logarithmus)</f>. 
+</description>
+			<seq>
+				<script>
+					expand(left=false; right=false);
+					deleteAll();
+					newObject( def = da.xMin:=-1;);
+					newObject( def = da.xMax:=4;);
+					newObject( def = da.yMax:=2;);
+					newObject( def = da.yMin:=-2*da.yMax;);
+					newObject( def = f(x):=ln(x); target = da );
+				  	newObject( def = Ordnung := 1 );
+			       	newObject( def = p_logarithmus(x) := sum(i, 1,Ordnung, (-1)^(i+1)*(x-1)^(i)/i); color = red; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Geben Sie als Ordnung eine natürliche Zahl ein: <f>
+					<conf>Ordnung(width = 3;style=text; pattern = ##0)</conf>$fd(p_logarithmus)</f>
+			</description>
+		</step>
+	</body>
+</math4u2>

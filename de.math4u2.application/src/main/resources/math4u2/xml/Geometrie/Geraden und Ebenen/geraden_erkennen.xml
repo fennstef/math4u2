@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. Weiss</author>
+		<location>Geometrie/Geraden und Ebenen</location>
+		<title>Geraden erkennen - Hough-Transformation</title>
+		<summary>Ein Verfahren zur Erkennung von Geraden in einem digitalen Bild.</summary>
+		<keywords>
+		   <keyword>Normal-Form</keyword>
+		   <keyword>Hough-Transformation</keyword>
+		   <keyword>Akkumulator</keyword>
+		</keywords>
+		<step>
+			<title>Aufgabenstellung: Geraden erkennen</title>
+			<description>Eine grundlegende Aufgabe in der digitalen Bildverarbeitung ist das Erkennen von einfachen geometrischen Objekten wie von Geraden und Kreisen.
+		   </description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="Punkte"/>
+					<col perc="50" name="Dichte"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			  deleteAll();
+			    Punkte.setTitle( title = "Punkte und Gerade");			    
+			     expand( left =none; right = all);
+			     Dichte.coordinateSystem(xMin=-3.15;xMax = 3.15; yMin = -1; yMax =5);
+			        
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Oben das Modell eines gerasterten Bildes. Unser Auge erkennt sofort, dass  in der gezeigten Situation eine Reihe von Bildpunkten auf einer Geraden liegen.
+		   <br/>Im Folgenden soll gezeigt werden, wie man dies mit Hilfe der <em>Hough-Transformation</em> rechnerisch erkennen kann und wie man dabei zugleich die Lage dieser Gerade bestimmt. 
+		   </description>
+			<seq>
+				<script>
+			   			     newObject( def = n := 30);
+			    	 newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 4*sin(i)), cond(i-n/2-0.5, 4-10/n*i, 4*cos(i*i*i))) ); target = Punkte; showNames = false );
+		      
+
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Dazu benötigen wir zunächst eine spezielle Beschreibung der Lage einer Gerade.</description>
+		</step>
+		<step>
+			<description>
+				<title2>Gerade durch Abstand und Winkel festlegen</title2>Eine Gerade der Ebene läßt sich durch die Angabe von zwei Parametern festlegen, nämlich:
+		   <ul>
+					<li>durch den senkrechten Abstand <f>d</f> der Gerade vom Ursprung und</li>
+					<li>durch den Winkel <f>phi</f>, den eine Senkrechte zur Gerade mit der x-Achse einschließt.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+		       deleteAll();
+		         newObject( def = hintergrund:= flaeche( {punkt(-5,-5), punkt(5,-5), punkt( 5,5), punkt(-5, 5) } ) ; fillcolor = 255.255.255.255; target = Dichte; visible = false ) ;
+			    Punkte.setTitle( title = "Punkte und Gerade");
+			     expand( left =none; right = all);
+			     Dichte.coordinateSystem(xMin=-3.15;xMax = 3.15; yMin = -1; yMax =5);
+			     newObject( def = n := 5);
+
+			      newObject( def = s:=punkt(1,2.3);  color = red);
+			      
+			      newObject( def = phi:=s.x);
+			      newObject( def = d:=s.y);
+			      newObject( def = pg:= punkt(d*cos(phi), d*sin(phi)) );
+			      newObject( def = origo := punkt(0,0) );
+			      newObject( def = g:=gerade(pg, vektor( {-sin(phi), cos(phi) } ) ) ; color = red; target = Punkte);
+			      newObject( def = kr:=kreis( origo, d ); color = gray; linestyle = dot ; target = Punkte );
+			      newObject( def = nv:=vektor( { cos(phi), sin(phi) } ) ); // Normalen-Einheitsvektor
+			      newObject( def = normg:=gerade( origo, nv ); color = blue; linestyle = dot; target = Punkte );
+			      newObject( def = norma:= strecke(origo, pg ); color = blue; target = Punkte );
+			      newObject( def = wink:=winkel( origo, e2x,nv , d/2 ) ; fillcolor = fillgreen; target = Punkte );
+			      	
+			 	newObject( def = rt:=text( punkt( 0.8*d*cos(phi), 0.8*d*sin(phi) ), "Abstand <f>d</f>", B_NW); fillcolor = fillblue; target = Punkte );	      
+			      newObject( def = phit:=text( punkt( 0.5*d*cos(phi/3), 0.5*d*sin(phi/3) ), "Winkel <f>phi</f>", B_SE); fillcolor = fillgreen; target = Punkte );	
+			      newObject( def = gt:=text( punkt( d*cos(phi)+0.3*sin(phi), d*sin(phi) -0.3*cos(phi)), "Gerade <f>g(d,phi)</f>", B_NE); color = red; target = Punkte );	
+
+		      
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Rechts ist jetzt ein Ausschnitt  aus der <f>d</f>-<f>phi</f>-Ebene zu sehen. Der rote Punkt <f>s(d,phi)</f> repräsentiert die Gerade <f>g(d,phi)</f>. 
+		   </description>
+			<seq>
+				<script>
+			Dichte.setTitle( title = "Hough-Transformierte" );
+		      Dichte.addGraph( name = s );
+		      newObject( def = phikt:=text( punkt(Dichte.xMax, 0), "Winkel <f>phi</f>", K_W); fillcolor = fillgreen; target = Dichte );
+			 	newObject( def = rkt:=text( punkt(0, Dichte.yMax), "Abstand <f>d</f>", K_S); fillcolor = fillblue; target = Dichte );
+		      newObject( def = sr:=strecke( punkt(0,s.y), s  ) ; color = blue; linestyle = dot ; target = Dichte );
+			      newObject( def = sphi:=strecke( punkt(s.x,0), s ) ; color = green; linestyle = dot ; target = Dichte );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man den Punkt <f>s</f> in <f>d</f>-Richtung verschiebt, ändert sich der Abstand der Gerade vom Ursprung, ihre Richtung bleibt unverändert:
+		   </description>
+		</step>
+		<step>
+			<seq>
+				<script> animate( name = s.y; to = 4; end = 0.5);
+		         animate( name = s.y; to = 0.5; end = 5);
+		         animate( name = s.y; to =2.5; end = 2);
+
+		        </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man den Punkt <f>s</f> in <f>phi</f>-Richtung verschiebt, bleibt der Abstand der Gerade vom Ursprung gleich, ihre Richtung ändert sich:
+		   </description>
+		</step>
+		<step>
+			<seq>
+				<script>
+		        		         
+		          animate( name = s.x; to =3.14; end = 6);
+		         animate( name = s.x; to =-1; end = 6);
+		         animate( name = s.x; to =1; end = 2);
+
+		         		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Der Ausschnitt der <f>d</f>-<f>phi</f>-Ebene ist aktuell wie folgt gewählt:
+		   <ul>
+					<li>Mit <f>-pi $le phi $le pi</f> kann man Geraden mit sämtlichen denkbaren Richtungen einstellen.</li>
+					<li>Mit <f>0 $le d $le 5</f> kann man Geraden einstellen, die vom Ursprung maximal den Abstand <f>5</f> haben.</li>
+				</ul>Experimentieren Sie durch Verschieben des Punktes <f>s</f>.
+		   </description>
+		</step>
+		<step>
+			<title>Die Hough-Transformierte eines Punktes p</title>
+			<description>Links ist jetzt ein einzelnen Bildpunkt <f>p</f> eingezeichnet.
+		  <br/>Die Idee der Hough-Transformation ist es, in der rechten <f>d</f>-<f>phi</f>-Ebene alle Stellen <f>s</f> zu markieren, die zu Geraden gehören, die durch diesen Punkt <f>p</f> verlaufen. Wir wollen dies zunächst schrittweise in Angriff nehmen.
+
+		  </description>
+			<seq>
+				<script>
+		  modifyObject( name = rt; visible = false );
+				modifyObject( name = phit; visible = false );
+				modifyObject( name = gt; visible = false );
+		          deleteObject( name = kr, normg);
+		            newObject( def = p:=punkt( fix(1),fix(3)); color = orange; target = Punkte );
+			     newObject( def = H(phi):=p.x*cos(phi)+p.y*sin(phi); color = orange;  );
+		            animate( name = s.x; to = 1; end = 0.5);
+		            newObject( def = s.x :=fix(2.5) );	
+		  
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Stellen Sie über den Punkt <f>s</f> für den aktuellen Winkel <f>phi</f> den Abstand <f>d</f> so ein, dass die rote Gerade durch den Punkt <f>p</f> verläuft.</description>
+			<seq>
+				<script>
+
+		            newObject( def = abtext:=text(s, "<f>d</f> so einstellen, <br/>dass die rote Gerade<br/>durch Punkt <f>p</f>  geht.", C_W); color = red; target = Dichte );           
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Genauso für diesen Winkel <f>phi</f>.</description>
+			<seq>
+				<script>
+		             animate( name = s.y; to =0.991; end = 0.5 );
+		             newObject( def = m1:=marker(2.5, H(2.5) ); color = orange; target = Dichte );
+		            animate( name = s.x; to = 2; end = 1.5);	 
+		             newObject( def = s.x :=fix(2) );		 
+		            deleteObject( name = abtext );    
+		            </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		            animate( name = s.y; to = 2.32; end = 0.5 );
+		             newObject( def = m2:=marker(2, H(2) ); color = orange; target = Dichte );
+		            animate( name = s.x; to = 1.5; end = 1.5);	 
+		            newObject( def = s.x :=fix(1.5) );	           
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		            animate( name = s.y; to = 3.072; end = 0.5 );
+		             newObject( def = m3:=marker(1.5, H(1.5) ); color = orange; target = Dichte );
+		            animate( name = s.x; to = 1; end = 2);
+		            newObject( def = s.x :=fix(1) );		            
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		       animate( name = s.y; to = 3.072; end = 0.5 );
+		             newObject( def = m4:=marker(1, H(1) ); color = orange; target = Dichte );
+		            animate( name = s.x; to = 0.5; end = 2);
+		            newObject( def = s.x :=fix(0.5) );	
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		            animate( name = s.y; to = 2.285; end = 0.5 );
+		             newObject( def = m5:=marker(0.5, H(0.5) );color = orange;  target = Dichte );
+		              newObject( def = m6:=marker(0, H(0) );color = orange;  target = Dichte );
+
+		                     
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir auf diese Art noch weitere Punkte einzeichnen würden, würde sich zeigen, dass sämtliche Punkte auf einen Graphen bilden, der einen sinusförmigen Verlauf hat.
+		<br/>Im Folgenden wollen wir die Funktionsgleichung dieses Graphen herleiten. Dazu brauchen wir die Beschreibung einer Gerade <f>g</f> durch ihre Normalform.
+
+		</description>
+			<seq>
+				<script>
+		     newObject( def = s:=punkt(1.25, H(1.25 ) )); 
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ausgangspunkt für Beschreibung einer Gerade <f>g</f> durch die Normalform ist der Normalen-Einheitsvektor <f>n~dach</f> mit folgenden Eigenschaften:
+		    <ul>
+					<li>Er steht senkrecht auf der Gerade <f>g</f>
+					</li>
+					<li>Er hat die Länge <f>1</f>.</li>
+					<li>Er zeigt vom Ursprung aus auf die Gerade hin.</li>
+				</ul>In unserem Fall lassen sich seine Komponenten mit dem Winkel <f>phi</f> schrieben als <f>n~dach=vektor({cos(phi), sin(phi)})</f>.</description>
+			<seq>
+				<script>
+						   newObject( def = n~dach:=vektor({cos(phi), sin(phi)}) );
+						   newObject( def = normPf:=pfeil(punkt(0,0), n~dach); target = Punkte; color = red );
+						   newObject( def = normPfText:=text( punkt( cos(phi)/2, sin(phi)/2), "<f>$fd(n~dach)</f>", B_NW); fillcolor = fillmagenta; target = Punkte);
+						</script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Gerade <f>g</f> ist dann die Menge aller Punkte, deren Ortsvektoren <f>r=vektor({r_x,r_y})</f> die Gleichung  <f>n~dach &lt;*>r=d</f> erfüllen. 
+				<br/>Darin ist  <f>d</f> wieder der senkrechte Abstand der Gerade vom Ursprung und <f>n~dach &lt;*>r</f> das Skalerprodukt von <f>n~dach</f> und <f>r</f>.  
+<br/>Ausführlich heißt dies <f>cos(phi)*r_x+sin(phi)*r_y=d</f>. 
+		 
+		    </description>
+			<seq>
+				<script>
+		          modifyObject( name = rt; visible = true );
+		          modifyObject( name =phit; visible = true );
+		          modifyObject( name = gt; visible = true );
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>Nun kommt der Punkt <f>p</f> ins Spiel. Es sollen ja die Geraden gefunden werden, die den Punkt <f>p</f> enthalten. Also muss der   Ortsvektor <f>p=vektor({p_x,p_y})</f> dieses Punktes die Geradengleichung erfüllen, d.h.es muss <f>n~dach &lt;*> p =d</f> gelten, ausführlich
+		    <br/>
+				<f>cos(phi)*p_x+sin(phi)*p_y=d</f>.
+		    <br/>Liest man dies umgekehrt, so hat man die gesuchte Funktionsgleichung <f>d(phi)=cos(phi)*p_x+sin(phi)*p_y</f>. 
+		  </description>
+		</step>
+		<step>
+			<description>Wir zeichnen rechts jetzt den Graphen dieser Funktion ein. Sie wird nach ihrem Erfinder als die <em>Hough-Transformierte</em> des Punktes <f>p</f> bezeichnet. Wir wollen sie deshalb im Folgenden mit <f>H(phi)</f> bezeichnen. 		</description>
+			<seq>
+				<script>
+		          Dichte.addGraph( name = H);
+		          newObject( def = s1text:= text(punkt(0.25, H(0.25) ), "<f>H(phi)</f>:<br/>Hough-Transformierte<br/>des Punktes <f>p</f>", B_NW); color = orange; target = Dichte );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Der orange Graph rechts repräsentiert also alle Geraden, die durch den orangen Punkt <f>p</f> gehen...
+</description>
+			<seq>
+				<script>
+		   deleteObject( name = rt, phit, gt, normPfText, normPf);
+		      newObject( def = s.x:=0 );
+		      newObject( def = s.y:= fix(H(s.x)) );
+		      animate( name = s.x; to = 2.8; end = 8 );
+		      animate( name = s.x; to = 1.5; end = 1 );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Probieren Sie es aus!</description>
+			<seq>
+				<script>
+		       newObject( def = s.x:=1.5 );
+		      newObject( def = s.y:= H(1.5) );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Entsprechend repräsentiert die grüne Kurve alle Geraden, die durch den grünen Punkt <f>p2</f> gehen.
+            <br/>Und: Der Schnittpunkt der orangen Kurve mit der grünen Kurve repräsentiert die Gerade, die gleichzeitig durch den orangen und den grünen Punkt geht.
+            <br/>Probieren Sie es aus: Plazieren Sie den Steuerpunkt <f>s</f> auf diesen Schnittpunkt.
+            </description>
+			<seq>
+				<script>
+				
+                    deleteObject( name = m1, m2, m3, m4, m5, m6 );
+                    newObject( def = p:=punkt( 1,3));
+		         newObject( def = p2:=punkt( -1,2); color =green; target = Punkte );
+		          
+			      newObject( def = H2(phi):=p2.x*cos(phi)+p2.y*sin(phi); color = green; target = Dichte );
+			       newObject( def = s2text:= text(punkt(0.5, H2(0.5) ), "<f>H2(d,phi)</f>:<br/>Hough-Transformierte<br/>des Punktes <f>p2</f>", B_NW); color = green; target = Dichte );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Noch mehr Punkte, die auf einer Gerade liegen, rechts ihre Hough-Transformierten.
+		<br/>Alle Hough-Transformierten schneiden sich in einem Punkt: Dieser repräsentiert die Gerade, auf der alle Punkte liegen.</description>
+			<seq>
+				<script>
+				deleteObject( name = s1text, s2text);
+		         newObject( def = p3:=punkt( -3,1); color =blue; target = Punkte );
+		          
+			      newObject( def = H3(phi):=p3.x*cos(phi)+p3.y*sin(phi); color = blue; target = Dichte );
+		         newObject( def = p4:=punkt( 2,3.5); color =cyan; target = Punkte );
+		          
+			      newObject( def = H4(phi):=p4.x*cos(phi)+p4.y*sin(phi); color = cyan; target = Dichte );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt viele Punkte und ihre Hough-Transformierten.
+		<br/>Sehr deutlich sieht man, dass sich alle Hough-Transformierten in einem Punkt schneiden. Dieser Schnittpunkt repräsentiert die Gerade, auf der alle Punkte liegen.
+		<br/>Stellen Sie die zugehörigen Gerade über den Steuerpunkt <f>s</f> ein!</description>
+			<seq>
+				<script>
+				
+		         modifyObject( name = p; visible = false);
+		         modifyObject( name = p2; visible = false);
+		          modifyObject( name = p3; visible = false);
+		          modifyObject( name = p4; visible = false);
+		          modifyObject( name = H; visible = false);
+		          modifyObject( name = H2; visible = false);
+		          modifyObject( name = H3; visible = false);
+		           modifyObject( name = H4; visible = false);
+			     newObject( def = n := 20);
+			      newObject( def = pl:=&lt;punkt>liste(i,n, punkt( -2.5+7/n*i,4-5/n*i) ); target = Punkte; showNames = false );
+
+			      newObject( def = s:=punkt(1,1); color = red);
+			      newObject( def = phi:=s.x);
+			      newObject( def = d:=s.y);
+			      newObject( def = pg:= punkt(d*cos(phi), d*sin(phi)) );
+			      newObject( def = origo := punkt(0,0) );
+			      newObject( def = g:=gerade(pg, vektor( {-sin(phi), cos(phi) } ) ) ; color = red; target = Punkte);
+			     			      
+			     newObject( def = fl:=&lt;funktion(phi)>liste(i,n,pl[i].x*cos(phi)+pl[i].y*sin(phi)); target = Dichte );
+			     Dichte.addGraph( name = s);
+			     
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Auch wenn das Bild zwei Geraden enthält, kann man die zugehörigen Schnittpunkte der Hough-Transformierten noch gut erkennen.
+		    <br/>Stellen Sie die zugehörigen Geraden über den Steuerpunkt <f>s</f> ein!
+		    </description>
+			<seq>
+				<script>
+		         deleteObject(name =fl, pl );
+		         Dichte.deleteGraph( name = s );
+			      newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 1+3/n*(i-n/2)), cond(i-n/2-0.5, 4-10/n*i, -3+12/n*(i-n/2))) ); target = Punkte; showNames = false );
+
+			     			      
+			     newObject( def = fl:=&lt;funktion(phi)>liste(i,n,pl[i].x*cos(phi)+pl[i].y*sin(phi)); target = Dichte );
+			     Dichte.addGraph( name = s);
+			     
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Etwas unübersichtlicher wird die Situation, wenn das Bild neben einer Geraden noch andere, willkürlich verteilte Punkte enthält.
+		    <br/>Aber auch hier kann man wohl den relevanten Schnittpunkt der Hough-Transformierten und somit die Gerade noch gut finden.
+		    </description>
+			<seq>
+				<script>
+		         deleteObject(name =fl, pl );
+		         Dichte.deleteGraph( name = s );
+			    			     newObject( def = n := 40);
+			    newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 4*sin(i)), cond(i-n/2-0.5, 4-10/n*i, 4*cos(i*i*i))) ); target = Punkte; showNames = false );
+
+
+			      			     			      
+			     newObject( def = fl:=&lt;funktion(phi)>liste(i,n,pl[i].x*cos(phi)+pl[i].y*sin(phi)); target = Dichte );
+			     Dichte.addGraph( name = s);
+			     
+			     
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Allerdings: Bisher haben wir letztlich  ein "graphisches" Problem (ob von einer Menge vom Bildpunkten viele auf einer Geraden liegen) in ein zweites "graphisches" Problem (ob von einer Menge von Funktionsgraphen sich viele in einem bestimmten Punkt schneiden) transformiert.  
+<br/>Das ist nur dann ein Fortschritt, wenn das zweite Problem  nun rechnerisch besser lösbar ist. </description>
+		</step>
+		<step>
+			<seq>
+				<script>
+		          deleteObject(name =fl, pl );
+		          modifyObject( name = p; visible = true );
+		          modifyObject( name = p2; visible = true );
+		          modifyObject( name = p3; visible = true );
+		          modifyObject( name = p4; visible = true );
+		          modifyObject( name = H; visible = true );
+		          modifyObject( name = H2; visible = true );
+		          modifyObject( name = H3; visible = true );
+		          modifyObject( name = H4; visible = true );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>Der Akkumulator</title>
+			<description>Wir betrachten die Hough-Transformierte eines Bildpunktes nur noch an endlich vielen Stellen im Intervall <f>-pi $le phi $le pi</f>.
+		    <br/>Die Hough-Transformierte des Bildpunktes <f>p</f> selbst besteht also jetzt selbst nur noch aus endlich vielen Punkten.</description>
+			<seq>
+				<script>
+				
+		         newObject( def = np :=20 ); // Anzahl der Intervalle in phi-Richtung
+		       newObject( def = nr := 20 ); // Anzahl der Intervalle in d-Richtung
+		       newObject( def = nintr:=5 ); // maximaler d-Wert, der berücksichtigt wird.
+		       newObject( def = nph:=np/2);
+		     		       newObject( def = pd1( i):=(-pi+pi/nph*i ); );
+		       
+		        modifyObject( name =H; visible = false );
+		        modifyObject( name = H2; visible = false );
+		        modifyObject( name = H3; visible = false );
+		        modifyObject( name = H4; visible = false );
+		        
+		        modifyObject( name = p2; visible = false);
+		        modifyObject( name = p3; visible = false);
+		        modifyObject( name = p4; visible = false);
+		        
+		        
+		        newObject( def = h1p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, H(pd1(i) )), 2 ) ; target = Dichte; color = orange );
+		         newObject( def = h2p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, H2(pd1(i) )), 2 )  ; color = green);
+		          newObject( def = h3p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, H3(pd1(i) )), 2 ) ; color = blue );
+		           newObject( def = h4p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, H4(pd1(i) )), 2 ) ; color = cyan );
+
+
+
+		          
+		      
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ausserdem sortieren wir die dort resultierenden Werte in endlich viele Intervalle in <f>d</f>-Richutng ein...</description>
+			<seq>
+				<script>
+				    newObject( def = gv:=balken(  vektor( i,np+1, -pi+pi/nph*(i-0.5)), vektor(i,np+1,7), 0 ); fillcolor = 0.0.0.0; bordercolor = lightgray; target = Dichte );
+		         newObject( def = gh:=balken(  vektor( i,nr, 0), vektor(i,nr,nintr/nr*(i-0.5)), 20 ); fillcolor = 0.0.0.0; bordercolor = lightgray; target = Dichte );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jeder Punkte der Hough-Transformierten liegt jetzt in einem der endlich vielen Kästchen. Das entstandene Raster mit endlich vielen Kästchen wird Akkumulator genannt.
+		</description>
+			<seq>
+				<script>
+		      		 		    Dichte.setTitle( title = "Akkumulator" );
+		      		 		    deleteObject( name = phikt, rkt, sr, sphi);
+		      		 		    modifyObject( name = hintergrund; visible = true);
+		         newObject( def = a1 := 0 );
+		    
+		    
+		 newObject( def = sd1(phi):=(floor( ((p.x*cos(phi)+p.y*sin(phi))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr   ) );
+		 newObject( def = s1d1(phi):= sd1(phi)*a1+H(phi)*(1-a1));
+
+		newObject( def = h1p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s1d1(pd1(i) )), 2 ) ; target = Dichte; color = orange );
+				animate( name = a1; to = 1; end = 3);
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Genauso machen wir es mit den anderen Punkten.</description>
+			<seq>
+				<script>
+				newObject( def = p := punkt( 1,3) );
+		      modifyObject( name = p2; visible =true);
+		        modifyObject( name = p3; visible =true);
+		        modifyObject( name = p4; visible =true);
+   
+		   newObject( def = a2 := 0 );
+		    
+		    
+		 newObject( def = sd2(phi):=(floor( ((p2.x*cos(phi)+p2.y*sin(phi))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr   ) );
+		 newObject( def = s2d1(phi):= sd2(phi)*a2+H2(phi)*(1-a2));
+
+		newObject( def = h2p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s2d1(pd1(i) )), 2 ) ; target = Dichte;  );
+		
+		 newObject( def = a3 := 0 );
+		    
+		    
+		 newObject( def = sd3(phi):=(floor( ((p3.x*cos(phi)+p3.y*sin(phi))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr   ) );
+		 newObject( def = s3d1(phi):= sd3(phi)*a3+H3(phi)*(1-a3));
+
+		newObject( def = h3p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s3d1(pd1(i) )), 2 ) ; target = Dichte; );
+		
+		 newObject( def = a4 := 0 );
+		    
+		    
+		 newObject( def = sd4(phi):=(floor( ((p4.x*cos(phi)+p4.y*sin(phi))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr   ) );
+		 newObject( def = s4d1(phi):= sd4(phi)*a4+H4(phi)*(1-a4));
+
+		newObject( def = h4p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s4d1(pd1(i) )), 2 ) ; target = Dichte;);
+		
+
+
+		animate( name = a2; to = 1; end = 3);
+		animate( name = a3; to = 1; end = 3);
+		animate( name = a4; to = 1; end = 3);	    
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Experimentieren Sie durch Verschieben der Punkte!
+		  <br/>Die graphische Darstellung hat noch das Problem, dass sich die Punkte von verschiedenen Hough-Transformierten überlagern, wenn sie im selben Kästchen zu liegen 
+		  kommen.
+		  <br/>Ausserdem sind die <f>4</f> Bildpunkte etwas wenig.</description>
+		</step>
+		<step>
+			<description>Deshalb im nächsten Schritt folgende Änderungen:
+		  <br/>Wir zeichnen "viele" Billdpunkte.
+		  <br/>Wir tragen die Punkte der verschiedenen Houg-Transformierten an leicht unterschiedlichen Stellen im entsprechenden Kästchen ein.</description>
+		</step>
+		<step>
+			<title>Geraden erkennen</title>
+			<description>In einem Kästchen sind besonders viele Punkte von Hough-Transformierten.
+		 <br/>Überprüfen sie, ob dieses Kästchen tatsächlich zur gesuchten Gerade gehört.
+		 <br/>Experimentieren Sie!</description>
+			<seq>
+				<script>
+				
+				deleteObject( name = h4p, h3p, h2p, h1p);
+				Punkte.deleteGraph( name = p, p2, p3, p4);
+		         Dichte.deleteGraph( name = s, gv, gh );
+
+			    			   
+			      
+
+
+		       newObject( def = n := 20 );  // Anzahl der Punkte, die erzeugt werden
+		       newObject( def = np :=20 ); // Anzahl der Intervalle in phi-Richtung
+		       newObject( def = nr := 20 ); // Anzahl der Intervalle in d-Richtung
+		       newObject( def = nintr:=5 ); // maximaler d-Wert, der berücksichtigt wird.
+		       newObject( def = nph:=np/2);
+
+		    
+		         newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 4*sin(i)), cond(i-n/2-0.5, 4-10/n*i, 4*cos(i*i*i))) ); target = Punkte; showNames = false );
+ 
+
+		       newObject( def = sd(ip, i):=(0.02+0.08*sqrt(ip/n))*sin(5*pi*ip/n)+floor( ((pl[ip].x*cos(-pi+pi/nph*i)+pl[ip].y*sin(-pi+pi/nph*i))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr    );
+		       newObject( def = pd(ip, i):=(0.02+0.08*sqrt(ip/n))*cos(5*pi*ip/n)-pi+pi/nph*i );
+		       
+		      		      		       
+		        newObject( def = h1p:=punkte( vektor( i,np, pd(1,i)), vektor( i,np, sd(1,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h2p:=punkte( vektor( i,np, pd(2,i)), vektor( i,np, sd(2,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h3p:=punkte( vektor( i,np, pd(3,i)), vektor( i,np, sd(3,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h4p:=punkte( vektor( i,np, pd(4,i)), vektor( i,np, sd(4,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h5p:=punkte( vektor( i,np, pd(5,i)), vektor( i,np, sd(5,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h6p:=punkte( vektor( i,np, pd(6,i)), vektor( i,np, sd(6,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h7p:=punkte( vektor( i,np, pd(7,i)), vektor( i,np, sd(7,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h8p:=punkte( vektor( i,np, pd(8,i)), vektor( i,np, sd(8,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h9p:=punkte( vektor( i,np, pd(9,i)), vektor( i,np, sd(9,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h10p:=punkte( vektor( i,np, pd(10,i)), vektor( i,np, sd(10,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h11p:=punkte( vektor( i,np, pd(11,i)), vektor( i,np, sd(11,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h12p:=punkte( vektor( i,np, pd(12,i)), vektor( i,np, sd(12,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h13p:=punkte( vektor( i,np, pd(13,i)), vektor( i,np, sd(13,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h14p:=punkte( vektor( i,np, pd(14,i)), vektor( i,np, sd(14,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h15p:=punkte( vektor( i,np, pd(15,i)), vektor( i,np, sd(15,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h16p:=punkte( vektor( i,np, pd(16,i)), vektor( i,np, sd(16,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h17p:=punkte( vektor( i,np, pd(17,i)), vektor( i,np, sd(17,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h18p:=punkte( vektor( i,np, pd(18,i)), vektor( i,np, sd(18,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h19p:=punkte( vektor( i,np, pd(19,i)), vektor( i,np, sd(19,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h20p:=punkte( vektor( i,np, pd(20,i)), vektor( i,np, sd(20,i) ), 0.1 ) ; target = Dichte );
+		        
+		        Dichte.addGraph(name =gv, gh,  s );
+
+
+
+		        		       		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Nun kann man Geraden tatsächlich einfach erkennen: Man muss nur die endlich vielen Kästchen der Reihe nach aufsuchen und das Kästchen suchen, in dem die meisten Punkte von Hough-Transformierten liegen. Dieses Kästchen gibt den Winkel <f>phi</f>und den Abstand <f>d</f> der gesuchten Gerade.
+<br/>Nachdem allerdings damit nur endlich viele unterschiedliche <f>phi</f>- und <f>d</f>-Werte verbunden sind, werden die so gefundenen Werte von den exakten leicht abweichen.</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Max Weiß (Fachhochschule Augsburg) -->
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Unfug</location>
+		<title>Silvester</title>
+		<summary/>
+		<step>
+			<title>Vorbereitung: Es wird Mitternacht</title>
+			<description>Schieberegler oben rechts ganz nach rechts schieben.</description>
+			<seq>
+				<script>
+						    expand( left = false; right = false );
+						    newObject( def = da.yMin := -2 );
+						    newObject( def = da.xMax := 8 );
+						    newObject( def = t := 0 );
+						    newObject( def = ff:= flaeche( { punkt( -30, -30), punkt( 30, -30), punkt( 30, 30), punkt( -30, 30) } ) ; fillcolor = 1.1.1.150; target = da;  );
+						    newObject( def = xx(b,c, a):= (b+t)+sin(a*t)*cos(a*floor(20*t)) );
+						    newObject( def = yy(b,c, a):= (-(t-2)^2+4)+sin(a*t)*sin(a*floor(20*t)) );
+						    newObject( def = xxx(b,c, a):= (b+t)+3*sin(a*t)*cos(a*floor(20*t)) );
+						    newObject( def = yyy(b,c, a):= (-(t-2)^2+4)+3*sin(a*t)*sin(a*floor(20*t)) );
+						    newObject( def = f(x):=sin(2*sin(x)+2*x)-1;);
+			        
+
+
+						    newObject( def = bb := -3 );
+						    newObject( def = cc := 4 );
+						    newObject( def = s1 := strecke( punkt( xx(bb,cc,1), yy(bb,cc,1) ), punkt(xxx(bb,cc,1), yyy(bb,cc,1) )) ; color = yellow; target = da; );
+						    newObject( def = s2 := strecke( punkt( xx(bb,cc,2), yy(bb,cc,2) ), punkt(xxx(bb,cc,2), yyy(bb,cc,2) )) ; color = yellow; target = da; );
+						    newObject( def = s3 := strecke( punkt( xx(bb,cc,3), yy(bb,cc,3) ), punkt(xxx(bb,cc,3), yyy(bb,cc,3) )) ; color = cyan; target = da; );
+						    newObject( def = s4 := strecke( punkt( xx(bb,cc,4), yy(bb,cc,4) ), punkt(xxx(bb,cc,4), yyy(bb,cc,4) )) ; color = red; target = da; );
+						    newObject( def = s5 := strecke( punkt( xx(bb,cc,5), yy(bb,cc,5) ), punkt(xxx(bb,cc,5), yyy(bb,cc,5) )) ; color = green; target = da; );
+						    newObject( def = s6 := strecke( punkt( xx(bb,cc,6), yy(bb,cc,6) ), punkt(xxx(bb,cc,6), yyy(bb,cc,6) )) ; color = cyan; target = da; );
+						    newObject( def = s7 := strecke( punkt( xx(bb,cc,7), yy(bb,cc,7) ), punkt(xxx(bb,cc,7), yyy(bb,cc,7) )) ; color = magenta; target = da; );
+						    newObject( def = s8 := strecke( punkt( xx(bb,cc,8), yy(bb,cc,8) ), punkt(xxx(bb,cc,8), yyy(bb,cc,8) )) ; color = blue; target = da; );
+						    newObject( def = s9 := strecke( punkt( xx(bb,cc,9), yy(bb,cc,9) ), punkt(xxx(bb,cc,9), yyy(bb,cc,9) )) ; color = cyan; target = da; );
+						    newObject( def = s10 := strecke( punkt( xx(bb,cc,10), yy(bb,cc,10) ), punkt(xxx(bb,cc,10), yyy(bb,cc,10) )) ; color = red; target = da; );
+						    newObject( def = s11 := strecke( punkt( xx(bb,cc,11), yy(bb,cc,11) ), punkt(xxx(bb,cc,11), yyy(bb,cc,11) )) ; color = blue; target = da; );
+						    	newObject( def = intfl:=flaeche({punkt(-10,-10),punkt(10,-10),kurve(t,10,-10,t,f(t))}); color = white; target = da );
+
+						    						  </script>
+			</seq>
+		</step>
+		<step>
+			<title>Ein gutes neues Jahr !!</title>
+			<seq>
+			    <script>
+			      newObject( def = aaa :=0 );
+			      animate(name = aaa; to = 0; end = 2);
+			      newObject( def = ff:= flaeche( { punkt( -30, -30), punkt( 30, -30), punkt( 30, 30), punkt( -30, 30) } ) ; fillcolor = 1.1.1.180; target = da;  );
+			      animate(name = aaa; to = 0; end = 2);
+			      newObject( def = ff:= flaeche( { punkt( -30, -30), punkt( 30, -30), punkt( 30, 30), punkt( -30, 30) } ) ; fillcolor = 1.1.1.200; target = da;  );
+			      animate(name = aaa; to = 0; end = 2);
+			      newObject( def = ff:= flaeche( { punkt( -30, -30), punkt( 30, -30), punkt( 30, 30), punkt( -30, 30) } ) ; fillcolor = 1.1.1.230; target = da;  );
+			      animate(name = aaa; to = 0; end = 2);
+			      newObject( def = ff:= flaeche( { punkt( -30, -30), punkt( 30, -30), punkt( 30, 30), punkt( -30, 30) } ) ; fillcolor = 1.1.1.255; target = da;  );
+			      
+			    </script>
+				<animate object="main" parameterName="t" to="4" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="bb := 2"/>
+				</call>
+				<animate object="main" parameterName="t" to="0" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="bb := -4"/>
+				</call>
+				<animate object="main" parameterName="t" to="4" end="7"/>
+				<call object="main" action="newObject">
+					<param type="String" value="bb := 2"/>
+				</call>
+				<animate object="main" parameterName="t" to="0" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="bb := -4"/>
+				</call>
+				<animate object="main" parameterName="t" to="4" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="bb := 2"/>
+				</call>
+				<animate object="main" parameterName="t" to="0" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="bb := -4"/>
+				</call>
+				<animate object="main" parameterName="t" to="4" end="7"/>
+				<call object="main" action="newObject">
+					<param type="String" value="bb := 2"/>
+				</call>
+				<animate object="main" parameterName="t" to="0" end="5"/>
+			</seq>
+		</step>
+	</body>
+</math4u2>

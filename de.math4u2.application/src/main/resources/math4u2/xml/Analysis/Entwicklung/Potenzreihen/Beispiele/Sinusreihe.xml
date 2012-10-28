@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. Weiss</author>
+		<location>Analysis/Entwicklung/Potenzreihen/Beispiele</location>
+		<title>Sinusreihe</title>
+		<summary>Taylor-Entwicklung der Sinus-Funktion, Sinusreihe</summary>
+		<step>
+			<title>Sinusreihe</title>
+			<description>Die Sinus-Funktion ist beliebig oft differenzierbar und ihre höheren Ableitungen genügen 
+			einer einfachen Systematik. Für die Taylor-Entwicklung wählt man hier den Entwicklungspunkt <f>c=0</f>, an 
+			dieser Stelle muss man die Werte der Ableitungen berechnen: <br/>
+				<br/>
+				<table>
+					<tr>
+						<td bgcolor="lightGray">Ordnung der Ableitung</td>
+						<td>0</td>
+						<td>1</td>
+						<td>2</td>
+						<td>3</td>
+						<td>4</td>
+						<td>5</td>
+					</tr>
+					<tr>
+						<td bgcolor="lightGray">Term</td>
+						<td>
+							<f>sin(x)</f>
+						</td>
+						<td>
+							<f>cos(x)</f>
+						</td>
+						<td>
+							<f>-sin(x)</f>
+						</td>
+						<td>
+							<f>-cos(x)</f>
+						</td>
+						<td>
+							<f>sin(x)</f>
+						</td>
+						<td>
+							<f>cos(x)</f>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="lightGray">Wert für <f>c=0</f>
+						</td>
+						<td>0</td>
+						<td>1</td>
+						<td>0</td>
+						<td>-1</td>
+						<td>0</td>
+						<td>1</td>
+					</tr>
+				</table>
+			</description>
+			<seq>
+				<script>
+					deleteAll();
+					da.coordinateSystem(xMin=-15; xMax=15; yMin=-1.9; yMax=1.9);
+					expand(left=false; right=false);
+					newObject( def =p(x) :=0+1/1!*x+0/2!*x^2+(-1)/3!*x^3+0/4!*x^4+1/5!*x^5 ; color = red;  );
+					newObject( def =g(x) :=sin(x); target = da;  );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Verwendet man die in der Tabelle aufgeführten Ableitungswerte, so erhält man z.B. das Taylor-Polynom vom 
+			Grad <f>5</f> mit Entwicklungspunkt <f>c=0</f> als
+			<br/><f>$fd(p)</f>.
+		   </description>
+		</step>
+		<step>
+			<title>Symmetriebetrachtung</title>
+			<description>Man kann das Taylor-Polynom 				
+			<br/><f>$fd(p)</f> noch etwas vereinfachen, wenn man bemerkt, dass sämtliche Koeffizienten zu geraden <f>x</f>-Potenzen den Wert <f>0</f> haben. 
+				<br/>Dies ist auf die Tatsache zurückzuführen, dass die <f>sin(x)</f>-Funktion eine ungerade Funktion ist. 
+			<br/>Hier findet folgender allgemeine Satz Anwendung:</description>
+			<seq/>
+		</step>
+		<step>
+			<description>
+				<strong>Satz</strong>
+				<br/>Bei der Taylor-Entwicklung einer ungeraden Funktion mit dem Entwicklungspunkt <f>c=0</f> haben sämtliche Koeffizienten 
+				zu ungeraden <f>x</f>-Potenzen den Wert <f>0</f>.</description>
+		</step>
+		<step>
+			<title>Taylor-Polynome für verschiedene Ordnungen</title>
+			<description>Führt man nur die ungeraden x-Potenzen auf (die Koeffizienten zu den geraden <f>x</f>-Potenzen haben aus Symmetriegründen 
+				alle den Wert <f>0</f>), dann erhält man für die <f>sin(x)</f>-Funktion je nach Ordnung folgendes Taylor-Polynom:<br/>
+				<br/>
+				Ordnung <f>1</f>: <f bgcolor="100.100.255">$fd(p_1)</f>
+			</description>
+			<seq>
+				<script>
+			       deleteObject( name = p );
+			       newObject( def = p_1(x) :=1/1!*x; color = blue; target = da);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ordnung <f>3</f>: <f bgcolor="magenta">$fd(p_3)</f>
+			</description>
+			<seq>
+				<script>
+		  newObject( def = p_3(x) :=1/1!*x+(-1)/3!*x^3; color = magenta; target = da);
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ordnung <f>5</f>: <f bgcolor="red">$fd(p_5)</f>
+			</description>
+			<seq>
+				<script>
+		  newObject( def = p_5(x) :=1/1!*x+(-1)/3!*x^3+1/5!*x^5; color =red; target = da);
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ordnung <f>7</f>: <f bgcolor="green">$fd(p_7)</f>
+			</description>
+			<seq>
+				<script>
+		  			newObject( def = p_7(x) :=1/1!*x+(-1)/3!*x^3+1/5!*x^5+(-1)/7!*x^7; color =green; target = da);
+		  		</script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Gesetzmäßigkeit, die der Entwicklung dieser Polynome zugrunde liegt, läßt sich mit Hilfe der 
+						Summenschreibweise so formulieren:
+			<br/><f>$fd(p)</f>
+				<br/>
+				<br/>Wählt man z.B. für <f>k=3</f>, so erhält man das Taylor-Polynom vom 
+			Grad <f>2*3+1 = 7</f>, für <f>k=10</f> den Grad <f>2*10+1 = 21</f>.<br/>
+			</description>
+			<seq>
+				<script>
+					deleteObject( name = p_1 );
+					deleteObject( name = p_3 );
+					deleteObject( name = p_5 );
+					da.deleteGraph( name = p_7 );
+					
+					newObject( def = k:=0; select = true; );
+					newObject( def = p(x) := sum(i, 0,k, (-1)^i*x^(2*i+1)/(2*i+1)!); color = red; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Versuchen Sie, aus dieser allgemeinen Darstellung mit <f>k = 3</f> das Polynom <f>$fd(p_7)</f> zu rekonstruieren.</description>
+		</step>
+		<step>
+			<description>In der folgenden Animation können Sie beobachten, wie der Grad des Taylor-Polynoms schrittweise von <f>0</f> bis zu <f>61</f> erhöht wird.
+		   <br/>Beachten Sie bei der folgenden Animation insbesondere:<br/>
+				<ul>
+					<li>Mit jedem Schritt wechselt der Koeffizient der nächsten <f>x</f>-Potenz das Vorzeichen.</li>
+					<li>Mit jedem Schritt wird das Intervall der <f>x</f>-Achse, in dem das Polynom <f>$fh(p)</f> die Funktion <f>sin(x)</f> "gut" annähert, etwas größer.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Aktueller Wert : <f>
+					<conf>k(style=deval; width=3; pattern = ##0)</conf>k</f>
+			</description>
+			<seq>
+				<script>
+					deleteObject(n=p_7);
+					newObject(def = k:=0);
+					newObject(def = p(x) := sum(i, 0,floor(k), (-1)^i*x^(2*i+1)/(2*i+1)!); color=red;);
+					
+					animate(n=k; to=15; end=20);
+				</script>
+				<par>
+					<script>
+						animate(n=k; to=30; end=20;);
+						animate(n=da.xMin; to=-25; end=20);
+						animate(n=da.xMax; to=25; end=20);
+					</script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Fazit</title>
+			<description>
+			Das Taylorpolynom der Ordnung <f>2*k+1</f> zu <f>sin(x)</f> mit Entwicklungspunkt <f>c=0</f> hat die Form <f>$fd(p)</f>. 
+			<br/>
+				<br/>Natürlich ist die soeben abgelaufene Animation nur ein Hinweis, aber es gilt: 
+			<br/>Die Funktionswerte des Polynoms konvergieren mit zunehmender Ordnung für alle <f>x$isinR</f> gegen <f>sin(x)</f>, 
+			der Konvergenzradius dieser Entwicklung ist also &infin;.</description>
+			<seq>
+				<script>
+					newObject(def = p(x) := sum(i, 0,k, (-1)^i*x^(2*i+1)/(2*i+1)!); color=red;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Experimentieren Sie durch Änderung der Ordnung: Sie können als obere Summationsgrenze eine natürliche Zahl oder <f>0</f> eingeben.
+			<br/><f>
+					<conf>k(style=text; pattern = #0)</conf>$fd(p)</f>
+				<br/>Erzeugen Sie so die Taylor-Polynome der Ordnung <f>1, 5, 17</f> und <f>23</f>.
+</description>
+		</step>
+	</body>
+</math4u2>

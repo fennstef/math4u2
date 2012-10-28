@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Interpolation</location>
+		<title>Lagrange-Interpolation</title>
+		<summary>Konstruktion eines Interpolationspolynoms nach der Idee von Lagrange</summary>
+		<step>
+			<title>Polynom-Interpolation: Aufgabenstellung</title>
+			<description>Die <em>Aufgabenstellung</em> bei der Polynom-Interpolation lautet:
+			<br/><br/>Gegeben sind <f>n+1</f> Punkte <f>S[0]</f>, <f>S[1]</f>, ..., <f>S[n]</f> mit paarweise verschiedenen <f>x</f>-Koordinaten.
+		    <br/>Finde ein Polynom <f>p(x)</f> vom Grad <f>$void $le n</f>, das diese Punkte interpoliert, d.h. <f>p(S[0].x)=S[0].y</f>, ..., <f>p(S[n].x)=S[n].y</f>
+				<br/>
+			</description>
+			<seq>
+				<script>
+			  		deleteAll();
+					da.coordinateSystem(xMin=-3.5; xMax=3.5; yMin=-2; yMax=5);
+					expand(left=false; right=false);
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<title>Das konkrete Beispiel</title>
+			<description>Gegeben sind hier <f>4+1=5</f> Punkte <f>S[0]</f>, <f>S[1]</f>, ..., <f>S[4]</f>.
+		    <br/>Finde ein Polynom <f>p(x)</f> vom Grad <f>$void $le4</f>, das diese Punkte interpoliert, d.h. <f>p(S[0].x)=S[0].y</f>, ..., <f>p(S[4].x)=S[4].y</f>.
+		    <br/>Die Punkte sind jetzt oben farbig eingezeichnet. Sie können sie jederzeit mit der Maus bewegen und so experimentieren.
+		    <br/>In den folgenden Termen wird die <f>x</f>-Koodinate eines Punktes mit <f>S[i].x</f> angesprochen, seine <f>y</f>-Koordinate mit <f>S[i].y</f> .
+</description>
+			<seq>
+				<script>
+				    newObject( def = P4:=punkt(2.133047210300429, 1.3417721518987342); color = orange;  hide = true );
+				    newObject( def = P3:=punkt(1.6373390557939915, 1.1561181434599157); color = gray;  );
+				    newObject( def = P2:=punkt(0.6459227467811157, 0.7426160337552741); color = red; );
+				    newObject( def = P1:=punkt(0.20028612303290405, 1.3839662447257384) ; color = blue;  );
+				    newObject( def = P0:=punkt(-0.4306151645207441, 1.2236286919831225) ; color = green;  );
+				    newObject( def = S:=&lt;punkt>liste0({P0,P1,P2,P3,P4 }) ; target = da );
+			         newObject( def = m4:=marker(S[4].x, S[4].y) ; color = orange; target = da; hide = true;);
+					newObject( def = m3:=marker(S[3].x, S[3].y); hide = true; color = gray; target = da);
+					newObject( def = m2:=marker(S[2].x, S[2].y); hide = true; color = red; target = da);
+					newObject( def = m1:=marker(S[1].x, S[1].y); hide = true; color = blue; target = da);
+					newObject( def = m0:=marker(S[0].x, S[0].y); hide = true; color = green; target = da);
+
+				    newObject( def = vy:=vektor({0,1}) );
+				    newObject( def = g4 := gerade(P4,vy) ; color = orange;linestyle = dot; target = da );
+				    newObject( def = g3 := gerade(P3,vy) ; color = gray; linestyle = dot; target = da );
+				    newObject( def = g2 := gerade(P2,vy) ; color = red;linestyle = dot;  target = da );
+				    newObject( def = g1 := gerade(P1,vy) ; color = blue; linestyle = dot; target = da );
+				    newObject( def = g0 := gerade(P0,vy) ; color = green; linestyle = dot; target = da );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<br/>Die erste Frage ist natürlich die <em>Existenzfrage</em>: 
+		   <br/>Ist diese Aufgabenstellung immer lösbar, d.h. existiert bei jeder Konstellation der Punkte ein solches Polynom <f>p(x)</f>? 
+<br/>
+				<br/>Die zweite Frage ist die <em>Eindeutigkeitsfrage</em>: 
+				<br/>Kann es (in bestimmten Situationen) mehrere Lösungen der Interpolations-Aufgabe geben oder ist eine gefundene Lösung eindeutig?
+		   </description>
+		</step>
+		<step>
+			<description>Die Lagrange-Interpolation gibt eine Antwort auf die Existenzfrage: 
+				<br/>Sie zeigt, dass es immer ein Polynom mit den geforderten Eigenschaften gibt, indem sie ein solches Polynom konstruiert.
+<br/>
+				<br/>Dies soll im folgenden gezeigt werden.
+
+		  </description>
+			<seq>
+				<script>
+		        newObject( def = L:=&lt;funktion(x)>liste0({ ((x-S[1].x)*(x-S[2].x)*(x-S[3].x)*(x-S[4].x))/((S[0].x-S[1].x)*(S[0].x-S[2].x)*(S[0].x-S[3].x)*(S[0].x-S[4].x)),
+		                                                                           ((x-S[0].x)*(x-S[2].x)*(x-S[3].x)*(x-S[4].x))/((S[1].x-S[0].x)*(S[1].x-S[2].x)*(S[1].x-S[3].x)*(S[1].x-S[4].x)),
+		                                                                           ((x-S[0].x)*(x-S[1].x)*(x-S[3].x)*(x-S[4].x))/((S[2].x-S[0].x)*(S[2].x-S[1].x)*(S[2].x-S[3].x)*(S[2].x-S[4].x)),
+		                                                                           ((x-S[0].x)*(x-S[1].x)*(x-S[2].x)*(x-S[4].x))/((S[3].x-S[0].x)*(S[3].x-S[1].x)*(S[3].x-S[2].x)*(S[3].x-S[4].x)),
+		                                                                           ((x-S[0].x)*(x-S[1].x)*(x-S[2].x)*(x-S[3].x))/((S[4].x-S[0].x)*(S[4].x-S[1].x)*(S[4].x-S[2].x)*(S[4].x-S[3].x)) } ) );
+		                                                                           
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Idee der Lagrangeschen Basisfunktionen</title>
+			<description>Nach der Idee von Lagrange wird zuerst eine Reihe von Hilfsfunktionen konstruiert, die es dann zuletzt ermöglichen, das gewünscht Interpolationspolynom relativ einfach "zusammenzubauen".
+<br/>Aus gutem Grund sind diese Hilfsfunktionen genauso numeriert wie die zu interpolierenden Punkte, im konkreten Fall sollen sie <f>L[0](x)</f>, <f>L[1](x)</f>, ..., <f>L[4](x)</f>  heißen.
+		    </description>
+		</step>
+		<step>
+			<description>Abstrakt im Sinne eines Vektorraums betrachtet bilden diese Hilfsfunktionen eine Basis des Vektorraums der Polynome vom Grad <f>$void $le n</f>. Deshalb werden Sie im folgenden als Basisfunktionen bezeichnet. Falls Sie mit dieser Interpretation der Hilfsfunktionen aktuell nichts anfangen können, ist das fürs folgende kein Hindernis.
+<br/>Wir beginnen mit der Konstruktion der ersten Basisfunktion <f>L[0](x)</f>.  
+
+		  </description>
+		</step>
+		<step>
+			<title>Anforderungen an die erste Basisfunktion</title>
+			<description>Die erste Basisfunktion <f>L[0](x)</f> soll eine Funktion mit folgenden Eigenschaften sein:
+				<ul>
+					<li>
+						<f>L[0](x)</f> soll ein Polynom vom Grad <f>4</f> (allgemein: <f>n</f>) sein,</li>
+					<li>an der Stelle, die durch die <f>x</f>-Koordinate <f>S[0].x</f> des Punktes <f>S[0]</f> gegeben ist, soll <f>L[0](x)</f> den Funktionswert <f>1</f> annehmen, kurz:  
+							<f>L[0](S[0].x)=1</f> ,</li>
+					<li>bei den <f>x</f>-Koordinaten der restlichen Punkte soll die Funktion <f>L[0](x)</f> eine Nullstelle haben, 
+					<br/>kurz: <f>L[0](S[1].x)=0</f>, <f>L[0](S[2].x)=0</f>, ..., <f>L[0](S[4].x)=0</f> .</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Das ist zunächst wieder eine neue Interpolationsaufgabe.
+				<br/>Allerdings ist diese Interpolationsaufgabe relativ einfach zu lösen, jedenfalls was die zuletzt genannte Anforderung bezüglich der Nullstellen betrifft:
+<br/>Wenn wir ein Polynom mit den dort geforderten Nullstellen hätten, könnten wir von diesem Polynom für jede dieser Nullstellen einen entsprechenden Linearfaktor abspalten, also konkret die Linearfaktoren <f>(x-S[1].x)</f>, <f>(x-S[2].x)</f>, <f>(x-S[3].x)</f> und <f>(x-S[4].x)</f> . </description>
+			<seq>
+				<script>
+			      newObject( def = gpx:=gerade(punkt(0,1),vektor({1,0})); color = magenta; target = da; linestyle = dot );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Die gewünschten Nullstellen ...</title>
+			<description>Jetzt machen wir es genau umgekehrt: Wir definieren ein Polynom als Produkt dieser vier Linearfaktoren,
+			<br/>wir definieren also <f>p[0](x) := (x-S[1].x)*(x-S[2].x)*(x-S[3].x)*(x-S[4].x)</f>.
+			<br/>Der Graph ist oben gestrichelt eingezeichnet. Wie man sieht, hat die Funktion die eingebauten Nullstellen. 
+			<br/>
+				<br/>Sie können durch Verschieben der Punkte <f>S[0]</f>, ... , <f>S[4]</f> jetzt mit dieser Funktion experimentieren.
+
+	
+		
+		  </description>
+			<seq>
+				<script>
+			      newObject( def = p0(x) := (x-S[1].x)*(x-S[2].x)*(x-S[3].x)*(x-S[4].x); color = black; linestyle = dash; target = da );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+		  Allerdings erfüllt diese Funktion noch nicht die Forderung, dass sie an der Stelle <f>S[0].x</f> den Wert <f>1</f> liefert. Jedenfalls hat diese Funktion an der Stelle <f>S[0].x</f> keine Nullstelle, weil sie als Polynom vom Grad <f>4</f> nicht mehr als die schon eingebauten <f>4</f> Nullstellen haben kann. 
+<br/>Wenn wir diese Funktion also durch den Wert dividieren, die sie an der Stelle <f>S[0].x</f> annimmt, dann erhalten wir eine neue Funktion, die sowohl die gewünschten Nullstellen hat als auch an der Stelle <f>S[0].x</f> den Wert <f>1</f> annimmt. ...
+		
+		  </description>
+		</step>
+		<step>
+			<title>Die erste Basisfunktion</title>
+			<description>Wir definieren also <f>L[0](x):=p[0](x)/p[0](S[0].x)</f>. 
+		  <br/>Der Graph dieser Funktion ist oben grün eingezeichnet. <br/>Die Funktion interpoliert jetzt offensichtlich alle gewünschten Punkte. 
+		  <br/>Dies ist übrigens nicht abhängig davon, dass die Punkte von links nach rechts aufsteigen numeriert sind. Wie auch immer wir die Punkte arrangieren, die konstruierte Funktion ändert sich zwar mit der Lage der Punkte, sie behält aber immer ihre Interpolationseigenschaft ... </description>
+			<seq>
+				<script>
+			       da.deleteGraph( name = p0 );
+			       newObject( def = L0(x) := L[0](x); color = green; target = da );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>... die Funktion behält ihre Interpolationseigenschaft ...</title>
+			<description>Experimentieren Sie!</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="P0.x" to="1" end="5"/>
+					<animate object="main" parameterName="P0.y" to="1.5" end="5"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="P3.x" to="-1" end="5"/>
+					<animate object="main" parameterName="P3.y" to="0.5" end="5"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Funktionsterm der ersten Basisfunktion</title>
+			<description>Damit ist diese erste Basisfunktion <f>L[0](x)</f> ein Polynom vom Grad <f>4</f> (allgemein: <f>n</f>) und hat die geforderten Eigenschaften.
+			<br/>Üblicherweise schreibt man die Definition dieser Funktion durch einen Term in der Form<br/>
+				<br/>
+				<f>L[0](x) := ((x-S[1].x)*(x-S[2].x)*(x-S[3].x)*(x-S[4].x))/((S[0].x-S[1].x)*(S[0].x-S[2].x)*(S[0].x-S[3].x)*(S[0].x-S[4].x))</f>. </description>
+			<seq/>
+		</step>
+		<step>
+			<title>Die zweite Basisfunktion</title>
+			<description> Für die zweite Basisfunktion <f>L[1](x)</f> gelten ähnliche Anforderungen wie für <f>L[0](x)</f>:
+				<ul>
+					<li>
+						<f>L[1](x)</f> soll ein Polynom vom Grad <f>4</f> (allgemein: <f>n</f>) sein,</li>
+					<li>
+						<f>L[1](S[1].x)=1</f>
+					</li>
+					<li>Für die restlichen Punkte: <f>L[1](S[0].x)=0</f>, <f>L[1](S[2].x)=0</f>, ..., <f>L[1](S[4].x)=0</f> .</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Dies erreicht man durch die Definition
+				<br/>
+				<f>L[1](x) := ((x-S[0].x)*(x-S[2].x)*(x-S[3].x)*(x-S[4].x))/((S[1].x-S[0].x)*(S[1].x-S[2].x)*(S[1].x-S[3].x)*(S[1].x-S[4].x))</f>.
+				<br/>Der Graph dieser Funktion ist oben blau eingetragen.
+			</description>
+			<seq>
+				<script>
+			        deleteObject( name = p0);
+			        da.deleteGraph( name = L0 );
+			        newObject( def = L1(x) := L[1](x); color = blue; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Restliche Basisfunktionen</title>
+			<description>Nach dem selben Prinzip sind die restlichen Basisfunktionen konstruiert:
+			<br/>Man könnte die Eigenschaften kurz so beschreiben: 
+			<ul>
+					<li>Die Nummer der Basisfunktion gibt an, bei welchem Punkt die Funktion den Werte <f>1</f> annimmt.</li>
+					<li>Bei den restlichen Punkten hat die Funktion jeweils den Wert <f>0</f>.</li>
+				</ul>
+				<ul>
+					<li>
+						<f>L[2](x)</f> (rot)</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+				    da.deleteGraph( name = L1 );
+				    newObject( def = L2(x) :=L[2](x); color = red; target = da );				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>
+						<f>L[3](x)</f> (grau) und</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+				    da.deleteGraph( name = L2 );
+				    newObject( def = L3(x) := L[3](x); color = gray; target = da);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>
+						<f>L[4](x)</f> (gelb)</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+				    da.deleteGraph( name = L3 );
+				    newObject( def = L4(x) := L[4](x); color = yellow; target = da);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Aufbau des Interpolationspolynoms
+		  </title>
+			<description>Nach diesen Vorarbeiten ist es einfach, aus den bereitgestellten Bauteilen das Interpolationspolynom zusammenzubauen:
+		  <br/>Wir beginnen mit <f>L[0](x)</f> (grün): Dieses Polynom hat an der Stelle <f>S[0].x</f> stets den Wert <f>1</f>. Wenn wir dieses Polynom jetzt mit dem Faktor <f>S[0].y</f> (der <f>y</f>-Koordinate des Punktes <f>S[0]</f>) multiplizieten, hat das Ergebnis an der Stelle <f>S[0].x</f> eben diesen Wert <f>S[0].y</f>, interpoliert also den Punkt <f>S[0]</f>.
+<br/>Bis jetzt haben wir: <f>p(x):=S[0].y*L[0](x)</f> (schwarz). Bei den <f>x</f>-Koordinaten aller anderen Punkte hat dieses Polynom den Wert <f>0</f>.</description>
+			<seq>
+				<script>
+				   da.deleteGraph( name = L4 );
+				   da.addGraph( name = L0 );
+				   newObject( def = p(x) := S[0].y*L[0](x); target = da);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Analog bauen wir die Hilfsfunktion <f>p[1](x):=S[1].y*L[1](x)</f>, oben gestrichelt eingezeichnet. Sie interpoliert den Punkt <f>S[1]</f>.</description>
+			<seq>
+				<script>
+				   da.deleteGraph( name = L0 );
+				   newObject( def = p1(x):=S[1].y*L[1](x); color = blue; lineStyle = dot; target = da );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir nun beide Terme addieren, erhalten wir eine Funktion, die schon die Punkte <f>S[0]</f> und <f>S[1]</f> interploiert: <f>p(x):=S[0].y*L[0](x)+S[1].y*L[1](x)</f>
+			</description>
+			<seq>
+				<script>
+			       newObject( def = p(x) := S[0].y*L[0](x)+S[1].y*L[1](x); target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Nun die Hilfsfunktion <f>p[2](x):=S[2].y*L[2](x)</f>, oben gestrichelt eingezeichnet. Sie interpoliert den Punkt <f>S[2]</f>.</description>
+			<seq>
+				<script>
+				deleteObject( name = p1 );
+			       newObject( def = p2(x):=S[2].y*L[2](x); color = red; lineStyle = dot; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>und als Summe eine Funktion, die schon die Punkte <f>S[0]</f>, <f>S[1]</f> und <f>S[2]</f> interploiert: <f>p(x):=S[0].y*L[0](x)+S[1].y*L[1](x)+S[2].y*L[2](x)</f>
+			</description>
+			<seq>
+				<script>
+
+			        newObject( def = p(x) :=S[0].y*L[0](x)+S[1].y*L[1](x)+S[2].y*L[2](x) );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir fahren nach dem gleichen Prinzip fort:
+			<br/>Hilfsfunktion <f>p[3](x):=S[3].y*L[3](x)</f>, sie interpoliert den Punkt <f>S[3]</f>.</description>
+			<seq>
+				<script>
+				deleteObject( name = p2 );
+			       newObject( def = p3(x):=S[3].y*L[3](x); color = gray; lineStyle = dot; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Dann als Summe eine Funktion, die schon die Punkte <f>S[0]</f>, <f>S[1]</f>, <f>S[2]</f> und <f>S[3]</f> interploiert: <f>p</f>
+			</description>
+			<seq>
+				<script>
+
+			        newObject( def = p(x) := S[0].y*L[0](x)+S[1].y*L[1](x)+S[2].y*L[2](x) + S[3].y*L[3](x) );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Hilfsfunktion <f>p[4](x):=S[4].y*L[4](x)</f>, sie interpoliert den Punkt <f>S[4]</f>.</description>
+			<seq>
+				<script>
+							        deleteObject( name = p3 );
+			       newObject( def = p4(x):=S[4].y*L[4](x); color = orange; lineStyle = dot; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Als Summe haben wir eine Funktion, die nun alle Punkte interploiert: <f>p(x):=S[0].y*L[0](x)+S[1].y*L[1](x)+S[2].y*L[2](x)+S[3].y*L[3](x)+S[4].y*L[4](x)</f>
+			</description>
+			<seq>
+				<script>
+
+			        newObject( def = p(x) := S[0].y*L[0](x)+S[1].y*L[1](x)+S[2].y*L[2](x)+S[3].y*L[3](x)+S[4].y*L[4](x));
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Das Interpolationspolynom</title>
+			<description>Für die so konstruierte Funktion <f>p(x):=S[0].y*L[0](x)+S[1].y*L[1](x)+S[2].y*L[2](x)+S[3].y*L[3](x)+S[4].y*L[4](x)</f> gilt:
+				<ul>
+					<li>Sie ist als Summe von Polynomen selbst ein Polynom.</li>
+					<li>Für den Grad dieses Polynoms gilt: <f>deg(p(x))&lt;=4</f> (allgemein: &le; <f>n</f>), weil alle Basisfunktionen den Grad <f>4</f> (allgemein: <f>n</f>) haben. </li>
+					<li>Das Polynom <fh>p(x)</fh> interpoliert die Punkte <f>S[0]</f>, ..., <f>S[4]</f>.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+			    deleteObject( name = p4 );
+			   </script>
+				<call object="main" action="newObject">
+					<param type="String" value="p(x) := S[0].y*L[0](x)+S[1].y*L[1](x)+S[2].y*L[2](x)+S[3].y*L[3](x)+S[4].y*L[4](x)"/>
+					<param type="Color" value="black"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Experimentieren Sie!</title>
+			<description>Gehen Sie durch Experimente z.B. folgenden Situationen nach:<ul>
+					<li>Wenn Sie alle Punkte auf einer Gerade anordnen, sollte das Interpolationspolynom der Gleichung dieser Gerade entsprechen, also vom Grad <f>1</f>. Das wird aber wahrscheinlich nicht gelingen, weil die Punkte mit der Maus nicht exakt genug plazierbar sind.</li>
+					<li>Wenn zwei Punkte relativ nah beieinander liegen, hat eine Verschiebung an einem dieser Punkte einen sehr großen Einfluss auf die gesamte Interpolation, insbesondere auch an Stellen, die weit von den fraglichen Punkten entfernt sind.</li>
+				</ul>
+			</description>
+			<seq>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="L0"/>
+					<param type="Boolean" value="false"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="L1"/>
+					<param type="Boolean" value="false"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="L2"/>
+					<param type="Boolean" value="false"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="L3"/>
+					<param type="Boolean" value="false"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="L4"/>
+					<param type="Boolean" value="false"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Andere Verfahren</title>
+			<description>Die Idee von Lagrange ist ein konstruktiver Existenzbeweis für das Interpolationspolynom. Algebraische Überlegungen zeigen, dass es höchstens ein solches Interpolationspolynom geben kann, d.h. dass es auch eindeutig ist. Das Vorgehen nach Lagrange hat den Nachteil, dass bei Hinzunahme eines weiteren zu interpolierenden Punktes sämtliche Basisfunktionen und dann das gesamte Polynom neu berechnet werden müssen.
+			</description>
+		</step>
+		<step>
+			<description>
+				<em>Newton-Verfahren:</em> Dieses Rechenverfahren zur Konstruktion des Interpolationspolynoms hat den Vorteil, dass bei Hinzunahme eines weiteren Punktes die bestehenden Ergebnisse nur ergänzt werden müssen.</description>
+		</step>
+		<step>
+			<description>
+				<em>Lineares Gleichungssystem:</em> Man kann das Interpolationspolynom auch berechnen, indem man zunächst einen Polynom-Ansatz der entsprechenden Ordnung macht. Aus den Interpolationsbedingungen erhält man dann ein lineares Gleichungssystem für die Koeffizienten des Polynoms. Dieses ist eindeutig lösbar.<br/>
+			</description>
+		</step>
+		<step>
+			<description>
+				<em>Spline-Interpolation:</em> Die Spline-Technik konstuiert eine Interpolation, die aus einzelnen Abschnitten so zusammengesetzt ist, dass sie am Übergang von einem zun nächsten Abschnitt z.B. stetig und zweimal differenzierbar ist. Näheres hängt von Spline-Typ ab. In jedem Fall vermeidet eine Spline-Interpolation die heftigen "Überschwinger", die eine Polynom-Interpolation bei vielen Stützpunkten gerne produziert.	
+		  </description>
+		</step>
+	</body>
+</math4u2>

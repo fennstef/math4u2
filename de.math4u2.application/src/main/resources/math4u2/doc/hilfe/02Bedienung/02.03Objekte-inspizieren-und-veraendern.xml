@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>2. Bedienung</location>
+		<title>2.3 Objekte inspizieren und verändern</title>
+		<step>
+			<title>2.3 Objekte inspizieren und verändern:<p/>Detailsicht und Detailliste</title>
+			<description>			
+				
+Für viele Objekte kann eine Detailsicht erzeugt werden. Eine Detailscht dient 
+dazu, einzelne Eigenschaften eines Objekts zu beobachten oder zu verändern.
+
+<p/>Die Form einer Detailsicht hängt vom Typ des zugehörigen Objekts ab. 
+Mehr Informationen dazu finden Sie deshalb bei der Beschreibung der 
+verschiedenen Objekt-Typen.
+
+<p/>In der Detailliste können mehrere Detailsichten verwaltet werden. 
+In der Regel wird man nur von den wenigen Objekten eine Detailsicht 
+erzeugen, die aktuell von besonderem Interesse sind. Die nicht mehr 
+benötigten Detailsichten können gelöscht weden, ohne dass davon das 
+eigentliche Objekt betroffen ist.	
+
+<p/><strong>Detailsicht erzeugen</strong>
+<p/>Sie erzeugen eine Detailsicht eines Objekts, indem Sie das 
+entsprechende Element der Definitionsliste mit gedrückter Maustaste 
+nach rechts auf den Verankerungsplatz der Detailliste ziehen.			
+				
+<p/><img src="math4u2/doc/images/bedienung/detailsicht-erzeugen01.gif"/>
+
+<p/><strong>Maus-Detailsicht</strong>
+<br/>Zum Verfolgen der aktuellen Maus-Koordinaten können Sie eine Detailsicht 
+erzeugen, indem Sie im Menü der Steuerleiste (siehe 2.1.1) das Element 
+"Mauskoordinaten anzeigen" auswählen.
+
+<p/><strong>Detailsicht löschen</strong>
+<br/>Sie löschen die Detailsicht eines Objekts,
+<br/>
+<ul>
+	<li>indem Sie diese mit der Maus markieren und dann die ENTF-Taste drücken oder</li>
+	<li>indem Sie die Sicht mit gedrücketer Maustaste in den math4u2-Papierkorb ziehen.</li>
+</ul>
+<p/><strong>Achtung:</strong>
+<br/>Beim Löschen einer Detailsicht bleibt das eigentliche Objekt erhalten.
+
+			</description>
+		</step>
+	</body>
+</math4u2>

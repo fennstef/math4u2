@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Geometrie/Kurven/Lokale Eigenschaften</location>
+		<title>Tangente</title>
+		<step><title>Tangente für eine parametrisierte Kurve</title>
+			<description>
+				<strong>Die Kurve für unsere Experimente</strong>
+				<br/>Eine parametrisierte Kurve <f>$fh(c)</f> ist beschrieben durch ihre beiden Koordinatenfunktionen <f>$fh(f_x)</f> und <f>$fh(f_y)</f> und das zugrunde liegene 
+				Definitionsintervall. <br/>Hier sind konkret <f>$fd(f_x)</f> und <f>$fd(f_y)</f> gewählt mit dem Definitionsintervall <f>-10 $le t $le 10</f>.
+				<br/>Wichtig für das Folgende ist allerdings nur, dass die beiden Funktionen an jeder Stelle des Definitionsintervalls differenzierbar sind.
+</description>
+			<seq>
+				<script>
+                        deleteAll();
+                        expand( left = false; right = true );
+                        newObject( def = f_x(t):=cos(t)+t^3/120 );
+                        newObject( def = f_y(t):=sin(t)+arctan(t) );
+                        newObject( def = c:=kurve(t,-10,10,f_x(t),f_y(t)); target = da );
+                        newObject( def = t0:=7.5);
+                        newObject( def = p0:=punkt( fix( f_x( t0) ), fix( f_y(t0) ) ) ; target = da; );
+                        newObject( def = p0text:=text( p0, "p0 mit Koordinaten<br/>(<f>f_x(t[0])</f>, <f>f_y(t[0])</f>)", B_SW);  target = da );
+                        
+                    </script>
+				<call object="main" action="coordinateSystem">
+					<param type="float" value="3"/>
+					<param type="float" value="6"/>
+					<param type="float" value="1.8"/>
+					<param type="float" value="3.2"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Wir wollen versuchen, am Punkt <f>$fh(p0)</f> der Kurve eine Tangente zu konstruieren. Dieser Punkt der Kurve wird beim Durchlauf zu einem 
+				bestimmten Zeitpunkt <f>t[0]</f>, hier konkret <f>t[0]=7.5</f> erreicht, er hat also die Koordinaten (<f>f_x(t[0])</f>, <f>f_y(t[0])</f>).
+		  </description>
+		</step>
+		<step>
+			<description>
+				<strong>Tangente als Grenzfall einer Sekante</strong>
+				<br/>Ähnlich wie man es oft bei der Definition der Ableitung einer reellen Funktion macht, wollen wir auch hier versuchen, die Tangente als Grenzfall 
+				einer Sekante zu konstruieren, d.h. als Grenzfall einer Gerade, die die Kurve c im Punkt <f>$fh(p0)</f> und in einem zweiten Punkt <f>p1</f> schneidet.
+				<br/>Den zweiten Punkt erhalten wir, indem wir ausgehend von <f>$fh(p0)</f> eine gewisse Zeit <f>delta</f> weiter der Kurve folgen ....</description>
+			<seq>
+				<script>
+			        newObject( def = delta:=0 );
+			        
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Zweiten Punkt festlegen</title>
+			<description> .... Den Punkt, den wir dann zum Zeitpunkt <f>t[0]+delta</f> erreicht haben, bezeichnen wir mit <f>$fh(p1)</f>. 
+            <br/>Er hat die Koordinaten (<f>f_x(t[0]+delta)</f>, <f>f_y(t[0]+delta)</f>) .
+</description>
+			<seq>
+				<script>
+				newObject( def = t1:=t0+delta );
+			        newObject( def = p1:=punkt(fix(f_x(t0+delta)),fix(f_y(t0+delta))) ; target = da );
+			        
+			        newObject( def = cc:=kurve(t,t0,t1, f_x(t),f_y(t)); color = red; target = da );
+			        animate( name = delta; to = 1; end = 5 );
+			        newObject( def = p1text:=text( p1, "p1 mit Koordinaten<br/>(<f>f_x(t[0]+delta)</f>, <f>f_y(t[0]+delta)</f>)", B_SE);  target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Sekante</title>
+			<description>Durch diese beiden Punkte können wir jetzt eine Gerade legen. <br/>Die beiden Komponenten ihres Richtungsvektors erhalten wir aus 
+				der Differenz der Koordinaten der beiden Punkte: 
+				<br/>
+				<f>v.x=f_x(t[0]+delta)-f_x(t[0])</f> (blau) und 
+				<br/>
+				<f>v.y=f_y(t[0]+delta)-f_y(t[0])</f> (grün).
+				<br/>Diese Gerade ist jetzt oben hellblau eingezeichnet. Da sie die Kurve an den beiden Punkten <f>p0</f> und <f>p1</f> in der Regel schneidet, wird sie im 
+				folgenden als Sekante bezeichnet.</description>
+			<seq>
+				<script>
+				      newObject( def = vx :=f_x(t0+delta)-f_x(t0) );
+				      newObject( def = vy :=f_y(t0+delta)-f_y(t0) );
+				      newObject( def = p2 := punkt( p1.x, p0.y) );
+				      newObject(def = p3:=punkt(p1.x, p1.y) );
+				      newObject( def = ssx:= strecke( p0, p2); color = blue; target = da);
+				      newObject( def = ssy:= strecke( p2, p3); color = green; target = da);
+				      newObject( def = ssxrm:=( p0.r + p2.r )/2 );
+				      newObject( dedf = ssxtext := text( punkt( ssxrm.x, ssxrm.y), "<f>v.x=f_x(t0+delta)-f_x(t0)</f>", B_NW); bordercolor = blue; target = da );
+				      newObject( def = ssyrm:=( p3.r + p2.r )/2 );
+				      newObject( dedf = ssytext := text( punkt( ssyrm.x, ssyrm.y), "<f>v.y=f_y(t0+delta)-f_y(t0)</f>", B_NE); bordercolor = green; target = da );
+				       newObject( def = ssvrm:=( p3.r + p0.r )/2 );
+				      newObject( dedf = ssvtext := text( punkt( ssvrm.x, ssvrm.y), "Richtungsvektor <f>v</f> der Sekante", B_SW) );
+
+				      
+			           newObject( def = sx:=vektor({fix(p1.x-p0.x),fix(0)} ) );
+			          newObject( def = sxp:=pfeil(p0, sx); color = blue;  );
+			          newObject( def = sy:= vektor({fix(0), fix(p1.y-p0.y)} ));
+			           newObject( def = syp:=pfeil(punkt( p0.x+sx.x, p0.y), sy); color = green;);
+			          newObject( def = vv := vektor( { fix(vx), fix(vy) } ) );
+			          
+			          newObject( def = sekante := gerade( p0, vv ); color = cyan; target = da );
+			          newObject( def = vvp:=pfeil(p0, vv); color = gray; target = da );
+			     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Grenzwertübergang</title>
+			<description>Eigentlich wollten wir ja keine Sekante, sondern eine Tangente an die Kurve. Aber die Idee liegt auf der Hand: Je näher wir den zweiten 
+				Kurvenpunkt <f>$fh(p1)</f> an den Punkt <f>$fh(p0)</f> rücken, desto mehr nähert sich die dann entstehende Sekante der gesuchten Tangente, d.h. der 
+				Richtungsvektor der Sekante nähert sich dem Richtungsvektor der Tangente. Wir rücken den Punkt <f>$fh(p1)</f> näher an den Punkt <f>$fh(p0)</f>, indem wir 
+				das Zeitintervall <f>$fh(delta)</f> immer kleiner machen ....</description>
+			<seq>
+				<script>
+                 deleteObject( name = ssvtext, ssytext, ssxtext, p0text, p1text );
+              </script>
+			</seq>
+		</step>
+		<step>
+			<description>Allerdings zeichnet sich jetzt schon folgendes Problem ab: Je kleiner wir die Zeitdifferenz <f>$fh(delta)</f> wählen, d.h. je näher 
+			wir <f>$fh(p1)</f> an <f>$fh(p0)</f> heranrücken, desto kleiner werden die beiden Komponenten des Richtungsvektors.
+			<br/>Wenn wir nun im Grenzübergang <f>delta $rarr 0</f> aus der Sekante die Tangente machen wollen, erhalten wir als "Richtungsvektor" den dazu vollkommen 
+			untauglichen Nullvektor.</description>
+			<seq>
+				<animate object="main" parameterName="delta" to="0.2" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Wir können dieses Problem beseitigen, indem wir die beiden Komponenten des Vektors durch eine Größe dividieren, 
+		    <br/>die beim Grenzwert <f>$fh(delta)</f>&rarr;0 "in ähnlicher Weise"  klein wird wie die Komponenten selbst. 
+		    <br/>Die einfachste Größe mit dieser Eigenschaft ist die Zeitdifferenz <f>$fh(delta)</f> selbst.</description>
+			<seq>
+				<animate object="main" parameterName="delta" to="1" end="1"/>
+			</seq>
+		</step>
+		<step>
+			<title>Differenzenquotient</title>
+			<description>Wir beseitigen also das Problem, indem wir von den Differenzen zu folgenden Differenzen-Quotienten übergehen:
+				<br/>
+				<f>v[x]:=(f_x(t[0]+delta)-f_x(t[0]))/delta</f>,
+				<br/>
+				<f>v[y]:=(f_y(t[0]+delta)-f_y(t[0]))/delta</f> . 
+		  <br/>Für endliche Werte von <f>$fh(delta)</f> erhalten wir so wieder einen Richtungsvektor der Sekante, beim Grenzwertübergang behalten wir aber einen 
+				endlichen Vektor übrig:	</description>
+			<seq>
+				<script>
+					newObject( def = vx:=(f_x(t0+delta)-f_x(t0))/delta);
+					newObject( def = vy:=(f_y(t0+delta)-f_y(t0))/delta);
+					newObject( def = tx:=derive(vars(x),f_x(x))(t0));
+					newObject( def = ty:=derive(vars(x),f_y(x))(t0));
+					newObject( def = p2 := punkt(p0.x+vx, p0.y) );
+					newObject( def = p3 := punkt(p0.x+vx, p0.y+vy) );
+					newObject( def = ssxtext := text( punkt( ssxrm.x, ssxrm.y), "<f>v.x=(f_x(t0+delta)-f_x(t0))/delta</f>", B_NW);   bordercolor = blue; target = da );
+					newObject( def = ssytext := text( punkt( ssyrm.x, ssyrm.y), "<f>v.y=(f_y(t0+delta)-f_y(t0))/delta</f>", B_NE) ;  bordercolor = green; target = da );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Beim Grenzwertübergang <f>$fh(delta)</f> &rarr; 0 erhalten wir jetzt aus
+				<br/>
+				<f>v[x]</f> die Ableitung <f>t[x]:=derive(f_x(t[0]))</f> und aus 
+				<br/>
+				<f>v[y]</f> die Ableitung <f>t[y]:=derive(f_y(t[0]))</f>
+			</description>
+			<seq>
+				<animate object="main" parameterName="delta" to="0.001" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<title>Tangente und Grenzwertübergang</title>
+			<description>Wir verfolgen nochmals den Grenzwertübergang ... </description>
+			<seq>
+				<script>
+					deleteObject( name = ssxtext, ssytext );
+	                newObject( def = tv:=vektor({tx,ty}) );
+	                newObject( def = tvp := pfeil( p0, tv ); color = gray; target = da );
+	                newObject( def = tangente:=gerade(p0, tv); color = orange; target = da );
+	              </script>
+			</seq>
+		</step>
+		<step>
+			<description>... Aus der Sekante wird jetzt die durch den Richtungsvektor mit <f>t[x]</f> und <f>t[y]</f> gegebene Tangente.</description>
+			<seq>
+				<animate object="main" parameterName="delta" to="1" end="0.5"/>
+				<animate object="main" parameterName="delta" to="0.001" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<title>... funktioniert! ...</title>
+			<description>... Einen kleinen Schönheitsfehler hat der so berechnete Richtungsvektor noch:
+			<br/>Sein Betrag ändert sich, er ist an manchen Stellen groß, an anderen Stellen vergleichsweise klein.
+			<br/>Das hat damit zu tun, dass man in der gleichen Zeitdifferenz <f>$fh(delta)</f> an einer Stelle der Kurve eine große Strecke zurücklegt, an 
+			einer anderen eine vergleichsweise kleine Strecke. Der Betrag des Richtungsvektors stellt also die "Geschwindigkeit" dar, mit der die Kurve an 
+			einem bestimmten Punkt durchlaufen wird. Der so berechnete Vektor wird deshalb auch als Geschwindigkeitsvektor bezeichnet.
+			</description>
+			<seq>
+				<script>
+			        deleteObject( name = sekante, sxp, syp, sx, sy, vvp, vv, p1 );
+			     </script>
+				<par>
+					<animate object="main" parameterName="da.xMin" to="-1" end="5"/>
+					<animate object="main" parameterName="da.xMax" to="10" end="5"/>
+					<animate object="main" parameterName="da.yMin" to="-0.3" end="5"/>
+					<animate object="main" parameterName="da.yMax" to="5" end="5"/>
+				</par>
+				<animate object="main" parameterName="t0" to="0" end="4"/>
+				<animate object="main" parameterName="t0" to="9" end="10"/>
+				<animate object="main" parameterName="t0" to="7.5" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>Tangenteneinheitsvektor</title>
+			<description>Allerdings hat diese Geschwindigkeit mit der Kurve als geometrischem Objekt nichts zu tun:
+			<br/>"Zwei verschiedene Aufofahrer fahren zwar mit verschiedenen Geschwindigkeiten durch die Kurven, fahren aber auf derselben Straße".
+			<br/>Wir beseitigen diesen Effekt, indem wir vom Geschwindigkeitsvektor <f>v</f>zum entsprechenden Einheitsvektor <f>v~dach</f>übergehen: 
+				Der so definierte Tangenteneinheitsvektor ist insgesamt
+				<br/>
+				<f>v~dach:=1/sqrt(derive(f_x(t[0]))^2 + derive( f_y(t[0]))^2)*vektor({derive(f_x(t[0])), derive(f_y(t[0]))})</f>.
+			</description>
+			<seq>
+				<script>
+					newObject( def = tx:=derive(vars(x),f_x(x))(t0)/sqrt(derive(vars(x),f_x(x))(t0)^2+derive(vars(x),f_y(x))(t0)^2));
+					newObject( def = ty:=derive(vars(x),f_y(x))(t0)/sqrt(derive(vars(x),f_x(x))(t0)^2+derive(vars(x),f_y(x))(t0)^2));
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="t0" to="0" end="4"/>
+				<animate object="main" parameterName="t0" to="9" end="10"/>
+				<animate object="main" parameterName="t0" to="7.5" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<description>... und zum Abschluss eine komplette Fahrt ...</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="da.xMin" to="-9" end="5"/>
+					<animate object="main" parameterName="da.xMax" to="18" end="5"/>
+					<animate object="main" parameterName="da.yMin" to="-4" end="5"/>
+					<animate object="main" parameterName="da.yMax" to="8" end="5"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>... insgesamt also: ...</description>
+			<seq>
+				<animate object="main" parameterName="t0" to="-9" end="4"/>
+				<animate object="main" parameterName="t0" to="9" end="15"/>
+				<animate object="main" parameterName="t0" to="7.5" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>Tangenteneinheitsvektor</title>
+			<description>Der Tangenteneinheitsvektor einer parametrisierten Kurve <f>c</f> mit den Koordinatenfunktionen 
+				<f>$fh(f_x)</f> und <f>$fh(f_y)</f> im Punkt <f>(f_x(t[0]), f_y(t[0]))</f> läßt sich berechnen als
+				<br/>
+				<f>v~dach:=1/sqrt(derive(f_x(t[0]))^2 + derive( f_y(t[0]))^2)*vektor({derive(f_x(t[0])), derive(f_y(t[0]))})</f>.</description>
+		</step>
+	</body>
+</math4u2>

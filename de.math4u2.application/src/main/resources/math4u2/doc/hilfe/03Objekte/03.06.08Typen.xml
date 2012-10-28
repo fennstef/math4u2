@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.8 Typen</title>
+		<step>
+			<title>3.6.8 Typen</title>
+			<description>
+Typen müssen bei Funktionsdefinitionen sowohl im &lt;result-type>-Tag als auch
+im &lt;argument>-Tag angegeben werden. Bei weiteren Definitionen, die diese
+Funktion benutzen wird dann die Konsitenz der Typen überprüft.
+<p/>
+Wenn die Lektion "Beispiele/Java-Schnittstelle/Beispiel 01" gestartet wird und
+die Definition <code>g(x):=myFunc(vector({1,2}))</code> eingegeben wird, erscheint
+folgende Fehlermeldung:
+<command><![CDATA[
+
+Der Methodenpfad konnte nicht erstellt werden (myFunc, []).
+math4u2.mathematics.functions.MathException: Typfehler in der Funktion myFunc an der Stelle 1
+erwartet:   ScalarType
+ist:             VectorType
+
+]]></command>Dadurch wird sicher gestellt, dass die Funktionen immer mit den gleichen Typen
+arbeitet.
+				
+<p/><strong>primitive Typen:</strong>
+<br/>Es stehen folgende primitive Typen zur Verfügung:
+<p/><table>
+	<tr>
+		<td bgcolor="#F4C86C">Typname</td>
+		<td bgcolor="#F4C86C">Beschreibung</td>
+	</tr>
+	<tr>
+		<td><strong>ScalarType</strong></td>
+		<td>
+Ein skalarer Typ wie z.B. 5 oder 3.4, der in Java 
+<br/>als <code>double</code> angesprochen wird.
+		</td>
+	</tr>
+	<tr>
+		<td><strong>VectorType</strong></td>
+		<td>
+Ein Vektor wie z.B. <f>vektor({1,2,3})</f>, der in Java
+<br/>als <code>double[]</code> angesprochen wird.
+		</td>
+	</tr>
+	<tr>
+		<td><strong>DualVectorType</strong></td>
+		<td>
+Ein Dualvektor wie z.B. <f>dualvektor({1,2,3})</f>, der in Java
+<br/>als <code>double[]</code> angesprochen wird.
+		</td>
+	</tr>
+	<tr>
+		<td><strong>MatrixType</strong></td>
+		<td>
+Eine Matrix wie z.B. <f>matrix({{1,2,3},{4,5,6}})</f>, die in Java
+<br/>als <code>double[][]</code> angesprochen wird.
+			
+		</td>
+	</tr>
+</table>
+<p/>
+				
+Neben den primitiven Typen gibt es auch komplexe Typen wie z.B. eine
+Funktion (<strong>UserFunction</strong>) oder einen Punkt (<strong>AffPoint</strong>).
+Diese Typen werden später erklärt. Als nächstes folgt eine Auflistung wie
+bei der Methode
+<br/><code>public Object eval(Object[] args) throws MathException</code>
+<br/>die jeweiligen Typen gelesen und zurück gegeben werden können.
+<p/><table>
+	<tr>
+		<td bgcolor="#F4C86C">Typname</td>
+		<td bgcolor="#F4C86C">Lesen</td>
+		<td bgcolor="#F4C86C">Rückgabe</td>		
+	</tr>
+	<tr>
+		<td><strong>ScalarType</strong></td>
+		<td>double x = ((Result) args[i]).getScalar();</td>
+		<td>return new ScalarDoubleResult(x);</td>
+	</tr>
+	<tr>
+		<td><strong>VectorType</strong></td>
+		<td>double[] v = ((Result) args[i]).getVector();</td>
+		<td>return new VectorDoubleResult(v);</td>
+	</tr>
+	<tr>
+		<td><strong>DualVectorType</strong></td>
+		<td>double[] v = ((Result) args[i]).getVector();</td>
+		<td>return new DualVectorDoubleResult(v);</td>
+	</tr>
+	<tr>
+		<td><strong>MatrixType</strong></td>
+		<td>double[][] m = ((Result) args[i]).getMatrix();</td>
+		<td>return new MatrixDoubleResult(m);</td>
+	</tr>
+	<tr>
+		<td><strong>UserFunction</strong></td>
+		<td>UserFunction f = (UserFunction) args[i];</td>
+		<td>nicht vorgesehen</td>
+	</tr>
+	<tr>
+		<td><strong>beliebiger komplexer Typ</strong></td>
+		<td>EinKomplexerTyp t = (EinKomplexerTyp) args[i];</td>
+		<td>nicht vorgesehen</td>		
+	</tr>
+</table>
+<p/>
+				
+<p/><strong>komplexe Typen:</strong>
+Bei komplexen Typen handelt es sich um Objekte, von denen man
+spezifische Informationen holen kann.
+<br/>In der folgenden Tabelle werden alle verfügbaren komplexen
+Typen und deren öffentliche Methoden beschrieben.
+				
+<p/><table>
+	<tr>
+		<td bgcolor="#F4C86C">Typname</td>
+		<td bgcolor="#F4C86C">Methode</td>
+		<td bgcolor="#F4C86C">Beschreibung</td>		
+	</tr>
+	<tr>
+		<td><strong>beliebiger</strong><br/><strong>komplexer Typ</strong></td>
+		<td> </td>
+		<td>Folgende Methoden können bei jeden<br/>komplexen Typ angewendet werden</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>Color getColor()</td>
+		<td>Gibt die Farbe für das Zeichnen des Graphen zurück</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>void setColor(Color c)</td>
+		<td>Setzt die Farbe für alle vorhandenen Graphen</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>String getName()</td>
+		<td>Gibt den Namen zurück</td>
+	</tr>
+		<tr>
+		<td> </td>
+		<td>boolean isVisible()</td>
+		<td>Gibt an, ob die vorhandenen Graphen gezeichnet werden</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>void setVisible(boolean visible)</td>
+		<td>Hiermit wird festgelegt, ob Graphen gezeichnet werden.</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>String toString()</td>
+		<td>Ausgabe des komplexen Typs in einer lesbaren Form</td>
+	</tr>
+	<tr>
+		<td><strong>UserFunction</strong></td>
+		<td> </td>
+		<td>Jede definierte Funktion wie z.B. f(x):=x+1</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>Object eval(Object[] argList)<br/>throws MathException</td>
+		<td>Berechnet den Funktionswert<br/>siehe Beispiel 3</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>int getArity()</td>
+		<td>Gibt die Stelligkeit der Funktion zurück</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>void setValue(double d)</td>
+		<td>Redefiniert die Funktion mit Konstante <code>d</code></td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>UserDefinedFunction getUserDefinedFunction()</td>
+		<td>
+Falls die <code>UserFunction</code> nur aus einer <code>UserDefinedFunction</code> besteht,
+<br/>so wird diese <code>UserDefinedFunction</code> zurück gegeben und es kann z.B. auf die
+<br/><code>cache</code> Variable zugegriffen werden. Dadurch können verschiedene 
+<br/>selbstgeschriebene Funktionen und Graphen miteinander kommunizieren.
+</td>
+	</tr>				
+	<tr>
+		<td><strong>AffPoint</strong> und <strong>Marker</strong></td>
+		<td> </td>
+		<td>Punkt und Marker (siehe Kapitel 3.4.01 und 3.4.02)</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>double evalX()</td>
+		<td>Gibt die X-Koordinate zurück</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>double evalY()</td>
+		<td>Gibt die Y-Koordinate zurück</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>UserFunction getX()</td>
+		<td>Gibt die Funktion der X-Koordinate zurück</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>UserFunction getX()</td>
+		<td>Gibt die Funktion der Y-Koordinate zurück</td>
+	</tr>
+	<tr>
+		<td><strong>Angle</strong></td>
+		<td> </td>
+		<td>Winkel (siehe Kapitel 3.4.06)</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>AffPoint getApex()</td>
+		<td>Holen des Scheitelpunktes</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>UserFunction getRadius()</td>
+		<td>Hole den Winkelradius</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>UserFunction[] getVectors()<br/>throws MathException</td>
+		<td>Holen der beiden Vektoren, zwischen denen<br/>der Winkel aufgespannt ist.</td>
+	</tr>
+	<tr>
+		<td><strong>Arrow</strong></td>
+		<td> </td>
+		<td>Pfeil (siehe Kapitel 3.4.11)</td>
+	</tr>				
+	<tr>
+		<td> </td>
+		<td>AffPoint getStart()<br/>throws MathException</td>
+		<td>Aufpunkt holen</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>UserFunction getVector()<br/>throws MathException</td>
+		<td>Richtungsvektor holen</td>
+	</tr>				
+	<tr>
+		<td><strong>Circle</strong></td>
+		<td></td>
+		<td>Kreis (siehe Kapitel 3.4.05)</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>AffPoint getCenter()<br/>throws MathException</td>
+		<td>Mittelpunkt holen</td>
+	</tr>				
+	<tr>
+		<td> </td>
+		<td>UserFunction getRadius()</td>
+		<td>Radius holen</td>
+	</tr>
+	<tr>
+		<td><strong>Curve</strong></td>
+		<td></td>
+		<td>Parametrisierte Kurve (siehe Kapitel 3.4.07)</td>
+	</tr>				
+	<tr>
+		<td> </td>
+		<td>double getMax()</td>
+		<td>Gibt Maximum des Zeitparameters an</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>double getMin()</td>
+		<td>Gibt Minimum des Zeitparameters an</td>
+	</tr>				
+	<tr>
+		<td> </td>
+		<td>UserFunction getXFunction()</td>
+		<td>Gibt Koordinatenfunktion in Richtung X zurück</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>UserFunction getYFunction()</td>
+		<td>Gibt Koordinatenfunktion in Richtung Y zurück</td>
+	</tr>
+	<tr>
+		<td><strong>Straight</strong></td>
+		<td></td>
+		<td>Gerade (siehe Kapitel 3.4.04)</td>
+	</tr>				
+	<tr>
+		<td> </td>
+		<td>AffPoint getStartPoint()<br/>throws MathException</td>
+		<td>Gibt Startpunkt zuürck</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>UserFunction getVector()<br/>throws MathException</td>
+		<td>Gibt den Richtungsvektor zurück</td>
+	</tr>
+	<tr>
+		<td><strong>Stretch</strong></td>
+		<td></td>
+		<td>Strecke (siehe Kapitel 3.4.03)</td>
+	</tr>				
+	<tr>
+		<td> </td>
+		<td>AffPoint getStartPoint()<br/>throws MathException</td>
+		<td>Gibt den Startpunkt zurück</td>
+	</tr>
+	<tr>
+		<td> </td>
+		<td>AffPoint getEndPoint()<br/>throws MathException</td>
+		<td>Gibt den Endpunkt zurück</td>
+	</tr>				
+</table>
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -187,7 +187,7 @@ public class Circle extends AbstractArea {
 			broker.propagateChange(radius);
 		} catch (BrokerException e) {
 			ExceptionManager.doError(
-					"Fehler beim Erneuern (" + getIdentifier() + ").", e);
+					"Fehler beim Erneuern (" + getKey() + ").", e);
 		}
 		return null;
 	} // operator_set_radius
@@ -203,7 +203,7 @@ public class Circle extends AbstractArea {
 			return center.eval();
 		} catch (MathException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'mitte' ("
-					+ getIdentifier() + ").", e);
+					+ getKey() + ").", e);
 			throw new RuntimeException();
 		}
 	} // operator_mitte
@@ -222,7 +222,7 @@ public class Circle extends AbstractArea {
 			broker.propagateChange(center);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'mitte' ("
-					+ getIdentifier() + ").", e);
+					+ getKey() + ").", e);
 		}
 		return null;
 	} // operator_set_mitte

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.5 Ergebnisse wiederverwenden: Caching</title>
+		<step>
+			<title>3.6.5 Ergebnisse wiederverwenden: Caching</title>
+			<description>
+				<strong>Beispiel 6: Wiederverwendung von Ergebnissen (Caching)</strong>
+				<br/>Als nächstes wollen wir eine Treppenfunktion erstellen, bei der die Werte an den einzelnen Treppenstufen 
+				zufällig erzeugt werden.<code><![CDATA[
+
+	<name>random2</name>
+	<import>java.util</import>
+	<result-type>ScalarType</result-type>
+	<arguments>
+		<argument type="ScalarType" name="x"/>
+		<argument type="ScalarType" name="left"/>
+		<argument type="ScalarType" name="right"/>
+		<argument type="ScalarType" name="size"/>
+		<argument type="ScalarType" name="seed"/>					
+	</arguments>
+
+]]></code>Da wir wieder die Klasse <code>Random</code> benutzen, bleibt das &lt;import>-Tag
+gleich. Es sind aber weitere Parameter hinzugekommen:
+<p/>
+				<table>
+					<tr>
+						<td bgcolor="#F4C86C">Argumentname</td>
+						<td bgcolor="#F4C86C">Beschreibung</td>
+					</tr>
+					<tr>
+						<td>
+							<code>x</code>
+						</td>
+						<td>Argument <code>x</code>, dem der eindeutige Zufallswert zugeordnet werden soll.
+			<br/>Wenn also zweimal <code>random2(0.1, ...)</code> aufgerufen wird, soll 
+			<br/>zweimal der gleiche Wert zurück gegeben werden.
+		</td>
+					</tr>
+					<tr>
+						<td>
+							<code>left, right</code>
+						</td>
+						<td>Linker bzw. rechter Rand. <br/>Außerhalb dieser Grenzen soll die Funktion <code>random2</code> immer den Wert 0 zurückgeben.</td>
+					</tr>
+					<tr>
+						<td>
+							<code>size</code>
+						</td>
+						<td>Anzahl der verschiedenen Treppenstufen, die im Intervall zwischen <code>left</code> und <code>right</code>erzeugt werden sollen.
+			<br/>Ist <code>size</code>	sehr klein, dann sind die einzelnen Stufen deutlich sichtbar.
+		</td>
+					</tr>
+					<tr>
+						<td>
+							<code>seed</code>
+						</td>
+						<td>Same zur Initialisierung des Konstruktors <code>java.util.Random(long seed)</code>. 
+						<br/>Eine Änderung des Arguments <code>seed</code> bewirkt eine Neuberechnung der Werte der einzelnen Stufen..			
+		</td>
+					</tr>
+				</table>
+				<br/>Um die Berechnung möglichst effizient zu machen, sollen die endlich vielen verschiedenen Zufallszahl der einzelnen Stufen in einem
+Array zwischengespeichert werden. Dieses Array bzw. seine Werte muss nur dann neu berechnet werden, wenn sich der Wert des Arguments
+ <code>size</code> oder <code>seed</code> geändert hat.
+Da keine Membervariablen definiert werden können, existiert in jeder Funktionsdefinition
+die Variable <code>Object cache</code>. In dieser Variablen können alle Zwischenergebnisse
+abgespeichert werden. Wir wollen dies mit einer <code>HashMap</code> realisieren.
+<p/>
+Zuerst werden wir die Variable <code>cache</code> initialisieren, dafür kann man die
+Methode <code>init()</code> überschreiben.
+<code><![CDATA[
+
+public void init(){
+	cache = new HashMap();
+}
+
+]]></code>Als nächstes schreiben wir eine neue Methode, die aufgerufen wird, wenn eine Neuberechnung
+durchgeführt werden muss. Sie berechnet die nötigen Werte. Die <code>eval()</code>-Methode greift dann auf diese Werte zu.
+<code><![CDATA[
+
+public void recalculate(int size, long seed){
+	// Durch init() erzeugte HashMap holen
+	HashMap cacheMap = (HashMap) cache;
+
+	// Array der passenden Groesse erzeugen.		
+	double[] bins = new double[size];
+	// Generator erzeugen und initialisieren
+	Random random = new Random((long)seed);
+	// Zufallswerte berechnen und im Array ablegen
+	for(int i=0; i<size; i++){
+	   bins[i] = random.nextDouble();
+	}//for i
+
+	// Im Cache ablegen:
+	// Fuer spaeteren Vergleich: size und seed.
+	cacheMap.put("oldSize", new Integer(size));
+	// Die eigentlichen Zufallswerte.
+	cacheMap.put("oldSeed", new Long(seed));
+	cacheMap.put("bins", bins);				
+}
+
+]]></code>
+				<br/>
+				<p/>
+Der Test, ob diese Neuberechnung durchgeführt werden muss, sieht wie folgt aus:
+<code><![CDATA[
+
+public boolean mustRecalculate(int size, long seed){
+	//hat sich etwas geändert?
+	HashMap cacheMap = (HashMap) cache;
+	// Alte Werte von size und seed aud dem Cache holen.
+	Object oldSize = cacheMap.get("oldSize");
+	Object oldSeed = cacheMap.get("oldSeed");		
+	// Falls es einen dieser Werte nicht gibt, muss neu berechnet werden.		
+	if(oldSize==null || oldSeed==null)
+		return true;
+	// Falls sich size geaendert hat, muss neu berechnet werden.
+	if(((Integer)oldSize).intValue()!=size)
+		return true;
+     // Falls sich seed geaendert hat, muss neu berechnet werden.
+	if(((Long)oldSeed).longValue()!=seed)
+		return true;
+     
+	return false;
+}
+
+]]></code>
+				<p/>
+Zuletzt wird die eigentliche Funktionsberechnung beschrieben:
+<code><![CDATA[
+
+public Object eval(Object[] args) throws MathException{
+	//Parameter holen
+	int k=0;
+	double x = ((Result) args[k++]).getScalar();				
+	double left = ((Result) args[k++]).getScalar();
+	double right = ((Result) args[k++]).getScalar();
+	int size = Math.floor(((Result) args[k++]).getScalar());
+	// Sicherstellen, dass size positiv ist.
+	if(size<=0) size=1;
+	long seed = Double.doubleToLongBits(((Result) args[k++]).getScalar());
+
+	// Falls nötig, Werte neu berechnen
+	if(mustRecalculate(size, seed)){
+	   recalculate(size, seed);
+	}//if
+
+     // Position innerhalb der Treppenstufen berechnen.
+	int pos = Math.floor((x-left)/(right-left)*size);
+	// Für Positionen ausserhalb des Intervalls den Wert 0 zurückgeben.
+	if(pos<0 || pos>=size) 
+		return new ScalarDoubleResult((double)0);				        
+	else {	
+	     // Array der Zufallswerte aus dem Cache holen.
+	     HashMap cacheMap = (HashMap) cache;
+	     double[] bins = (double[]) cacheMap.get("bins");
+	     // Passenden Zufallswert zurückgeben.
+		return new ScalarDoubleResult(bins[pos]);
+	}// else
+}
+
+]]></code>
+				<br/>
+				<br/>Sie finden dieses Beispiel unter "Beispiele/Java-Schnittstelle/Beispiel 06"
+				.
+			
+<p/>
+			</description>
+		</step>
+	</body>
+</math4u2>

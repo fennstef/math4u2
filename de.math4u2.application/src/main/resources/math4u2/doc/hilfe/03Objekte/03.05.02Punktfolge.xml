@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.5 Diagramme und Textelemente</location>
+		<title>3.5.2 Folge von Punkten</title>
+		<step>
+			<title>3.5.2 Folge von Punkten</title>
+			<description>
+<strong>Folge von Punkten definieren</strong>
+Eine Punktfolge <code>pf:=punktFolge( xf, yf, s, r, layout )</code> stellt für zwei Zahlenfolgen <code>xf</code>
+und <code>yf</code> die Punkte <f>punkt(xf[1],yf[1])</f>, <f>punkt(xf[2],yf[2])</f>, <f>punkt(xf[3],yf[3])</f>, ... dar.
+<br/>Der Term <code>s</code> gibt an, bis zu welchem Folgenglied die Darstellung erfolgen soll.
+<br/>Der Term <code>r</code> bestimmt den Radius der Markierungen.
+<br/>Die Konstante <code>layout</code> legt die Art der Darstellung fest. Möglich sind folgende Werte:
+<br/><strong>P</strong>: Es werden nur die Punkte gezeichnet.
+<br/><strong>S</strong>: Die Punkte werden durch einen Streckenzug verbunden, dieser wird gezeichnet.
+<br/><strong>PS</strong> oder <strong>SP</strong>: Die Punkte und der zugehörige Streckenzug werden gezeichnet.
+				
+<p/><strong>Beispiel</strong>
+<br/>Die Folgenglieder der geometrischen Reihe zu
+<code>q:=0.5</code> solle graphisch dargestellt werden.
+Die Folgenglieder selbst definiert man als
+<br/><code>geom:=folge0(i,{1},geom[i-1]+q^i)</code>
+<br/>Als x-Koordinaten für die Darstellung der Folge definiert man eine weitere Folge
+<br/><code>xk:=folge0(i,{},i)</code>
+<br/><code>t:=20</code> wird verwendet, um festzulegen, wie viele Glieder dargestellt werden.
+Jetzt stellt <code>geopunkte:=punktFolge(xk, geom, t, 1, P)</code> die ersten 21 Elemente der
+Folge graphisch dar.
+			</description>
+		</step>
+	</body>
+</math4u2>

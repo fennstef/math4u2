@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.01 Punkt</title>
+		<step>
+			<title>3.4.1 Punkt</title>
+			<description>			
+<strong>Punkt definieren</strong>
+Mit <code>p1:=punkt(1,1)</code> wird ein Punkt mit den Koordinaten <code>(1,1)</code> erzeugt.
+Der Punkt kann mit der Maus bewegt werden, dadurch ändern sich seine Koordinaten.
+
+<p/><strong>Detailsicht</strong>
+<p/><img src="math4u2/doc/images/objekte/punkt-detail01.jpg"/>
+
+<p/><strong>Punkt bewegen, Zwangsbedingungen</strong>
+<p/><command>Eine Punktkoordinate mit Zwangsbedingung</command>
+<br/>Man legt für eine Punktkoordinate eine Zwangsbedingung fest, indem man die 
+entsprechende Koordinatenfunktion in die Funktion <code>fix()</code> einschließt.
+
+<p/>Im einfachsten Fall kann man damit z.B. beim Erzeugen eines 
+Punktes <code>p2</code> festlegen, dass sich seine
+x-Koordinate nicht ändern darf. Dies erreicht man durch <code>p2:=punkt(fix(2),2)</code>. 
+Der Punkt hat nach der Definition die Koordinaten <code>(2,2)</code>, er 
+kann aber mit der Maus nur noch in y-Richtung bewegt werden, seine x-Koordinaten 
+wird beim Wert <code>2</code> festgehalten.
+
+<p/>Man kann mit einer Zwangsbedingung auch festlegen, dass eine Koordinate 
+über eine bestimmte Funktion von der anderen Koordinate abhängt. Will man 
+z.B. einen Punkt <code>p3</code> erzeugen, der sich nur auf dem Graphen der 
+sin-Funktion bewegen läßt, so geht man vor wie folgt:
+
+<p/>Mit <code>p3:=punkt(1,1)</code> definiert man zunächst den gewünschten Punkt, 
+anschließend definiert man mit <code>p3.y:=fix(sin(p3.x))</code> seine Koordinatenfunktion 
+für die y-Koordinate neu.
+
+<p/><img src="math4u2/doc/images/objekte/punkt-auf-funktion01.jpg"/>
+
+<p/><command>Beide Punktkoordinaten mit Zwangsbedingung</command>
+<br/>Mit <code>p4:=punkt(fix(2),fix(3))</code> erzeugt man einen Punkt, der 
+sich mit der Maus nicht bewegen läßt, da beide Koordinaten gebunden sind.
+
+<p/>Hat man einen Parameter <code>a:=0</code>, so erzeugt man mit 
+<code>p5:=punkt(fix(cos(a)),fix(sin(a)))</code> einen Punkt, der sich zwar 
+mit der Maus nicht bewegen läßt, der sich aber mit Veränderung des Wertes 
+von <code>a</code> auf dem Einheitskreis bewegt.
+
+<p/><command>Zwangsbedingung aufheben</command>
+<br/>Eine Zwangsbedingung wird aufgehoben, indem man die entsprechende 
+Koordinatenfunktion neu definiert. Durch <code>p3.y:=3</code> wir der 
+oben definierte Punkt <code>p3</code> bei der y-Koordinate <code>3</code> 
+positioniert und ist dann mit der Maus auch in y-Richtung frei bewegbar.
+
+<p/><strong>Methoden eines Punktes</strong>
+<br/>Zu einem Punkt <code>p1</code> liefert
+<ul>
+	<li><code>p1.x</code> die (nullstellige) Koordinatenfunktion der <strong>x-Koordinate</strong></li>
+	<li><code>p1.y</code> die (nullstellige) Koordinatenfunktion der <strong>y-Koordinate</strong> und</li>
+	<li><code>p1.r</code> den zweidimensionalen <strong>Ortsvektor</strong> des Punktes.</li>
+</ul>
+<br/>Den Abstand des Punktes <code>p1</code> vom Ursprung kann man also mit dem Term
+<code>sqrt(p1.x^2+p1.y^2)</code> berechen, einfacher allerdings als Betrag 
+des Ortsvektors mit dem Term <code>|p1.r|</code>.
+
+<p/><strong>Methoden, die Punkte als Ergebnis liefern</strong>
+<br/>Folgende Methoden anderer Objekte liefern insbesondere als Ergebnis einen Punkt:
+<ul>
+	<li><code>.mitte</code> liefert wie bei <code>kreis1.mitte</code> den Mittelpunkt eines Kreises.</li>
+	<li><code>.start</code> liefert wie bei <code>strecke1.start</code> den Startpunkt einer Strecke,</li>
+	<li><code>.ende</code> liefert wie bei <code>strecke1.ende</code> den Endpunkt einer Strecke.</li>
+	<li><code>.punkt</code> liefert wie bei <code>gerade1.punkt</code> einen Punkt einer Gerade.</li>
+</ul>
+<br/>Weitere Objekte, die über Methoden Punkte als Ergebnis liefern sind: Ein Winkel liefert seinen Scheitelpunkt,
+eine Bezier-Kurve liefert ihre 4 Steuerpunkte.
+
+<p/><strong>Die Maus als vordefinierter Punkt</strong>
+<br/>Mit dem Bezeichner <code>mouse</code> wird der Punkt angesprochen, an dem sich der 
+Mauszeiger aktuell befindet. So liefert <code>ma:=|mouse.r|</code> den Abstand des Mauszeigers 
+vom Ursprung, <code>so:=strecke(mouse, punkt(0,0))</code> die Verbindungsstrecken von 
+Maus-Position und Ursprung.
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -142,7 +142,7 @@ public abstract class AbstractSimpleGraph implements SimpleGraphInterface,
 		return getStroke(da.getStroke(), getLineStyle());
 	}
 	
-	public String getIdentifier() {
+	public String getKey() {
 		return name.getScalarOrNull();
 	}
 	

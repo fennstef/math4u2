@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Kurven/Kubische Kurven</location>
+		<title>Hermite-Kurven - kurz</title>
+		<step>
+			<title>Hermite-Kurven - kurz</title>
+			<description>
+				<strong>links</strong>: Zeit über Doppelpfeil t verändern.
+				<br/><strong>rechts</strong>: Steuerpunkte bewegen, Geschwindigkeitsvektoren (Richtung, Länge) verändern.</description>
+
+						<layout>
+				<row perc="100">
+					<col perc="40" name="gewichte"/>
+					<col perc="60" name="kurve"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			      deleteAll();
+				  gewichte.coordinateSystem(xMin=-0.2; xMax=1.3; yMin=-0.2; yMax=1.2);
+				  kurve.coordinateSystem(xMin=0.2;xMax=3.5;yMin=0.2; yMax=2.4);
+				  
+			      expand( left = false; right = false );
+			      gewichte.setTitle( title="Gewichtsfunktionen" );
+			      kurve.setTitle( title="Geometrische Größen, Kurve" );
+
+                  newObject( def = gg1 := gerade( punkt( 1, 0 ) , vektor({0,1} ) ) ; target = gewichte );
+			      newObject( def =  p1:=punkt(1.3,0.6); color = red; target = kurve);
+			      newObject( def =  p2:=punkt(2.3,1.9); color = green; target = kurve);
+			      newObject( def = v1:= vektor({ -0.7, 1.2 } ) );
+			      newObject( def = pf1 := pfeil( p1, v1 ) ; color = blue; target = kurve );
+			       newObject( def = v2:= vektor({ 0.3, -0.7 } ) );
+			      newObject( def = pf2 := pfeil( p2, v2 ) ; color = magenta; target = kurve );  
+			      newObject( def = recl:= flaeche({ punkt(-1,-1), punkt(0,-1), punkt( 0, 2), punkt(-1,2)}); fillcolor = 255.255.255.220; target = gewichte);
+			      newObject( def = recr:= flaeche({ punkt(1,-1), punkt(2,-1), punkt( 2, 2), punkt(1,2)}); fillcolor = 255.255.255.220; target = gewichte);
+			       newObject( def =  f1(t):=2*t^3-3*t^2+1;   );
+			       newObject( def =  f2(t):=-2*t^3+3*t^2 );
+			       newObject( def =   f3(t):=t^3-2*t^2+t);
+			       newObject( def =  f4(t):=t^3-t^2 );
+			       newObject( def =  sx(t):=p1.x*f1(t)+p2.x*f2(t)+v1.x*f3(t)+v2.x*f4(t) );
+			       newObject( def =  sy(t):=p1.y*f1(t)+p2.y*f2(t)+v1.y*f3(t)+v2.y*f4(t) );
+			       newObject( def = s:=kurve(t,0,1,sx(t),sy(t))  );
+			    			      newObject( def = f1g:=kurve(t,0,1,t,f1(t)); color = red; target = gewichte );
+			    			       newObject( def = f2g:=kurve(t,0,1,t,f2(t)); color = green; target = gewichte);
+			    			        newObject( def =f3g:=kurve(t,0,1,t,f3(t)) ; color = blue; target = gewichte);
+			    			        			      newObject( def = f4g:=kurve(t,0,1,t,f4(t)); color = magenta; target = gewichte );
+			      			       newObject( def = t:=punkt(0.2,fix(0.5)); color = gray; style =  ARROW_H; target = gewichte );
+			     			       newObject( def = t0:=max(0,min(t.x,1)) );
+			       newObject( def = g:=gerade(punkt(t0,0),e2y) ; color =darkGray ; target = gewichte; linestyle = dot);
+			       newObject( def =pt:=punkt(fix(sx(t0)),fix(sy(t0))) ; style = CIRCLE_DOT; target = kurve );
+				   			       modifyObject( name = s; color = gray; target = kurve );
+			    </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

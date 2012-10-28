@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.1 Vorbemerkungen</title>
+		<step>
+			<title>3.6.1 Vorbemerkungen</title>
+			<description>
+Mit Hilfe der Java-Schnittstelle besteht die Möglichkeit, eigene Funktionen und
+Graphen in Java zu implementieren.
+<br/>
+				<br/>
+				<strong>Voraussetzungen</strong>
+				<br/>Neben den Grundkentnissen von Java wird im Folgenden davon ausgegangen,
+dass man mit den XML-Lektionen von Math4u2 schon die ersten Erfahrungen
+gesammelt hat, da der Java-Code direkt in die XML-Datei geschrieben wird.
+<br/>
+				<br/>
+Insbesondere sollten folgende Konstrukte bekannt sein:
+<br/>
+				<ul>
+					<li>
+Die Primitivtypen: <code>double</code>, <code>double[]</code> und <code>double[][]</code> sowie
+die arithmetischen Operatoren zwischen den Primitivtypen.
+<br/>
+					</li>
+					<li>Die Klassen: <code>HashMap</code>, <code>LinkedList</code>, <code>Color</code>.</li>
+					<li>Methodenaufruf, Rückgabe und Casting in Java.</li>
+					<li>Die Methoden: <code>Math.floor()</code>, <code>Math.ceil()</code> und <code>Math.random()</code>.</li>
+				</ul>
+			</description>
+		</step>
+	</body>
+</math4u2>

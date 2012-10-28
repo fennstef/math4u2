@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.2 Datentypen</location>
+		<title>3.2.2 Vektoren (Spaltenvektoren)</title>
+		<step>
+			<title>3.2.2 Vektoren (Spaltenvektoren)</title>
+			<description>			
+<strong>Grundlagen</strong>
+<p/><strong>a) Definieren über eine Komponentenliste</strong>
+<br/>Die Komponenten eines Vektors können Zahlen oder Terme aus Zahlen, Variablen und Parametern
+sein.
+
+<p/>So definiert man durch<code> zv:=vektor({3,4,5}) </code>den dreidimensionalen Spaltenvektor mit den
+Komponenten 3, 4 und 5.
+Allgemein werden die Komponenten durch Kommata getrennt aufzählt, die Aufzählung wird in Klammern
+<code>{}</code> eingeschlossen.
+
+<p/>Wenn man zuvor mit <code>a:=2</code> einen Parameter definiert hat, dann erhält man mit
+<code>pv:=vektor({1, a, a^2, a^3})</code>
+einen vierdimensionalen Vektor. Die einzelnen Komponenten sind in unterschiedlicher Weise von 
+<code>a</code> abhängig.
+
+<p/><strong>b) Definieren über eine Vorschrift</strong>
+<br/>Wenn sich alle Komponenten eines Vektors durch einen Term beschreiben lassen, dann kann der
+Vektor mit Hilfe dieses Terms erzeugt werden:
+<p/><code>zv1:=vektor(i,3,i+2)</code>
+<p/>An der ersten Stelle wird der Name eines lokalen Parameters vereinbart (hier: <code>i</code>), an der zweiten
+Stelle wird die Dimension dim festgelegt (hier: <code>3</code>), zuletzt der 
+Initialisierungsterm (hier: <code>i+2</code>).
+<p/>Bei der Erzeugung des Vektors druchläuft der lokale Parameter die Werte 1, 2, ..., dim und belegt die
+Komponenten mit den zugehörigen Instanzen des Initialisierungsterms. Im Beispiel hat der Spaltenvektor
+zv1 die Komponenten <code>1+2</code>, <code>2+2</code> und <code>3+2</code>.
+
+<p/><strong>c) Vektor durch ASCII-Datei initialisieren</strong>
+<br/><command>Dateiauswahl durch Pfadangabe</command>
+<br/>In der Definition <code>dv1:=vektor( finput:C:/work/temp/testvek.txt )</code> bewirkt das
+Schlüsselwort <code>finput</code>, dass die Komponenten des Vektors <code>dv1</code> aus der 
+Datei mit dem Pfad <code>C:/work/temp/testvek.txt</code> eingelesen werden.
+<br/>Das Schlüsselwort und die Pfadangabe werden dabei durch einen Doppelpunkt getrennt.
+
+<p/><command>Dateiauswahl durch Benutzerdialog</command>
+<br/>Wenn wie bei <code>dv2:=vektor( finput )</code> keine Datei angegeben ist, wird der Pfad beim Laden
+der Definition über einen Benutzerdialog ermittelt.
+
+<p/><command>Struktur der ASCII-Datei</command>
+<br/>Die Komponenten eines Vektors werden dabei in einer ASCII-Datei in einer Zeile durch Zahlen 
+angegeben: 
+<br/><code>1.23     1.0e-4     -23.77     -17.23</code>
+<br/>Die einzelnen Komponenten werden durch Leerzeichen oder Tabulatoren voneinander getrennt.
+
+<p/><strong>d) Vektoren in ASCII-Datei exportieren</strong>
+<br/>Bei nullstelligen vektorwertigen Funktionen wie 
+<code>v:=vektor({1,2,3})</code> oder <code>w:=3/|v|*v</code> kann das aktuelle Ergebnis in eine 
+ASCII-Datei exportiert werden. Dazu klickt man mit der rechten Maustaste
+auf das entsprechende Element der Definitions- oder Detailliste und startet über das Menüelement
+<strong>Exportieren ...</strong> den Speicherdialog.
+<p/>Zunächst werden aus dem vorliegenden Term die aktuellen Werte der Komponenten berechnet. Diese
+werden als Gleitpunktzahlen, durch Tabulatoren getrennt, in der Datei abgelegt.
+
+<p/><strong>e) Vordefinierte Vektoren</strong>
+<br/>Mit <code>e2x</code> ist der Vektor <f>vektor({1,0})</f> und mit <code>e2y</code> der 
+Vektor <f>vektor({0,1})</f> vordefiniert.
+
+<p/><strong>f) Auf Komponenten zugreifen</strong>
+<br/>Wie in <code>t:=pv[4]*sin(zv[1])</code> greift man mit <code>pv[4]</code> 
+oder <code>zv[1]</code> auf die vierte bzw. erste Komponente
+des Vektors <code>pv</code> bzw. <code>zv</code> zu. Der Index der Komponente kann 
+wie in <code>pv[a-1]</code> über einen
+Term gegeben sein. Der Term muss zum Zeitpunkt der Auswertung einen gültigen Index liefern.
+<br/>Indexwerte werden abgerundet.
+<p/>Bei einem zweidimensionalen Vektor <code>v2dim</code> kann man auch mit den Methoden <code>.x</code> 
+und <code>.y</code> auf die
+beiden Komponenten zugreifen: <code>v2dim.x</code> ist gleichwertig mit <code>v2dim[1]</code>, 
+analog <code>v2dim.y</code> zu <code>v2dim[2]</code>.
+<br/>Entsprechendes gilt bei einem dreidimensionalen Vektor für die 
+Methoden <code>.x</code>, <code>.y</code> und <code>.z</code>.
+
+<p/><strong>g) Methoden</strong>
+<br/><command>Dimension</command>
+<br/>Für Vektoren wie <code>zv</code> oder <code>pv</code> von oben liefert die 
+Methode <code>.dimension</code> die Anzahl der Zeilen, also die Dimension des Vektors.
+<br/>So liefert zu <code>pv:=vektor({1, a, a^2, a^3})</code> der Ausdruck <code>pv.dimension</code>
+den Wert 4.
+
+<p/>Diese Methode ist nur auf einen einzelnen Vektor anwendbar, nicht aber auf Vektor-Terme.
+
+<p/><strong>f) Wichtige Funktionen für Vektoren</strong>
+<br/>Zu einem Vektor <code>v:=vektor({1,2,3})</code> berechnet man mit
+<ul>
+	<li><code>|v|</code> seinen Betrag, mit</li>
+	<li><code>2*v</code> das zweifache von <code>v</code>, man berechnet mit</li>
+	<li><code>v/2</code> die Hälfte von <code>v</code>.</li>
+	<li>Hat man zusätzlich <code>w:=vektor({-1,2,0})</code> definiert, so 
+		berechnet <code>v&lt;*>w</code> das Skalarprodukt der beiden Vektoren.</li>
+</ul>
+
+<p/><strong>g) Methoden, die Vektoren als Ergebnis liefern</strong>
+<br/>Folgende Methoden anderer Objekte liefern als Ergebnis einen Vektor:
+<ul>
+	<li><code>.r</code> den Ortsvektor eines Punktes wie bei <code>punkt1.r</code>,</li>
+	<li><code>.richtung</code> den Richtungsvektor einer Geraden wie bei <code>gerade1.richtung</code>,</li>
+	<li>die Richtung der beiden Schenkel eines Winkels <code>winkel1</code> durch <code>winkel1.richtung1</code> und <code>winkel1.richtung2</code>.</li>
+</ul>
+
+<p/><strong>h) Graphische Darstellung</strong>
+<br/>
+<ul>
+	<li>
+Standard-Graph
+<br/>Der Standard-Graph eines Vektors ist ein Balkendiagramm. Für einen Vektor der Dimension
+<code>dim</code> werden über den Stellen 1,2,3, ..., dim der x-Achse die entsprechenden 
+Komponenten des Vektors als Balken aufgetragen.
+	</li>
+	<li>
+Balkendiagramm
+<br/>Das Balkendiagramm(vgl. 3.5.1) ist eine Erweiterung des Standard-Graphen. Hier werden 
+wie in <code>b:=balken(vx,v)</code> über den Vektor <code>vx</code> die Stellen der x-Achse 
+festgelegt, über denen die Komponenten des Vektors <code>v</code> aufgetragen werden.
+	</li>
+	<li>
+Pfeil
+<br/>Ein zweidimensionaler Vektor <code>v2d</code> kann wie bei <code>pf:=pfeil(punkt(1,2),v2d)</code>
+mit Hilfe eines Pfeils-Graphen (vgl. 3.4.11) dargestellt werden. Die Pfeilspitze kann mit der
+Maus bewegt werden, damit werden die Komponenten des Vektors verändert.		
+	</li>
+</ul>
+
+<p/><strong>Fortgeschrittene Anwendungen</strong>
+
+<p/><strong>a) Dimension über einen Term festlegen</strong>
+<br/>Wenn man mit <code>dd:=3</code> einen Parameter definiert, kann man anschließend 
+einen Vektor erzeugen, dessen Dimension von diesem Parameter 
+abhängt: <code>vd:=vektor(i,dd*dd,2*i)</code> erzeugt einen Spaltenvektor der 
+Dimension 9. Allgemein wird zur Bestimmung der Dimension der aktuell gültige
+Wert des Dimensionsterms berechnet.
+
+<p/><strong>b) Vektorwertige Funktionen</strong>
+<br/>Eine vektorwertige Funktionen entsteht, wenn der Definitionsterm auf der rechten Seite 
+der Funktionsdefinition als Ergebnis einen Vektor liefert.
+Im einfachsten Fall definiert man wie bei <code>cv:=vektor({7,-1,3,4})</code> eine 
+nullstellige vektorwertige Funktion, kurz einen (konstanten) Vektor.
+
+<p/><code>pv(x):=vektor(i,4,x^(i-1))</code> definiert eine einstellige vektorwertige 
+Funktion, die Komponenten des Vektors sind die x-Potenzen <f>x^(1-1)</f>,
+<f>x^(2-1)</f>, <f>x^(3-1)</f>, <f>x^(4-1)</f>.
+
+<p/>Eine vektorwertige Funktion kann nun ihrerseits in einem Term überall da stehen, wo 
+ein Vektor zugelassen ist. So definiert <code>poly(x):=cv&lt;*>pv(x)</code> mit Hilfe 
+des Skalarprodukts <code>&lt;*></code> jetzt die Polynomfunktion
+<f>7*x^0-1*x^1+3*x^2+4*x^4</f>.
+
+<p/><strong>Auf Komponenten vektorwertiger Funktionen zugreifen</strong>
+<br/>Auf die Komponenten einer vektorwertigen Funktion wie <code>v(x):=vektor({x,x^2, x^3})</code>
+greift man zu, indem man zuerst durch Angabe eines Arguments einen Ergebnisvektor berechnet und
+anschließend durch Angabe eines Index die gewünschte Komponente auswählt:
+
+<p/><code>a:=v(3)[2]</code> berechnet mit dem Argument <code>(3)</code> zuerst den Ergebnisvektor
+<f>vektor({3,9,27})</f>, durch die Angabe des Index <code>[2]</code> wird davon die 
+2.Komponente, also konkret das Ergebnis 9 ausgewählt.
+
+<p/>Entsprechend definiert <code>f(x):=v(sin(x))[3]</code> eine einstellige Funktion. 
+Zu jedem Argument <code>x</code> berechnet <code>f(x)</code> insgesamt den Wert <f>(sin(x))^3</f>.
+
+
+<p/><strong>c) Vektoren als Funktionsargumente</strong>
+<br/>Auch bei neu definierten Funktionen können Vektoren als Argumente verwendet werden. Ein solches
+Argument muss durch den vorangestellten Typbezeichner <code>&lt;vektor></code> als vektorwertig 
+gekennzeichnet werden. So kann man für zwei dreidimensionale Vektoren das 
+Skalarprodukt <code>sp</code> und das Vektorprodukt <code>vp</code> wie folgt definieren:
+<p/><code>sp(&lt;vektor>a, &lt;vektor>b):=a.x*b.x+a.y*b.y+a.z*b.z</code> und
+<br/><code>vp(&lt;vektor>a, &lt;vektor>b):=vektor({a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x})</code>
+
+<p/><strong>d) Vektoren über eine Punktliste initialisieren</strong>
+<br/>Hat man mit <code>pl:=&lt;punkt>liste(i,10,punkt(i,1))</code> eine Liste von Punkten bereit 
+gestellt, dann erzeugt man mit <code>xv:=vektor(i,10,pl[i].x)</code> einen Vektor, der 
+die x-Koodinaten der Punkte enthält, entsprechend <code>yv:=vektor(i,10,pl[i].y)</code> die 
+y-Koordinaten. Mit diesen beiden Vektoren erhält man dann z.B. 
+mit <code>sp(x):=spline(splinecoeff(xv,yv), x)</code> die kubische Spline-Interpolation 
+der Punkte.
+			</description>
+		</step>
+	</body>
+</math4u2>

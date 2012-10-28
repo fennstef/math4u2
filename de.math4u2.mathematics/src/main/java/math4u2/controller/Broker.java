@@ -42,7 +42,7 @@ import math4u2.view.graph.HasGraph;
  * werden dürfen.
  * 
  * @author Fenn Stefan
- * @see MathObject#getIdentifier()
+ * @see MathObject#getKey()
  * @see RelationInterface
  */
 public class Broker {
@@ -406,7 +406,7 @@ public class Broker {
 	 * Trägt die neue Beziehung ein. Beide Objekte müssen beim Broker bekannt
 	 * sein. Die Objekte werden dabei mit getKey() neu gesucht.
 	 * 
-	 * @see MathObject#getIdentifier()
+	 * @see MathObject#getKey()
 	 */
 	public void addRelation(MathObject firstObject, MathObject secondObject,
 			RelationInterface relation, boolean isSwap) throws BrokerException {

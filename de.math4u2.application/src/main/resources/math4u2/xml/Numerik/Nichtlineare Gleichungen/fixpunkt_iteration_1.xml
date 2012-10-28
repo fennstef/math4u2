@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Nichtlineare Gleichungen</location>
+		<title>Fixpunkt-Iteration 1</title>
+		<summary>Fixpunktiteration, Beispiel</summary>
+		<step>
+			<description>Gegeben ist die Funktion <f>f(x)</f>, gesucht ist eine Nullstelle, also eine Lösung der Gleichung  <fh>f(x)</fh> = <f>0</f>. 
+		   <br/>Dass diese Funktion wenigestens eine Nullstelle hat, könnte man so begünden: <br/>
+				<ul>
+					<li>Für <f>x</f>&rarr;&infin; dominiert im Funktionsterm der Beitrag <f>-x</f>, deshalb gilt <fh>f(x)</fh>&rarr;&minus;&infin; für <f>x</f>&rarr;&infin;.</li>
+					<li>Für <f>x</f>&rarr;&minus;&infin; dominiert im Funktionsterm der Beitrag <f>e^(-x)</f>, deshalb gilt <fh>f(x)</fh>&rarr;&infin; für <f>x</f>&rarr;&minus;&infin;.</li>
+					<li>Da die Funktion überall stetig ist, gibt es nach dem Zwischenwertsatz mindesterns eine Stelle mit <fh>f(x)</fh> = <f>0</f>.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+		         		          expand( left = false; right = true );
+						    newObject( def = da.xMin := -5);
+						    newObject( def = da.xMax := 5);
+						    newObject( def = da.yMin := -2.5);
+						    newObject( def = da.yMax := 2.5);
+						    newObject( def = f(x):= 2*sin(x)+0.5*e^(-x)-x; );
+						    newObject( def = F(x):=2*sin(x)+0.5*e^(-x); color = red; );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Eine Funktion <fh>F(x)</fh> heißt auf einem Intervall <f>J</f> kontrahierend, wenn es eine Zahl <f>q</f> mit <f>0</f> &lt; <f>q</f> &lt; <f>1</f> gibt, 
+<br/>so dass für alle <f>x[0]</f>, <f>x[1]</f>&Element;<f>J</f> gilt: <f>|F(x[0])-F(x[1])|</f> &le; <f>q*|x[0]-x[1]| </f>.
+<br/>Für eine differenzierbare Funktion <fh>F(x)</fh> gilt: Sie ist kontrahierend auf einem Intervall <f>J</f>, wenn es ein <f>q</f> mit <f>0</f> &lt; <f>q</f> &lt; <f>1</f> gibt,
+<br/>so dass <f>|derive(F(x))|</f> &le; <f>q</f> gilt für alle <f>x</f> &Element; <f>J</f>.
+		   </description>
+		</step>
+		<step>
+			<description>Jetzt ist der Graph der Funktion <fh>f</fh> oben gezeichtet. Wie man sieht, gibt es tatsächlich nur eine Nullstelle. 
+		  <br/>Diese wollen wir jetzt mit einer Fixpunktiteration näher bestimmen.
+		  </description>
+			<seq>
+				<script>
+		         modifyObject( name = f; target = da );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+			Schreibt man den Funktionsterm mit <f>F(x)</f> um in <fh>f(x)</fh>=<fb>ff(x):=F(x)-x</fb>, dann wird aus der Nullstellengleichung die äquivalente Gleichung <fh>F(x)</fh> = <f>x</f>. 
+<br/>Oben sind jetzt zusätzlich die Graphen der Funktion <fh>F(x)</fh> (rot) und der Funktion <f>y=x</f> (blau) eingezeichnet.
+<br/>Graphisch: Bestimme Schnittpunkt des roten
+
+			<br/>Eine Gleichung der Form <fh>F(x)</fh>=<f>x</f> heißt Fixpunktgleichung. Ihre Lösungen heißen Fixpunkte.</description>
+			<seq>
+				<script>
+						    modifyObject( name = F; target = da );
+						    newObject( def = id(x):=x; color = blue; target = da);
+						    newObject( def = tF:=text(punkt(2.5, F(2.5)), "<f>y=F(x)</f>", B_NE); target = da );
+						    newObject( def = tx:=text(punkt(1.5, 1.5), "<f>y=x</f>", B_SE); target = da );
+						    newObject( def = tf:=text( punkt(2.3, f(2.3)), "<f>y=f(x)=F(x)-x</f>", B_SW); target = da );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir fokusieren den Blick jetzt stärker auf den Fixpunkt, den Graphen der Funktion <fh>f(x)</fh> blenden wir aus.
+		    </description>
+		</step>
+		<step>
+			<description/>
+			<seq>
+				<script>
+			        deleteObject( name = tF, tx, tf , f);
+			    </script>
+				<par>
+					<animate object="main" parameterName="da.xMin" to="-0.5" end="4"/>
+					<animate object="main" parameterName="da.yMin" to="-0.3" end="4"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Mit der Suche nach einem Fixpunkt starten wir mit einem <f>x[0]</f> möglichst "in der Nähe" des gesuchten Fixpunkts. 
+		    <br/>Damit die Argumentation graphisch übersichtlich bleibt, starten wir hier mit <f>x[0]=0.55</f>. Später können Sie ausprobieren, was passiert, wenn man diesen Startwert ändert.</description>
+			<seq>
+				<script>
+		          newObject( def = x0:=punkt(0.55, fix(da.yMin+0.2*(da.yMax-da.yMin))); style = ARROW_H; );
+				  newObject( def = F0:=F(x0.x));
+				  		       newObject( def = F1:=F(F0));
+				   newObject( def = streifenX:=flaeche( { punkt(x0.x, -100), punkt(F0, -100), punkt(F0, 100), punkt(x0.x, 100) } ); visible = false; color = green; target = da );
+		   		        newObject( def = streifenY := flaeche ( {punkt(-100, F0), punkt(100, F0), punkt( 100, F1) , punkt(-100, F1)} ); visible = false; color = orange; target = da );		       
+				  newObject( def = pf0:=punkt(x0.x, F0 ); hide = true );
+				  newObject( def = ey:= vektor({0,1}); hide = true);
+				  newObject( def = g0 := gerade( x0, ey ); hide = true; linestyle = dot ; target = da );
+				  
+				  newObject( def = s00:=strecke(x0, punkt(x0.x, 0)); hide = true; linestyle = dot );
+				  newObject( def = s0:=strecke(punkt(x0.x, 0), pf0); target = da ; hide = true);
+				  newObject( def = t0 := text(punkt(x0.x, 0), "<f>x[0]</f> in der Nähe des gesuchten Fixpunkts", B_NE); target = da );
+				  		   		       
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir berechnen den Funktionswert <f>y=F(x[0])</f> und tragen diesen zunächst wie gewohnt in y-Richtung auf.
+		   </description>
+			<seq>
+				<script>
+		           newObject( def = ty0 := text( punkt(0, F0), "<f>y=F(x[0])</f>", B_NE); target = da );
+				newObject( def = gy0:=gerade(pf0, e2x); color = red; linestyle = dot; taget = da );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Übertragen auf die x-Achse
+		    </description>
+			<seq>
+				<script>
+
+		          newObject( def = a := 0.05 ; hide = true );
+		          newObject( def = dv:= a*vektor( {F0-x0.x,0} ) ; hide = true);
+		          newObject( def = dp:= pfeil(pf0, dv); target = da; hide = true);
+		      </script>
+				<animate object="main" parameterName="a" to="1" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Offensichtlich liegt der so berechnete x-Wert <f>x[1]</f> näher an der gesuchten Stelle als der ursprüngliche Wert <f>x[0]</f>. 
+		    <br/>Deshalb der gleiche Schritt mit dem besseren Ausgangswert <f>x[1]</f> nochmal:</description>
+			<seq>
+				<script>
+				deleteObject( name = t0);
+				newObject( def = t0 := text(punkt(x0.x, 0), "<f>x[0]</f>", B_NE); target = da );
+
+
+						    newObject( def = pf1:=punkt(F0, F1 ) ; hide = true);	
+		         newObject( def = g1 := gerade( pf1, ey ); hide = true; linestyle = dot ; target = da );
+		          newObject( def = t1 := text(punkt(F0, 0), "<f>x[1]=F(x[0])</f>", B_NE); target = da );
+		         
+
+				      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Funktionswert <f>F(x[1])</f> berechnen</description>
+			<seq>
+				<script>
+		          newObject( def = pd0:=punkt(F0, F0 ); hide = true );
+				  newObject( def = s0d:=strecke(pf0, pd0); target = da ; hide = true);
+                   newObject( def = s1:=strecke(pd0, pf1); target = da; hide = true );
+				   newObject( def = pd1:=punkt(F1, F1 ); hide = true );	 
+				    newObject( def = g11 := gerade( pd1, e2x ); hide = true;color = red;  linestyle = dot ; target = da );
+				    newObject( def = ty0 := text( punkt(0, F1), "<f>y=F(x[1])</f>", B_NE); target = da );
+				        
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Auf Winkelhalbierende abtragen</description>
+			<seq>
+				<script>
+		          newObject( def = a := 0.05 ; hide = true );
+		          newObject( def = dv:= a*vektor( {F1-F0,0} ) ; hide = true);
+		          newObject( def = dp:= pfeil(pf1, dv); target = da; hide = true);
+		      </script>
+				<animate object="main" parameterName="a" to="1" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Wert auf x-Achse übertragen.</description>
+			<seq>
+				<script>
+		       newObject( def = F2:=F(F1));
+						    newObject( def = pf2:=punkt(F1, F2 ) ; hide = true);	
+		         newObject( def = g2 := gerade( pf2, ey ); hide = true; linestyle = dot ; target = da );
+		         		          newObject( def = t2 := text(punkt(F1, 0), "<f>x[2]=F(x[1])</f>", B_NE); target = da );
+
+				      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Der Wert <f>x[2]</f> liegt offensichtlich noch näher beim Fixpunkt als der Wert <f>x[1]</f>.
+		   Deshalb ein weiterer Itrerationsschritt, jetzt in verkürzter Form.
+		   </description>
+		</step>
+		<step>
+			<description>Und im Folgenden noch ein paar weitere Schritte.
+		   </description>
+			<seq>
+				<script>
+		      
+		        newObject( def = s1d:=strecke(pf1, pd1); target = da ; hide = true);
+						     deleteObject( name = dp, ty0, g11, gy0, g0, g1, g2); 
+						  newObject( def = aa := 1);
+						    animate( name = aa; to=1; end = 3);				    
+						     newObject( def = F2:=F(F1));
+						    newObject( def = pf2:=punkt(F1, F2 ) ; hide = true);
+						    newObject( def = s2:=strecke(pd1, pf2); target = da; hide = true );
+						    animate( name = aa; to=1; end = 1);
+						    						    
+						    
+						    newObject( def = pd2:=punkt(F2, F2 ) ; hide = true);
+						    newObject( def = s2d:=strecke(pf2, pd2); target = da; hide = true );
+						    animate( name = aa; to=1; end = 1);
+
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description/>
+			<seq>
+				<script>
+
+						   
+
+						    
+						     newObject( def = F3:=F(F2));
+						    newObject( def = pf3:=punkt(F2, F3 ) ; hide = true);
+						    newObject( def = s3:=strecke(pd2, pf3); target = da; hide = true );
+						    animate( name = aa; to=1; end = 1);
+						    newObject( def = pd3:=punkt(F3, F3) ; hide = true);
+						    newObject( def = s3d:=strecke(pf3, pd3); target = da; hide = true );
+						    animate( name = aa; to=1; end = 1);
+						    
+						    newObject( def = F4:=F(F3));
+						    newObject( def = pf4:=punkt(F3, F4 ); hide = true );
+						    newObject( def = s4:=strecke(pd3, pf4); target = da ; hide = true);
+						    animate( name = aa; to=1; end = 0.5);
+						    newObject( def = pd4:=punkt(F4, F4); hide = true );
+						    newObject( def = s4d:=strecke(pf4, pd4); target = da ; hide = true);
+						    animate( name = aa; to=1; end = 1);
+						    
+						     newObject( def = F5:=F(F4));
+						    newObject( def = pf5:=punkt(F4, F5 ) ; hide = true);
+						    newObject( def = s5:=strecke(pd4, pf5); target = da; hide = true );
+						      animate( name = aa; to=1; end = 0.5);
+						    newObject( def = pd5:=punkt(F5, F5); hide = true );
+						    newObject( def = s5d:=strecke(pf5, pd5); target = da ; hide = true);
+						      animate( name = aa; to=1; end = 0.5);
+						    
+						    newObject( def = F6:=F(F5));
+						    newObject( def = pf6:=punkt(F5, F6 ) ; hide = true);
+						    newObject( def = s6:=strecke(pd5, pf6); target = da; hide = true );
+						      animate( name = aa; to=1; end = 0.5);
+						    newObject( def = pd6:=punkt(F6, F6) ; hide = true);
+						    newObject( def = s6d:=strecke(pf6, pd6); target = da ; hide = true);
+						      animate( name = aa; to=1; end = 0.5);
+						    
+						    newObject( def = F7:=F(F6));
+						    newObject( def = pf7:=punkt(F6, F7 ); hide = true );
+						    newObject( def = s7:=strecke(pd6, pf7); target = da; hide = true );
+						      animate( name = aa; to=1; end = 0.5);
+						    newObject( def = pd7:=punkt(F7, F7); hide = true );
+						    newObject( def = s7d:=strecke(pf7, pd7); target = da ; hide = true);
+						      animate( name = aa; to=1; end = 0.5);
+						    
+						    newObject( def = F8:=F(F7));
+						    newObject( def = pf8:=punkt(F7, F8 ); hide = true );
+						    newObject( def = s8:=strecke(pd7, pf8); target = da; hide = true );
+						      animate( name = aa; to=1; end = 0.5);
+						    newObject( def = pd8:=punkt(F8, F8); hide = true );
+						    newObject( def = s8d:=strecke(pf8, pd8); target = da ; hide = true);
+						      animate( name = aa; to=1; end = 0.5);
+
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt können Sie der Frage nachgehen, wie "nahe" der Startwert <f>x[0]</f> beim gesuchten Fixpunkt liegen muss, so dass die Iterationsfolge auch zu diesem Punkt konvergiert.
+<br/>Verschieben Sie den Startwert <f>x[0]</f> über den Doppelpfeil!</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="da.xMin" to="-6" end="4"/>
+					<animate object="main" parameterName="da.xMax" to="10" end="4"/>
+					<animate object="main" parameterName="da.yMin" to="-3" end="4"/>
+					<animate object="main" parameterName="da.yMax" to="3" end="4"/>
+				</par>
+				<script>
+		       modifyObject( name = x0; target = da );
+		       modifyObject( name = s00; target = da );
+		       deleteObject( name = t0, t1, t2);
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		     
+		      newObject( def=F(x) := (2*x^2+1)^(1/3) );
+		       newObject( def = tF:=text( punkt(da.xMin, da.yMax), "<f>F</f>", POSTIT ); target = da );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		      deleteObject( name = tF);
+		      newObject(def=F(x) := 1/x^2+2;target=linksunten;);
+		      newObject( def = tF:=text( punkt(da.xMin, da.yMax), "<f>F</f>", POSTIT ); target = da );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		      deleteObject( name = tF);
+		      newObject( def = f(x):=x^3-2*x^2-1 );
+		      newObject(
+	def=a := -0.6;
+	select=true;
+);
+
+newObject(def=F(x) := a*f(x)+x; target = rechtunten);
+newObject( def = tF:=text( punkt(da.xMin, da.yMax), "<f>F</f>", POSTIT ); target = da );
+
+		      </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.4 Import von Java-Klassen</title>
+		<step>
+			<title>3.6.4 Import von Java-Klassen</title>
+			<description>
+				<br/>Wenn Klassen benutzt werden, die nicht in <code>java.awt.*</code> liegen, dann müssen diese
+Klassen entweder direkt angesprochen werden (z.B. <code>new java.util.Random()</code>) oder
+per &lt;import>-Tag eingetragen werden. 
+<br/>Als Beispiel wollen wir eine Funktion <f>random(x)</f> schreiben, die ein reproduzierbares Rauschen mit Werten zwischen 0 und 1 liefert.
+<code><![CDATA[
+
+<function>
+	<name>random</name>
+	<import>java.util</import>	
+	<result-type>ScalarType</result-type>
+	<arguments>
+		<argument type="ScalarType" name="x"/>
+	</arguments>	
+	<method><![CDATA[
+		public Object eval(Object[] args) throws MathException{
+			//Argumentwert holen
+			double x = ((Result) args[0]).getScalar();
+			//Variable für das Ergebnis bereitstellen
+			double result = 0;						
+	
+			// Zufallszahl berechnen
+			// Generator in Abhängigkeit von Argumentwert x initialisieren.
+			Random random = new Random(Double.doubleToLongBits(x));
+			// Nächste Zufallszahl des Generators abrufen.
+			result = random.nextDouble();
+			
+			//Ergebnisrückgabe
+			return new ScalarDoubleResult(result);
+		}
+	]]>]]&gt;<![CDATA[</method>				
+</function>
+	
+]]></code>Durch das &lt;import>-Tag werden alle Klassen im Package <code>java.util</code> 
+sichtbar gemacht. Dies entspricht einem <code>import java.util.*</code> im Java-Code. 
+<br/>Ein Import einzelner Klassen ist nicht möglich. 
+<br/>
+				<br/>Im Methodenrumpf ist nur die Funktionsberechnung neu:
+<code><![CDATA[
+
+// Zufallszahl berechnen
+// Generator in Abhängigkeit von Argumentwert x initialisieren.
+Random random = new Random(Double.doubleToLongBits(x));
+// Nächste Zufallszahl des Generators abrufen.
+result = random.nextDouble();
+
+
+]]></code>Dabei wurde der Konstruktor Random(long seed) benutzt. Das Rauschen soll reproduzierbar sein, d.h. für einen bestimmenten Wert des Arguments <code>x</code> soll immer der gleiche Zufallswert erzeugt werden. Dies erreichen wir, indem wir den Seed in Abhängigkeit vom Argumentwert <code>x</code> setzen. Für diese eindeutige Zuordnung von <code>double x</code> zu <code>long Seed</code> verwenden wir die statische Methode 
+<code>Double.doubleToLongBits(double x)</code>, welche die interne Repräsentation
+eines <code>double</code>-Wertes zurück gibt.
+<p/>
+Ohne &lt;import>-Tag hätte man auch folgendes schreiben können:
+<code><![CDATA[
+
+//Zufallszahl berechnen
+java.util.Random random = new java.util.Random(Double.doubleToLongBits(x));
+result = random.nextDouble();
+
+]]></code>Wird das Präfix <code>java.util</code> vergessen, so erscheint eine Fehlermeldung
+<strong>[source error] no such class: Random</strong> die angibt, dass die 
+Klasse <code>Random</code> nicht gefunden werden konnte.
+<br/>
+				<br/>Sie finden dieses Beispiel unter "Beispiele/Java-Schnittstelle/Beispiel 05".
+<p/>
+				<strong>Hinweis:</strong>
+Falls Klassen aus einem selbstgeschriebenen Package angesprochen werden sollen,
+dann muss dieses Package schon beim Start von Math4u2 im Classpath gefunden werden.
+Dies geht am einfachsten, wenn der Classpath in der Datei <strong>math4u2.bat</strong>
+bzw. <strong>math4u2.sh</strong> eingetragen wird.
+								
+<p/>
+			</description>
+		</step>
+	</body>
+</math4u2>

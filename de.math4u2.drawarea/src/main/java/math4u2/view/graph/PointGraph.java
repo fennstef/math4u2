@@ -26,7 +26,7 @@ public class PointGraph extends AbstractSimpleGraph {
 		db = new DragButtonPoint(da, layout, xPos, yPos, this);
 	} 
 
-	public String getIdentifier() {
+	public String getKey() {
 		return "%%Handle_" + da.getName() + "_" + name.getScalarOrNull();
 	}
 

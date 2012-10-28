@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+	<author>Dr. M. Weiss</author>
+		<location>Analysis/Funktionen/Winkelfunktionen</location>
+		<title>Arcus-Sinus-Funktion</title>
+		<summary>Definition der Arcus-Sinus-Funktion</summary>
+		<keywords>
+			<keyword>Sinus</keyword>
+			<keyword>sin</keyword>
+			<keyword>Umkehrfunktion</keyword>
+			<keyword>Arcus-Sinus</keyword>
+			<keyword>arcsin</keyword>
+		</keywords>
+		<step>
+			<title>Arcus-Sinus-Funktion</title>
+			<description>Die Sinus-Funktion ist nicht umkehrbar, da sie wegen ihrer Periodizität jeden Funktionswert an unendlich vielen verschiedenen <f>x</f>-Werten annimmt.</description>
+			<seq>
+				<script>
+					newObject( def = da.yMax := fix(2.5) );
+					newObject( def = da.xMax := fix(7.5) );
+					newObject( def =  da.xMin := fix(-4));
+					expand( left = false; right = false );
+					newObject( def = sinus(x):=sin(x); color = blue; target = da );
+					da.zoom1To1(active=true);
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Definitionsmenge einschränken:</strong> Für die Umkehrung schränkt man die Definitionsmenge auf ein Intervall so ein, dass die resultierende Funktion dort injektiv ist, d.h. jeden Funktionswert nur einmal annimmt.
+<br/>Beim Sinus wählt man das Intervall [ <f>-pi/2</f>, <f>pi/2</f> ].</description>
+			<seq>
+				<script>
+		         newObject( def = ts:= 0 );
+		         modifyObject( name = sinus; linestyle = dot );
+		         newObject( def = scdl:= pfeil( punkt(0,0), vektor( {-pi/2, 0} ) ) ; linestyle = dot-dash; color = blue; target = da);
+		         newObject( def = scdr:= pfeil( punkt(0,0), vektor( {pi/2, 0} ) ) ; linestyle = dash; color = blue; target = da);
+
+		         newObject( def = sink(x):= kurve( t, -pi/2, pi/2, t, sin(t) ); color = blue; target = da );
+		         newObject( def = scu:= strecke(punkt(-pi/2,-ts), punkt(pi/2, -ts) ); linestyle = dot-dash; color = blue; target = da );
+		         newObject( def = sco:= strecke(punkt(-pi/2,ts), punkt(pi/2, ts) ); linestyle = dot-dash; color = blue; target = da );
+		         newObject( def = scl:= strecke(punkt(-pi/2, -ts), punkt(-pi/2, ts) ); linestyle = dash; color = blue; target = da );
+		         newObject( def = scr:= strecke(punkt(pi/2, -ts), punkt(pi/2,ts) ); linestyle = dash; color = blue; target = da );
+		         newObject( def = mr:=text(punkt(pi/2, 0), "<f>pi/2</f>", C_S); hide = true; target = da );
+		         newObject( def = ml:=text(punkt(-pi/2, 0), "<f>-pi/2</f>", C_N); hide = true; target = da );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Wertemenge:</strong> In diesem Intervall erhält man als Werte alle Zahlen aus dem Intervall [ <f>-1</f> , <f>1</f> ].
+		    <br/>Jeder dieser Werte wird genau einmal angenommen.</description>
+			<seq>
+				<script>
+				deleteObject( name = mr, ml );
+		         newObject( def = sclu:= pfeil( punkt(0,0), vektor( {0, -ts} ) ) ; linestyle = dash; color = blue; target = da);
+		         newObject( def = sclo:= pfeil( punkt(0,0), vektor( {0, ts} ) ) ; linestyle = dash; color = blue; target = da);
+		        		      </script>
+				<animate object="main" parameterName="ts" to="1" end="5"/>
+				<script>
+							 newObject( def = td:=text(punkt(0,0.5), "Wertemenge <br/>von <f>sin(x)</f>", B_NW); bodercolor = blue; fillcolor =255.255.255.220; target = da);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Definitionsmenge der Umkehrfunktion:</strong> Beim Übergang von einer Funktion zu ihrer Umkehrfunktion tauschen diese Mengen ihre Rollen:
+		   <br/>Aus der Wertemenge der Funktion wird die Definitionsmenge der Umkehrfunktion, hier das Intervall [ <f>-1</f> , <f>1</f> ].</description>
+			<seq>
+				<script>
+		         modifyObject( name = scdl; visible = false );
+		         modifyObject( name = scdr; visible = false );
+		         newObject( def = asdl := pfeil( punkt( 0,0), vektor( {-1, 0 } ) ) ; linestyle = dash; color = red; target = da );
+		          newObject( def = asdr := pfeil( punkt( 0,0), vektor( {1, 0 } ) ) ; linestyle = dash; color = red; target = da );
+		         newObject( def = td2:=text(punkt(0.5,0), "Definitionsmenge <br/>von <f>arcsin(x)</f>", B_SE); bodercolor = red; fillcolor =255.255.255.220; target = da);
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Wertemenge der Umkehrfunktion:</strong> Aus der Definitionsmenge der ursprünglichen Funktion wird die Wertemenge der Umkehrfunktion.</description>
+			<seq>
+				<script>
+		          modifyObject( name = scdl; visible = true );
+		         modifyObject( name = scdr; visible = true );
+		         deleteObject( name = sclu);
+		         deleteObject( name = sclo);
+		         deleteObject( name = asdl);
+		         deleteObject( name = asdr);
+
+		     	 newObject( def = aswu := pfeil( punkt( 0,0), vektor( {0, -pi/2 } ) ) ; linestyle = dot-dash; color = red; target = da );
+		          newObject( def = aswo := pfeil( punkt( 0,0), vektor( {0, pi/2 } ) ) ; linestyle = dot-dash; color = red; target = da );
+		          newObject( def = ascu:= strecke(punkt(-1,-pi/2), punkt(1,-pi/2 ) ); linestyle = dash; color = red; target = da );
+		         newObject( def = ascl:= strecke(punkt(-1, -pi/2), punkt(-1,pi/2 ) ); linestyle = dot-dash; color = red; target = da );
+		         newObject( def = asco:= strecke(punkt(-1,pi/2 ), punkt(1,pi/2) ); linestyle = dash; color = red; target = da );
+		         newObject( def = ascr:= strecke(punkt(1,-pi/2), punkt(1,pi/2) ); linestyle = dot-dash; color = red; target = da );
+		         newObject( def = ascr:= strecke(punkt(1,-pi/2), punkt(1,pi/2) ); linestyle = dot-dash; color = red; target = da );
+		         newObject( def = td:=text(punkt(1.2,0), "Eingeschränkte Definitionsmenge<br/>von <f>sin(x)</f>", B_SE); bodercolor =blue; fillcolor =255.255.255.220; target = da);
+ 		         newObject( def = td2:=text(punkt(0,1.2), "Wertemenge von <br/>
+					<f>arcsin(x)</f>", B_NE); bodercolor = red; fillcolor =255.255.255.220; target = da);
+		         </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Graph der Umkehrfunktion:</strong> Den Graphen der Umkehrfunktion erhalten wir jetzt, indem wir den Graphen der ursprünglichen Funktion an der Winkelhalbierenden des 1. und 3. Quadranten (grün) spiegeln:</description>
+			<seq>
+				<script>
+		      deleteObject( name = scdl, );
+		        deleteObject( name = scdr);
+		        deleteObject( name = aswu);
+		        deleteObject( name = aswo);
+		        deleteObject( name = td);
+		        deleteObject( name = td2);
+		        newObject( def = wh:= gerade( punkt(0,0), vektor({1,1}) ); color = green ; target = da );
+		        newObject( def = tt := -1.5708; );
+		        newObject( def = ks:=kreis( punkt( tt, sin(tt) ), 0.05 ); color = blue; target = da );
+		        newObject( def = aks:=kreis( punkt( sin(tt), tt ), 0.05 ); color = red; target = da ); 
+		        newObject( def = asink:= kurve( t, -1.5708, tt, sin(t),  t); color = red; target = da );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script/>
+				<animate object="main" parameterName="tt" to="1.5708" end="10"/>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Die Arcus-Sinus-Funktion:</strong> Die so entstandene Funktion wird als Arcus-Sinus-Funktion bezeichnet. 
+				<br/>Sie wird häufig mit <f>arcsin(x)</f> abgekürzt. 
+		   <br/>Streng genommen ist die Arcus-Sinus-Funktion nicht die Umkehrung der Sinus-Funktion (auch wenn man das oft verkürzt so sagt), sonder die Umkehrung der  auf das Intervall [ <f>-pi/2</f>, <f>pi/2</f>] eingeschränkten Sinus-Funktion.</description>
+			<seq>
+				<script>
+				  deleteObject( name = scu);
+				  deleteObject( name = sco);
+				  deleteObject( name = scl);
+				  deleteObject( name = scr);
+				  deleteObject( name = ascu);
+				  deleteObject( name = asco);
+				  deleteObject( name = ascl);
+				  deleteObject( name = ascr);
+				  deleteObject( name = sink);
+
+		           deleteObject( name = wh);
+		           deleteObject( name = ks);
+		           deleteObject( name = aks);
+		           newObject( def = mr:=text(punkt(1, 0), "<f>1</f>", C_S); hide = true; target = da );
+		         newObject( def = ml:=text(punkt(-1, 0), "<f>-1</f>", C_N); hide = true; target = da );
+		         newObject( def = mo:=text(punkt(0, pi/2), "<f>pi/2</f>", C_W); hide = true; target = da );
+		         newObject( def = mu:=text(punkt(0, -pi/2), "<f>-pi/2</f>", C_E); hide = true; target = da );
+		         newObject( def = mg:=text(punkt(0.9, arcsin(0.9)), "<f>y=arcsin(x)</f>", B_NE); hide = true; bordercolor = red; fillcolor = fillwhite; target = da );
+		          newObject( def = mgs:=text(punkt(3, sin(3)), "<f>y=sin(x)</f>", B_NE); hide = true; bordercolor = blue; fillcolor = fillwhite; target = da );
+
+
+
+		        </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

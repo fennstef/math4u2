@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Geometrie/Kurven/Kurven zuordnen</location>
+		<title>Parametrisierte Kurven 4</title>
+		<summary>Ordnen Sie einer Reihe von Koordinatenfunktionen die zugehörigen parametrisierten Kurven zu.</summary>
+		<step>
+			<description>Gegeben sind  5 parametrisierte Kurven mit Koordinatenfunktionen <f>vektor({x(t),y(t)})</f>, <f>t$isin(0,1)</f>
+				<br/>
+				<br/>
+				<table>
+					<tr>
+						<td>
+							<strong>1:</strong>
+							<f>vektor({$fb(f1x),$fb(f1y)})</f>
+						</td>
+						<td>
+							<strong>2:</strong>
+							<f>vektor({$fb(f2x),$fb(f2y)})</f>
+						</td>
+						<td>
+							<strong>3:</strong>
+							<f>vektor({$fb(f3x),$fb(f3y)})</f>
+						</td>
+						<td>
+							<strong>4:</strong>
+							<f>vektor({$fb(f4x),$fb(f4y)})</f>
+						</td>
+						<td>
+							<strong>5:</strong>
+							<f>vektor({$fb(f5x),$fb(f5y)})</f>
+						</td>
+					</tr>
+				</table>
+				<br/>
+				<br/>Oben sind drei dieser Kurven gezeigt. Tragen Sie in jedem Fenster die Nummer der dort gezeigten Kurve ein !
+			</description>
+			<layout>
+				<row perc="100">
+					<col perc="33" name="da1"/>
+					<col perc="34" name="da2"/>
+					<col perc="33" name="da3"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+deleteAll();
+
+expand(left=false;right=false);
+ da1.coordinateSystem( xMin = -2; xMax = 2;yMin = -2; yMax = 2 ); 
+ da2.coordinateSystem( xMin = -2; xMax = 2;yMin = -2; yMax = 2 ); 
+  da3.coordinateSystem( xMin = -2; xMax =2;yMin = -2; yMax = 2 ); 
+  // 5 einstellige Funktionen definieren
+   newObject( def = f1x(t):=t; hide = true );
+  newObject( def = f2x(t):=t; hide = true );
+  newObject( def = f3x(t):=sin(t);  hide = true );
+  newObject( def = f4x(t):=t^4; hide = true );
+     newObject( def = f5x(t):=t; hide = true );
+     
+       // 5 einstellige Funktionen definieren
+   newObject( def = f1y(t):=sin(t); hide = true );
+  newObject( def = f2y(t):=t^2; hide = true );
+  newObject( def = f3y(t):=t;  hide = true );
+  newObject( def = f4y(t):=t^2; hide = true );
+     newObject( def = f5y(t):=t^4; hide = true );
+ 
+  
+  // festlegen, welche 3 dieser Funktionen wo erscheinen
+  newObject( def = a1L:=3; hide = true  );
+  newObject( def = a2L:=4; hide = true );
+  newObject( def = a3L:=2; hide = true  );
+
+  
+  
+  newObject( def = a1 := 0; hide = true );
+  newObject( def = a2 :=0; hide = true );
+  newObject( def = a3 := 0; hide = true );
+
+
+
+  newObject( def= kmt(x,y):= |x-y|*1000; hide = true );
+  newObject( def = kmf(x,y):= (|signum(x-y)|-1)*1000; hide = true );
+  newObject( def = k1t:=kreis(punkt(kmt(a1,a1L), kmt(a1,a1L)), 100); fillcolor = 0.255.0.80; target = da1; visible = false ; hide = true );
+  newObject( def = k1f:=kreis(punkt(kmf(a1,a1L), kmf(a1,a1L)), 100); fillcolor =255.0.0.80; target = da1; visible = false; hide = true  );
+   newObject( def = k2t:=kreis(punkt(kmt(a2,a2L), kmt(a2,a2L)), 100); fillcolor = 0.255.0.80; target = da2; visible = false; hide = true  );
+  newObject( def = k2f:=kreis(punkt(kmf(a2,a2L), kmf(a2,a2L)), 100); fillcolor =255.0.0.80; target = da2; visible = false; hide = true  );
+   newObject( def = k3t:=kreis(punkt(kmt(a3,a3L), kmt(a3,a3L)), 100); fillcolor = 0.255.0.80; target = da3; visible = false ; hide = true );
+  newObject( def = k3f:=kreis(punkt(kmf(a3,a3L), kmf(a3,a3L)), 100); fillcolor =255.0.0.80; target = da3; visible = false ; hide = true );
+   
+
+
+
+  
+   
+
+  newObject( def = flx:=&lt;funktion(x)>liste0({10E10, f1x(x), f2x(x), f3x(x), f4x(x), f5x(x), 10E10 } ); hide = true );
+  newObject( def = fly:=&lt;funktion(x)>liste0({10E10, f1y(x), f2y(x), f3y(x), f4y(x), f5y(x), 10E10 } ); hide = true );
+  
+ 
+ 
+ newObject( def = k1:=kurve(t,0,1,flx[a1L](t),fly[a1L](t)); color = blue; target = da1; hide = true );
+ newObject( def = k2:=kurve(t,0,1,flx[a2L](t),fly[a2L](t)); color = blue; target = da2; hide = true );
+  newObject( def = k3:=kurve(t,0,1,flx[a3L](t),fly[a3L](t)); color = blue; target = da3; hide = true );
+  
+  
+  newObject( def = tt1:=text(punkt(da1.xMin, da1.yMax), "<fh>
+						<conf>a1(style=text; width=2; pattern = 0)</conf>a1</fh>", POSTIT ); target = da1; hide = true );
+  newObject( def = tt2:=text(punkt(da2.xMin, da2.yMax), "<fh>
+						<conf>a2(style=text; width=2; pattern = 0)</conf>a2</fh>", POSTIT ); target = da2; hide = true  );
+  newObject( def = tt3:=text(punkt(da3.xMin, da3.yMax), "<fh>
+						<conf>a3(style=text; width=2; pattern = 0)</conf>a3</fh>", POSTIT ); target = da3; hide = true  );
+  				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Grün = richtig. Rot = falsch. Der Graph zur gewählten Nummer ist gestrichelt eingetragen. Lösung im nächsten Schritt.</description>
+			<seq>
+				<script>		   
+		   
+		   modifyObject( name = k1t; visible = true );
+		   modifyObject( name = k1f; visible = true );
+		   modifyObject( name = k2t; visible = true );
+		   modifyObject( name = k2f; visible = true );
+		    modifyObject( name = k3t; visible = true );
+		   modifyObject( name = k3f; visible = true );
+		  
+
+
+		   newObject( def = toInt(x):=min( max( 0, floor(x)) , 6 ); hide = true );
+		   
+		   newObject( def = k1L:=kurve(t,0,1,flx[a1](t),fly[a1](t)); linestyle = dot; target = da1; );
+		   newObject( def = k2L:=kurve(t,0,1,flx[a2](t),fly[a2](t)); linestyle = dot; target = da2; );
+		   newObject( def = k3L:=kurve(t,0,1,flx[a3](t),fly[a3](t)); linestyle = dot; target = da3; );
+		   		                            
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt sind die richtigen Nummern eingetragen.</description>
+			<seq>
+				<script>
+  
+  // HIer Werte von a11L, a12L, ... eintragen.
+  newObject( def = a1 := 3; hide =true);
+  newObject( def = a2:= 4; hide =true);
+  newObject( def = a3 := 2; hide =true);
+
+  
+		      </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

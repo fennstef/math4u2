@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>	<body>
+	     <author>Dr. M. Weiss</author>
+		<location>Analysis/Grundlagen/Koordinatentransformationen</location>
+		<title>Koordinatentrafo: Übung 2</title>
+		<summary>Passen Sie eine vorgegebene Funktion an bestimmte Anforderungen an</summary>
+		<step>
+			<title>Lineare Koordinatentransformationen 2</title>
+			<description>Gegeben ist die Funktion <fh>f(x)</fh> mit dem oben schwarz gezeigten Graphen.
+			<br/>Durch lineare Transformationen mit <f>4</f> Parametern <fh>a</fh>, <fh>b</fh>, <fh>c</fh> und <fh>d</fh> entsteht daraus die Funktion <f>$fd(g)</f>. 
+			<br/>Ihr Graph ist oben rot eingezeichnet. Die Parameter haben zunächst noch nicht die richtigen Werte. 
+			</description>
+			<seq>
+				<script>
+					deleteAll();
+					expand( left = false; right = true);
+					da.coordinateSystem(xMin=-1; xMax=7; yMin=-4; yMax=5;);
+					newObject( def = f(x) := sin(pi/2*x); target = da );
+					newObject( def = d:=0; select = true );
+					newObject( def = c:=1; select = true );
+					newObject( def = b:=0; select = true );
+					newObject( def = a:=0; select = true );
+					newObject( def = g(x) := a*f((x-b)*c)+d ; color = red; target = da; select = true );   
+					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Mit den vier Reglern oben rechts können Sie die Parameter verändern. 
+		  <br/>Sie können auch einen Zahlenwert wie 1.3 oder -0.7 über die Tastatur eingeben (Eingabe mit Return-Taste abschließen).
+		  <br/>Experimentieren Sie!</description>
+		</step>
+		<step>
+			<description>Stellen Sie die 4 Parameter so ein, dass die Funktion <f>$fd(g)</f> folgende Eigenschaften hat:
+<ul>
+					<li>
+						<fh>g(x)</fh> hat die primitive Periode <f>2</f>.</li>
+					<li>
+						<fh>g(x)</fh> hat bei <f>x=2</f> ein Maximum, dort ergibt sich der Funktionswert <f>4</f>.</li>
+					<li>
+						<fh>g(x)</fh> hat als minimalen Funktionswert den Wert <f>-2</f>.</li>
+				</ul>Arbeiten Sie schrittweise, kontrollieren Sie jeweils den Effekt.
+		  </description>
+		</step>
+		<step>
+			<description>	    
+				Die Lösung ist nicht ganz eindeutig. 
+				<br/>Wo führen verschiedene Parameterwerte zu identischen Funktionsgraphen?
+				<br/>Wo führen verschiedene Parameterkombinationen zu identischen Funktionsgraphen?
+				<br/>.... wenn Sie keine Lösung finden, können Sie im nächsten Schritt eine anschauen.
+		   </description>
+		</step>
+		<step>
+			<description><title2>Eine Lösung:</title2>Folgende Eigenschaften sollten erreicht werden:Wir arbeiten schrittweise:
+			<ul>
+					<li>
+						<fh>g(x)</fh> hat die primitive Periode <f>2</f>.</li>
+					<li>
+						<fh>g(x)</fh> hat bei <f>x=2</f> ein Maximum, dort ergibt sich der Funktionswert <f>4</f>.</li>
+					<li>
+						<fh>g(x)</fh> hat als minimalen Funktionswert den Wert <f>-2</f>.</li>
+				</ul>
+				</description>
+		</step>
+		<step>
+			<description>Differenz zwischen Maximal- und Minimalwert: 
+		  <br/>Bei <fh>f(x)</fh> ist dies <f>2</f>, bei <fh>g(x)</fh> soll <f>(4 - (-2)) = 6 = 3*2</f> erreicht werden, wir wählen deshalb <f>a = 3</f>.</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="a" to="3" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Werte für Maximum und Minimum: 
+		  <br/>Durch Wahl von <f>d=1</f> schieben wir den roten Graphen nach oben und stellen den richtigen Wert für Maximum und Minimum ein.</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="d" to="1" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<description>Periode: 
+		  <br/>Die primitive Periode der Ausgangsfunktion <fh>f(x)</fh> ist <f>4</f>.
+		  <br/>Um eine primitive Periode <f>2</f> zu erhalten, müssen wir den Graphen in <f>x</f>-Richtung auf die Hälfte stauchen. 
+		  <br/>Dies erreicht wir durch die Einstellung <f>c = 2</f>:</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="c" to="2" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Lage eines Maximums: 
+		  <br/>Nach der Stauchung liegt ein Maximum jetzt z.B. bei <f>x = 0.5</f> . 
+		  <br/>Um ein Maximum bei <f>x = 2</f> zu erhalten, schieben wir den Graphen um <f>1.5</f> nach rechts,
+		  <br/>d.h. wir wählen <f>b=1.5</f>.</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="b" to="1.5" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description><title2>Ein paar Varianten:</title2>Die Funktion <fh>g(x)</fh> hat die primitive Periode <f>2</f>.
+		  <br/>Wir erhalten also auch die richtige Lage des Maximums, wenn wir statt <f>b=1.5</f>  den Wert <f>b = 1.5 + 2 = 3.5</f>  oder <f>b = 1.5 + 2*2 = 5.5</f>  oder ... wählen..</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="b" to="3.5" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir statt <f>a=3</f>   den Wert <f>a=-3</f>   wählen, vertauschen Maxima und Minima ihre Rolle. </description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="a" to="-3" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Wir erhalten wieder ein Maximum an der richtigen Position, wenn wir <f>b</f>  entsprechend, z.B. auf <f>b = 4.5</f>  oder <f>b = 2.5</f>  oder <f>b = 0.5</f>  ...</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="b" to="4.5" end="3"/>
+				<animate object="main" parameterName="b" to="0.5" end="5"/>
+			</seq>
+		</step>
+	</body>
+</math4u2>

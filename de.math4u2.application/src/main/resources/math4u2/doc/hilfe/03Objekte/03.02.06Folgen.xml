@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.2 Datentypen</location>
+		<title>3.2.6 Folgen</title>
+		<step>
+			<title>3.2.6 Folgen</title>
+			<description>			
+<strong>1. Grundlagen</strong>
+<p/><code>folge(...)</code> erzeugt eine Folge, bei der das erste Element mit dem Index 1 angesprochen wird,
+<br/><code>folge0(...)</code> erzeugt eine Folge, bei der das erste Element mit dem Index 0 angesprochen wird.
+<p/>Damit kann man die Indizierung auf die im jeweiligen Problemfeld übliche Konvention abstimmen.
+Es können Folgen von Zahlen, Vektoren, Dualvektoren und Matrizen definiert werden.
+<p/>In der Definition
+<br/><code>folgenName:=folge(indVar,{basis1, basis2, ..., basisN },allgGlied)</code>
+<br/>haben die Argumente folgende Bedeutung:
+<br/><code>indVar</code>: Name der Indexvariable, mit dem die Glieder der Folge im allgemeinen Folgenglied angesprochen
+werden.
+<br/><code>{ basis1, basis2, ..., basisN }</code>: Die ersten Glieder der Folge, falls diese rekursiv definiert
+wird. Die einzelnen Glieder basis1, ... sind Terme. Die Indexvariable indVar darf in diesen
+Termen nicht vorkommen.
+Bei Folgen, die nicht rekursiv definiert werden, bleibt die Klammer <code>{ }</code> leer.
+<br/><code>allgGlied</code>: Term, der das allgemeine Folgenglied beschreibt. Zum Aufbau des Terms kann neben
+vorher definierten Funktionen und Parametern verwendet werden:
+Die Indexvariable <code>indVar</code> und vorhergehende Folgenglieder mittels
+<code>folgenName[ positionsTerm ]</code>.
+				
+<p/><strong>Beispiel:</strong>
+<br/>Fibonacci-Zahlen:
+<br/><code>fib:=folge( i, {1,1}, fib[i-2]+fib[i-1] )</code> liefert die Folge der Fibonacci-Zahlen.
+
+<p/>Harmonische Reihe:
+<br/><code>harm:=folge( k, { 1 }, harm[k-1]+1/k )</code> erzeugt die Folgenglieder Fixpunkt-Iteration
+
+<p/>Mit den Definitionen
+<br/><code>a:=2</code>
+<br/><code>f(x):=2*sin(x)-0.5*x</code>
+<br/><code>fix:=folge( i, {a}, f( fix[i-1] ) )</code>
+<br/>definiert man die Fixpunkt-Iteration mit der Funktion <code>f(x)</code> und dem Startwert <code>a</code>. 
+Mit <code>fix[7]</code> erhält man den 7. Wert der Iteration.
+				
+<strong>2. Elementtypen</strong>
+<br/>Zahlenfolgen werden erzeugt wie <code>&lt;skalar>folge(...)</code> . Die Typangabe <code>&lt;skalar></code> 
+kann allerdings entfallen (Voreinstellung).
+Vektor-Folgen werden erzeugt wie <code>&lt;vektor>folge(...)</code>.
+
+<p/><strong>Beispiel:</strong>
+<br/>Zuerst definieren wir mit
+<br/><code>dreh:=matrix( {{cos(pi/10),-sin(pi/10)}, {sin(pi/10),cos(pi/10)}} )</code>
+<br/>eine Drehmatrix: Zentrum der Drehung ist der Ursprung, der Drehwinkel ist im mathematisch
+positiven Sinn. Jetzt definiert
+<br/><code>ff:=&lt;vektor>folge(i, {vektor( {1,0} ) }, dreh*ff[i-1] )</code>
+<br/>eine Folge <code>ff</code> von Vektoren, die mit <f>vektor({1,0})</f> startet. Jedes weitere Glied ist ein Vektor, der 
+mit der Drehmatrix dreh gegenüber dem vorhergehenden Vektor um den Winkel <f>pi/10</f> im mathematisch
+positiven gedreht ist.
+
+<p/><strong>Dualvektor-Folgen:</strong> <code>&lt;dualvektor>folge(...)</code>
+<p/><strong>Matrix-Folgen:</strong> <code>&lt;matrix>folge(...)</code>
+<p/>Zu beachten ist in jedem Fall, dass sowohl die Elemente der Rekursionsbasis als auch der Term für
+das allgemeine Folgenglied vom entsprechenden Typ sein müssen.
+				
+<p/><strong>3. Auf Elemente zugreifen</strong>
+<br/>Auf ein Element einer Folge wird wie bei <code>fib[15]</code> duch Angabe des entsprechenden 
+Index zugegriffen. Allgemein kann der gewünschte Index auch durch einen Zahlenterm angegeben werden.
+			</description>
+		</step>
+	</body>
+</math4u2>

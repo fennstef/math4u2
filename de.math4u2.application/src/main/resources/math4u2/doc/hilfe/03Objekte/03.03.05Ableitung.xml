@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.3 Funktionen</location>
+		<title>3.3.5 Ableitung</title>
+		<step>
+			<title>3.3.5 Ableitung</title>
+			<description>			
+<strong>Ableitung reeller Funktionen</strong>
+<br/>Nach der Definition einer Funktion wie <code>g(x):=x*sin(x)</code> können zu 
+dieser die Ableitungen berechnet werden. Bei <code>g1(x):=derive(g(x))</code> wird 
+<code>g1(x)</code> als die erste Ableitung der Funktion <code>g(x)</code> definiert.
+
+<p/>Höhere Ableitungen werden durch Angabe der Ordnung der Ableitung spezifiziert:
+<code>g3(x):=derive(g(x),3)</code>.
+
+<p/>Wenn vorher ein Parameter <code>ord:=4</code> definiert wurde, kann man auch über 
+diesen die Ordnung der Ableitung steuern: <code>gabl(x):=derive(g(x),ord)</code>.
+Der Parameter <code>ord</code> darf dann natürlich nur Werte 0, 1, 2, 3, ... annehmen.
+
+<p/><strong>Ableitungen in einem Funktionsterm verwenden</strong>
+<br/>Ableitungen können auch direkt in einem Funktionsterm verwendet werden:
+<br/><code>h(x):=g(x)+x*derive(g(x))+x^2*derive(g(x),2)</code>.
+
+<p/><strong>Wert einer Ableitung an einer bestimmten Stelle</strong>
+<br/>Wenn in einem Funktionsterm Ableitungen einer Funktion an einer bestimmten Stelle 
+benötigt werden, dann kann diese Stelle wie bei <code>derive(g(x))(1)</code> als 
+Funktionsargument <code>(1)</code> angegeben werden:
+<br/><code>tay2(x) := g(1)+derive(g(x))(1)*(x-1)+derive(g(x),2)(1)/2*(x-1)^2</code>
+<br/>berechnet zu <code>g(x)</code> das Taylor-Polynom vom Grad 2 zum Entwicklungspunkt 1, 
+darin werden die erste und zweite Ableitung an der Stelle 1 benötigt.
+
+<p/>Wenn die zweite Ableitung gebildet, aber an der Stelle <code>x*x</code> ausgewertet 
+werden soll, so geschieht dies durch <code>derive(g(x),2)(x*x)</code>.
+
+<p/><strong>Neuberechnung der Ableitung</strong>
+<br/>Eine Ableitung wie <code>gabl(x):=derive(g(x),ord)</code> wird in folgenden Fällen 
+neu berechnet:
+<ul>
+	<li>
+		Die Definition der abzuleitenden Funktion <code>g(x)</code> hat sich geändert oder
+	</li>
+	<li>
+		die Ordnung <code>ord</code> der Ableitung hat sich geändert.	
+	</li>
+</ul>
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -143,13 +143,13 @@ public abstract class AbstractGraph implements GraphInterface {
 		da.removeGraph(g);
 	}//prepareDelete
 
-	public Object getKey() {
+	public Object getIdentifier() {
 		Object id = getModel().getIdentifier();
 		if(id==null) return null;
 		return id.toString();
 	} //getKey
 	
-	public String getIdentifier() {
+	public String getKey() {
 		if(getKey()==null) return null;
 		return getKey().toString();
 	} //getKey

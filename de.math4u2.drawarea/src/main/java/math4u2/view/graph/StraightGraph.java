@@ -49,13 +49,13 @@ public class StraightGraph extends AbstractSimpleGraph {
 				x = point.getVector()[0];
 			} catch (Exception e) {
 				ExceptionManager.doError("Fehler beim Zeichnen der Geraden "
-						+ getIdentifier(), e);
+						+ getKey(), e);
 				return;
 			}
 
 			if (dx == 0) {
 				if (dy == 0)
-					throw new RuntimeException("Die Strecke " + getIdentifier()
+					throw new RuntimeException("Die Strecke " + getKey()
 							+ " hat eine ungültige Steigung");
 				int ix = da.xCoordToPix(x);
 				g.drawLine(ix, 0, ix, da.getHeight());

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>unbekannt</author>
+		<location>/Simulation/</location>
+		<title>Planeten</title>
+		<summary/>
+		<step>
+			<title>Planeten</title>
+
+			<description>Vor dem Start die Positionen und die Startrichtungen verändern.</description>
+			<layout>
+				<row perc="100.0">
+					<col perc="100.0" name="da"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+deleteAll();
+
+expand(left=none;right=all);
+da.coordinateSystem(xMin=-2;xMax=2;yMin=-2;yMax=2;);
+da.zoom1To1(active=true);
+
+newObject(def=dt := 0.005; select=true;);
+newObject(def=kk := -0.5; select=true;);
+newObject(def=anz := 5);
+					
+newObject(def=vx := 3;);
+newObject(def=vy := 4;);
+newObject(def=x := 1;);
+newObject(def=y := 2;);
+
+newObject(
+	def=
+		one(k, m) := matrix(i, 4, j, anz, cond( -|k-i|, 0, cond( -|m-j|, 0, 1) ))					
+;);
+					
+newObject(
+    def= vek_m(&lt;vektor>v,k) := sum(i, 1, 4, one(i, k)*v[i]) 
+;);
+
+newObject(
+	def= p := &lt;punkt>liste(i,anz, punkt(cos(i/anz*2*pi),sin(i/anz*2*pi)));
+	target = da;				
+);
+					
+newObject(
+	def= vp := &lt;punkt>liste(i,anz, punkt(cos((i+0.5)/anz*2*pi)*0.6,sin((i+0.5)/anz*2*pi)*0.6));
+	target = da;				
+);								
+										
+newObject(
+	def=
+		start_m := 
+			sum(j,1,anz, 
+				vek_m( 
+					vektor({ 
+						p[j].x,
+						p[j].y,
+						vp[j].x-p[j].x,
+						vp[j].y-p[j].y
+					}), 
+					j
+				)
+			)
+;);	
+															
+					
+newObject(def=t := 5; min=1; max=30; select=true;);
+					
+newObject(def=
+	pkt(&lt;matrix>m, i) := vektor({m[x,i],m[y,i]})
+;);
+					
+newObject(def=
+	vel(&lt;matrix>m, i) := vektor({m[vx,i],m[vy,i]})
+;);
+	
+newObject(def=
+	cut := 0.1
+;);					
+													
+newObject(def=
+	gfeldx(&lt;matrix>m, &lt;vektor> v) := -kk*sum(i, 1, anz, cond(cut-|pkt(m,i)-v|, (m[x,i]-v.x)/|pkt(m,i)-v|^3, 0));
+);
+					
+newObject(def=
+	gfeldy(&lt;matrix>m, &lt;vektor> v) := -kk*sum(i, 1, anz, cond(cut-|pkt(m,i)-v|, (m[y,i]-v.y)/|pkt(m,i)-v|^3, 0));
+);
+
+					
+newObject(def=					
+g(&lt;matrix> yr) := 
+			sum(j,1,anz, 
+				vek_m( 
+					vektor({ 
+						yr[vx,j],
+						yr[vy,j],
+						gfeldx(yr, pkt(yr,j)),
+						gfeldy(yr, pkt(yr,j))
+					}), 
+					j
+				)
+			)					
+;);
+					
+newObject(def=   k1(&lt;matrix> yr) := dt * g(yr)               ;);
+newObject(def=   k2(&lt;matrix> yr) := dt * g(yr+1/2*k1(yr))    ;);
+newObject(def=   k3(&lt;matrix> yr) := dt * g(yr+1/2*k2(yr))    ;);
+newObject(def=   k4(&lt;matrix> yr) := dt * g(yr+k3(yr))        ;);
+					
+newObject(def=
+  f1:=&lt;matrix> folge(i, { start_m},
+	f1[i-1]+1/6*(k1(f1[i-1]) + 2 * k2(f1[i-1]) + 2 * k3(f1[i-1]) + k4(f1[i-1]))
+  );
+);
+					
+newObject(
+	def= q := &lt;punkt>liste(i,anz, punkt(f1[t][x,i],f1[t][y,i]));
+	target = da;				
+	color = green;
+);
+
+newObject(
+	def= q1x := folge(i,{}, f1[i][x,1]);
+);
+
+newObject(
+	def= q1y := folge(i,{}, f1[i][y,1]);
+);
+
+
+newObject(
+	def= b1 := punktFolge(q1x,q1y,t,1, S);
+		target = da;				
+	color = green;
+);
+
+newObject(
+	def= q2x := folge(i,{}, f1[i][x,2]);
+);
+
+newObject(
+	def= q2y := folge(i,{}, f1[i][y,2]);
+);
+
+
+newObject(
+	def= b2 := punktFolge(q2x,q2y,t,1, S);
+		target = da;				
+	color = blue;
+);
+
+newObject(
+	def= q3x := folge(i,{}, f1[i][x,3]);
+);
+
+newObject(
+	def= q3y := folge(i,{}, f1[i][y,3]);
+);
+
+
+newObject(
+	def= b3 := punktFolge(q3x,q3y,t,1, S);
+		target = da;				
+	color = red;
+);
+
+newObject(
+	def= q4x := folge(i,{}, f1[i][x,4]);
+);
+
+newObject(
+	def= q4y := folge(i,{}, f1[i][y,4]);
+);
+
+
+newObject(
+	def= b4 := punktFolge(q4x,q4y,t,1, S);
+		target = da;				
+	color = orange;
+);
+
+newObject(
+	def= q5x := folge(i,{}, f1[i][x,5]);
+);
+
+newObject(
+	def= q5y := folge(i,{}, f1[i][y,5]);
+);
+
+
+newObject(
+	def= b5 := punktFolge(q5x,q5y,t,1, P);
+		target = da;				
+	color = black;
+);
+
+
+
+
+			
+		
+newObject(
+	def= aniTime:=500;
+);					
+								
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+animate(name=t; from=1; to=500; start=0; end=30;);										
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+newObject(def=vek_x:=vektor(i,aniTime*anz, f1[ceil(i/anz)][x,mod(i,anz)+1]););
+newObject(def=vek_y:=vektor(i,aniTime*anz, f1[ceil(i/anz)][y,mod(i,anz)+1]););
+newObject(def=p_2 := punkte(vek_x,vek_y,1); target=da; color=orange);			
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Interpolation</location>
+		<title>Kubische Spline-Interpolation V2</title>
+		<summary>Eigenschaften und Konstruktion einer kubischen Spline-Interpolation</summary>
+		<keywords>
+			<keyword>Interpolation</keyword>
+			<keyword>Spline</keyword>
+			<keyword>Stetigkeit</keyword>
+		</keywords>
+		<step>
+			<title>Problem und Augabenstellung</title>
+			<description>Sehr häufig hat man in der Technik oder in der Graphik folgende Aufgabe:
+		<br/>Gegeben ist eine Reihe von Punkten <f>P[0]</f>, <f>P[1]</f>, ..., <f>P[n]</f>. Konstruiere eine "möglichst schöne" Kurve, die alle diese Punkte "trifft", d.h. interpoliert.
+		<br/>Bei der im Folgenden vorgestellten Lösung soll die Kurve stückweise durch Funktionsgraphen erzeugt werden. Deshalb gilt hier für die Lage der Punkte die Einschränkung, dass je zwei verschiedene Punkte auch verschiedene <f>x</f>-Koordinaten haben müssen.
+			</description>
+			<seq>
+				<script>
+					deleteAll();
+					da.coordinateSystem(
+						xMin=-3.5;					
+						xMax=3.5;
+						yMin=-2;
+						yMax=5;
+					);
+					
+					expand(left=false;right=false);
+					
+					
+					newObject( def = P:=&lt;punkt&gt;liste0( { punkt(-0.43, 1.2),
+																				punkt(0.2, 2.5),
+																				punkt(0.64, 1.3),
+																				punkt(1.6, 1.1),
+																				punkt(2.1, 1.3) } ) ; color = gray; target = da );
+					
+				
+					newObject( def = m0:= marker(P[0].x, P[0].y); color = green; target = da );
+					newObject( def = m1:= marker(P[1].x, P[1].y); color = blue; target = da );
+					newObject( def = m2:= marker(P[2].x, P[2].y); color = red; target = da );
+					newObject( def = m3:= marker(P[3].x, P[3].y); color = gray; target = da );
+					newObject( def = m4:= marker(P[4].x, P[4].y); color = orange; target = da );
+					
+						
+					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Kubische Ansatzfunktionen</title>
+			<description>Ob es nun gelingt, aus einzelnen Funktionsgraphen eine "schöne" Kurve zusammenzusetzen, hängt entscheidend davon ab, ob die zugrunde liegenden Funktionen genügend Parameter haben, um sie an die Anforderungen anzupassen. 
+<br/>Die "einfachsten" Funktionen, mit denen das "gut" gelingt, sind Polynome vom Grad <f>3</f> wie <f>p(x):=a[3]*x^3+a[2]*x^2+a[1]*x+a[0]</f>, kurz als kubische Polynome bezeichnet.
+<br/>Ein solches Polynom hat vier Parameter. Weiter unten wird sich zeigen, dass dies gerade ausreicht, um einen gewissen Satz von Anforderungen zu erfüllen.
+<br/>Sie sehen jetzt oben die Graphen von zwei solchen kubischen Polynomen eingezeichnet.</description>
+			<seq>
+				<script>
+										
+					newObject( def = h:=&lt;funktion&gt;liste0(i,4,P[i+1].x-P[i].x));				
+					newObject( def = delta:=&lt;funktion&gt;liste0(i,4,(P[i+1].y-P[i].y)/h[i]));
+					newObject( def = koeff:=matrix( { {  2*(h[0]+h[1]),   h[1] ,             0                 },
+					                                                 {  h[1],               2*(h[1]+h[2]),  h[2]              },
+					                                                 {  0,                   h[2],               2*(h[2]+h[3]) } }) );
+					newObject( def = inhom :=vektor(i,3, 3*(delta[i]-delta[i-1])) );    			
+					newObject( def = C:=solvelin(koeff, inhom) );                                            
+				    newObject( def = c:=&lt;funktion&gt;liste0({0,C[1],C[2],C[3], 0}) );
+				    newObject( def = d:=&lt;funktion&gt;liste0(i,4,(c[i+1]-c[i])/(3*h[i])));
+				    newObject( def = b:=&lt;funktion&gt;liste0(i,4,delta[i]-h[i]/3*(2*c[i]+c[i+1])));
+					newObject( def = p:=&lt;funktion(x)&gt;liste0(i,4,P[i].y+b[i]*(x-P[i].x)+c[i]*(x-P[i].x)^2+d[i]*(x-P[i].x)^3));					
+										
+					newObject(
+						def = aa:=0.5;
+					);	
+					
+					newObject(
+						def = bb:=-5;
+					);		
+					
+					newObject(
+						def = cc:=-5;
+					);	
+					
+					newObject(
+						def = dd:=-40;
+					);	
+					
+					newObject(
+						//def = p0(x):=p[0](x);
+						def = p0(x):=P[0].y+b[0]*(x-P[0].x)+c[0]*(x-P[0].x)^2+aa*d[0]*(x-P[0].x)^3;
+						color = green;
+						target = da;
+					);	
+					
+										
+					newObject(
+						//def = p1(x):=p[1](x);
+						def = p1(x):=P[1].y+bb*b[1]*(x-P[1].x)+cc*c[1]*(x-P[1].x)^2+dd*d[1]*(x-P[1].x)^3;
+						color = blue;
+						target = da;
+					);		
+					
+																																																																																																																										
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Kurvenstücke</title>
+			<description>Jetzt sind nur die Teile der Graphen sichtbar, die später als Kurvenstücke zur Interpolation beitragen sollen.
+			  <br/>Im Folgenden wollen wir an Hand des Punktes <f>P[1]</f> genauer zeigen, was wir unter einem "schönen" Übergang zwischen zwei Kurvenstücken verstehen wollen.</description>
+			<seq>
+				<script>
+					modifyObject(name=p0; visible=false;);
+					modifyObject(name=p1; visible=false;);					
+					
+					newObject(
+						def = k0:=kurve(t,P[0].x,P[1].x,t,p0(t));
+						color = green;
+						target = da;
+					);
+					
+					newObject(
+						def = k1:=kurve(t,P[1].x,P[2].x,t,p1(t));
+						color = blue;
+						target = da;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Keine Sprünge: Stetigkeit</title>
+			<description>Die wichtigste Anforderung ist sicher die, dass die Kurve keine Sprünge macht.
+		  <br/>Das grüne Kurvenstück sollte also beim Punkt <f>P[1]</f> enden.
+		  <br/>Bei geeigneter Wahl der entsprechenden Parameter klappt das auch ...</description>
+			<seq>
+				<script>
+					da.coordinateSystem(
+						xMin=-1;
+						xMax=1;
+						yMin=1;
+						yMax=3.5;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>... also besser so.</description>
+			<seq>
+				<animate object="main" parameterName="aa" to="1" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>Keine Knicke: Stetigkeit der ersten Ableitung</title>
+			<description>Unauffälliger wäre die Verbingung des grünen und blauen Kurvenstücks am Punkt <f>P[1]</f> sicher, wenn dort kein Knick wäre. 
+		  <br/>Geometrisch: Die beiden Kurvenstücke sollten an dieser Stelle die gleiche Tangente haben.
+		  <br/>Die Analysis sagt: Dies erreichen wir, wenn bei den beide Funktionen an dieser Stelle die Ableitung den gleichen Wert hat.
+		  <br/>Wir stellen an den Parametern ...</description>
+			<seq/>
+		</step>
+		<step>
+			<description>... also besser so.</description>
+			<seq>
+				<animate object="main" parameterName="bb" to="1" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>Kein Sprung in der Krümmung: Stetigkeit der 2. Ableitung</title>
+			<description>Unser Auge sagt uns, dass die Verbindung der beiden Kurvenstücke am Punkt <f>P[1]</f> immer noch nicht "ganz schön" ist. 
+		  	   <br/>Auch als Autofahrer würden wir die Verbindung der "grünen und der blauen Straße" nicht als besonders gelungen empfinden: Wenn wir von der grünen Kurve kommend zum Punkt <f>P[1]</f> gelangen, haben wir dort das Lenkrad nach rechts eingeschlagen, wenn wir auf das blaue Stück kommen, müssen wir sofort (unstetig) nach lins einschlagen.
+<br/>Geometrisch: Die beiden Kurvenstücke haben am Verbindungspunkt eine unterschiedliche Krümmung - sie sollte aber besser den gleichen Wert haben.
+<br/>Die Analysis sagt: Dies erreichen wir, wenn bei den beide Funktionen an dieser Stelle die 2. Ableitung den gleichen Wert hat.
+		  <br/>Wir stellen an den Parametern ...</description>
+		</step>
+		<step>
+			<description>... also besser so.</description>
+			<seq>
+				<animate object="main" parameterName="cc" to="1" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>... den nächsten Punkt interpolieren</title>
+			<description>Nun sollte natürlich das blaue Kurvenstück bei <f>P[2]</f> enden ...</description>
+		</step>
+		<step>
+			<description>... also besser so.</description>
+			<seq>
+				<animate object="main" parameterName="dd" to="1" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>Interpolations- und Stetigkeitsbedingungen</title>
+			<description>Insgesamt hat man so an die vier Kurvenstücke, die die Punkte <f>P[0]</f>, ..., <f>P[4]</f> interpolieren sollen, folgende Anforderungen:
+		  <ul>
+					<li>Ein Kurvenstück startet bei einem Punkt und endet beim nächsten. Das ergibt pro Kurvenstück <f>2</f>, insgesamt <f>8</f> Anforderungen.</li>
+					<li>An den Verbindungspunkten haben die Ableitungen jeweils den gleichen Wert. Das sind bei <f>3</f> Verbindungspunkten <f>3</f> Anforderungen.</li>
+					<li>An den Verbindungspunkten haben die zweiten Ableitungen jeweils den gleichen Wert. Das sind <f>3</f> Anforderungen.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>In Summe entstehen so <f>8+3+3=14</f> Anforderungen.
+				Die <f>4</f> kubischen Kurvenstücke haben insgesamt <f>4*4=16</f> Parameter. Diese sind mit obigen Gleichungen noch nicht eindeutig bestimmt. Deshalb ergänzt man noch <f>2</f> weitere sogenannte Randbedingungen:
+		</description>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>entweder: Die Krümmung am Anfang und am Ende ist <f>$void=0</f>. Das ergibt <f>2</f> Gleichungen. Wählt man diese Randbedingungen, dann spricht man von <em>natürlichen Splines</em>.</li>
+					<li>oder: An den Rändern (Anfang und Ende) gibt man der Tangente eine bestimmte Steigung. Das ergibt ebenfalls zwei zusätzliche Gleichungen. Diese Randbedingungen werden als <em>Hermite-Randbedingungen</em> bezeichnet.</li>
+				</ul>
+				<br/>Wir wollen im Folgenden den einfacheren Fall der natürlichen Splines weiter verfolgen.</description>
+			<seq>
+				<script>
+					da.coordinateSystem(
+						xMin = -3.5;
+						xMax = 3.5;
+						yMin = -2;
+						yMax = 5;
+					);
+					
+					animate(name=dd; to=1.001; end=0.1);
+					animate(name=dd; to=1; end=0.1);
+					
+					modifyObject(name=k0; visible=false;);
+					modifyObject(name=k1; visible=false;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Die Ansatzfunktionen</title>
+			<description>Für das kubische Polynom, das die Punkte <f>P[0]</f> und <f>P[1]</f> interpolieren soll, wählt man den Ansatz
+			<br/>
+				<f>p[0](x)=P[0].y+b[0]*(x-P[0].x)+c[0]*(x-P[0].x)^2+d[0]*(x-P[0].x)^3</f>, 
+			<br/>
+				<f>P[0].x</f> bzw. <f>P[0].y</f> sind darin die <f>x</f>- bzw. <f>y</f>-Koordinaten des Punktes <f>P[0]</f>. </description>
+			<seq>
+				<script>
+                        newObject(
+						def = p0(x):=p[0](x);
+						color = green;
+						target = da;
+					);
+					
+										
+					newObject(
+						def = p1(x):=p[1](x);
+						color = blue;
+						target = da;
+					);
+                     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Das Polynom, das <f>P[0]</f> und <f>P[1]</f> interpolieren soll, setzt man an als
+			<br/>
+				<f>p[1](x)=P[1].y+b[1]*(x-P[1].x)+c[1]*(x-P[1].x)^2+d[1]*(x-P[1].x)^3</f>, die anderen entsprechend.
+		   </description>
+		</step>
+		<step>
+			<title>Das Gleichungssystem</title>
+			<description>Zu lösen ist dann insgesamt ein System von <f>16</f> Gleichungen für die <f>16</f> Parameter der <f>4</f> kubischen Ansatzfunktionen. Kern dieser Gleichungen ist ein lineares Gleichungssystem für die <f>4</f> Parameter <f>c[0]</f>, <f>c[1]</f>, <f>c[2]</f> und <f>c[3]</f>. Dieses Gleichungssystem bewirkt, dass das Verschieben eines Punktes alle Parameter <f>c[0]</f>, <f>c[1]</f>, <f>c[2]</f> und <f>c[3]</f> und somit alle Kurvenstücke beeinflusst. 
+<br/>Die Lösung für die restlichen Parameter kann durch feste Terme angegeben werden.
+			<br/>
+			</description>
+		</step>
+		<step>
+			<title>Das konkrete Beispiel</title>
+			<description>Oben sind nun die <f>4</f> kubischen Kurven eingezeichnet, aus denen sich letztlich der Spline-Kurvenzug zusammensetzt.
+			<br/>Experimentieren Sie durch Verschieben der Punkte. Beobachten Sie dabei, dass die Kurven am jeweiligen Verbindungspunkt zu jedem Zeitpunkt ohne Knick und ohne Sprung in der Krümmung ineinander übergehen (grün zu blau beim Punkt <f>P[1]</f>, blau zu rot beim Punkt <f>P[2]</f>, ...).</description>
+			<seq>
+				<script>
+                     modifyObject(name=p0; visible=true;);
+					modifyObject(name=p1; visible=true;);		
+
+										
+					newObject(
+						def = p2(x):=p[2](x);
+						color = red;
+						target = da;
+					);
+					
+										
+					newObject(
+						def = p3(x):=p[3](x);
+						color = gray;
+						target = da;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Natürliche kubische Spline-Interpolation</title>
+			<description>Nun sind die überflüssigen Teile der Graphen ausgeblendet. Übrig bleibt die gesuchte natürliche kubische Spline-Interpolation.
+			<br/>Experimentieren Sie durch Verschieben der Punkte. 
+			<br/>Beobachten Sie insbesondere, dass ein Verschieben des Punktes <f>P[0]</f> auch das Kurvenstück zwischen <f>P[3]</f> und <f>P[4]</f> leicht beeinflusst. Dieser Einfluss ist umso größer, je kleiner der Abstand zwischen <f>P[0]</f> und <f>P[1]</f> ist.</description>
+			<seq>
+				<script>
+					modifyObject(name=p0; visible=false);					
+					modifyObject(name=p1; visible=false);
+					modifyObject(name=p2; visible=false);
+					modifyObject(name=p3; visible=false);					
+					modifyObject(name=k0; visible=true);	
+					modifyObject(name=k1; visible=true);	
+					
+					newObject(
+						def = k2:=kurve(t,P[2].x,P[3].x,t,p2(t));
+						color = red;
+						target = da;
+					);
+					
+					newObject(
+						def = k3:=kurve(t,P[3].x,P[4].x,t,p3(t));
+						color = gray;
+						target = da;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Ausblick</title>
+			<description>Der Begriff "Spline" steht nicht ausschließlich für die oben gezeigt Vorgehensweise zur Erstellung einer Interpolationsfunktion.
+		    <br/>Er steht vielmehr allgemein für die Idee, eine Interpolationskurve aus einzelnen Stücken zusammenzusetzen und dabei an den Übergängen einen möglichst hohen Grad an Stetigkeit (kein Sprung, gleiche Tangente, gleiche Krümmung, ...) zu gewährleisten.
+<br/>Gängige Varianten sind z.B.
+<ul>
+					<li>Erzeugung von Spline-Kurven in der Ebene oder im dreidimensionalen Raum. So macht man sich von der Einschränkung frei, dass zwei verschiedene Punkte nicht die gleiche x-Koordinate haben dürfen.</li>
+					<li>Man nimmt als Ansatzfunktionen keine kubischen Polynome, sondern z.B. gebrochen-rationale Funktionen.</li>
+				</ul>
+			</description>
+		</step>
+	</body>
+</math4u2>

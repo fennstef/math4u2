@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. M. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Kurven/Kubische Kurven</location>
+		<title>kubische B-Splines</title>
+		<summary>Eingenschaften von uniformen nichtrationalen kubischen B-Splines. Konstruktion der Gewichtsfunktionen.</summary>
+		<keywords>
+			<keyword>Spline</keyword>
+			<keyword>B-Spline</keyword>
+			<keyword>uniform</keyword>
+			<keyword>nichtrational</keyword>
+			<keyword>Gewichtsfunktion</keyword>
+			<keyword>Basisfunktion</keyword>
+		</keywords>
+		<step>
+			<title>Uniforme nichtrationale kubische B-Splines</title>
+			<description>
+				<strong>Zusammengesetzte Kurven</strong>
+				<br/>An vielen Stellen in der Technik und in der Computergraphik benötigt man Kurven, die sich durch eine bestimmte Anzahl von Steuerpunkten in eine gewünsche Form bringen lassen. In der Regel werden solche Kurven aus einzelnen Kurvenstücken zusammengesetzt. Oben sehen Sie eine Kurve, die aus drei Kurvenstücken (gepunktet, durchgezogen, gestichelt) zusammengesetzt ist. Jedes dieser Kurvenstücke wird durch geeignete Koordinatenfunktionen in Parameterform beschrieben. 
+		</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="kurven"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+		      deleteAll();
+					kurven.coordinateSystem(xMin=0.5;xMax=10;yMin=1;yMax=8);	
+					kurven.setTitle( title = "Kurve");
+					expand( left = false; right = false );
+					newObject( def = p0:=punkt(1, 6); target = kurven; );
+					newObject( def = p1:=punkt(4, 4.2); colr = red; target = kurven; );
+					newObject( def = p2:=punkt(2, 2.2); color = blue; target = kurven; );
+					newObject( def = p3:=punkt(6.37, 2.2); color = green; target = kurven; );
+					newObject( def = p4:=punkt(7, 5.3); color = orange; target = kurven; );
+					newObject( def = p5:=punkt(8.6, 4.5); color = gray; target = kurven; );
+					newObject( def = pp:=&lt;punkt>liste0({p0, p1,p2,p3,p4,p5}); );
+					newObject( def = a:=1/6 );
+					newObject( def = b:=0 );
+					newObject( def = c:=0);
+					newObject( def = d:=0);
+					newObject( def = m:=1/2 );
+					newObject( def = n:=-1 );
+					newObject( def = p:=0);
+					newObject( def = q:=2/3);
+
+					newObject( def =g4(t) :=a* t^3+b*t^2+ c*t +d );
+					newObject( def = g3(t) := (-t^3+t^2+t+1/3)/2);
+					newObject( def = g2(t) := m*t^3+n*t^2+p*t+q );
+					newObject( def =g1(t) := a*(1-t)^3 );
+					
+					newObject( def =gg4(t) := t^3/6 );
+					newObject( def = gg3(t) := (-t^3+t^2+t+1/3)/2);
+					newObject( def = gg2(t) := (3*t^3-6*t^2+4)/6);
+					newObject( def =gg1(t) := (1-t)^3/6 );
+
+
+					newObject( def = polx(i,t) := pp[i-1].x*gg1(t)+pp[i].x*gg2(t)+pp[i+1].x*gg3(t)+pp[i+2].x*gg4(t) );
+					newObject( def = poly(i,t) := pp[i-1].y*gg1(t)+pp[i].y*gg2(t)+pp[i+1].y*gg3(t)+pp[i+2].y*gg4(t) );
+					newObject( def =py(t) := p1.y*g1( t)+p2.y*g2( t)+p3.y*g3( t)+p4.y*g4( t) );
+					newObject( def = px(t) := p1.x*g1( t)+p2.x*g2( t)+p3.x*g3( t)+p4.x*g4( t));
+										newObject( def = mark0:=marker(px(0), py(0) ); target = kurven );
+					newObject( def = mark1:=marker(px(1), py(1) ); target = kurven );
+					newObject( def =spline1:=kurve(t,0,1,polx(1,t),poly(1,t)); linestyle = dot;  target = kurven );
+					newObject( def =spline2:=kurve(t,0,1,polx(2,t),poly(2,t)); target = kurven );
+					newObject( def =spline3:=kurve(t,0,1,polx(3,t),poly(3,t)); linestyle = dash; target = kurven );
+					
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Geometrische Stetigkeit</strong>
+				<br/>Die Anforderungen an eine zusammengesetzte Kurve sind mit denen vergleichbar, die man an eine Straße stellen würde, die aus einzelnen Teilstücken zusammengesetzt ist: Der Übergang von einem Stück zum nächsten sollte möglichst unauffällig sein. 
+<br/>Als erstes soll an dieser Stelle kein Sprung sein. Ein solcher Übergang heißt dann G0-stetig.
+<br/>Schöner ist es, wenn an der Verbindungsstelle zwischen zwei Stücken kein Knick entsteht, d.h. wenn zusätzlich beide Kurvenstücke dort dieselbe Tangente haben. Ein solcher Übergang heißt G1-stetig.
+
+	    </description>
+		</step>
+		<step>
+			<description>Noch schöner ist es, wenn man beim Übergang von einem Straßenstück zum nächsten den Lenkrad-Einschlag beibehalten kann, d.h. wenn beide Kurvenstücke zusätzlich dort dieselbe Krümmung haben. Dann heißt der Übergang G2-stetig.
+<br/>Man spricht ausführlich von einem zweifach geometrisch stetigen Übergang. Bei anspruchsvollen gestalterischen oder technischen Aufgabenstellungen kann ein noch höherer Grad von geometrischer Stetigkeit erforderlich sein.
+<br/>Wir wollen im Folgenden die Kurvenstücke so zusammensetzen, dass jeder Übergang G2-stetig ist.
+		   </description>
+		</step>
+		<step>
+			<description>
+				<strong>Steuerpunkte</strong>
+				<br/>Unsere Kurve soll durch eine Reihe von Steuerpunkten interaktiv veränderbar sein. Dabei soll jedes Kurvenstück nur durch einen Teil der Steuerpunkte beeinflusst sein.
+				<br/>In unserem Fall wird das erste Kurvenstück (gepunktet) durch die Punkte p0, p1, p2 und p3 beeinflusst,
+		   <br/>das mittlere Kurvenstück (durchgezogen) wird durch die Punkte p1, p2, p3 und p4 beeinflusst und
+		   <br/>das dritte Kurvenstück (gestrichelt) wird von den Punkten p2, p3, p4 und p5 beeinflusst.
+		   <br/>Experimentieren Sie durch Verschieben der Punkte mit der Maus. Wie auch immer man die Punkte plaziert, die Kurve bleibt an den Übergängen zwischen zwei Kurvenstücken immer schön "rund".
+
+		   </description>
+		</step>
+		<step>
+			<description>
+				<strong>Kurvenstücke als parametrisierte kubisch Kurven</strong>
+				<br/>Die Kurvenstücke selbst sollen jeweils als parametrisierte Kurven beschrieben werden. Wir wollen also für jedes Kurvenstück zwei Koordinatenfunktionen <f>kx(t)</f> und <f>ky(t)</f> erstellen, die ihrerseits von den relevanten Steuerpunkten (konkret: von deren Koordinaten) abhängen.
+		  </description>
+		</step>
+		<step>
+			<description>
+				<strong>Die Rollen der Steuerpunkte</strong>
+				<br/>Im Folgenden  wollen uns auf das mittlere Kurvenstück konzentrieren. 
+		  <br/>Überprüfen Sie folgende Eigenschaften durch Experimente:
+		  <br/>Das mittlere Kurvenstück startet in der Nähe des Punktes p2, seine Richtung wird dabei vom Punkt p1 beeinflusst.
+		  <br/>Es endet in der Nähe des Punktes p3, dabei wird seine Richtung vom Punkt p4 beeinflusst.
+		  <br/>Die Punkte p0 und p5 haben keinen Einfluss auf das mittlere Kurvenstück.
+		  <br/>Entsprechend gilt: Der Punkt p4 hat keinen Einfluss auf das erste Kurvenstück.
+		  </description>
+		</step>
+		<step>
+			<description>Nun sollen die Koordinatenfunktionen <fh>kx</fh> und <fh>ky</fh> der Kurven abgeleitet werden. Dazu blenden wir jetzt links ein zusätzliches Koordinatensystem ein.
+		</description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="gewichte"/>
+					<col perc="50" name="kurven"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+
+					gewichte.coordinateSystem(xMin=-1.51;xMax=2.51;yMin=-0.5;yMax=1.5);					
+					gewichte.setTitle( title = "Gewichtsfunktionen");
+										
+					newObject( def = flaecheLinks:= flaeche({punkt(-1, 0), punkt(0,0), punkt(0, 10), punkt(-1, 10 )}); fillcolor = 100.100.100.100;  target = gewichte );
+					newObject( def = flaecheRechts:= flaeche({punkt(1, 0), punkt(2,0), punkt(2, 10), punkt(1, 10 )}); fillcolor = 100.100.100.100; target = gewichte );
+					newObject( def = streckeLinks := strecke( punkt(-1, -0.2), punkt(0,-0.2) ) ; linestyle = dot; target = gewichte );
+					newObject( def = streckeMitte := strecke( punkt(0, -0.2), punkt(1,-0.2) ) ; target = gewichte );
+					newObject( def = streckeRechts := strecke( punkt(1, -0.2), punkt(2,-0.2) ) ; linestyle = dash; target = gewichte );
+					
+					newObject( def = m10:= marker( -0.875, 1.1); color = black; target = gewichte );
+					newObject( def = m11:= marker( -0.625, 1.1); color =red; target = gewichte );
+					newObject( def = m12:= marker( -0.375, 1.1); color = blue; target = gewichte );
+					newObject( def = m13:= marker( -0.125, 1.1); color = green; target = gewichte );
+					
+					
+					newObject( def = m21:= marker( 0.125, 1.1); color =red; target = gewichte );
+					newObject( def = m22:= marker( 0.375, 1.1); color = blue; target = gewichte );
+					newObject( def = m23:= marker( 0.625, 1.1); color = green; target = gewichte );
+					newObject( def = m24:= marker( 0.875, 1.1); color = orange; target = gewichte );
+					
+					newObject( def = m32:= marker( 1.125, 1.1); color = blue; target = gewichte );
+					newObject( def = m33:= marker( 1.375, 1.1); color = green; target = gewichte );
+					newObject( def = m34:= marker( 1.625, 1.1); color = orange; target = gewichte );
+					newObject( def = m35:= marker( 1.875, 1.1); color =gray; target = gewichte );
+
+
+					
+					
+					
+					
+					
+					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Die horizontale Achse  ist die "Zeit"-Achse. Zum Zeitpunkt <f>t=-1</f> befinden wir uns am Anfang der Gesamtkurve.
+		   </description>
+			<seq>
+				<script>newObject( def = tt := -0.9999 );
+		         newObject( def = kind := ceil(tt)+1 );
+		         newObject( def = tm := text(punkt(tt,0), "aktuelle Zeit", C_S); target = gewichte );
+		         newObject( def = km := marker(polx(kind,tt+2-kind), poly(kind,tt+2-kind)); color = magenta; target = kurven );
+		         newObject( def = tkm := text(punkt(polx(kind,tt+2-kind), poly(kind,tt+2-kind)), "aktueller Punkt", B_NE); target = kurven );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir den Parameter <f>t</f> zwischen <f>-1</f> bis <f>0</f> verändern, laufen wir auf dem ersten Kurvenstück vom Startpunkt der Gesamtkurve bis zum ersten Verbindungspunkt (Knotenpunkt).
+		  </description>
+			<seq>
+				<script>animate( name = tt; to= 0; end = 5 );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir <f>t</f> weiter von <f>0</f> bis <f>1</f> verändern, laufen wir weiter auf dem mittleren Kurvenstück bis zum zweiten Verbindungspunkt.
+		 		   </description>
+			<seq>
+				<script>		         
+		         animate( name = tt; to= 1; end = 5 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Mit <f>t</f> von <f>1</f> bis <f>2</f> laufen wir auf dem dritten Kurvenstück bis zum Ende der Kurve.
+		   <br/>Unterhalb der <f>t</f>-Achse ist angedeutet, für welches Kurvenstück das jeweilige Zeitintervall zuständig ist, durch die farbigen Punkte oben ist jeweils symbolisiert, welche Punkte in welcher Reihenfolge das jeweilige Kurvenstück beeinflussen.
+		   </description>
+			<seq>
+				<script>
+		         animate( name = tt; to= 1.99999; end = 5 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>uniform</title>
+			<description>Splines, bei denen die Parameterintervalle für sämtliche Kurvenstücke gleich lang sind, heißen uniform.
+		   <br/>Wir konstuieren im Folgenden eine uniforme Spline-Kurve.
+		   <br/>Bei nichtuniformen Splines können verschiedene Kurvenstücke Parameterintervalle unterschiedlicher Länge haben.</description>
+		</step>
+		<step>
+			<description>Wir konzentrieren uns auf die Koordinatenfunktionen für das mittlere Kurvenstück.
+			<br/>Wir wählen für die Koordinatenfunktion <fh>kx</fh> der x-Koordinate des Kurvenpunktes zum Zeitpunkt <f>t</f> folgenden Ansatz:
+           <br/>
+				<br/>
+				<f>kx(t):=p1.x*g1(t)+p2.x*g2(t)+p3.x*g3(t)+p4.x*g4(t)</f>
+			</description>
+			<seq>
+				<script>
+			      deleteObject( name = tkm, km, tm, kind, tt );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Basis</title>
+			<description>Darin sind <fb>ff:=p1.x</fb>, <fb>ff:=p2.x</fb>, <fb>ff:=p3.x</fb> und <fb>ff:=p4.x</fb> die x-Koordinaten der relevanten Punkte und 
+		   <fh>g1(t)</fh>, <fh>g2(t)</fh>, <fh>g3(t)</fh> und <fh>g4(t)</fh> so genannte Gewichts- oder Basis-Funktionen, die festlegen, wie sich beim Durchlaufen das Zeitintervalls von <f>t=0</f> bis <f>t=1</f> die Gewichte (=Einfluss) der entsprechenden Punkte auf die Kurve ändern. 
+
+		   </description>
+		</step>
+		<step>
+			<description>Der Ansatz für die Koordinatenfunktion der y-Koordinate des Kurvenpunktes zum Zeitpunkt <f>t</f> beinhaltet die y-Koordinaten der relevanten Punkte, die Gewichtsfunktionen sind dieselben: <br/>
+				<br/>
+				<f>ky(t):=p1.y*g1(t)+p2.y*g2(t)+p3.y*g3(t)+p4.y*g4(t)</f>
+			</description>
+		</step>
+		<step>
+			<title>Kubisch</title>
+			<description>		Als Gewichtsfunktionen wählen wir kubische Polynome, d.h. Polynome vom Grad &le;3, konkret machen wir z.B. den Ansatz 
+			<br/>
+				<f>g4(t)=a*t^3+b*t^2+c*t*e</f> und <f>g2(t)=f*t^3+g*t^2+h*t*i</f>
+			</description>
+		</step>
+		<step>
+			<title>nichtrational</title>
+			<description>Wir verwenden als Basisfunktionen also Polynome.
+		<br/>Eine Alternative dazu wären rationale Funktionen (d.h. Quotienten von Polynomen). Das Ergebnis wären sog. rationale Splines.
+		<br/>Die Wahl der einfacheren Alternative wird durch das Attribut "nichtrational" dokumentiert.</description>
+		</step>
+		<step>
+			<description>Bevor wir die Koeffizienten der nichtrationalen kubischen Basisfunktionen bestimmen, kurz zu einer möglichen Alternative:
+		   <br/>Die Alternative zu den Basisfunktionen ist ein Ansatz der Koordinatenfunktionen der Kurvenstücke als Polynome, wobei die Koeffizienten der Polynome von den Steuerpunkten abhängen. In diesem Fall erhält man aus den Stetigkeitsbedingungen an den Verbindungsstellen ein lineares Gleichungssystem. In diesem ist jeder Koeffizient eines jeden Polynoms von allen Steuerpunkten abhängig. Verschiebt man nur einen Steuerpunkt, so muss die komplette Lösung dieses Gleichungssystems (d.h. alle Kurvenstücke) neu berechnet werden. Dieser Aufwand bringt allerdings einen Vorteil: Eine so konstruierte Spline-Kurve interpoliert ihre Steuerpunkte. 
+<br/>Bei der Konstruktion, die wir hier weiterführen, erhalten wir Splines, die die Steuerpunkte leider nur approximieren. Der Vorteil ist: Der Rechenaufwand, der entsteht, wenn ein Steuerpunkt verschoben wird, ist vergleichsweise gering, weil davon nur wenige (konkret: 3) Kurvenstücke betroffen sind.
+		   </description>
+		</step>
+		<step>
+			<title>Konstruktion der Basisfunktionen</title>
+			<description>Damit die Kurve am Übergang von einem zum nächsten Kurvenstück G2-stetig ist, müssen die Gewichtsfunktionen dort gewisse Bedingungen erfüllen. 
+<br/>Wenn die Gewichtsfunktionen am Übergang stetig sind, macht die Kurve dort keinen Sprung (G0-Stetigkeit),
+<br/>wenn sie dort die gleiche Ableitung haben, macht die Kurve keinen Knick (G1-Stetigkeit) und
+<br/>wenn sie dort in der zweiten Ableitung übereinstimmen, ändert sich die Krümmung am Übergang nicht (G2-Stetigkeit).
+		  <br/>Durch diese Bedingungen kann man die Koeffizienten <fh>a</fh>, <fh>b</fh>, ... der Gewichtsfunktoinen weitgehend bestimmen.
+		  <br/>Dies zeigen wir jetzt konkret am ersten Übergang.
+		  </description>
+		</step>
+		<step>
+			<description>Der Punkt p4 soll das erste Kurvenstück nicht beeinflussen.
+		  <br/>Wir tragen deshalb im ersten Intervall für diesen Punkt die Nullfunktion als Gewichtsfunktion ein.
+		  </description>
+			<seq>
+				<script>
+		         newObject( def = g14:=kurve(t,-1,0,t ,0); color = orange;  target = gewichte );
+		         newObject( def = ttt:=text(punkt(-0.5,0), "Gewichtsfunktion<br/>für p4 im<br/>ersten Kurvenstück", B_NE ); fillcolor =250.190.000.255; target = gewichte );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Für das mittlere Kurvenstück hat p4 für <f>t=0</f> eine geringe Bedeutung, seine Bedeutung für dieses Kurvenstück wird immer größer, je mehr wir uns <f>t=1</f> nähern.
+		  <br/>Damit beim Übergang vom ersten zum mittleren Kurvenstück kein Sprung, Knick oder Sprung in der Krümmung entsteht, müssen die Gewichtsfunktionen bei <f>t=0</f> im Funktionswert und in der ersten und der zweiten Ableitung übereinstimmen.
+		<br/>Da sich auf der linken Seite für diese Größen stets der Wert 0 ergibt, muss für <f>g4</f> gelten:
+						<br/>
+				<f>d=derive(g4(0),0)=0</f> ,
+						<br/>
+				<f>c=derive(g4(0))=0</f> und
+						<br/>
+				<f>2*b=derive(g4(0), 2)=0</f>
+			</description>
+			<seq>
+				<script>
+				deleteObject( name = ttt );
+		       newObject( def = g24:=kurve(t,0,1,t ,g4(t)); color = orange; target = gewichte );
+		       newObject( def = tt:=text(punkt(0,0), "Übergang <br/>muss <br/>dreimal <br/>stetig sein", B_NW ); target = gewichte );
+		       newObject( def = ttt:=text(punkt(0.9,g4(0.9)), "<fh>g4(t)</fh>:<br/>Gewichtsfunktion<br/>für p4<br/>im mittleren<br/>Kurvenstück", B_NE ); fillcolor =250.190.000.255; target = gewichte );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Damit sind in <f>g4(t)</f> die letzten drei Koeffizienten bestimmt, alle haben den Wert <f>0</f>.
+		</description>
+		</step>
+		<step>
+			<description>Die Gewichtsfunktion zu p4 hat also die einfache Form <f>g4(t)</f>.
+		  </description>
+			<seq>
+				<script>
+				deleteObject( name = ttt, tt );
+		        newObject( def = g4(t):=a*t^3 );
+                    newObject( def = ttt:=text(punkt(0.9,g4(0.9)), "<f>g4(t)</f>", B_NE ); fillcolor =250.190.000.255; target = gewichte );
+
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Punkte p4 und p1 haben im mittleren Kurvenstück ähnliche Rollen:
+		  <br/>In ählicher Weise, wie p4 an Gewicht gewinnt, verliert p1 an Gewicht. 
+		  <br/>Die Gewichtsfunktion für p1 entsteht aus <f>g4(t)</f> durch einfache Koordinatentransformationen. 
+		  <br/>Man erhält <f>g1</f>.
+		  </description>
+			<seq>
+				<script>
+                  		      deleteObject( name =ttt );
+                  		      newObject( def = ttt:=text(punkt(0.2,g1(0.2)), "<f>g1(t)</f>", B_NE); fillcolor =250.0.0.255; target = gewichte );
+
+                  		      newObject( def = g21:=kurve(t,0,1,t ,g1(t)); color = red; target = gewichte );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Für das nächste Argument brauchen wir eine kurze Vorbereitung: Die Gewichtsfunktion des Punktes p2 für das dritte Kurvenstück.
+		     <br/>p2 hat für das dritte Kurvenstück dieselbe Rolle wie p1 für das mittlere Kurvenstück. 
+		     <br/>Deshalb erhält man diese Gewichtsfunktion <f>g2a</f> (blau gestrichelt)  aus der roten "durch Verschieben nach rechts um 1".
+		     <br/>Wichtig ist: 				<br/>
+				<f>g2a(1)=g1(0)=a</f>, 
+		     <br/>
+				<f>derive(g2a(1))=derive(g1(0))=-3*a</f> und 
+		     <br/>
+				<f>derive( g2a(1), 2) = derive(g1(0), 2)=6*a</f>.
+			</description>
+			<seq>
+				<script>
+				           deleteObject( name = ttt);
+                            	newObject( def = g32:=kurve(t,1,2,t ,g1(t-1)); color = blue; linestyle = dash; target = gewichte );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Nun die Gewichtsfunktion von p2 für das mittlere Kurvenstück:
+			<br/>Der Übergang der Gewichtsfunktionen (von blau durchgezogen nach blau gestrichelt) für p2 bei <f>t=1</f> muss dreimal stetig sein. 
+			Insgesamt gelten also für die 4 Koeffizienten des Polynoms <f>g2(t)</f> die 3 Bedingungen:
+<br/>
+				<f>m+n+p+q=derive(g2(1), 0)=derive(g2a(1), 0)=derive(g1(0), 0)=a</f>
+				<br/>
+				<f>3*m+2*n+p=derive(g2(1), 1)=derive(g1(0), 1)=derive(g1(0), 1)=-3*a</f>
+				<br/>
+				<f>6*m+2*n=derive(g2(1), 2)=derive(g1(1), 2)=derive(g1(0), 2) = 6*a</f> .
+			</description>
+			<seq>
+				<script>
+				
+                         newObject( def = tt := text(punkt(1,g2(1)), "Übergang muss <br/>dreimal stetig sein", B_NE ); target = gewichte );
+		          newObject( def = g22:=kurve(t,0,1,t ,g2(t)); color = blue; target = gewichte );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+		  Eine weitere Bedingung ergibt sich aus folgendem Argument: 
+		  <br/>Genau so, wie p2 für das mittlere Kurvenstück zunächst von großer Bedeutung ist, dann aber an Bedeutung verliert, ist p2 für das erste Kurvenstück zunächst von geringer Bedeutung, wird aber immer wichtiger, die Gewichtsfunktion erhält man durch Spiegelung an der y-Achse (blau gepunktet).
+<br/>Damit an der Stelle <f>t=0</f> durch die beiden "blauen" Gewichtsfunktionen die G2-Stetigkeit nicht beeinträchtigt wird, muss dort beiderseits die Ableitung =<f>0</f> sein. Es muss also zusätzlich die vierte Bedingung erfüllt sein:
+<br/>
+				<f>p=derive(g2(0), 1)=0</f>
+			</description>
+			<seq>
+				<script>
+                       newObject( def = g12:=kurve(t,-1,0,t ,g3(t+1)); color = blue; linestyle = dot; target = gewichte );
+                       newObject( def = tt := text(punkt(0, g2(0)), "Hier keine Spitze,<br/>also Ableitung = 0", B_NW); target = gewichte );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Mit diesen 4 Bedingungen lassen sich die vier Parameter in <fh>g2</fh> in Abhängigkeit von <fh>a</fh> festlegen. Man erhält:
+			<br/>
+				<f>g2</f>
+			</description>
+			<seq>
+				<script>
+		               deleteObject( name = tt );
+		          newObject( def = g2(t):= a*(3*t^3-6*t^2+4));
+		           newObject( def = g3(t):=a*(-3*t^3+3*t^2+3*t+1));
+		          newObject( def = ttt:=text(punkt(0.3,g2(0.3)), "<f>g2(t)</f>", B_NE); fillcolor =blue; target = gewichte );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Punkte p2 und p3 haben im mittleren Kurvenstück ähnliche Rollen:
+		  <br/>In ählicher Weise, wie p2 an Gewicht verliert, gewinnt p3 an Gewicht. 
+		  <br/>Die Gewichtsfunktion für p3 entsteht aus <f>g2(t)</f> durch einfache Koordinatentransformationen. 
+		  <br/>Man erhält <f>g3</f>.
+</description>
+			<seq>
+				<script>
+				      newObject( def = ttt:=text(punkt(0.9,g3(0.9)), "<f>g3(t)</f>", B_NW); fillcolor =green; target = gewichte );
+				                              newObject( def = g23:=kurve(t,0,1,t ,g3(t)); color = green; target = gewichte );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Damit sind die Gewichtsfunktionen mit Hilfe von Stetigkeitsargumenten bis auf den Parameter <fh>a</fh> wie folgt bestimmt:
+			<br/>
+				<f>g1(x)</f>
+				<br/>
+				<f>g2(x)</f>
+				<br/>
+				<f>g3(x)</f>
+				<br/>
+				<f>g4(x)</f>
+			</description>
+			<seq>
+				<script>
+				deleteObject( name = ttt );
+
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Den Parameter <fh>a</fh> machen wir nun fest, indem wir fordern, dass an jeder Stelle des Intervalls die Summe der Gewichte der beteiligten Punkte den Wert <f>1</f> ergeben soll. Dies ergibt zuletzt <f>a</f>.
+		  </description>
+			<seq>
+				<script/>
+			</seq>
+		</step>
+		<step>
+			<title>Basisfunktionen für uniforme nichtrationale kubische B-Splines</title>
+			<description>Die Gewichtsfunktionen für uniforme nichtrationale kubische B-Splines haben also die Form:
+		   <br/>
+				<f>g1</f>
+				<br/>
+				<f>g2</f>
+				<br/>
+				<f>g3</f>
+				<br/>
+				<f>g4</f>
+				<br/>Oben sind jetzt auch die Gewichtsfunktionen für die anderen Intervalle eingezeichnet.
+			</description>
+			<seq>
+				<script>
+		      
+
+					newObject( def = g1(t):=1/6*(1-t)^3 );
+					newObject( def = g2(t):=1/6*(3*t^3-6*t^2+4) );
+					newObject( def = g3(t):=1/6*(-3*t^3+3*t^2+3*t+1));
+					newObject( def = g4(t):=1/6*t^3 );
+					
+					
+					newObject( def = g10:=kurve(t,-1,0,t ,g1(t+1)); linestyle = dot; target = gewichte );
+					newObject( def = g11:=kurve(t,-1,0,t ,g2(t+1)); color = red; linestyle = dot; target = gewichte );
+
+					newObject( def = g13:=kurve(t,-1,0,t ,g4(t+1)); color = green; linestyle = dot; target = gewichte );
+
+					newObject( def = g33:=kurve(t,1,2,t ,g2(t-1)); color = green; linestyle = dash; target = gewichte );
+					newObject( def = g34:=kurve(t,1,2,t ,g3(t-1)); color = orange; linestyle = dash; target = gewichte );
+					newObject( def = g35:=kurve(t,1,2,t ,g4(t-1)); color = gray; linestyle = dash; target = gewichte );
+
+		      </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

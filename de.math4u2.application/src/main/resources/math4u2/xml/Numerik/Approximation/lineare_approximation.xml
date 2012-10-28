@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>M. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Approximation</location>
+		<title>Ausgleichsgerade</title>
+		<summary>Approximation einer Reihe von Punkten durch eine Gerade.</summary>
+		<keywords>
+			<keyword>Approximation</keyword>
+		</keywords>
+		<step>
+			<title>Ausgleichsgerade - Aufgabenstellung</title>
+			<description>
+		   Bei technischen Messungen oder naturwissenschaftlichen Experimenten nimmt man häufig eine Reihe von Messpunkten auf, von denen bekannt ist, dass ihre Lage einer bestimmten Gesetzmäßigkeit genügen sollte. 
+<br/>Im einfachsten Fall erwartet man, dass sämtliche Messpunkte auf einer Gerade liegen.
+		   </description>
+			<seq>
+				<call object="main" action="deleteAll"/>
+				<call object="main" action="expandLists">
+					<param type="boolean" value="false"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Experiment</title>
+			<description>Oben sind jetzt die Punkte eines "Modell-Experiments" eingetragen. 
+		  <br/>Wir gehen davon aus, dass sie eigentlich auf einer Gerade liegen sollten, dass dies aber auf Grund von Messfehlern nicht der Fall ist.
+		  <br/>Nachdem nicht bekannt ist, bei welchen Messpunkten der Fehler klein und bei welchen er groß ist,
+		  <br/>wäre es sicher nicht angemessen, die Messung durch eine Gerade zu charakterisieren, die durch zwei der Messpunkte festgelegt ist ...
+		  </description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="Experiment"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				
+			 Experiment.setTitle(title="Experiment");
+
+              
+			  newObject( def= Experiment.xMin := -4 );
+			  newObject( def= Experiment.xMax := 5 );
+			  newObject( def= Experiment.yMin := -7 );
+			  newObject( def= Experiment.yMax := 6 );
+
+
+               newObject( def = p:=&lt;punkt&gt;liste({  punkt( -3*1, -3),
+               															punkt(-2*1,-3.3),
+                                                                           punkt( -1.2*1, -1.6),
+                                                                           punkt( 1.5*1, 1.3),
+                                                                           punkt( 2.5*1,3),
+                                                                           punkt( 3.2*1, 3.4),
+                                                                           punkt( 4*1, 4.0) }) ; target = Experiment );
+                
+                                                      
+
+			 			</script>
+			</seq>
+		</step>
+		<step>
+			<description>oder ...</description>
+			<seq>
+				<script>
+		       newObject( def = g1 := gerade( p[2], p[3].r - p[2].r ) ; color = blue; target = Experiment );
+		       		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>oder ...</description>
+			<seq>
+				<script>
+		       newObject( def = g1 := gerade( p[3], p[3].r - p[4].r ) ; color = blue; target = Experiment );
+		       		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>oder ...</description>
+			<seq>
+				<script>
+		       newObject( def = g1 := gerade( p[5], p[5].r - p[6].r ) ; color = blue; target = Experiment );
+		       		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Man wird also nicht versuchen, das Experiment zu beschreiben, indem man zwei ausgezeichnete Punkte interpoliert, 
+		  <br/>vielmehr wird man eine Gerade wählen, die von allen Punkten einen möglichst kleinen Abstand hat.
+		  </description>
+		</step>
+		<step>
+			<title>Ausgleichsgerade</title>
+			<description>Jetzt ist oben wieder eine blaue Gerade eingezeichnet.
+		<br/>Sie können die Lage der Gerade über den grünen Punkt und die Pfeilspitze verändern.
+		<br/>Plazieren Sie die Gerade so, dass die Abstände von den Messpunkten (rote Strecken) im Mittel möglichst klein sind.</description>
+			<seq>
+				<script>
+		deleteObject( name = g1);
+		newObject(   def = bf:=punkt( fix(0), -2); color = green;);      
+                newObject( def = vf := vektor( {1*1, 1.5}) );
+                newObject( def = rf := pfeil( bf, vf ); color = green; );
+                newObject( def =bb:=bf.y);                                                     
+               newObject( def = aa:=vf[2]);                                                           
+               newObject( def = f(x):=  aa*x + bb; target = Experiment; color = blue;  );
+               modifyObject( name = rf; target = Experiment );
+               modifyObject( name = bf; target = Experiment );
+               newObject(  def = pf:=&lt;punkt&gt;liste(i,7, punkt(p[i].x, f(p[i].x))) );
+               newObject( def = s1 := strecke(p[1], pf[1]); color = red; target = Experiment );             
+               newObject( def = s2 := strecke(p[2], pf[2]); color = red; target = Experiment );
+               newObject( def = s3 := strecke(p[3], pf[3]); color = red; target = Experiment );
+               newObject( def = s4 := strecke(p[4], pf[4]); color = red; target = Experiment );
+               newObject( def = s5 := strecke(p[5], pf[5]); color = red; target = Experiment );
+               newObject( def = s6 := strecke(p[6], pf[6]); color = red; target = Experiment );
+               newObject( def = s7 := strecke(p[7], pf[7]); color = red; target = Experiment );
+               newObject( def = t2 := text(bf, "Gerade verschieben", B_SE); bordercolor = green; fillcolor = 255.255.255.220; target = Experiment);
+               newObject( def = t1 := text(punkt(bf.r.x+vf.x,bf.r.y+vf.y), "Richtung ändern", B_NW); bordercolor = green; fillcolor = 255.255.255.220; target = Experiment);
+		</script>
+			</seq>
+		</step>
+		<step>
+			<description>Unser "Auge" ist sehr geschickt darin, die Lage dieser Ausgleichsgerade festzulegen.
+		   <br/>Für ihre rechnerische Ermittlung benötigen wir allerdings eine Formel, die uns sagt, wie gut die Wahl der Gerade zu den aktuellen Messpunkten passt.
+		   <br/>Meist argumentiert man wie folgt: 
+		   <ul>
+					<li>Große Abstände sollen wesentlich stärker "bestraft" werden als kleine, deshalb bildet man das Quadrat der Abstände.</li>
+					<li>Man bildet die Summe aller quadrierten Abstände.</li>
+					<li>Je kleiner der Wert dieser Summe, desto besser approximiert die Gerade die Messpunkte.</li>
+				</ul>Diese Technik wird allgemein als Least-Square Approximation (Methode der kleinsten Quadrate) bezeichnet.
+			</description>
+		</step>
+		<step>
+			<description>Im Fenster oben rechts ist jetzt der Wert dieser Summe als Balken nach oben aufgetragen.
+			<br/>Verändern Sie die Lage der Gerade.
+			<br/>Stellen Sie die Lage der Gerade so ein, dass ein möglichst kleiner Wert angezeigt wird.</description>
+			<layout>
+				<row perc="100">
+					<col perc="80" name="Experiment"/>
+					<col perc="20" name="Abweichung"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				
+			 Experiment.setTitle(title="Experiment");
+			 Abweichung.setTitle(title="Abweichung");
+
+              			  
+			  newObject( def= Abweichung.xMin := -0.5 );
+			  newObject( def= Abweichung.xMax := 2 );
+			  newObject( def= Abweichung.yMin := -1 );
+			  newObject( def= Abweichung.yMax := 25);
+
+                              newObject( def = fehler := sum(i,1,7, (p[i].y-f(p[i].x))^2 ) );
+               newObject( def = fehlerv:=vektor({fehler}); color = red; target = Abweichung );
+                                     
+
+			 			</script>
+			</seq>
+		</step>
+		<step>
+			<description>Man kann den minimalen Fehler exakt berechnen. 
+		<br/>Dieser Wert ist jetzt oben rechts gestrichelt eingezeichnet.
+		<br/>Experimentieren Sie! 
+		<br/>Es sollte nicht möglich sein, die Höhe des Balkens unter diesen Wert zu drücken.</description>
+			<seq>
+				<script>
+		  newObject( def = D := 7*(  sum(i,1,7,p[i].x^2)   )-(  sum(i,1,7,p[i].x)   )^2    );
+		        newObject( def = Db := 7*( sum(i,1,7,p[i].x*p[i].y) ) - ( sum(i,1,7,p[i].x) ) * ( sum(i,1,7, p[i].y) ) );
+		        newObject( def = Da := ( sum( i,1,7, p[i].x^2) ) * ( sum ( i,1,7, p[i].y) ) - ( sum(i,1,7, p[i].x*p[i].y)  ) * ( sum(i,1,7, p[i].x)  ) );
+		        newObject( def = a:= Da/D );
+		        newObject( def = b := Db/D);
+		        newObject( def = g(x):= a + b*x; linestyle = dash; color = magenta;  );   
+               newObject( def = minfehler := sum(i,1,7, (p[i].y-g(p[i].x))^2 ) );   
+               newObject( def = mfg(x):= minfehler; color = magenta; linestyle = dash; target = Abweichung );          
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<title>Berechnung der Ausgleichsgerade</title>
+			<description>Zum minimal möglichen Wert behört eine eindeutig bestimmte Gerade mit einer Gleichung <f>g</f>.
+		  <br/>Zur Bestimmung der beiden Parameter <fh>a</fh> und <fh>b</fh> muss man folgendes Gleichungssystem lösen:
+          <br/><f> a*7 + b*sum(i,1,7, p[i].x) = sum(i,1,7,p[i].y)</f> und
+			<br/><f>a*sum(i,1,7,p[i].x) + b*sum(i,1,7,p[i].x^2) = sum(i,1,7,p[i].y*p[i].x)</f>
+
+				<br/>Darin sind <fb>ff(i):=p[i].x</fb> und <fb>ff(i):=p[i].y</fb> die x- bzw. y-Koordinaten der einzelnen Punkte.</description>
+		</step>
+		<step>
+			<description>Jetzt ist die berechnete Ausgleichsgerade oben links gestrichelt eingetragen.
+		<br/>Experimentieren Sie!
+		<br/>Natürlich können Sie auch die Messpunkte verschieben.</description>
+			<seq>
+				<script>
+		     Experiment.addGraph( name = g );
+		  </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

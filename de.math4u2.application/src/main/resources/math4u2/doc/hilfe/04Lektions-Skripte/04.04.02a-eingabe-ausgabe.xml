@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.4 description-Tag: Text und Formelsatz</location>
+		<title>4.4.2a Ein-/Ausgabeelemente</title>
+		<step>
+			<title>4.4.2a Ein-/Ausgabeelemente</title>
+			<description>
+Parameter (nullstellige skalare Funktionen) können in Formeln durch Ein-/Ausgabeelemente ersetzt
+werden.
+<p/>So kann die Formel <f>y=sin(omega*t)</f> so konfiguriert werden, dass der Wert für die Kreisfrequenz in
+der Formel angezeit wird und auch dort verändert werden kann.
+Dazu wird im <code>&lt;f></code>-Tag als erstes Element ein <code>&lt;conf></code>-(Konfigurations-)Tag 
+eingefügt. Darin wird festgelegt, welcher Parameter in welcher Form (<code>style</code>) dargestellt 
+werden soll. Als Formen (<code>style</code>) stehen zur Verfügung:
+<br/><br/>				
+<table>
+	<tr>
+		<td><code>text</code></td><td>Ein-/Ausgabefeld</td>
+	</tr><tr>
+		<td><code>dtext</code></td><td>Ein-Ausgabefeld mit Namen des Parameters</td>
+	</tr><tr>
+		<td><code>slider</code></td><td>Schieberegler</td>
+	</tr><tr>
+		<td><code>dslider</code></td><td>Schieberegler mit Namen des Parameters</td>
+	</tr>
+</table>				
+				
+<p/><strong>Ein-/Ausgabefeld:</strong> <code>text</code>
+<br/>Jedes Vorkommen des Parameters <code>omega</code> wird durch ein Ein-/Ausgabefeld der 
+Breite <code>8</code> ersetzt:
+<br/><code><![CDATA[
+<description>
+	Ändern Sie hier die Kreisfrequenz <f>omega</f>:
+	<br/><f><conf>omega(style=text;width=8)</conf>y=sin(omega*t)</f>
+</description>
+]]></code>
+<br/>math4u2-Anzeige:
+<br/>
+<img src="math4u2/doc/images/skript/formelsatz02.jpg"/>	
+			
+<p/><strong>Ein-Ausgabefeld mit Namen des Parameters:</strong> <code>dtext</code>
+<code><![CDATA[
+<description>Ändern Sie hier die Kreisfrequenz <f>omega</f>:
+	<br/><f><conf>omega(style=dtext;width=8)</conf>y=sin((omega)*t)</f>
+</description>
+]]></code>
+<br/>math4u2-Anzeige:
+<br/>
+<img src="math4u2/doc/images/skript/formelsatz03.jpg"/>	
+
+<p/><strong>Schieberegler:</strong> <code>slider</code>
+<br/>Jedes Vorkommen des Parameters <code>omega</code> wird durch einen Schieberegler ersetzt. Der 
+Regelbereich wird durch die Angaben <code>min = -10</code> und <code>max = 10</code> festgelegt:
+<br/><code><![CDATA[
+<description>
+	Ändern Sie hier die Kreisfrequenz <f>omega</f>:
+	<br/><f><conf>omega(style=slider;min = -10;max = 10)</conf>y=sin(omega*t)</f>
+</description>
+]]></code>
+<br/>math4u2-Anzeige:
+<br/>
+<img src="math4u2/doc/images/skript/formelsatz04.jpg"/>	
+
+<p/><strong>Schieberegler mit Namen des Parameters:</strong> <code>dslider</code>
+<code><![CDATA[
+<description>
+	Ändern Sie hier die Kreisfrequenz <f>omega</f>:
+	<br/><f><conf>omega(style=dslider;min=-10;max=10)</conf>y=sin((omega)*t)</f>
+</description>
+]]></code>
+<br/>math4u2-Anzeige:
+<br/>
+<img src="math4u2/doc/images/skript/formelsatz05.jpg"/>	
+
+<p/>Wenn in einer Formel mehrere Paramter durch Ein-/Ausgabeelemente dargestellt werden sollen, so
+werden die entsprechenden Angaben im <code>&lt;conf></code>-Tag jeweils durch ein Semikolon (<code>;</code>) getrennt.
+
+<p/>Werden z.B. im aktuellen Schritt die Parameter und Funktionen
+<br/><code>a:= 1</code>,
+<br/><code>b:= 2</code> und
+<br/><code>g(x):=a*sin(b*x)</code> definiert,
+<br/>so kann man wie folgt eine Formeldarstelliung erzeugen, in der beide Parameter durch 
+Ein-/Ausgabefelder dargestellt werden:
+<br/><code><![CDATA[
+<step>
+	<description>
+		<title2>Parameter und Funktion definieren</title2>
+		Mit <code>a:=1</code>, <code>b:=1</code>
+		und <code>g(x):=a*x+b</code>
+		haben wir zwei Parameter und die Funktion
+		<f>$fd(g)</f> definiert.
+		
+		<title2>Experimentieren</title2>
+		Verändern Sie hier die Werte der Parameter und
+		beobachten Sie die Wirkung!
+		<f>
+			<conf>
+				a(style=slider; min = -3; max = 3);
+				b(style=slider; min = -3; max = 3)
+			</conf>
+			$fd(g)
+		</f>
+	</description>
+	<seq>
+		<script>
+			newObject( def = a:=1; );
+			newObject( def = b:=1; );
+			newObject( def = g(x):=a*x+b; target = da );
+		</script>
+	</seq>
+</step>
+]]></code>
+<br/>
+<img src="math4u2/doc/images/skript/formelsatz06.jpg"/>	
+			</description>
+		</step>
+	</body>
+</math4u2>

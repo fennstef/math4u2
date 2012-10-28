@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Interpolation</location>
+		<title>Interpolationspolynom über LG</title>
+		<summary>Berechnung eines Interpolationspolynoms über ein lineares Gleichungssystem</summary>
+		<step>
+			<title>Polynom-Interpolation: Aufgabenstellung</title>
+			<description>Die <em>Aufgabenstellung</em> bei der Polynom-Interpolation lautet:
+			<br/>Gegeben sind <f>n+1</f> Punkte <f>S[0]</f>, <f>S[1]</f>, ..., <f>S[n]</f> mit paarweise verschiedenen x-Koordinaten.
+		    <br/>Finde ein Polynom <f>p(x)</f> vom Grad &le; <f>n</f>, das diese Punkte interpoliert, d.h. <f>p(S[0].x)=S[0].y</f>, ..., <f>p(S[n].x)=S[n].y</f>
+			</description>
+			<seq>
+				<script>
+			  		deleteAll();
+					da.coordinateSystem(xMin=-2; xMax=3.5; yMin=-1; yMax=3);
+					expand(left=false; right=false);
+									    newObject( def = P4:=punkt(2.133047210300429, 1.3417721518987342); color = orange;  hide = true );
+				    newObject( def = P3:=punkt(1.6373390557939915, 1.1561181434599157); color = gray;  );
+				    newObject( def = P2:=punkt(0.6459227467811157, 0.7426160337552741); color = red; );
+				    newObject( def = P1:=punkt(0.20028612303290405, 1.3839662447257384) ; color = blue;  );
+				    newObject( def = P0:=punkt(-0.4306151645207441, 1.2236286919831225) ; color = green;  );
+				    newObject( def = S:=&lt;punkt>liste0({P0,P1,P2,P3,P4 }) ; target = da );
+					newObject( def = m4:=marker(S[4].x, S[4].y) ; color = orange; target = da; hide = true;);
+					newObject( def = m3:=marker(S[3].x, S[3].y); hide = true; color = gray; target = da);
+					newObject( def = m2:=marker(S[2].x, S[2].y); hide = true; color = red; target = da);
+					newObject( def = m1:=marker(S[1].x, S[1].y); hide = true; color = blue; target = da);
+					newObject( def = m0:=marker(S[0].x, S[0].y); hide = true; color = green; target = da);
+
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Zwei "elegante" Lösungen dieser Aufgabe tragen zwei berühmte Namen: <em>Lagrange-Interpolation</em> und <em>Newton-Interpolation</em>. 
+		<br/>Beide Wege führen letzlich zum gleichen Polynom, allerdings in unterschiedlicher Darstellung.</description>
+		</step>
+		<step>
+			<description>Hier nun die ("wenig elegante") Lösung der Aufgabe über ein lineares Gleichungssystem:<br/>Wir machen für das gesuchte Polynom den Ansatz <f>p(x)=c[0]+c[1]*x+c[2]*x^2+c[3]*x^3+c[4]*x^4</f> und versuchen nun, die Koeffizienten <f>c[0]</f>,..., <f>c[4]</f> passend zu berechnen.</description>
+		</step>
+		<step>
+			<title>Interpolationsbedingungen</title>
+			<description>Zur Berechnung dieser Koeffizienten ziehen wir die Interpolationsbedingungen heran.
+		   <br/>Die Interpolationsbedingung für den Punkt <f>S[0]</f> lautet <f>p(S[0].x)=S[0].y</f>, ausführlich: <br/>
+				<f bgcolor="green">(1)</f>
+				<tab/>
+				<f>c[0]+c[1]*S[0].x+c[2]*S[0].x^2+c[3]*S[0].x^3+c[4]*S[0].x^4=S[0].y</f>
+			</description>
+		</step>
+		<step>
+			<description>Die Interpolationsbedingung für den Punkt <f>S[1]</f> lautet ausführlich: <br/>
+				<f bgcolor="blue">(2)</f>
+				<tab/>
+				<f>c[0]+c[1]*S[1].x+c[2]*S[1].x^2+c[3]*S[1].x^3+c[4]*S[1].x^4=S[1].y</f>
+			</description>
+		</step>
+		<step>
+			<description>Für die restlichen Punkte entsprechend:
+		   <br/>
+				<f bgcolor="red">(3)</f>
+				<tab/>
+				<f>c[0]+c[1]*S[2].x+c[2]*S[2].x^2+c[3]*S[2].x^3+c[4]*S[2].x^4=S[2].y</f>
+				<br/>
+				<f bgcolor="gray">(4)</f>
+				<tab/>
+				<f>c[0]+c[1]*S[3].x+c[2]*S[3].x^2+c[3]*S[3].x^3+c[4]*S[3].x^4=S[3].y</f>
+				<br/>
+				<f bgcolor="orange">(5)</f>
+				<tab/>
+				<f>c[0]+c[1]*S[4].x+c[2]*S[4].x^2+c[3]*S[4].x^3+c[4]*S[4].x^4=S[4].y</f>
+			</description>
+		</step>
+		<step>
+			<description>Insgesamt entstehen also als Interpolationsbedingungen <f>5</f> Gleichungen für die Koeffizienten <f>c[0]</f>, ..., <f>c[4]</f> des gesuchten Polynoms <f>p(x)</f>. Diese Koeffizienten sollen (bei fester Lage der Punkte <f>S[0]</f>, ..., <f>S[4]</f>) so gewählt werden, dass alle <f>5</f> Gleichungen erfüllt sind.
+Da die Koeffizienten (Unbekannten) <f>c[0]</f>, ..., <f>c[4]</f> in diesen Gleichungen nur in erster Potenz vorkommen, liegt insgesamt ein lineares Gleichungssystem mit <f>5</f> Gleichungen und <f>5</f> Unbekannten vor.</description>
+		</step>
+		<step>
+			<title>Lineares Gleichungssystem</title>
+			<description>In Matrixschreibweise lautet es: <f>matrix({    {1,S[0].x, S[0].x^2,S[0].x^3,S[0].x^4},
+				                                                     {1,S[1].x, S[1].x^2,S[1].x^3,S[1].x^4}, 
+				                                                     {1,S[2].x, S[2].x^2,S[2].x^3,S[2].x^4},
+				                                                     {1,S[3].x, S[3].x^2,S[3].x^3,S[3].x^4},
+				                                                     {1,S[4].x, S[4].x^2,S[4].x^3,S[4].x^4} } )*vektor({c[0],c[1],c[2],c[3],c[4]})=vektor({S[0].y,S[1].y,S[2].y,S[3].y,S[4].y})</f>
+			</description>
+		</step>
+		<step>
+			<description>Die Frage ist jetzt: 
+		<ul>
+					<li>Ist dieses Gleichungssystem lösbar?</li>
+					<li>Und, falls es lösbar ist, ist die Lösung dann eindeutig?</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Die Antworten:<ul>
+					<li>Das Gleichungssystem ist lösbar (falls, wie angenommen, die <f>x</f>-Koordinaten der Punkte paarweise verschieden sind). </li>
+					<li>Die Lösung ist eindeutig (falls wir, wie angenommen, <f>5</f> Punkte mit einem Polynom vom Grad <f>$void $le 4</f> interpolieren).</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Die Begründung dieser Antworten kann verschieden erfolgen. Hier kurz: 	      <ul>
+					<li>Die Idee von Lagrange (<em>Lagrange-Interpolation</em>) zeigt konstruktiv, dass es ein Interpolationspolynom gibt und dass deshalb das aus den Interpolationsbedingungen resultierende Gleichungssystem lösbar ist.</li>
+					<li>Die Eindeutigkeit der Lösung und damit des Interpolationspolynoms beweist man z.B. über die allgemeine Nullstellen-Eigenschaft von Polynomen.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Das Gleichungssystem kann also mit jedem Verfahren (Gauss-Algorithmus, Cramersche Regel, inverse Matrix) gelöst werden.
+		  <br/>Wir verwenden hier den eingebauten Gauss-Algorithmus.</description>
+		</step>
+		<step>
+			<title>Intepolationspolynom</title>
+			<description>Das resultierende Polynom ist oben jetzt  rot eingezeichnet.
+							</description>
+			<seq>
+				<script> 
+
+
+				   newObject( def = A:=matrix({    {1,S[0].x, S[0].x^2,S[0].x^3,S[0].x^4},
+				                                                     {1,S[1].x, S[1].x^2,S[1].x^3,S[1].x^4}, 
+				                                                     {1,S[2].x, S[2].x^2,S[2].x^3,S[2].x^4},
+				                                                     {1,S[3].x, S[3].x^2,S[3].x^3,S[3].x^4},
+				                                                     {1,S[4].x, S[4].x^2,S[4].x^3,S[4].x^4} } ) );
+                        newObject( def = b:=vektor({S[0].y, S[1].y,S[2].y,S[3].y,S[4].y}) );
+                        newObject( def = coeff := solvelin(A,b) );
+                        newObject( def = pot(x):=vektor({1,x,x^2, x^3, x^4 }) );
+                        newObject( def = poly(x):=coeff&lt;*>pot(x); color = red; target = da );
+				   
+				  				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Experimentieren Sie!
+		<br/>Sie können die Punkte mit der Maus verschieben. 
+		<br/>Jedesmal, wenn Sie einen Punkt verschieben, entsteht aus den neuen Interpolationsbedingungen ein neues Gleichungssystem für die Koeffizienten des Polynoms: 
+		<br/><f><conf>A(style=eval;width=6);b(style=eval;width=6)</conf>A*vektor({c[0],c[1],c[2],c[3],c[4]})=b</f>, Lösung: <f><conf>coeff(style=eval;width=6)</conf>vektor({c[0],c[1],c[2],c[3],c[4]})=coeff</f>
+		<br/>Dieses Gleichungssystem wird so schnell gelöst, dass fast ohne Zeitverzögerung das passende Interpolationspolynom angezeigt werden kann.</description>
+		</step>
+		<step>
+			<description>Bestätigen Sie durch Experimente:
+<br/>Die Interpolationseigenschaft ist nicht abhängig davon, in welcher Reihenfolge die Punkte von links nach rechts angeordnet sind.
+
+			</description>
+		</step>
+	</body>
+</math4u2>

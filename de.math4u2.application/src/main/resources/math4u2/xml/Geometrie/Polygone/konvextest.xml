@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Polygone</location>
+		<title>Konvex-Test</title>
+		<step>
+			<title>Konvex-Test</title>
+			<description>Hier erfahren Sie <br/>
+				<ul>
+					<li>was die Begriffe <em>konvex</em> und <em>konvav</em> bedeuten und</li>
+					<li>wie man bei einem Polygon durch eine relatriv einfache Rechnung ermitteln kann, ob es konvex oder konkav ist.</li>
+				</ul>
+				<br/>Voraussetzung: Vektorprodukt</description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="Polygon"/>
+					<col perc="30" name="Winkel"/>
+					<col perc="20" name="Summe"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false;right=false);
+					Polygon.setTitle(title="Polygon");
+              
+					newObject( def= Polygon.xMin := -0.5 );
+					newObject( def= Polygon.xMax := 5 );
+					newObject( def= Polygon.yMin := -2.6 );
+					newObject( def= Polygon.yMax := 2.6 );
+									
+					newObject( def= Winkel.xMin := -0.5 );
+					newObject( def= Winkel.xMax := 6 );
+					newObject( def= Winkel.yMin := -10 );
+					newObject( def= Winkel.yMax := 10);
+					
+					newObject( def= Summe.xMin := 1 );
+					newObject( def= Summe.xMax := 6 );
+					newObject( def= Summe.yMin := -1.5 );
+					newObject( def= Summe.yMax := 1.5);
+					  
+					  
+					newObject( def= P5:=punkt(0.5,2); target=Polygon );
+					newObject( def= P4:=punkt(2.5,1.5); target=Polygon );
+					newObject( def= P3:=punkt(3.5,0.5); target=Polygon );
+					newObject( def=P2:=punkt(3,-1.5) ; target=Polygon );
+					newObject( def= P1:=punkt(1,-1.5); target=Polygon );
+					newObject( def= ff:=kurvenzug({P1,P2,P3,P4,P5,P1}); target=Polygon );
+					newObject( def= polygonflaeche:=flaeche({P1,P2,P3,P4,P5,P1}); target=Polygon; color = lightGray );
+					newObject( def= vz(x1,y1,x2,y2,x3,y3) := (x2-x1)*(y3-y2)-(x3-x2)*(y2-y1) );
+			</script>
+			</seq>
+		</step>
+		<step>
+			<title>Definition: konvex und konkav</title>
+			<description>Eine Teilmenge <f>T</f> der affinen Ebene hat eine der beiden folgenden Eigenschaften:
+		  <br/>
+				<ul>
+					<li>
+						<em>konvex:</em> Die Teilmenge heißt konvex, wenn mit je zwei Punkten <f>A $isin T</f> und <fb>B $isin T</fb> die gesamte Verbindungsstrecke dieser beiden Punkte in <f>T</f> verläuft. </li>
+					<li>
+						<em>konkav:</em> Die Teilmenge heißt konkav (ausgehöhlt), wenn sie nicht konvex ist. Dann gibt es mindestens zwei Punkte in <f>T</f>, so dass deren Verbindungsstrecke nicht ganz in <f>T</f> verläuft.</li>
+				</ul>
+				<br/>
+				<br/>Im folgenden wird diese Eigenschaft zunächst bei Polygonen veranschaulicht.. 
+				<br/>Anschließend zeigen wir, wie man diese Eigenschaft bei einem Polygon mit relaiv einfachen Schritten rechnerisch ermitteln kann.
+		  </description>
+		</step>
+		<step>
+			<title>Konvexes Polygon</title>
+			<description>Das jetzt gezeigte Polygon ist konvex. 
+		  <br/>Dazu genügt es allerdings nicht, dass die aktuell gezeigt Verbindungsstrecke zwischen den Punkten <f>A</f> und <f>B</f> vollständig im Polygon verläuft. 
+<br/>Man müsste vielmehr ausprobieren, ob dies bei allen möglichen Positionen der Punkte <f>A</f> und <f>B</f> innerhalb des Polygons der Fall ist ....
+		  </description>
+			<seq>
+				<script>
+					newObject( def= A:=punkt(1,0.5); target=Polygon );
+					newObject( def= B:=punkt(2.5,-1); target=Polygon );
+					newObject( def= s:=strecke(A,B); target=Polygon;  color = green );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>... Wir testen für verschiedene Lagen von <f>A</f> und <f>B</f>, ob die gesamte Verbindungsstrecke <f>s</f> im Polygon verläuft ...</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="A.x" to="0.5" end="2"/>
+					<animate object="main" parameterName="A.y" to="2" end="2"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="B.x" to="3" begin="0.5" end="2"/>
+					<animate object="main" parameterName="B.y" to="1" begin="0.5" end="2"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="A.x" to="1" begin="0.5" end="2"/>
+					<animate object="main" parameterName="A.y" to="-1.5" begin="0.5" end="2"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="B.x" to="3" begin="0.5" end="2"/>
+					<animate object="main" parameterName="B.y" to="-1.5" begin="0.5" end="2"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="B.x" to="2.5" begin="0.5" end="2"/>
+					<animate object="main" parameterName="B.y" to="0" begin="0.5" end="2"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Konkaves Polygon</title>
+			<description>Jetzt ist das Polygon konkav.
+		  <br/>Zwar liegt die Verbindungsstrecke aktuell komplett im Polygon...</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="P4.x" to="2.5" end="2"/>
+					<animate object="main" parameterName="P4.y" to="0.5" end="2"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>... wenn man die Punkte aber anders plaziert, liegt die Verbindungsstrecke nicht mehr vollständig im Poplygon.</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="A.x" to="1" end="2"/>
+					<animate object="main" parameterName="A.y" to="1.5" end="2"/>
+					<animate object="main" parameterName="B.x" to="3" end="2"/>
+					<animate object="main" parameterName="B.y" to="0.5" end="2"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Wie soll man das einem Computer beibringen?</title>
+			<description>Für unser "Auge" ist diese Unterscheidung zwischen "konvex" und "konkav" relativ einfach. 
+		  Wenn wir diese Aufgabe allerdings einem Computer übertragen wollen, der dann lediglich die Koordinaten der Eckpunkte kennt, dann sieht die Situation wesentlich schwieriger aus:
+<ul>
+					<li>Einmal müssten wir für eine gegebene Strecke <f>s</f> herausfinden, ob sie komplett im Polygon verläuft. Dies könnte man noch lösen, indem man ermittelt, ob <f>s</f> einen Schnittpunkt mit einer der Seiten des Polygons hat.</li>
+					<li>Aber dann müsste man ja für alle möglichen Lagen der Endpunkte <f>A</f> und <f>B</f> so überprüfen, ob die zugehörige Verbindungsstrecke <f>s</f> komplett im Polygon liegt. Da ein Polygon in der Regel unendlich viele Punkte enthält, wird man bei dieser Aufgabe nie zu einem Ende kommen.</li>
+				</ul>
+				<br/>
+				<br/>Glücklicherweise gibt es noch eine ganz andere Methode, um festzustellen, ob ein Polygon konvex ist. Bei dieser Methode muss man das Polygon nicht "sehen", sie eignet sich also auch für einen "blinden" Computer. ...</description>
+			<seq>
+				<script>
+					deleteObject(name=s,A,B);
+				</script>
+				<par>
+					<animate object="main" parameterName="P4.x" to="2.5" end="2"/>
+					<animate object="main" parameterName="P4.y" to="1.5" end="2"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Umrunden eines konvexen Polygons</title>
+			<description>Wir umrunden das Polygon einmal und drehen uns an jeder Ecke auf dem kürzesten Weg in die neue Richtung: ....</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					newObject( def= aa:=0 );
+					newObject( def= vv:= P2.r - P1.r );
+					newObject( def= v:=vv/|vv| );
+					newObject( def= pv:=(1-aa)*P1.r+aa*P2.r );
+	
+					newObject( def= pp:=punkt(pv.x,pv.y);
+									  color = red; target = Polygon );
+					newObject( def= vp:=pfeil(pp,v); color = red; target=Polygon );	        
+					
+					animate(name=aa; to=1; end=5);
+					
+					newObject( def= bb:=0 );				
+					newObject( def= vv:=P2.r*(1-2*bb)+P1.r*(bb-1)+P3.r*bb );
+					newObject( def = ww:=winkel(P2, vv, P3.r - P2.r, 0.5); 
+					color = red; target = Polygon );		        
+					
+					animate(name=bb; to=1; end=4);
+	
+					newObject( def= aa1:=0 );
+					newObject( def= vv:= P3.r - P2.r );
+					newObject( def= pv:=(1-aa1)*P2.r+aa1*P3.r );
+	
+					newObject( def= pp:=punkt(pv.x,pv.y);
+									  color = red; target = Polygon );
+					newObject( def= vp:=pfeil(pp,v); color = red; target=Polygon );	        
+					
+					animate(name=aa1; to=1; end=4);
+	
+					newObject( def= bb:=0 );							
+					newObject( def= vv:=P3.r*(1-2*bb)+P2.r*(bb-1)+P4.r*bb );
+					newObject( def = ww:=winkel(P3, vv, P4.r - P3.r, 0.5) );	
+					
+					animate(name=bb; to=1; end=3);
+	
+					newObject( def= aa:=0 );
+					newObject( def= vv:= P4.r - P3.r );
+					newObject( def= pv:=(1-aa)*P3.r+aa*P4.r );        
+					
+					animate(name=aa; to=1; end=2);
+	
+					newObject( def= bb:=0 );							
+					newObject( def= vv:=P4.r*(1-2*bb)+P3.r*(bb-1)+P5.r*bb );
+					newObject( def = ww:=winkel(P4, vv, P5.r - P4.r, 0.5) );		        
+					
+					animate(name=bb; to=1; end=2);
+	
+					newObject( def= aa1:=0 );
+					newObject( def= vv:= P5.r - P4.r );
+					newObject( def= pv:=(1-aa1)*P4.r+aa1*P5.r );        
+					
+					animate(name=aa1; to=1; end=2);
+	
+					newObject( def= bb:=0 );		
+						
+					newObject( def= vv:=P5.r*(1-2*bb)+P4.r*(bb-1)+P1.r*bb );
+					newObject( def = ww:=winkel(P5, vv, P1.r - P5.r, 0.5) );		        
+					
+					animate(name=bb; to=1; end=2);
+	
+					newObject( def= aa:=0 );
+					newObject( def= vv:= P1.r - P5.r );
+					newObject( def= pv:=(1-aa)*P5.r+aa*P1.r );        
+					
+					animate(name=aa; to=1; end=2);
+	
+					newObject( def= bb:=0 );			
+					newObject( def= vv:=P1.r*(1-2*bb)+P5.r*(bb-1)+P2.r*bb );
+					newObject( def = ww:=winkel(P1, vv, P2.r - P1.r, 0.5) );		        
+					
+					animate(name=bb; to=1; end=2);					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Umrunden eines kokaven Polygons</title>
+			<description>Jetzt ist das Polygom konkav.<br/>
+				<br/>Wir umrunden nun wieder das Polygon ....</description>
+			<seq>
+				<animate object="main" parameterName="P4.y" to="0.5" end="2"/>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+					newObject( def= aa:=0 );
+					newObject( def= vv:= P2.r - P1.r );
+					newObject( def= pv:=(1-aa)*P1.r+aa*P2.r );
+	
+					newObject( def= pp:=punkt(pv.x,pv.y);
+							   color = red; target = Polygon 
+					);
+					newObject( def= vp:=pfeil(pp,v); color = red; target=Polygon );	        
+					
+					animate(name=aa; to=1; end=4);
+	
+					newObject( def= bb:=0 );				
+					newObject( def= vv:=P2.r*(1-2*bb)+P1.r*(bb-1)+P3.r*bb );
+					newObject( def = ww:=winkel(P2, vv, P3.r - P2.r, 0.5) );		        
+					
+					animate(name=bb; to=1; end=3);
+	
+					newObject( def= aa1:=0 );
+					newObject( def= vv:= P3.r - P2.r );
+					newObject( def= pv:=(1-aa1)*P2.r+aa1*P3.r );
+					newObject( 
+						def= pp:=punkt(pv.x,pv.y);
+						color = red; 
+						target = Polygon 
+					);
+					newObject( def= vp:=pfeil(pp,v); color = red; target=Polygon );	        
+					
+					animate(name=aa1; to=1; end=2);
+	
+					newObject( def= bb:=0 );							
+					newObject( def= vv:=P3.r*(1-2*bb)+P2.r*(bb-1)+P4.r*bb );
+					newObject( def = ww:=winkel(P3, vv, P4.r - P3.r, 0.5) );	
+					
+					animate(name=bb; to=1; end=2);
+	
+					newObject( def= aa:=0 );
+					newObject( def= vv:= P4.r - P3.r );
+					newObject( def= pv:=(1-aa)*P3.r+aa*P4.r );        
+					
+					animate(name=aa; to=1; end=2);
+	
+					newObject( def= bb:=0 );							
+					newObject( def= vv:=P4.r*(1-2*bb)+P3.r*(bb-1)+P5.r*bb );
+					newObject( def = ww:=winkel(P4,  vv, P5.r - P4.r,  0.5) );		        
+					
+					animate(name=bb; to=1; end=2);
+	
+					newObject( def= aa1:=0 );
+					newObject( def= vv:= P5.r - P4.r );
+					newObject( def= pv:=(1-aa1)*P4.r+aa1*P5.r );        
+					
+					animate(name=aa1; to=1; end=2);
+	
+					newObject( def= bb:=0 );							
+					newObject( def= vv:=P5.r*(1-2*bb)+P4.r*(bb-1)+P1.r*bb );
+					newObject( def = ww:=winkel(P5, vv, P1.r - P5.r, 0.5) );		        
+					
+					animate(name=bb; to=1; end=2);
+	
+					newObject( def= aa:=0 );
+					newObject( def= vv:= P1.r - P5.r );
+					newObject( def= pv:=(1-aa)*P5.r+aa*P1.r );        
+					
+					animate(name=aa; to=1; end=2);
+	
+					newObject( def= bb:=0 );			
+					newObject( def= vv:=P1.r*(1-2*bb)+P5.r*(bb-1)+P2.r*bb );
+					newObject( def = ww:=winkel(P1, vv, P2.r - P1.r, 0.5) );		        
+					
+					animate(name=bb; to=1; end=2);
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>... Auch wenn wir mit verbundenen Augen um das Polygon geführt worden wären, wir hätten zwischen der ersten Umrundung und der zweiten einen entscheidenden Unterschied festgestellt!?</description>
+		</step>
+		<step>
+			<title>Erkennungemerkmal</title>
+			<description>Zwischen beiden Situationen kann man folgendermaßen unterscheiden:
+		  <br/>
+				<ul>
+					<li>
+						<em>Konvexes Polygon</em> (erste Umrundung): Die Drehrichtung ist an allen Ecken die gleiche. Bei der ersten Umrundung haben wir uns konkret an jeder Ecke nach links gedreht.</li>
+					<li>
+						<em>Konkaves Polygon</em> (zweite Umrundung): Die Drehrichtung hat sich einmal geändert: Am Punkt <f>P3</f> dreht man sich nach links, am Punkt <f>P4</f> dann nach rechts.</li>
+				</ul>
+				<br/>Der Betrag des Drehwinkels ist dabei nicht wichtig.</description>
+			<seq>
+				<script>
+					deleteObject(name=vp,pp,ww);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Idee zur rechnerischen Umsetzung</title>
+			<description>Nun soll die Drehrichtung rechnerisch ermittelt werden. Dazu gehen wir wie folgt vor:
+		    <br/>Wir erweitern gedanklich die <f>x-y</f>-Ebene um eine darauf senkrechte Richtung <f>z</f>. Dann bilden die drei Koordeinatenrichtungen eine rechtshändige Ortho-Normal-Basis. 
+Wir berechnen für zwei aufeinander folgende Richtungsvektoren die <f>z</f>-Komponente ihres Vektorprodukts. Diese liefert uns dann folgende Information:<br/>
+				<ul>
+					<li>Wenn diese Größe positiv ist, findet eine Drehung nach links statt.</li>
+					<li>Wenn diese Größe negativ ist, findet eine Drehung nach rechts statt.</li>
+				</ul>
+				<br/>
+				<br/>Im folgenden Schritt berechnen wir diese Größe konkret für den Punkt <f>P1</f>.
+</description>
+		</step>
+		<step>
+			<title>Vektorprodukt am Punkt P1</title>
+			<description>
+Vom Punkt <f>P5</f>  auf den Punkt <f>P1</f> zugehend bewegen wir uns mit folgendem Richtungsvektor (blau):
+				<ul>
+					<li><f>x</f>-Komponente: <f>d1.x=P1.x-P5.x</f>
+					</li>
+					<li><f>y</f>-Komponente: <f>d1.y=P1.y-P5.y</f>
+					</li>
+				</ul>
+				<br/>Wenn wir dann vom Punkt <f>P1</f> auf den Punkt <f>P2</f> zugehen, haben wir einen Richtungsvektor mit (rot):
+				<ul>
+					<li><f>x</f>-Komponente: <f>d2.x=P2.x-P1.x</f> und</li>
+					<li><f>y</f>-Komponente: <f>d2.y=P2.y-P1.y</f>
+					</li>
+				</ul></description>
+			<seq>
+				<script>
+					newObject( def = v1:=(P1.r-P5.r) );
+					newObject( def = v2:=(P2.r-P1.r) );
+					newObject( def = v1p:=pfeil(P5, v1); color = blue; target = Polygon );
+					newObject( def = v2p:=pfeil(P1, v2); color = red; target = Polygon );
+
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+		Aus diesen beiden Vektoren berechnet sich die <f>z</f>-Komponente des Vektorprodukts zu <f>v1_z = d1.x*d2.y-d2.x*d1.y</f>.
+<br/>Im mittleren Fenster sehen Sie den Wert <f>v1_z</f> als roten Balken nach oben bzw. unten aufgetragen.
+<br/>Experimentieren Sie durch Veränderungen am Polygon.	     
+		</description>
+			<seq>
+				<script>
+		    Winkel.setTitle(title="Winkel");
+		    
+            newObject( 
+				def = wv:=vektor({v1.x*v2.y-v2.x*v1.y }) ;
+				color = red; 
+				target = Winkel;
+			);
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Überblick über alle Drehrichtungen</title>
+			<description>Nun haben wir auch für die anderen Eckpunkte die entsprechenden Größen berechnet und als rote Balken aufgetragen.
+<br/>
+				<br/>Experimentieren Sie durch verschieben der Eckpunkte!
+<br/>
+				<ul>
+					<li>Wenn alle roten Belken über (oder unter) der <f>x</f>-Achse liegen, ist das Polygon konvex</li>
+					<li>Wenn die roten Balken auf verschiedenen Seiten der <f>x</f>-Achse liegen, ist das Polygon konkav.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+				deleteObject( name = v1p);
+				deleteObject(name = v2p);
+				newObject( def = v3:=(P3.r-P2.r) );
+				newObject( def = v4:=(P4.r-P3.r) );
+				newObject( def = v5:=(P5.r-P4.r));
+
+				newObject( def = wv:=vektor({v1.x*v2.y-v2.x*v1.y,
+											  v2.x*v3.y-v3.x*v2.y,
+          									  v3.x*v4.y-v4.x*v3.y, 
+          									  v4.x*v5.y-v5.x*v4.y,
+          									  v5.x*v1.y-v1.x*v5.y}) );
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Indikator für konvex/konkav</title>
+			<description>Das ist nun schon recht übersichtlich.<br/>Aber natürlich hätten wir jetzt gerne einen Indikator, der uns insgesamt darüber Auskunft gibt, ob das Polygon aktuell konvex oder konkav ist. 
+<br/>In einer Programmiersprache könnten wir einen logischen Ausdruck erstellen, der prüft, ob alle Vorzeichen gleich sind.
+<br/>
+				<br/>Aber auch ohne logische Ausdrücke sind wir nicht ganz hilflos ...
+        </description>
+		</step>
+		<step>
+			<title>Indikator als Funktionswert</title>
+			<description>Hier können wir  uns behelfen, indem wir aus den berechneten Werten <f>v1.z, $dots,v5.z</f> folgendes berechnen:
+			<ul>
+					<li>die Summe der Beträge: <f>sumAbs:=|v1.z|+|v2.z|+|v3.z|+|v4.z|+|v5.z|</f>,</li>
+					<li>den Betrag der Summe: <f>absSum:=|v1.z+v2.z+v3.z+v4.z+v5.z|</f>.</li>
+					<li>und daraus die Differenz: <f>differenz:=absSum - sumAbs</f>.</li>
+				</ul>
+			Wenn alle Werte <f>v1.z, $dots , v5.z</f> das gleiche Vorzeichen haben, dann hat diese Differenz den Wert <f>0</f>,  ansonsten einen Wert <f>$void $lt 0</f>.
+<br/>Zuletzt berechnen wir aus dieser Differenz die Größe <f>$fb(indikator)</f>
+				<br/>(die Funktion <f>floor(x)</f> rundet auf die nächst-kleinere ganze Zahl ab, die Funktion <f>max(x,y)</f> liefert das größere der beiden Argumente <f>x</f> bzw <f>y</f>).<br/>Dann gilt:
+<ul>
+					<li>
+						<em>konvex</em>: indikator hat den Wert <f>1</f> .</li>
+					<li>
+						<em>konkav</em>: indikator hat den Wert <f>0</f> .</li>
+				</ul>Der rote Pfeil im Fenster ganz rechts zeigt auf den aktuellen Wert. Probieren Sie es aus!</description>
+			<seq>
+				<script>
+					Summe.setTitle(title="Indikator");
+					newObject( def =sumAbs := sum(i,1,5,|wv[i]|) );
+					newObject( def =absSum := |sum(i,1,5,wv[i])| );
+					newObject( def =differenz := absSum - sumAbs );
+					newObject( def =indikator:= max( floor(differenz + 0.1e-10), -1) +1 );
+					
+					newObject( def = konvex:=text(punkt(2.5,1),"konvex",A_E); target = Summe);
+					newObject( def =konkav:=text(punkt(2.5,0),"konkav",A_E); target = Summe);
+					
+					newObject( 
+						def =pf:=pfeil(punkt(1,indikator), vektor({1.5,0}) ); 
+						color = red; 
+						target = Summe 
+					);	    
+			    </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

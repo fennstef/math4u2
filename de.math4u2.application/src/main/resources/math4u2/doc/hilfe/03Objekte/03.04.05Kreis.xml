@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.05 Kreis</title>
+		<step>
+			<title>3.4.5 Kreis</title>
+			<description>			
+<strong>Kreis definieren</strong>
+<br/>Ein Kreis wird durch Angabe von Mittelpunkt und Radius definiert:
+<br/><code>kr1:=kreis(punkt(3,5), 3)</code>.
+<br/>An der ersten Stelle kann ein vorher definierter Punkt verwendet 
+werden, an der zweiten Stelle ein Funktionsterm, der eine Zahl liefert. 
+Sind <code>A</code> und <code>B</code> Punkte, dann entsteht mit
+<code>kr2:=kreis(A, |B.r-A.r|)</code> ein Kreis mit dem Mittelpunkt <code>A</code>.
+Der Term für den Radius ist so
+eingerichtet, dass die Kreislinie stets den Punkt <code>B</code> enthält.
+
+<p/><strong>Detailsicht</strong>
+<p/><img src="math4u2/doc/images/objekte/kreis-detail01.jpg"/>
+
+<p/><code>Methoden eines Kreises</code>
+<br/>Zu einem Kreis <code>k</code> liefert
+<br/><code>k.mitte</code><tab/> den Mittelpunkt,
+<br/><code>k.radius</code><tab/> den Radius und
+<br/><code>k.flaeche</code><tab/> den Flächeninhalt.
+<p/><strong>Beispiel:</strong> Der Kreis <code>k2</code> berührt stets den Kreis <code>k1</code>
+<p/><img src="math4u2/doc/images/objekte/kreis01.jpg"/>
+
+<p/><strong>Hinweis</strong>
+<br/>Auf der Zeichenfläche erscheinen Kreise nur dann als Kreise, wenn für beide Achsen 
+der gleiche Maßstab gewählt ist. Dies erreicht man am schnellsten durch die 
+Auswahl <command>zoom 1:1</command> (Taste: <command>1</command>) oder durch die Festlegung 
+<command>ständiger 1:1 Zoom</command> im Menü der Zeichenfläche.
+			</description>
+		</step>
+	</body>
+</math4u2>

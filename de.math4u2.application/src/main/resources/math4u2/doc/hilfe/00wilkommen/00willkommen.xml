@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>0. Willkommen</location>
+		<title>0.0 Willkommen</title>
+		<step>
+			<title>Willkomen bei math4u2</title>
+			<description>
+<img src="math4u2/images/Math4uLogoBig.gif"/>		
+<p/><strong>Neuigkeiten in der Version math4u2 V2.2</strong>
+<br/>Einen kurzen Überblick über die Neuigkeiten finden Sie als Vorspann vor den
+eigentlichen Kapiteln.
+			
+<p/><strong>Schnell starten</strong>
+<br/>Im Kapitel 1 erfahren Sie,
+<ul>
+	<li>wie Sie eine Lektion von einen math4u2-Server holen und</li>
+	<li>wie Sie selbst ein kleines Modell erstellen.</li>
+</ul>
+<br/><strong>Bedienung im Detail</strong>
+<br/>Im Kapitel 2 werden Sie detailliert mit der Bedienung der math4u2-Oberfläche vertraut gemacht.
+<p/>
+<strong>Die Mathamatik</strong>
+<br/>Das Kapitel 3 beschreibt, wie Sie aus Daten, Funktionen und Objekten Ihr Modell aufbauen, graphisch
+darstellen und manipulieren.
+<p/>
+<strong>Lektions-Skripte</strong>
+<br/>Das Kapitel 4 zeigt, wie Sie mit Hilfe von XML-Skripten math4u2-Lektionen erstellen können.
+				
+<p/><strong>Druckbare Dokumentation</strong>
+<br/>Eine druckbare Benutzerdokumentation der Version 2.1 können Sie 
+unter <strong>http://www.math4u2.de/doku/math4u2-doc_2_1.pdf</strong> herunterladen.
+
+<p/>
+math4u2 ist ein Projekt der FH Augsburg
+<br/>Kontakt: www.math4u2.de.
+			</description>
+		</step>
+	</body>
+</math4u2>

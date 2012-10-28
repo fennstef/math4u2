@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.9 Methoden</title>
+		<step>
+			<title>3.6.9 Methoden</title>
+			<description>
+In jeden &lt;method>-Tag wird genau eine Methode geschrieben. 
+Das Grundgerüst eines &lt;method>-Tags sieht folgendermaßen aus:
+<code><![CDATA[
+
+<method><![CDATA[
+public Rueckgabetyp methodenName(...){
+	...
+}
+]]>]]&gt;<![CDATA[</method>	
+
+]]></code>Dabei leitet die Sequenz <code>&lt;![CDATA[</code> leitet einen Abschnitt ein, in der alle 
+Sonderzeichen wie z.B. <code>&lt;</code>,<code>&gt;</code> oder <code>&amp;</code> als Text 
+interpretiert werden. Die Sequenz wird mit <code>]]&gt;</code> abgeschlossen.
+<p/>
+Jede Funktion, die über die Java-Schnittstelle definiert wird, leitet automatisch von der Klasse
+<code>UserDefinedFunction</code> ab. Steht im &lt;method>-Tag eine Methode, die schon in der
+Klasse <code>UserDefinedFunction</code> definiert wurde, so wird die alte Methode überschrieben.
+<p/>
+
+Einige Methoden in <code>UserDefinedFunction</code>, können direkt benutzt werden:
+<p/><table>
+	<tr>
+		<td bgcolor="#F4C86C">Methode</td>
+		<td bgcolor="#F4C86C">Beschreibung</td>
+	</tr>
+	<tr>
+		<td>public int getArity()</td>
+		<td>Stelligkeit der Funktion</td>
+	</tr>
+	<tr>
+		<td>public Color getColor()</td>
+		<td>Farbe des Graphen</td>
+	</tr>
+	<tr>
+		<td>public void setColor(Color color)</td>
+		<td>Setzt die Farbe des Graphen</td>
+	</tr>	
+	<tr>
+		<td>public String getName()</td>
+		<td>Namen der Funktion</td>
+	</tr>
+	<tr>
+		<td>public boolean isVisible()</td>
+		<td>Gibt an ob die Graphen dieser Funktion gezeichnet werden</td>
+	</tr>
+							
+	<tr>
+		<td>public void setVisible(boolean b)</td>
+		<td>Legt fest ob die Graphen dieser Funktion gezeichnet werden</td>
+	</tr>
+	<tr>
+		<td>public String toString()</td>
+		<td>Ausgabe der Funktion in einer lesbaren Form</td>
+	</tr>
+	<tr>
+		<td>public void reEvalMe(int millis)</td>
+		<td>
+Diese Methode wird normalerweise in der <code>eval(...)</code>-Methode aufgerufen.
+<br/>Diese bewirkt den erneuten Aufruf der <code>eval(...)</code>-Methode in <code>millis</code> Millisekunden. 
+<br/>Indem die <code>eval(...)</code>-Methode immer wieder aufgerufen wird, können bei länger 
+<br/>andauerende Berechnungen Zwischenergebnisse angezeigt werden oder Simulationen realisiert 
+<br/>werden, die sich nach einem gewissen Zeitintervall immer wieder neu berechnen.
+		</td>
+	</tr>
+</table>
+<p/>
+
+Folgende Methoden in <code>UserDefinedFunction</code> sind zum Überschreiben vorgesehen:
+<p/><table>
+	<tr>
+		<td bgcolor="#F4C86C">Methode</td>
+		<td bgcolor="#F4C86C">Beschreibung</td>
+	</tr>
+	<tr>
+		<td>public Object eval(Object[] args)<br/>throws MathException</td>
+		<td>
+Berechnung den Funktionswertes. In <code>args</code> sind die Argumente der
+<br/>Funktion enthalten. Wie verschiedene Typen geholt werden, kann
+<br/>im Kaptiel 3.6.5 entnommen werden. Ferner werden in Beispiel 4
+<br/>verschiedene Typen bei der Berechnung benutzt.
+		</td>
+	</tr>			
+	<tr>
+		<td>public void init()</td>
+		<td>
+Diese Methode wird vor der ersten Berechnung aufgerufen. Dadurch ist es möglich
+<br/>gewisse Arbeiten vor der Funktionsberechnung zu erledigen.
+<br/>(siehe auch Beispiel 6)
+		</td>
+	</tr>
+	<tr>
+		<td>public void paint(Graphics2D g, DrawAreaInterface da)</td>
+		<td>
+Es kann hier der Graph gezeichnet werden. Dabei muss das &lt;with-graph>-Tag
+<br/>gesetzt werden. Mit den Zeichenmethoden von <code>g</code> und den 
+<br/>Zusatzinformationen von der Zeichenfläche <code>da</code> können beliebige
+<br/>Darstellungen erzeugt werden (Siehe Beispiel 7).
+	</td>
+	</tr>							
+</table>
+<p/>
+
+Folgende Methoden in <code>DrawAreaInterface</code> liefern Informationen 
+zum Zeichnen des Graphen:
+<p/><table>
+	<tr>
+		<td bgcolor="#F4C86C">Methode</td>
+		<td bgcolor="#F4C86C">Beschreibung</td>
+	</tr>
+	<tr>
+		<td>public Color getAxisColor()</td>
+		<td>Gibt die Koordinatenachsenfarbe zurück.</td>
+	</tr>
+	<tr>
+		<td>public Color getGridColor()</td>
+		<td>Gibt die Gitterfarbe zurück.</td>
+	</tr>
+	<tr>
+		<td>public int getHeight()</td>
+		<td>Gibt die Höhe der Zeichenfläche in Pixel zurück.</td>
+	</tr>
+	<tr>
+		<td>public int getWidth()</td>
+		<td>Gibt die Breite der Zeichenfläche in Pixel zurück.</td>
+	</tr>
+	<tr>
+		<td>
+public double getXMax();
+<br/>public double getXMin();
+<br/>public double getYMax();
+<br/>public double getYMin();
+		</td>
+		<td>Gibt die Randwerte des Koordinatensystems zurück.</td>
+	</tr>
+	<tr>
+		<td>public int xCoordToPix(double xCoord)</td>
+		<td>Berechnet für eine X-Koordinate die Pixelposition auf der Zeichenfläche.</td>
+	</tr>
+	<tr>
+		<td>public int yCoordToPix(double yCoord)</td>
+		<td>
+Berechnet für eine Y-Koordinate die Pixelposition auf der Zeichenfläche.
+<br/><strong>Vorsicht</strong>: Pixelposition in Y-Richtung geht von oben nach unten.
+		</td>
+	</tr>
+	<tr>
+		<td>public double xPixToCoord(int xPix)</td>
+		<td>Berechnet von der Pixelposition die X-Koordinate.</td>
+	</tr>
+	<tr>
+		<td>public double yPixToCoord(int yPix)</td>
+		<td>Berechnet von der Pixelposition die Y-Koordinate.</td>
+	</tr>
+</table>
+<p/>
+Für das Zeichnen mit <code>Graphics2D</code> sind viele Möglichkeiten vorhanden. Falls Sie noch
+keine Erfahrungen mit dem Zeichnen in Java haben, empfehlen wir Ihnen ein Tutorial zu machen oder
+dieses Thema in einem Java-Buch nachzuschlagen. Für einen kurzen Überblick sind hier die wichtigsten
+Methoden vermerkt.
+<p/><table>
+	<tr>
+		<td bgcolor="#F4C86C">Methode</td>
+		<td bgcolor="#F4C86C">Beschreibung</td>
+	</tr>
+	<tr>
+		<td>drawString(String s, float x, float y)</td>
+		<td>Zeichnet den Text <code>s</code> an die Pixelposition (<code>x</code>,<code>y</code>)</td>
+	</tr>
+	<tr>
+		<td>void drawLine(int x1, int y1, int x2, int y2)</td>
+		<td>Zeichnet eine Linie zwischen (<code>x1</code>,<code>y1</code>) und (<code>x2</code>,<code>y2</code>)</td>
+	</tr>
+	<tr>
+		<td>drawRect(int x, int y, int breite, int hoehe)</td>
+		<td>Zeichnet ein Rechteck</td>
+	</tr>
+	<tr>
+		<td>fillRect(int x, int y, int breite, int hoehe)</td>
+		<td>Zeichnet ein ausgefülltes Rechteck</td>
+	</tr>
+		<tr>
+		<td>drawOval(int x, int y, int breite, int hoehe)</td>
+		<td>Zeichnet eine Ellipse</td>
+	</tr>
+	<tr>
+		<td>fillOval(int x, int y, int breite, int hoehe)</td>
+		<td>Zeichnet eine ausgefüllte Ellipse</td>
+	</tr>
+	<tr>
+		<td>draw(Shape s)</td>
+		<td>
+Zeichnet ein Shape-Objekt. Hervorzuheben ist die universelle Shape-Klasse <code>GeneralPath</code>.
+<br/>Nachdem ein Objekt mit <code>new GeneralPath()</code> instantiiert wurde, kann mit <code>moveTo(...)</code>,
+<br/><code>lineTo(...)</code>, <code>quadTo(...)</code> und <code>curveTo(...)</code> ein beliebiger Pfad gezeichnet
+<br/>werden.
+		</td>
+	</tr>
+	<tr>
+		<td>draw(Shape s)</td>
+		<td>Zeichnet ein ausgefülltes Shape-Objekt.</td>		
+	</tr>
+</table>
+<p/>
+Neben den überschreibbaren Methoden in <code>UserDefinedFunction</code> existiert auch die 
+Membervariable <code>Object cache</code>,
+die für das Zwischenspeichern von Ergebnissen gedacht ist (Siehe auch Beispiel 6).
+<p/><strong>Tipps für das Arbeiten mit der Variable cache:</strong>
+<p/><strong>1.</strong> Überscheibe die <code>init()</code>-Methode und initialisiere die Variable <code>cache</code>.
+<br/>Dafür sind folgende Klassen bei mehreren Zwischenergebnissen gut geeignet: <code>HashMap</code>, <code>LinkedList</code>, <code>List</code>.
+<br/>Soll nur ein Wert gespeichert werden, so kann dieser Wert in der <code>eval(...)</code>-Methode direkt in die Variable <code>cache</code> gespeichert werden.
+<p/><strong>2.</strong> Bei der <code>eval(...)</code>-Methode wird Variable <code>cache</code> meist gelesen und beschrieben.
+<p/><strong>3.</strong> In den anderen Methoden soll die Variable nur gelesen werden.
+								
+<p/>			
+<strong>weitere Hinweise beim Schreiben von Methoden:</strong>
+<p/><strong>1. </strong>
+Erscheint die Fehlermeldung: <strong>[source error] no such class: ...</strong>, dann konnte
+eine Klasse nicht gefunden werden. Diese Klasse muss durch das &lt;import>-Tag bekannt gegeben
+werden (siehe Kapitel 3.6.4).
+<p/><strong>2. </strong>
+Es müssen bei Methodenaufrufen ALLE Casts von Hand gemacht werden, was nicht üblich für Java ist.
+Beispiel:
+<br/><code>Math.sqrt(2);</code>
+<br/>würde in diesem Beispiel zu einen
+Fehler führen, da die <code>2</code> als <code>int</code> verstanden werden
+würde und <code>Math.sqrt()</code> einen <code>double</code>-Wert als Parameter verlangt. 
+<br/>Ein expliziter Cast führt zum gewünschten Erfolg:
+<br/><code>Math.sqrt((double)2);</code>
+<br/>oder hier einfacher und schneller 
+<br/><code>Math.sqrt(2.0);</code>.
+<p/><strong>3. </strong>
+Wir empfehlen Ihnen zuerst die Methoden als ein einfaches Java-Programm zu schreiben und
+zu testen und anschließend die Methoden als Java-Schnittstelle anzubinden. Dadurch können
+Sie die meiste Zeit in Ihrer gewohnten Entwicklungsumgebung arbeiten.
+<p/><p/>
+				
+Damit nicht unabsichtlich eine wichtige Methode überschrieben wird, folgt hier eine Liste aller
+Methoden die nicht überschrieben werden dürfen (alle Methoden sind <strong>public</strong>):
+<ul>
+	<li>boolean hasCurrentObjectGraph(), boolean isFreeze(), 
+		boolean testSubstitution(MathObject a, Set b), boolean testDelete()
+	</li>
+
+	<li>Class getResultType(Class[] argTypes),Class getVariableType(int pos), 
+		Class getReturnType(MethodContext mc),Class getReturnType(PathStep nextStep)
+	</li>
+
+	<li>double evalScalar() throws MathException, Function getDeriveFunction(int da, int b, Broker c) throws MathException,
+		GraphInterface getGraph(DrawAreaInterface da, UserFunction f),int getLineStyle()
+	</li>
+
+	<li>Object eval() throws MathException, Object eval(Object arg) throws MathException, 
+		Object computeDummyObject(Class a), Object getKey(), Object shallowEval() throws Exception,
+		Object shallowEval() throws Exception, Object shallowEval(Object[] args) throws MathException
+	</li>
+
+	<li>PathStep createPathStep(List methods) throws CreatePathException,
+		RelationContainer getRelationContainer()
+	</li>
+
+	<li>String[] getVariableNames(), String getDefinitionHeader(),
+		String buildTermString(String[] a, String b)
+	</li>
+
+	<li>TermNode buildDeriveTerm(TermNode[] a, TermNode[] b, Broker c) throws MathException,
+		TermNode evalNum(TermNode a, TermNode[] b, Brokerc) throws Exception,
+		TermNode simplify(TermNode a, TermNode[] b, Broker c) throws MathException
+    </li>
+
+	
+	<li>void evalFunction(), void paintGraph(Graphics gr, DrawAreaInterface da), 
+		void reportArgumentConflict(TermNode[] a) throws MathException,
+		void setFreeze(boolean b), void setLineStyle(int lineStyle),
+		void swapLinks(MathObject a, MathObject b) throws Exception, 
+		void prepareDelete(), void renew(MathObject source)
+	</li>
+</ul>
+
+			</description>
+		</step>
+	</body>
+</math4u2>

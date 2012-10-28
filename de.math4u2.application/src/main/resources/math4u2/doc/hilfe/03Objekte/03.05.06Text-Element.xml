@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.5 Diagramme und Textelemente</location>
+		<title>3.5.6 Text-Element</title>
+		<step>
+			<title>3.5.6 Text-Element</title>
+			<description>
+<strong>Text-Element definieren</strong>
+<br/>Man definiert ein Text-Element wie bei <code>text1:=text(punkt(1,2), "Wichtig!", B_SW)</code>
+durch Angabe eines Verankerungspunktes (hier: <code>punkt(1,2)</code>), des gewünschten Texts (in <code>""</code> eingeschlossen)
+und einer Layout-Konstante (hier: <code>B_SW</code>).
+
+<p/><strong>Beispiel</strong>
+<br/>Ein Textelement, das immer der Maus folgt, kann man erstellen mit
+<br/><code>maustext:=text(mouse, "Maus", B_NE)</code>.
+
+<p/><strong>Layout</strong>
+<br/>Folgende Graphik zeigt die verschiedenen Layouts. Als Text ist jeweils die zugehörige
+Layout-Konstante eingetragen.
+<p/><img src="math4u2/doc/images/objekte/text-detail01.gif"/>
+
+<p/><strong>Pfeil (A</strong>rrow<strong>)</strong>
+<br/>Der Verankerungspunkt liegt an der Pfeilspitze, die Orientierung ist durch die 
+Himmelsrichtungen (N, S, E, W) gegeben.
+
+<p/><strong>Sprechblase (B</strong>ubble<strong>)</strong>
+<br/>Der Verankerungspunkt liegt an der Pfeilspitze, die Orientierung ist durch die 
+Himmelsrichtungen (NW, NE, SW, SE) gegeben.
+
+<p/><strong>Pfeile für die Koordinatenachsen (K</strong>oordinatenachsen<strong>)</strong>
+<br/>Der Verankerungspunkt liegt an der Pfeilspitze, Die Orientierung ist durch die Himmelsrichtungen
+(N, S, E, W) gegeben.
+
+<p/><strong>Markierung für Koordinatenachsen (C)</strong>
+<br/>Der Verankerungspunkt liegt beim hervorgehobenen Punkt, die Orientierung ist durch die 
+Himmelsrichtungen gegeben.
+
+<p/><strong>Notizzettel (POSTIT)</strong>
+<br/>Der Verankerungspunkt liegt in der linken oberen Ecke.
+			</description>
+		</step>
+	</body>
+</math4u2>

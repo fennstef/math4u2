@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Interpolation</location>
+		<title>Vergleich: Polynom- und Spline-Interpolation</title>
+		<summary>Vergleich einer Interpolation von 8 Punkten durch ein Polynom vom Grad 7 und durch kubische Splines</summary>
+		<keywords>
+			<keyword>Interpolation</keyword>
+			<keyword>Spline</keyword>
+			<keyword>Polynom-Interpolation</keyword>
+		</keywords>
+		<step>
+			<title>Polynominterpolation</title>
+			<description>Zunächst sind die oben gezeigten <f>8</f> Punkte durch ein einziges Polynom (<f bgcolor="red">rot</f>) interpoliert. 
+			<br/>Das Polynom hat einen Grad von maximal <f>7</f>.
+			<br/>Experimentieren Sie: Wenn man einen in der Mitte gelegenen Punkt in <f>y</f>-Richtung verschiebt, ändern sich vor allem in den Randbereichen die Werte des Polynoms "dramatisch".</description>
+			<seq>
+				<script>
+					deleteAll();
+					da.coordinateSystem(
+						xMin=-1.5;					
+						xMax=9;
+						yMin=-2;
+						yMax=5;
+					);
+					
+					expand(left=false;right=false);
+					
+					newObject( def = P := &lt;punkt&gt;liste(i,8, punkt(i,1)); target = da );
+					newObject( def = m := matrix(i,8,k,8, P[i].x^(k-1)) );
+					newObject( def = b := vektor( i,8, P[i].y ) );
+					newObject( def = a:= solvelin( m, b ) );
+					newObject( def = p(x) := vektor(i,8, x^(i-1) ) );
+					newObject( def = poly(x):= p(x) &lt;*&gt;a; color = red; target = da);					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Kubische Spline-Interpolation</title>
+			<description>Nun ist zusätzlich eine stückweise Interpolation durch kubische Splines eingetragen (<f bgcolor="blue">blau</f>).
+			<br/>Experimentieren Sie: Diese Interpolation ist wesentlich "gutmütiger", je weiter man von einem Punkt entfernt ist, dessen <f>y</f>-Wert man verändert, desto geringer sind die Auswirkungen.</description>
+			<seq>
+				<script>
+				   newObject( def = av := vektor(i,7,P[i].y) );
+				   newObject( def = hv := vektor(i,7, P[i+1].x - P[i].x) );
+				   newObject( def = deltav :=vektor( i,7, ( P[i+1].y - P[i].y ) / hv[i] ) );
+				   newObject( def = cm := matrix({ { 2*(hv[1]+hv[2]), hv[2], 0, 0, 0, 0 },
+				                                                  { hv[2], 2*(hv[2]+hv[3]), hv[3], 0, 0, 0},
+				                                                  { 0, hv[3], 2*(hv[3]+hv[4]), hv[4], 0, 0},
+				                                                  { 0, 0, hv[4], 2*(hv[4]+hv[5]), hv[5], 0},
+				                                                  { 0, 0, 0, hv[5], 2*(hv[5]+hv[6]), hv[6]},
+				                                                  { 0, 0, 0, 0, hv[6], 2*(hv[6]+hv[7])} }) );
+				    newObject( def = alfav := vektor( i,6, 3*( deltav[i+1] - deltav[i] ) ) );
+				    newObject( def = cv := solvelin( cm, alfav ) );
+				    newObject( def = ccv := vektor( { 0, cv[1], cv[2],cv[3],cv[4],cv[5],cv[6], 0 } ) );
+				    newObject( def = bv := vektor( i, 7, deltav[i] - hv[i]/3*( 2* ccv[i]+ccv[i+1] ) ) );
+
+				    newObject( def = dv := vektor(i, 7, (ccv[i+1]-ccv[i])/(3*hv[i]) ) );
+
+				    //newObject( def = xvi(x):=vektor(i,7,x-P[i].x); );
+				    //newObject( def = ppp(x):=&lt;funktion(x)&gt;liste(i,7, av[i] + bv[i]*(x-P[i].x) + ccv[i]*(x-P[i].x)^2 + dv[i]*(x-P[i].x)^3) );
+				    newObject( def = pp(x,i):= av[i] + bv[i]*(x-P[i].x) + ccv[i]*(x-P[i].x)^2 + dv[i]*(x-P[i].x)^3; );
+				    newObject( def = p1(x):= pp(x,1); );
+				    newObject( def = c1 :=kurve(t,P[1].x, P[2].x, t, p1(t) ); color = blue; target = da; );
+				    newObject( def = p2(x):= pp(x,2); );
+				    newObject( def = c2 :=kurve(t,P[2].x, P[3].x, t, p2(t) ); color = blue; target = da; );
+				    newObject( def = p3(x):= pp(x,3); );
+				    newObject( def = c3 :=kurve(t,P[3].x, P[4].x, t, p3(t) ); color = blue; target = da; );
+				    newObject( def = p4(x):= pp(x,4); );
+				    newObject( def = c4 :=kurve(t,P[4].x, P[5].x, t, p4(t) ); color = blue; target = da; );
+				    newObject( def = p5(x):= pp(x,5); );
+				    newObject( def = c5 :=kurve(t,P[5].x, P[6].x, t, p5(t) ); color = blue; target = da; );
+				    newObject( def = p6(x):= pp(x,6); );
+				    newObject( def = c6 :=kurve(t,P[6].x, P[7].x, t, p6(t) ); color = blue; target = da; );
+				    newObject( def = p7(x):= pp(x,7); );
+				    newObject( def = c7 :=kurve(t,P[7].x, P[8].x, t, p7(t) ); color = blue; target = da; );						
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

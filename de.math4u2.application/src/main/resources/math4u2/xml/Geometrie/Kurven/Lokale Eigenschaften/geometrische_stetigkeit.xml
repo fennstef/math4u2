@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Geometrie/Kurven/Lokale Eigenschaften</location>
+		<title>Geometrische Stetigkeit</title>
+		<step>
+		<title>Zusammengesetzte Kurven - Geometrische Stetigkeit</title>
+		<description>Häufig werden "komplizierte" Kurven aus mehreren einfachen Kurvenstücken zusammengesetzt. Ob die so konstruierte Kurve dann insgesamt schön aussieht bzw. technisch (z.B. als Straßenverlauf) brachbar ist, hängt entscheidend davon ab, wie die einzelnen Kurvenstücke an den Verbindungspunkten zusammengesetzt sind.
+<br/>Im Folgenden soll dies zunächst an Hand von Kurven gezeigt werden, die aus den sehr gebräuchlichen Bezier-Kurven zusammengesetzt sind.
+<br/>Anschließend werden Kurven gezeigt, die aus kubischen B-Spline-Kurven bestehen.</description>
+		</step>
+		<step>
+			<description><strong>Bezier-Kurven</strong>
+			<br/>In Computer-Zeichenwerkzeugen werden häufig Bezier-Kurven (oder die sehr ähnlichen Hermite-Kurven) eingesetzt.<br/>Oben ist jezt eine Bezier-Kurve mit ihren viel Steuerelementen gezeigt:<ul>
+					<li>Startpunkt: Zur Zeit <f>t=0</f> startet der Kurvenpunkt hier.</li>
+					<li>Startrichtung: Beim Start bewegt sich der Kurvenpunkt auf den Steuerpunkt für die Startrichtung zu.</li>
+					<li>Endpunkt: Zur Zeit <f>t=1</f> kommt  der Kurvenpunkt hier an.</li>
+					<li>Endrichtung: Der Steuerpunkt für die Endrichtung legt fest, aus welcher Richtung der Kurvenpunkt beim Endpunkt eintrifft.</li>
+				</ul>Über diese Steuerelemente können diese Kurven zunächst sehr zeilgerichtet manipuliert werden.
+			</description>
+			<layout>
+				<row perc="100">
+					<col perc="60" name="da"/>
+					<col perc="40" name="kruemmung"/>
+				</row>
+			</layout>
+			<seq>
+				<script>deleteAll();
+		       da.coordinateSystem( xMin = -0.5; xMax = 10.5; yMin = -4; yMax = 4  );
+		       		     kruemmung.coordinateSystem( xMin = -0.3; xMax = 1.3; yMin = -4; yMax = 4) ;
+		       		     da.setTitle( title = "Kurve" );
+		       		   
+					expand(left=false; right=false);
+					newObject( def = fl:=&lt;funktion(t)>liste({ (1-t)^3, 3*t*(1-t)^2, 3*t^2*(1-t), t^3 } ) );
+					newObject( def = dfl:=&lt;funktion(t)>liste({ -3*(1-t)^2,  9*t^2-12*t+3, 6*t-9*t^2 ,3*t^2   } ) );
+					newObject( def = ddfl:=&lt;funktion(t)>liste({ 6*(1-t), 18*t-12,  6-18*t, 6*t } ) );
+					
+					newObject( def = pl:=&lt;punkt>liste( { punkt( 1 , 2 ),  punkt( 5 , 1.7 ),   punkt( 3 , -1),  punkt( 5 , -0.5) }); target = da; showNames = false );
+                        newObject( def = fx1(t):=sum(i,1,4,pl[i].x*fl[i](t) ) );
+					newObject( def = fy1(t):=sum(i,1,4,pl[i].y*fl[i](t) ) );
+					newObject( def = kk1:=bezier(pl[1], pl[2], pl[3], pl[4] ); target = da; color = red );
+					newObject( def = s0:=strecke( pl[1], pl[2] ); color = red; linestyle = dot; target = da);
+
+					newObject( def = s1:=strecke( pl[3], pl[4] ); color = red; linestyle = dot; target = da);
+					newObject( def = mmk2:=marker( pl[2].x, pl[2].y ) ; color = red; target = da );
+                         newObject( def = mmk3:=marker( pl[3].x, pl[3].y ) ; color =red; target = da );
+                         newObject( def = dfx1(t):=sum(i,1,4,pl[i].x*dfl[i](t) ) );
+					newObject( def = dfy1(t):=sum(i,1,4,pl[i].y*dfl[i](t) ) );
+					
+
+					
+					newObject( def = ddfx1(t):=sum(i,1,4,pl[i].x*ddfl[i](t) ) );
+					newObject( def = ddfy1(t):=sum(i,1,4,pl[i].y*ddfl[i](t) ) );                  
+                         newObject( def = k1(t):= ( dfx1(t)*ddfy1(t)-dfy1(t)*ddfx1(t) )/(dfx1(t)^2+dfy1(t)^2)^1.5  ; );
+                         
+                        
+                         newObject( def = startt:=text( pl[1], "Startpunkt des Kurvenstücks", B_NE); fillcolor = 0.100.100.50 ;target = da );
+                         newObject( def =endt:=text( pl[4], "Endpunkt des Kurvenstücks", B_SE); fillcolor = 0.100.100.50 ;target = da );
+                         newObject( def =startgt:=text( pl[2], "Steuerpunkt <br/>für Startrichtung", B_SE); fillcolor = 0.100.100.50 ;target = da );
+                         newObject( def =endgt:=text( pl[3], "Steuerpunkt <br/>für Endrichtung", B_SW); fillcolor = 0.100.100.50 ;target = da );
+                         
+                         newObject( def = time:=0 );
+                         
+                        newObject( def = n1(t):= sqrt( dfx1(t)^2 + dfy1(t)^2 ) );
+                        
+                         newObject( def = tp:= pfeil( punkt( fx1(time), fy1(time) ) ,0.001/n1(time)* vektor({ dfx1(time), dfy1(time) } ) ) ; color = magenta; target = da );          
+
+		     </script>
+			</seq>
+		</step>
+		<step>
+		   <description><strong>Die Krümmung des Kurvenstücks verändern</strong><br/>Neben dem Sart- und Endpunkt und den entsprechenden Richtungen ist die Krümmung eine wichtige Größe für die Gestaltung und Beurteilung einer Kurve. 
+		   <br/>Aus der Sicht eines Autofahrers entspricht die Krümmung an einem Punkt dem Lenkradeinschlag, den man benötigt, um an dieser Stelle in der Kurve zu fahren:
+		   <ul>
+						<li>Links eingeschlagen: Positive Krümmung</li>
+						<li>Rechts eingeschlagen: Negative Krümmung</li>
+						<li>Je schärfer die Kurve, desto größer der Betrag der Krümmung.</li>
+					</ul>
+		   Durch das Verschieben der Steuerpunkte wird die Krümmung der Kurve beeinflusst. Experimentieren Sie!</description>
+		</step>
+				<step>
+			<description>Rechts ist jetzt die Krümmung der Kurve über dem Zeitintervall aufgetragen. Sie gibt den "Lenkradeinschlag" wieder, der sich beim Durchfahren der Kurve einstellt:
+		   <br/>Über den Doppelpfeil t  können Sie einen bestimmten Zeitpunkt wählen, links wird der zugehörige Kurvenpunkt angezeigt.   
+		   <br/>Experimentieren Sie! 		  </description>
+			<seq>
+				<script>   kruemmung.setTitle( title = "Krümmung" );
+		      newObject( def = t:= punkt( 0, fix( -1.5 ) ) ; color = magenta; style = ARROW_H; target = kruemmung;  );
+                         newObject( def = time := min(max(0,t.x ),1) );
+                         
+                         newObject( def = tgerade:= gerade( punkt(time, 0), e2y); linestyle = dot; color = magenta; target = kruemmung );
+                          newObject( def = k1g:=kurve(t,0,1,t, k1(t) ); color = red; target = kruemmung );
+                          newObject( def = kt:=text( t, "Zeitpunkt <f>t</f> einstellen", B_SE); fillcolor = 0.100.100.50 ;target = kruemmung );
+                          animate( name = t.x; to = 0.3; end = 1 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+		  <description>Überprüfen Sie insbesondere:
+		   <ul>
+						<li>Der Steuerpunkt für die Endrichtung beeinflusst auch die Krümmung am Startpunkt.</li>
+						<li>Je näher der Steuerpunkt für die Startrichtung am Startpunkt selbst liegt , desto größer ist die Krümmung am Startpunkt.</li>
+					</ul>
+		   </description>
+
+		</step>
+				<step>
+			<description><strong>Mehrere Bezier-Kurven zusammensetzen</strong>   <br/>Die Gestaltungsmöglichkeiten einer Bezier-Kurve sind relativ eingeschränkt. In der Regel wird man deshalb mehrere solcher Kurvenstücke zu einer Gesamtkurve zusammensetzen. Ziel ist es dabei häufig, die einzelnen Kurvenstücke so zu gestalten, dass der Übergang von einem zum nächsten Kurvenstück möglichst unauffällig ist.
+		</description>
+			<seq>
+				<script>
+		                   deleteObject( name = startt, startgt, endgt, endt, kt );
+		                  deleteObject( name = s1, s0, kk1, tp,fy1, fx1, pl, mmk2, mmk3, k1g, k1,n1, tp, dfx1, dfy1, ddfx1, ddfy1, tgerade, time, t  );
+		                    newObject( def = pl:=&lt;punkt>liste( { punkt( 1 , 0.86 ),  punkt( 2 , 0.934 ),   punkt( 2.6 , -0.7),  punkt( 4 , -0.75 ),  punkt( 5.5 , -0.76 ),   punkt( 5.85 , 1.16 ),  punkt( 7 , 0.69 ) , punkt(8,3), punkt(9,3), punkt(10,3) }); target = da; showNames = false );
+          newObject( def = fx1(t):=sum(i,1,4,pl[i].x*fl[i](t) ) );
+					newObject( def = fy1(t):=sum(i,1,4,pl[i].y*fl[i](t) ) );
+					newObject( def = kk1:=kurve(	t,0,1,fx1(t), fy1(t) ); target = da ; color = red;);
+newObject( def = s0:=strecke( pl[1], pl[2] ); color = red; linestyle = dot; target = da);
+
+					newObject( def = s1:=strecke( pl[3], pl[4] ); color = red; linestyle = dot; target = da);
+
+		                              
+		                              newObject( def = mmk2:=marker( pl[2].x, pl[2].y ) ; color = red; target = da );
+                         newObject( def = mmk3:=marker( pl[3].x, pl[3].y ) ; color =red; target = da );
+                         newObject( def = mmk5:=marker( pl[5].x, pl[5].y ) ; color =blue; target = da );
+                         newObject( def = mmk6:=marker( pl[6].x, pl[6].y ) ; color = blue; target = da );
+                         newObject( def = mmk8:=marker( pl[8].x, pl[8].y ) ; color = green; target = da );
+                         newObject( def = mmk9:=marker( pl[9].x, pl[9].y ) ; color = green; target = da );
+					
+					
+					newObject( def = fx2(t):=sum(i,1,4,pl[i+3].x*fl[i](t) ) );
+					newObject( def = fy2(t):=sum(i,1,4,pl[i+3].y*fl[i](t) ) );
+					 newObject( def = kk2:=bezier(pl[4], pl[5], pl[6], pl[7] ); target = da; color = blue );	
+					 newObject( def = fx3(t):=sum(i,1,4,pl[i+6].x*fl[i](t) ) );
+					newObject( def = fy3(t):=sum(i,1,4,pl[i+6].y*fl[i](t) ) );
+					  
+					
+					newObject( def = kk3:=bezier(pl[7], pl[8], pl[9], pl[10] ); target = da; color =green);	
+					
+					newObject( def = s2:=strecke( pl[5], pl[4] ); color = blue; linestyle =dot; target = da);
+					newObject( def = s13:=strecke( pl[6], pl[7] ); color = blue; linestyle = dot; target = da);
+					newObject( def = s23:=strecke( pl[7], pl[8] ); color = green; linestyle =dot; target = da);
+					newObject( def = s10:=strecke( pl[9], pl[10] ); color = green; linestyle =dot; target = da);
+						
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description><strong>Kein Sprung: G0-Stetigkeit</strong> 
+		<br/>Ein Übergang heißt <em>G0-stetig</em>, wenn dort der Endpunkt eines Kurvenstücks und der Startpunkt des nächsten Kurvenstücks zusammenfallen, d.h. wenn dort kein Sprung vorliegt.
+		<br/>Die oben gezeigte Kurve ist immer G0-stetig.</description>
+		</step>
+		<step>
+			<description><strong>Kein Knick: G1-Stetigkeit</strong>  
+		<br/>Ein Übergang heißt <em>G1-stetig</em>, wenn er G0-stetig ist und dort Endrichtung und Startrichtung übereinstimmen, d.h. wenn dort kein Knick vorliegt.</description>
+		</step>
+		<step>
+			<description><strong>Gleiche Krümmung: G2-Stetigkeit</strong>  
+		<br/>Diese Anforderung an den Übergang läßt sich am einfachsten aus Sicht eines Autofahrers beschreiben: Wenn er beim Endpunkt des einen Kurvestücks ankommt, hat er das Lenkrad aufgund der dort vorliegenden Krümmung um einen bestimmten Winkel eingeschlagen. Kommt er jezt zum Startpunkt des nächsten Kurvenstücks, so gibt die dort vorliegende Krümmung den Lenkradeinschlag vor. Schön wäre es für den Autofahrer, wenn der Lenkradeinschlag im beiden Fällen der gleiche wäre. Schlecht und sehr unfallträchtig wäre der Übergang von einem Kurvenstück zum nächsten, wenn sich dort der Lenkradeinschlag (d.h. die Krümmung) schlagartig (d.h. unstetig) ändert.
+<br/>Ein Übergang heißt G2-stetig, wenn die Krümmung dort keinen Sprung macht.</description>
+		</step>
+		<step>
+			<description>Rechts ist jetzt der Verlauf der Krümmung für die gesamte Kurve dargestellt.
+			<br/>Experimentieren Sie: Versuchen Sie insbesondere, beide Übergänge so zu gestalten, dass sie G2-stetig sind.
+			</description>
+			<seq>
+				<script>
+kruemmung.coordinateSystem( xMin = -0.5; xMax = 3.7; yMin = -4; yMax = 4) ;
+		             newObject( def = dfx1(t):=sum(i,1,4,pl[i].x*dfl[i](t) ) );
+					newObject( def = dfy1(t):=sum(i,1,4,pl[i].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx1(t):=sum(i,1,4,pl[i].x*ddfl[i](t) ) );
+					newObject( def = ddfy1(t):=sum(i,1,4,pl[i].y*ddfl[i](t) ) );                  
+                         newObject( def = k1(t):= ( dfx1(t)*ddfy1(t)-dfy1(t)*ddfx1(t) )/(dfx1(t)^2+dfy1(t)^2)^1.5  ; );
+                         
+                         newObject( def = k1g:=kurve(t,0,1,t, k1(t) ); color = red; target = kruemmung );
+
+                         
+                         newObject( def = dfx2(t):=sum(i,1,4,pl[i+3].x*dfl[i](t) ) );
+					newObject( def = dfy2(t):=sum(i,1,4,pl[i+3].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx2(t):=sum(i,1,4,pl[i+3].x*ddfl[i](t) ) );
+					newObject( def = ddfy2(t):=sum(i,1,4,pl[i+3].y*ddfl[i](t) ) );                 
+                         newObject( def = k2(t):= ( dfx2(t)*ddfy2(t)-dfy2(t)*ddfx2(t) )/(dfx2(t)^2+dfy2(t)^2)^1.5  ;  );
+                         
+                          newObject( def = k2g:=kurve(t,0,1,t+1, k2(t) ); color = blue; target = kruemmung );
+                          
+                          newObject( def = dfx3(t):=sum(i,1,4,pl[i+6].x*dfl[i](t) ) );
+					newObject( def = dfy3(t):=sum(i,1,4,pl[i+6].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx3(t):=sum(i,1,4,pl[i+6].x*ddfl[i](t) ) );
+					newObject( def = ddfy3(t):=sum(i,1,4,pl[i+6].y*ddfl[i](t) ) );                
+                         newObject( def = k3(t):= ( dfx3(t)*ddfy3(t)-dfy3(t)*ddfx3(t) )/(dfx3(t)^2+dfy3(t)^2)^1.5  ;  );
+                         
+                           newObject( def = k3g:=kurve(t,0,1,t+2, k3(t) ); color = green; target = kruemmung );
+
+		   </script>
+			</seq>
+		</step>
+		<step><description>Man kann die beiden Werte der Krümmung an einem Verbindungspunkt auch direkt an der Kurve anzeigen. Dazu führt man folgende Konstruktion durch:
+		<ul>
+			<li>Man zeichnet eine Gerade senkrecht zur aktuellen Richtung der Kurve.</li>
+			<li>Aur dieser Gerade trägt man eine Strecke ab, die zur aktuellen krümmung proportional ist, bei positiver Krümmung links von der Kurve, bei negativer Krümmung rechts.</li>
+			<li>Der Endpunkt dieser Strecke wird als neuer Hilfspunkt farbig markiert.</li>
+		</ul>Im folgenden Schritt erfolgt diese Konstruktion für den Endpunkt des ersten Kurvenstücks.</description>
+		<seq>
+		  <par>
+		  <script>
+		         animate( name = pl[1].x; to =  1 ; end = 2 );
+		         animate( name = pl[1].y; to =  0.8 ; end = 2 );
+		         animate( name = pl[2].x; to =  2; end = 2 );
+		         animate( name = pl[2].y; to =  0.9 ; end = 2 );
+		         animate( name = pl[3].x; to = 2.6 ; end = 2 );
+		         animate( name = pl[3].y; to =  -0.7 ; end = 2 );
+		         animate( name = pl[4].x; to =  4 ; end = 2 );
+		         animate( name = pl[4].y; to =  -0.6 ; end = 2 );
+		         animate( name = pl[5].x; to =  5.5 ; end = 2 );
+		         animate( name = pl[5].y; to =  -0.7 ; end = 2 );
+		         animate( name = pl[6].x; to = 5.8 ; end = 2 );
+		         animate( name = pl[6].y; to =  1.2 ; end = 2 );
+		         animate( name = pl[7].x; to =  7 ; end = 2 );
+		         animate( name = pl[7].y; to =  0.7 ; end = 2 );
+		         animate( name = pl[8].x; to =  8 ; end = 2 );
+		         animate( name = pl[8].y; to =  3 ; end = 2 );
+		         animate( name = pl[9].x; to =  9 ; end = 2 );
+		         animate( name = pl[9].y; to = 3 ; end = 2 );
+		         animate( name = pl[10].x; to =  10 ; end = 2 );
+		         animate( name = pl[10].y; to =  3 ; end = 2 );
+
+
+
+
+
+
+
+
+
+		   </script>
+		  
+		  </par>
+		   
+		</seq>
+		
+		</step>
+				<step>
+			<seq>
+				<script>
+		   		   newObject( def = td:= 0 );
+		   		   newObject( def = ffx1(t):=fx1(t)-3*k1(t)*dfy1(t) );
+					newObject( def = ffy1(t):=fy1(t)+3*k1(t)*dfx1(t) );	
+					
+					
+					
+					newObject( def = n1(t):= sqrt( dfx1(t)^2 + dfy1(t)^2 ) );	
+					newObject( def = ffx1m(t):=fx1(t)-2.5*k1(t)*dfy1(t)/n1(t) );
+					newObject( def = ffy1m(t):=fy1(t)+2.5*k1(t)*dfx1(t)/n1(t) );	
+					newObject( def =kkk1:=kurve(	t,0.001,0.999,ffx1m(t), ffy1m(t) );  color = red; linestyle = dash );
+					animate( name = td; to = 0; end = 1 );
+					newObject( def = e1g:=gerade( pl[4], vektor( {dfy1(1), -dfx1(1)} ) );  color = red; linestyle = dot; target = da );
+					newObject( def = mk1:= marker( ffx1m(1), ffy1m(1) ); color = red );
+					newObject( def = e1gt:=text( mk1, "Gerade senkrecht<br/>zur Kurve", B_NE ); fillcolor = 0.100.100.100 ;target = da );
+					animate( name = td; to = 0; end = 3 );
+					
+					newObject( def = sk1:=strecke(pl[4], mk1);target = da );
+					
+                         newObject( def = e1gt:=text(punkt(fx1(1)-1.25*k1(1)*dfy1(1)/n1(1), fy1(1)+1.25*k1(1)*dfx1(1)/n1(1) )  , "Strecke proportional<br/>zur aktuellen Krümmung", B_NE ); fillcolor = 0.100.100.100 ;target = da );
+                         
+                         animate( name = td; to = 0; end = 3 );                        
+                         da.addGraph( name = mk1 );
+                         newObject( def = e1gt:=text( mk1, "Hilfspunkt<br/>markieren", B_NE ); fillcolor = 0.100.100.100 ;target = da );
+
+
+					animate( name = td; to = 0; end = 3 );
+					
+					deleteObject( name = e1gt, e1g, e1gt);
+					
+					
+					
+					
+					
+					
+		   		       
+		   		   </script>
+			</seq>
+		</step>
+				<step>
+				<description>Entsprechend die Konstruktion für den Startpunkt der blauen Kurve und am Verbindungspunkt zwischen blauer und grüner Kurve.
+				<br/>Der Übergang an einen Verbindungspunkt ist G2-Stetig, wenn die beiden zugehörigen Hilfspunkte übereinender zu liegen kommen.
+				<br/>Experimentieren Sie!</description>
+			<seq>
+				<script>
+		   				   		  
+		   				   		  newObject( def = ffx2(t):=fx2(t)-3*k2(t)*dfy2(t) );
+					newObject( def = ffy2(t):=fy2(t)+3*k2(t)*dfx2(t) );	
+					
+
+					
+					newObject( def = n2(t):= sqrt( dfx2(t)^2 + dfy2(t)^2 ) );	
+
+					newObject( def = ffx2m(t):=fx2(t)-2.5*k2(t)*dfy2(t)/n2(t) );
+					newObject( def = ffy2m(t):=fy2(t)+2.5*k2(t)*dfx2(t)/n2(t) );	
+                          newObject( def =kkk2:=kurve(	t,0.001,0.999,ffx2m(t), ffy2m(t) ); color =blue; linestyle = dash );	
+					
+					newObject( def = mk2:= marker( ffx2m(0), ffy2m(0) ); color = blue; target = da );
+				    newObject( def = sk2:=strecke(pl[4], mk2); target = da );   
+		   				   		 
+		                newObject( def = mk23:= marker( ffx2m(1), ffy2m(1) ); color = blue; target = da );
+		                newObject( def = sk23:=strecke(pl[7], mk23) ; target = da );   
+	
+					newObject( def = ffx3(t):=fx3(t)-3*k3(t)*dfy3(t) );
+					newObject( def = ffy3(t):=fy3(t)+3*k3(t)*dfx3(t) );	
+					
+				
+					newObject( def = n3(t):= sqrt( dfx3(t)^2 + dfy3(t)^2 ) );	
+
+					newObject( def = ffx3m(t):=fx3(t)-2.5*k3(t)*dfy3(t)/n3(t) );
+					newObject( def = ffy3m(t):=fy3(t)+2.5*k3(t)*dfx3(t)/n3(t) );	
+                         newObject( def =kkk3:=kurve(	t,0.001,0.999,ffx3m(t), ffy3m(t) ); color =green; linestyle = dash);	
+					
+					newObject( def = mk3:= marker( ffx3m(0.001), ffy3m(0.001) ); color =green; target = da );
+					   newObject( def = sk3:=strecke(pl[7], mk3); target = da );   
+	                                    
+		       </script>
+			</seq>
+		</step>
+		<step>
+		<description>Insgesamt läßt sich eine G2-Stetigkeit mit Bezier-Kurven nur sehr schwierig herstellen, weil die Steuerpunkte an einem Ende eines Kurvenstücks die Krümmung am anderen Ende beeinflussen.
+<br/>Schön wäre es doch, wenn man Kurven hätte, bei denen um solche Details kümmern muss. Solche gibts im nächsten Schritt.</description>
+		</step>
+		<step>
+		<description><strong>Kurven mit eingebauter G2-Stetigkeit: Kubische B-Splines</strong><br/>Splines sind allgemein zusammengesetzte Kurven, die einen gewissen Grad von geometrischer Stetigkeit automatisch gewährleisten. Oben ist jetzt ein Kurvenstück vom Typ kubisches B-Spline gezeichnet. Es läßt sich durch die vier Steuerpunkte manipulieren:
+<ul>
+	<li>Es startet "in der Nähe" des Punkts <f>p[2]</f>. </li>
+	<li>Die Startrichtung wird durch den Punkt <f>p[1]</f> "beeinflusst".</li>
+	<li>Es endet "in der Nähe" des Punkts <f>p[3]</f>.</li>
+	<li>Die Endrichtung wird durch den Punkt <f>p[4]</f> "beeinflusst".</li>
+</ul>Experimentieren Sie.
+		</description>
+		  <seq>
+		    <script>
+		    deleteAll();
+		        da.coordinateSystem( xMin = -0.5; xMax = 7.5; yMin = -4; yMax = 4  );
+		        newObject( def = p:=&lt;punkt>liste( { punkt( 1 , 2),  punkt( 2 , 2.2 ),   punkt( 2.7 , 0.5),  punkt( 4 , 1.5 ) }); target = da;  );
+		        newObject( def = fl:=&lt;funktion(t)>liste({ (-t^3+3*t*t-3*t+1)/6, (3*t^3-6*t*t+4)/6, (-3*t^3+3*t*t+3*t+1)/6, t^3/6 } ) );
+					newObject( def = dfl:=&lt;funktion(t)>liste({ (-3*t^2+6*t-3)/6, (9*t^2-12*t)/6, (-9*t^2+6*t+3)/6, t^2/2 } ) );
+					newObject( def = ddfl:=&lt;funktion(t)>liste({ -t+1, 3*t-2, -3*t+1, t } ) );
+
+		        
+		        
+          newObject( def = fx1(t):=sum(i,1,4,p[i].x*fl[i](t) ) );
+					newObject( def = fy1(t):=sum(i,1,4,p[i].y*fl[i](t) ) );
+					newObject( def = kk1:=kurve(	t,0,1,fx1(t), fy1(t) ); target = da ; color = red;);
+
+		    </script>
+		  </seq>
+		</step>
+		
+		<step>
+		   <description>Jetzt ist oben eine Kurve zu sehen, die aus drei kubischen B-Splines zusammengesetzt ist. Experimentieren Sie durch Verschieben der Steuerpunkte. Die Kurve bleibt an den Verbindungspunkten immer ohne Knick, also G1-stetig.
+		   </description>
+		   <seq>
+		      <script>
+		        deleteAll();
+		        da.coordinateSystem( xMin = -0.5; xMax = 7.5; yMin = -4; yMax = 4  );
+		        newObject( def = p:=&lt;punkt>liste( { punkt( 1 , 2),  punkt( 2 , 2.2 ),   punkt( 2.7 , 0.5),  punkt( 4 , 1.5 ),  punkt( 5.5 , -1 ),  punkt( 5.5 , -3 )  }); target = da;  );
+		        newObject( def = fl:=&lt;funktion(t)>liste({ (-t^3+3*t*t-3*t+1)/6, (3*t^3-6*t*t+4)/6, (-3*t^3+3*t*t+3*t+1)/6, t^3/6 } ) );
+					newObject( def = dfl:=&lt;funktion(t)>liste({ (-3*t^2+6*t-3)/6, (9*t^2-12*t)/6, (-9*t^2+6*t+3)/6, t^2/2 } ) );
+					newObject( def = ddfl:=&lt;funktion(t)>liste({ -t+1, 3*t-2, -3*t+1, t } ) );
+
+		        
+		        
+          newObject( def = fx1(t):=sum(i,1,4,p[i].x*fl[i](t) ) );
+					newObject( def = fy1(t):=sum(i,1,4,p[i].y*fl[i](t) ) );
+					newObject( def = kk1:=kurve(	t,0,1,fx1(t), fy1(t) ); target = da ; color = red;);
+
+										
+					
+					newObject( def = fx2(t):=sum(i,1,4,p[i+1].x*fl[i](t) ) );
+					newObject( def = fy2(t):=sum(i,1,4,p[i+1].y*fl[i](t) ) );
+					newObject( def = kk2:=kurve(	t,0,1,fx2(t), fy2(t) ); target = da ; color =blue;);
+					newObject( def = fx3(t):=sum(i,1,4,p[i+2].x*fl[i](t) ) );
+					newObject( def = fy3(t):=sum(i,1,4,p[i+2].y*fl[i](t) ) );
+					  
+                         newObject( def = kk3:=kurve(	t,0,1,fx3(t), fy3(t) ); target = da ; color = green;);
+                         
+                 
+					
+		      </script>
+		   </seq>
+		</step>
+		<step>
+		<description>Rechts ist wieder die Krümmung für die drei Kurvenstücke gezeigt. 
+		<ul>
+			<li>Die Krümmung ist an den Verbindungspunkten stets stetig, die Kurve ist also G2-stetig.</li>
+		</ul><br/>Allerdings hat man sich diese Eigenschaft durch folgende Nachteile erkauft: 
+		<ul>
+<li>Man kann keinen der Kurvenpunkte exakt einstellen.</li>
+		<li>Man kann an keiner Stelle die Richtung der Kurve exakt einstllen.</li>
+
+		</ul>
+				</description>
+		   <seq>
+		      <script>
+		         newObject( def = dfx1(t):=sum(i,1,4,p[i].x*dfl[i](t) ) );
+					newObject( def = dfy1(t):=sum(i,1,4,p[i].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx1(t):=sum(i,1,4,p[i].x*ddfl[i](t) ) );
+					newObject( def = ddfy1(t):=sum(i,1,4,p[i].y*ddfl[i](t) ) );                  
+                         newObject( def = k1(t):= ( dfx1(t)*ddfy1(t)-dfy1(t)*ddfx1(t) )/(dfx1(t)^2+dfy1(t)^2)^1.5  ; );
+                         
+                         newObject( def = k1g:=kurve(t,0,1,t, k1(t) ); color = red; target = kruemmung );
+
+                         
+                         newObject( def = dfx2(t):=sum(i,1,4,p[i+1].x*dfl[i](t) ) );
+					newObject( def = dfy2(t):=sum(i,1,4,p[i+1].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx2(t):=sum(i,1,4,p[i+1].x*ddfl[i](t) ) );
+					newObject( def = ddfy2(t):=sum(i,1,4,p[i+1].y*ddfl[i](t) ) );                 
+                         newObject( def = k2(t):= ( dfx2(t)*ddfy2(t)-dfy2(t)*ddfx2(t) )/(dfx2(t)^2+dfy2(t)^2)^1.5  ;  );
+                         
+                          newObject( def = k2g:=kurve(t,0,1,t+1, k2(t) ); color = blue; target = kruemmung );
+                          
+                          newObject( def = dfx3(t):=sum(i,1,4,p[i+2].x*dfl[i](t) ) );
+					newObject( def = dfy3(t):=sum(i,1,4,p[i+2].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx3(t):=sum(i,1,4,p[i+2].x*ddfl[i](t) ) );
+					newObject( def = ddfy3(t):=sum(i,1,4,p[i+2].y*ddfl[i](t) ) );                
+                         newObject( def = k3(t):= ( dfx3(t)*ddfy3(t)-dfy3(t)*ddfx3(t) )/(dfx3(t)^2+dfy3(t)^2)^1.5  ;  );
+                         
+                           newObject( def = k3g:=kurve(t,0,1,t+2, k3(t) ); color = green; target = kruemmung );
+                        newObject( def = kk1st:=text(punkt(1, k1(1)), "stets stetig", B_SE); fillcolor = 0.100.100.50;  target = kruemmung );
+                        newObject( def = kk2st:=text(punkt(2, k2(1)), "stets stetig", B_NE);  fillcolor = 0.100.100.50; target = kruemmung );
+
+		      </script>
+		   </seq>
+		</step>
+		
+				<step>
+		<description><strong>Höhere Stetigkeitanforderungen</strong>
+		<br/>Für viele technische Anwendungen ist die G2-Stetigkeit eine Mindestanforderung, ein höherer Grad von Stetigkeit ist oft gewünscht oder manchmal zwindend erforderlich.
+		<br/>Als Beispiel wieder der Verlauf einer Straße: wenn sie G2-stetig ist, dann kann man auf ihr fahren, ohne an irgendeiner Stelle den Lenkradeinschlag schlagartig (unstetig) ändern zu müssen. 
+		<br/>Einzelne Straßenstücke sind häufig zusätzlich so gebaut, dass man beim Durchfahren den Lenkradeinschlag mit konstenter Dreh-Geschwindigkeit verändern muss, d.h. dass sich die Krümmung linear mit der zurückgelegten Wegstrecke verändert. Unangenehm ist es nun, wenn man von einem solchen Straßenstück auf ein anderes Straßenstück kommt, wo man den Lenkradeinschlag mit einer anderen Dreh-Geschwindigkeit verändern muss.
+<br/>Kurz gesagt: Oft ist es angenehm, wenn an einem Verbindugspunkt auch die Änderung der Krümmung in Abhängigkeit vom Weg keinen Sprung macht.
+<br/>Einen solchen Übergang würde man als G3-stetig bezeichnen. Dieser Grad von Stetigkeit wird mit den Soeben vorgestellten Kueben aus Bezier-Stücken oder aus kubischen B-Spline-Stücken in der Regel nicht erreicht.</description>
+         <seq>
+            <script>
+                deleteObject( name  = kk1st, kk2st );
+            </script>
+         </seq>
+		</step>
+	</body>
+</math4u2>

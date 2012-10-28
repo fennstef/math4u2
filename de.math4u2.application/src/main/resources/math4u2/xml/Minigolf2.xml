@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>bahn</name>
+				<import>java.util</import>
+				<import>java.awt.geom</import>
+				<with-graph/>
+				<result-type>ScalarType</result-type>
+				<arguments>
+					<argument type="VectorType" name="posDir"/>
+					<argument type="ScalarType" name="dt"/>
+					<argument type="UserFunction" name="phiS"/>
+					<argument type="VectorType" name="pvx"/>
+					<argument type="VectorType" name="pvy"/>
+					<argument type="Circle" name="kreis"/>
+				</arguments>				
+				<method><![CDATA[
+					public Object eval(Object[] args) throws MathException{
+						//Parameter holen
+						int k=0;
+						double[] posDirStart = ((Result) args[k++]).getVector();
+						double dtStart = ((Result) args[k++]).getScalar();
+						UserFunction phiSum = (UserFunction) args[k++];
+						double[] pvx = ((Result) args[k++]).getVector();
+						double[] pvy = ((Result) args[k++]).getVector();
+						Circle aim = (Circle) args[k++];
+						
+						HashMap map;
+						LinkedList trajectory;
+						if(cache == null){
+							System.out.println("Start");
+							map = new HashMap();
+							cache = map;
+							map.put((Object)"posDirStart",posDirStart);
+							map.put((Object)"dtStart",new Double(dtStart));
+							map.put((Object)"posDir",posDirStart);
+							map.put((Object)"dt",new Double(dtStart));
+							map.put((Object)"pvx",pvx);
+							map.put((Object)"pvy",pvy);
+							
+							//Trajektorie
+							trajectory = new LinkedList();
+							trajectory.add(new double[]{posDirStart[0],posDirStart[1]});
+							map.put((Object)"trajectory", trajectory);
+						}else{
+							map = (HashMap)cache;
+							trajectory = (LinkedList)map.get((Object)"trajectory");
+							
+							double[] posDir = (double[]) map.get((Object)"posDir");
+							double cx = aim.getCenter().evalX();
+							double cy = aim.getCenter().evalY();
+							double radius = aim.evalRadius();
+							double dAim = (posDir[0]-cx)*(posDir[0]-cx)+(posDir[1]-cy)*(posDir[1]-cy);
+							
+							double[] posDirStartTemp = (double[])map.get((Object)"posDirStart");							
+							double dtStartTemp = ((Double)map.get((Object)"dtStart")).doubleValue();
+							if(dtStartTemp!=dtStart || 
+								Math.abs(posDirStartTemp[0]-posDirStart[0]-dtStart*posDirStart[2])>0.001 || 
+								Math.abs(posDirStartTemp[1]-posDirStart[1]-dtStart*posDirStart[3])>0.001 ||
+								Math.abs(posDirStartTemp[2]-posDirStart[2])>0.001 || 
+								Math.abs(posDirStartTemp[3]-posDirStart[3])>0.001 ||
+								dAim <= radius*radius){
+								
+								map.put((Object)"posDir",posDirStart);
+								map.put((Object)"dt",new Double(dtStart));
+								map.put((Object)"posDirStart",posDirStart);
+								map.put((Object)"dtStart",new Double(dtStart));
+								trajectory.clear();
+								trajectory.add(new double[]{posDirStart[0],posDirStart[1]});
+							}
+								
+						}
+						double[] posDir = (double[]) map.get((Object)"posDir");
+						double dt = ((Double)map.get((Object)"dt")).doubleValue();
+						
+						double[] pos = new double[]{posDir[0]+dt*posDir[2], posDir[1]+dt*posDir[3]};
+						Object[] args = new Object[]{new VectorDoubleResult(pos)};
+						double phiS = ((ScalarDoubleResult)phiSum.eval(args)).getScalar();					
+						
+						if(Math.abs(phiS)<0.5){
+							//Ball berührt die Wand
+							
+							//Welche Wand?
+							int boundIndex = -1;
+							double boundDist = 100000;
+							for(int i=0; i<pvx.length; i++){
+								double[] s = new double[]{posDir[0],posDir[1]};
+								double[] d = new double[]{posDir[2],posDir[3]};
+								double[] p1 = new double[]{pvx[i],pvy[i]};
+								double[] p2 = new double[]{pvx[(i+1)%pvx.length], pvy[(i+1)%pvx.length]};
+								double[] pd = new double[]{p2[0]-p1[0], p2[1]-p1[1]};
+								double det = d[0]*pd[1]-d[1]*pd[0];
+								if(det==0) continue;
+								double lambda1 = ((p1[1]-s[1])*pd[0]+(s[0]-p1[0])*pd[1])/-det;
+								double lambda2 = ((s[0]-p1[0])*d[1]+(p1[1]-s[1])*d[0])/-det;
+								if(lambda2<0 || lambda2>1 || lambda1<0) continue;
+								double dist = lambda1;
+								System.out.println("distance at "+i+" "+dist);
+								if(boundDist<dist) continue;
+								boundIndex=i;
+								boundDist = dist;		
+							}
+							
+							//Berechne neue Richtung
+							int i=boundIndex;							
+							System.out.println("Wand "+i);
+							
+							if(i>=0){
+								double[] v = new double[]{posDir[2],posDir[3]};
+								double[] p1 = new double[]{pvx[i],pvy[i]};
+								double[] p2 = new double[]{pvx[(i+1)%pvx.length], pvy[(i+1)%pvx.length]};
+								double[] w = new double[]{p2[0]-p1[0],p2[1]-p1[1]};
+								double w_norm2 = w[0]*w[0]+w[1]*w[1];
+								double sp2 = v[0]*w[0]+v[1]*w[1];
+								double factor = sp2/w_norm2;
+								double[] v_orth = new double[]{factor*w[0],factor*w[1]};
+								posDir[2]=v[0]+(v_orth[0]-v[0])*2;
+								posDir[3]=v[1]+(v_orth[1]-v[1])*2;
+							
+								trajectory.add(new double[]{posDir[0],posDir[1]});
+							}
+							//return null;
+						}else{
+							posDir[0] += dt*posDir[2];
+							posDir[1] += dt*posDir[3];	
+						}
+						
+						map.put("posDir",new double[]{posDir[0],posDir[1],posDir[2],posDir[3]});
+												
+						//Ergebnisrückgabe
+						reEvalMe(0);
+						
+						return new ScalarDoubleResult(0.0);
+					}
+				]]></method>
+				<method><![CDATA[
+						public void paint(Graphics2D g, DrawAreaInterface da){
+							HashMap map = (HashMap) cache;
+							double[] posDir = (double[]) map.get((Object)"posDir");
+							int radius = 6;
+							int x = da.xCoordToPix(posDir[0]);
+							int y = da.yCoordToPix(posDir[1]);
+							//Kugel zeichnen
+							g.drawOval(x-radius/2,y-radius/2,radius,radius);
+							
+							//Richtung zeichnen
+							int xe = da.xCoordToPix(posDir[0]+posDir[2]/5);
+							int ye = da.yCoordToPix(posDir[1]+posDir[3]/5);
+							g.drawLine(x,y,xe,ye);
+							
+							//Trajektorie zeichnen
+							g.setColor(new Color(100,100,100,100));
+							GeneralPath gp = new GeneralPath();
+							LinkedList traj = (LinkedList)map.get((Object)"trajectory");
+							double[] pos = (double[]) traj.get(0);
+							gp.moveTo((float)da.xCoordToPix(pos[0]),(float)da.yCoordToPix(pos[1]));
+							for(Iterator iter = traj.iterator(); iter.hasNext();){
+								pos = (double[]) iter.next();
+								gp.lineTo((float)da.xCoordToPix(pos[0]),(float)da.yCoordToPix(pos[1]));
+							}
+							gp.lineTo((float)x,(float)y);
+							g.draw(gp);
+						}//paint
+				]]></method>				
+			</function>
+		</define>
+	</head>
+	<body>
+		<location>Simulation</location>
+		<title>Minigolf 2</title>
+		<step>
+			<title>Minigolf 2</title>
+			<seq>
+				<script>
+da.coordinateSystem(xMin=-2;xMax=4.5;yMin=-1;yMax=4);
+expand(left=false;);
+da.zoom1To1(active=true);
+newObject(
+	def=pl:=&lt;punkt>list({
+				punkt(0,1),
+				punkt(0.99165344,1.5052143),
+				punkt(1.4876789,1.5),
+				punkt(1.4980127,1.7398612),
+				punkt(3.0119238,2.261299),
+				punkt(0.99682033,2.25087),
+				punkt(0,3)});
+	target=da;
+	color=red;
+);
+//def=pl:=&lt;punkt>list({punkt(0,1),punkt(1,1),punkt(1,0),punkt(3,0),punkt(3,1),punkt(1,3),punkt(0,3)});
+		
+newObject(def=pvx:=vektor(i,pl.laenge, pl[i].x););
+newObject(def=pvy:=vektor(i,pl.laenge, pl[i].y););
+newObject(
+	def=fla:=flaeche({pl});
+	target=da;
+	color=green;
+);
+newObject(def=ziel := kreis(punkt(2,2.1),0.1); bordercolor=black; fillcolor=orange; target=da;);
+	
+newObject( def = zykl(i) := mod(i-1, pl.laenge) + 1 );
+//newObject(def=startp:=punkt(0.2,2);target=da;);
+//newObject(def=startd := vektor({0.3,0.5}););
+newObject(def=startp:=punkt(0.1391097,1.625145);target=da;);
+newObject(def=startd := vektor({-0.5166932,-0.37022066}););
+	
+newObject(def=pf := pfeil(startp,startd); target=da);
+
+newObject( def = vekProdZ(&lt;vektor&gt;v1, &lt;vektor&gt;v2):=v1[1]*v2[2]-v1[2]*v2[1] );
+newObject( def = sign(&lt;vektor&gt;v1, &lt;vektor&gt;v2):= vekProdZ(v1, v2)/|vekProdZ(v1,v2)| );
+newObject( def = phi12(&lt;vektor&gt;v1, &lt;vektor&gt;v2):=arccos( (v1 &lt;*&gt; v2)/(|v1|*|v2| ) ) * sign(v1, v2 ) );
+
+newObject(def=phiS(&lt;vektor>r) := sum(i, 1, pl.laenge-1, phi12(pl[i].r-r, pl[zykl(i+1)].r-r))/(pi*2));
+
+newObject(def=dt:=0.05);
+newObject(def=b:=bahn(vektor({startp.x,startp.y,startd.x,startd.y}),dt,phiS.funktion,pvx,pvy,ziel); target=da);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

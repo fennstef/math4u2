@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Analysis/Funktionen/Winkelfunktionen</location>
+		<title>Winkelfunktionen am Einheitskreis</title>
+		<summary>Die Winkelfunktionen Sinus, Cosinus und Tangens am rechtwinkligen Dreieck und am Einheitskreis.</summary>
+		<keywords>
+			<keyword>Winkelfunktionen</keyword>
+			<keyword>Trigonometrische Funktionen</keyword>
+			<keyword>Einheitskreis</keyword>
+		</keywords>
+		<step>
+			<title>Die Winkelfunktionen</title>
+			<description>
+		     Die Winkelfunktionen werden geometrisch durch bestimmte Seitenverhältnisse in einem rechtwinkligen Dreieck definiert.
+		     <br/>Der rechte Winkel ist hier grau markiert.
+		     <br/>In einem rechtwinkligen Dreieck ist immer die Seite am längsten, die dem rechten Winkel gegenüberliegt. 
+		     <br/>Diese Seite wird als <strong>Hypotenuse</strong> bezeichnet. 		     
+			</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="kreisF"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					kreisF.zoom1To1(active=true);	
+					expand(left=false;right=false;);				
+					newObject(def=radius:=4;);
+					newObject(def=phi:=0.5;);
+					newObject(def=kreisF.yMax:=fix(2.5););
+					newObject(def=kreisF.xMin:=fix(-3););
+					newObject(def=Ankathete:=radius*cos(phi););
+					newObject(def=Hypotenuse:=radius;);
+					newObject(def=Gegenkathete:=radius*sin(phi););
+					newObject(def=ak:=strecke(punkt(0,0),punkt(radius*cos(phi),0)); color=gray; target=kreisF;);
+					
+					newObject(def=gk:=strecke(punkt(radius*cos(phi),0),punkt(radius*cos(phi),radius*sin(phi))); color=gray; target=kreisF;);
+							
+					newObject(def=hyp:=strecke(punkt(radius*cos(phi),radius*sin(phi)),punkt(0,0)); color=gray; target=kreisF;);
+					newObject( def = hypm := (hyp.start.r+hyp.ende.r)/2; hide = true );
+					newObject( def = hyp_text:=text(punkt( hypm.x, hypm.y), "Hypotenuse", B_NW ); color = magenta; hide = true; target = kreisF );	
+					newObject(def=rwinkel:=winkel(ak.ende, gk.ende.r-gk.start.r, ak.start.r-ak.ende.r, radius/6); color=gray; target=kreisF;);
+					
+					newObject( def = rwv:= 0.95*ak.ende.r +0.025*(ak.start.r + gk.ende.r); hide = true);
+					newObject( def = rw_text:=text(punkt(rwv.x, rwv.y), "rechter Winkel", B_SE ); colr = gray; hide = true; target = kreisF );	
+										newObject(def=hypv:=strecke(punkt(0,0),punkt(radius*cos(phi),radius*sin(phi))); color=magenta; target=kreisF;);
+					newObject(def=ek:=kreis(punkt(0,0),1); target=kreisF; visible=false;);
+					animate(name=phi; to=0.55; end=1;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Die beiden anderen Seiten, die die Schenkel des rechten Winkels bilden, heißen <strong>Katheten</strong>.
+		     <br/>Wählt man einen der beiden restlichen Winkel aus, so spielen die beiden Katheten bezüglich dieses Winkels 
+			 verschiedene Rollen. Wir wählen den blau markierten Winkel, er wird im folgenden mit <f>phi</f> bezeichnet.
+</description>
+			<seq>
+				<script>
+		     //newObject( def = phiwinkel:= winkel(ak.start, ak.ende.r-ak.start.r, hyp.start.r-hyp.ende.r, radius/6); color = cyan; target = kreisF);
+		     newObject(def=winkel1:=flaeche({punkt(0,0),kurve(t,0,phi, 0.5*cos(t), 0.5*sin(t))}); color=cyan; target=kreisF;);	
+		     newObject( def = phiv:= 0.95*ak.start.r +0.025*(ak.ende.r + gk.ende.r); hide = true);
+					newObject( def = phi_text:=text(punkt(phiv.x, phiv.y), "Winkel &phi;", B_NW ); color = cyan; hide = true; target = kreisF );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die jetzt rot markierte Kathete liegt dem Winkel <f>phi</f> gegenüber, sie wird deshalb als <strong>Gegenkathete</strong> bezeichnet.</description>
+			<seq>
+				<script>newObject(def=gkv:=pfeil(punkt(radius*cos(phi),0),vektor({0,radius*sin(phi)})); color=red; target=kreisF;);
+		     newObject( def = gkm := (gk.start.r+gk.ende.r)/2; hide = true );
+					newObject( def = gk_text:=text(punkt( gkm.x, gkm.y), "Gegenkathete", B_NE ); color = red; hide = true; target = kreisF );	
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die andere Kathete liegt am fraglichen Winkel, sie heißt deshalb <strong>Ankathete</strong>. Sie ist im folgenden grün markiert.</description>
+			<seq>
+				<script>					newObject(def=akv:=pfeil(punkt(0,0),vektor({radius*cos(phi),0})); color=green; target=kreisF;);	
+		     newObject( def = akm := (ak.start.r+ak.ende.r)/2; hide = true );
+					newObject( def = ak_text:=text(punkt( akm.x, akm.y), "Ankathete", B_SE ); colr = green; hide = true; target = kreisF );		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>In der folgenden Tabelle sind diese Größen nochmals zusammengestellt:
+				<br/>
+				<br/>
+				<table>
+					<tr>
+						<td bgcolor="cyan">Winkel <f>phi</f></td>
+						<td/>
+					</tr>
+					<tr>
+						<td bgcolor="magenta">Hypotenuse</td>
+						<td>Liegt dem rechten Winkel gegenüber</td>
+					</tr>
+					<tr>
+						<td bgcolor="green">Ankathete</td>
+						<td>Liegt am fraglichen Winkel <f>phi</f></td>
+					</tr>
+					<tr>
+						<td bgcolor="red">Gegenkathete</td>
+						<td>Liegt dem fraglichen Winkel <f>phi</f> gegenüber</td>
+					</tr>
+				</table>
+			</description>
+		</step>
+		<step>
+			<title>Sinus</title>
+			<description>
+			  Der <f>Sinus(phi)</f>, kurz <f>sin(phi)</f>, ist definiert als das Längenverhältnis <f>sin(phi)=Gegenkathete/Hypotenuse</f>
+			</description>
+			<seq/>
+		</step>
+		<step>
+			<title>Cosinus</title>
+			<description>
+			  Der <f>Cosinus(phi)</f>, kurz <f>cos(phi)</f>, ist definiert als das Längenverhältnis <f>cos(phi)=Ankathete/Hypotenuse</f>
+			</description>
+			<seq/>
+		</step>
+		<step>
+			<title>Ähnlichkeitstransformation</title>
+			<description>
+		Zunächst sieht es vielleicht so aus, als ob die beiden Quotienten <f>sin(phi)=Gegenkathete/Hypotenuse</f> und <f>cos(phi)=Ankathete/Hypotenuse</f> nicht nur vom Winkel <f>phi</f> abhängen, sondern auch von der tatsächlichen Länge der beteiligten Seiten.
+<br/>Wenn man das Dreieck unter Beibehaltung der Winkel größer oder kleiner macht, werden alle Seiten jeweils um den gleichen Faktor größer oder kleiner, die Verhältnisse von je zwei Seiten ändern sich dabei dann nicht...
+		</description>
+			<seq/>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=radius; to=5; end=6;);
+					animate(name=radius; to=3; end=4;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Dies  ermöglicht eine besonders günstige Wahl der Größe des Dreiecks: 
+			<br/>Man wählt die Größe so, dass die Hypotenuse die Länge <f>1</f> bekommt.
+		</description>
+			<seq>
+				<script>
+deleteObject( name = phi_text);
+					deleteObject( name = rw_text);
+					deleteObject( name = phiv);
+					deleteObject( name = rwv);
+					modifyObject( name = ek; visible=true);
+					animate(name=radius; to=1; end=5;);
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description> In einem solchen Dreieck gilt dann:<ul>
+					<li>
+						<f>sin(phi)</f> = Länge der Gegenkathete und </li>
+					<li>
+						<f>cos(phi)</f> = Länge der Ankathete
+					</li>
+				</ul>Bei der gewählten Situation spricht man von der Darstellung der Winkelfunktionen am Einheitskreis, weil sich bei Veränderung des Winkels phi eine Ecke des Dreiecks auf der Kreislinie mit Radius <f>1</f> bewegt, der Mittelpunkt dieses Kreises liegt im Ursprung des Koordinatensystems....
+			</description>
+			<seq>
+				<script>
+					newObject( def = hyp_text:=text(punkt( hypm.x, hypm.y), "Hypotenuse hat Länge 1", B_NW ); color = magenta; hide = true; target = kreisF );	
+
+					newObject( def = gk_text:=text(punkt( gkm.x, gkm.y), "sin(&phi;)=Länge der Gegenkathete", B_NE ); color = red; hide = true; target = kreisF );	
+                     newObject( def = ak_text:=text(punkt( akm.x, akm.y), "cos(&phi;)=Länge der Ankathete", B_SE ); colr = green; hide = true; target = kreisF );	
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		  animate(name=phi; to=1.1; end=3;);
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<title>Das Koordinatensystem</title>
+			<description>Im Folgenden konzentrieren wir uns auf den <f>sin(phi)</f>.
+			<br/>Sie sehen jetzt links den Einheitskreis mit unserem rechtwinkligen Dreieck, im Koordinatensystem rechts soll der Wert des Sinus über dem Winkel <f>phi</f> aufgetragen werden. Der Winkel wird im Bogenmaß gemessen, wir markieren zunächst besonders wichtige Winkel:</description>
+			<layout>
+				<row perc="100">
+					<col perc="30" name="kreisF"/>
+					<col perc="70" name="funktionen"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				    deleteObject( name = rwinkel);
+				    //deleteObject( name = phiwinkel);
+				    deleteObject(name = gk_text);
+					deleteObject(name = ak_text);
+					deleteObject( name = hyp_text);
+				   				    deleteObject( name = hypm);
+					
+					
+					kreisF.zoom1To1(active=true);
+					funktionen.zoom1To1(active=true);
+					newObject(def=kreisF.yMax:=fix(2););
+					newObject(def=kreisF.xMax:=fix(2););
+					newObject(def=kreisF.xMin:=fix(-2););
+					newObject(def=funktionen.yMax:=fix(2););
+					newObject(def=funktionen.xMax:=fix(8.3););
+					newObject(def=funktionen.xMin:=fix(-1););
+					newObject(def=xphig:=strecke(punkt(0,0),punkt(10*cos(phi),10*sin(phi))); color=gray; target=kreisF; lineStyle=dash);
+					newObject(def=xg:=gerade(punkt(phi,0),vektor({0,1})); color=gray; target=funktionen; lineStyle=dash;);
+					animate(name=phi; to=0.6; end=1;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Der rechte Winkel mit dem Bogenmaß <f>pi/2 $asymp 1.57</f> ,</description>
+			<seq>
+				<script>
+					animate(name=phi; to=1.571; end=10;);
+					 newObject( def = pi05m:=text(punkt(0.5*pi,0),"<f>pi/2</f>", C_N); target = funktionen; bordercolor = gray; fillcolor = 255.255.255.100; hide = true );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>die Hälfte des rechten Winkels mit dem Bogenmaß <f>pi/4 $asymp 0.785</f> ,</description>
+			<seq>
+				<script>
+					animate(name=phi; to=0.785; end=6;);
+					 newObject( def = pi025m:=text(punkt(0.25*pi,0),"<f>pi/4</f>", C_N); target = funktionen; bordercolor = gray; fillcolor = 255.255.255.100; hide = true );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>den gestreckten Winkel mit dem Bogenmaß <f>pi $asymp 3.14</f></description>
+			<seq>
+				<script>
+					animate(name=phi; to=3.14; end=6;);
+					newObject( def = pi1m:=text(punkt(pi,0),"<f>pi</f>", C_N); target = funktionen; bordercolor = gray; fillcolor = 255.255.255.100; hide = true );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>und weitere Vielfache von  <f>pi/2</f>
+			</description>
+			<seq>
+				<script>
+					newObject( def = pi15m:=text(punkt(3/2*pi,0),"<f>3/2*pi</f>", C_N); target = funktionen; bordercolor = gray; fillcolor = 255.255.255.100; hide = true );
+					newObject( def = pi2m:=text(punkt(2*pi,0),"<f>2*pi</f>", C_N); target = funktionen; bordercolor = gray; fillcolor = 255.255.255.100; hide = true );
+					newObject( def = pi25m:=text(punkt(5/2*pi,0),"<f>5/2*pi</f>", C_N); target = funktionen; bordercolor = gray; fillcolor = 255.255.255.100; hide = true );
+					newObject( def = pi3m:=text(punkt(3*pi,0),"<f>3*pi</f>", C_N); target = funktionen; bordercolor = gray; fillcolor = 255.255.255.100; hide = true );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Nun können wir genauer verfolgen, wie der Sinus (=Länge des roten Pfeils) von seinem Winkel <f>phi</f> abhängt.
+		<br/>Sie können den Winkel <f>phi</f> jederzeit  über den Doppelfpeil <f>x</f> im rechten Fenster mit der Maus einstellen.
+		<br/>Experimentieren Sie ein bisschen!</description>
+			<seq>
+				<script>
+					newObject(def=x:=punkt(0.5,fix(1.5)); color=orange;style = ARROW_H; target=funktionen;);
+					newObject(def=phi:=x.x;);
+					newObject(def=phis:=strecke(punkt(0,0),punkt(phi,0)); color=cyan; target=funktionen;);
+					kreisF.deleteGraph(name=akv);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Sinus-Werte für besondere Winkel</title>
+			<description>Nur für ganz wenige Winkel kann man algebraische Ausdrücke für die Sinus-Werte angeben.
+		  <br/>Wir beschränken uns hier auf die einfachsten Fälle:
+		  <br/>Wenn man den Winkel <f>phi</f> immer kleiner und letzlich zu <f>0</f> macht, wird auch der Pfeil immer kürzer und verschwindet letztlich ....</description>
+		</step>
+		<step>
+			<description>also: <f>sin(0)=0</f> .</description>
+			<seq>
+				<script>
+					animate(name=x.x; to=0.5; end=2;);
+					animate(name=x.x; to=0; end=6;);
+					newObject(def=sinv0:=marker(0,0); color=red; target=funktionen;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man den Winkel <f>phi</f> zum rechten Winkel macht, bekommt der Pfeil die Länge <f>1</f> ...</description>
+		</step>
+		<step>
+			<description>also: <f>sin(pi/2)=1</f> .</description>
+			<seq>
+				<script>
+					animate(name=x.x; to=1.5708; end=6;);
+					newObject(def=sinv1:=marker(pi/2,1); color=red; target=funktionen;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir jetzt den Winkel <f>phi</f> noch größer machen, ist er eigentlich kein Innenwinkel in einem rechtwinkligen Dreieck mehr....</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=x.x; to=2; end=6;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir definieren aber auch für diese Winkel den <f>sin(phi)</f> als Länge des roten Pfeils. 
+		   <br/>Eine besondere Situation tritt wieder ein, wenn <f>phi</f> zum gestreckten Winkel wird: Der Pfeil hat dann wieder die Länge <f>0</f>.</description>
+		</step>
+		<step>
+			<description>also: <f>sin(pi)=0</f>
+		   </description>
+			<seq>
+				<script>
+					animate(name=x.x; to=3.1416; end=6;);
+					newObject(def=sinv2:=marker(pi,0); color=red; target=funktionen;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir machen den Winkel <f>phi</f> noch größer. Der rote Pfeil hat jetzt seine Orientierung geändert, er zeigt nach unten. Für solche Winkel erweitern wir die Definition von <f>sin(phi)</f> folgendermaßen:
+		  <ul>
+					<li>Betrag: <tab/>
+						<tab/>Länge des Pfeils</li>
+					<li>Vorzeichen: <tab/>Minus</li>
+				</ul>
+			</description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="4" end="6"/>
+			</seq>
+		</step>
+		<step>
+			<description>Eine besondere Situation tritt wieder beim Wert <f>3/2*pi</f> ein....</description>
+		</step>
+		<step>
+			<description>also: <f>sin(3/2*pi)=-1</f>
+		   </description>
+			<seq>
+				<script>
+					animate(name=x.x; to=4.7124; end=6;);
+					newObject(def=sinv3:=marker(1.5*pi,-1); color=red; target=funktionen;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>und so weiter ...</description>
+			<seq>
+				<script>
+					animate(name=x.x; to=6.2832; end=3;);
+					
+					newObject(def=sinv4:=marker(2*pi,0); color=red; target=funktionen;);
+					newObject(def=sinv5:=marker(2.5*pi,1); color=red; target=funktionen;);
+					
+					animate(name=x.x; to=7.8540; end=3;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Man kann noch für einige andere ausgezeichnete Winkel den zugehörigen Sinus-Wert algebraisch berechnen.
+		<br/>Wir wollen uns hier damit begnügen, die restlichen Werte graphisch zu übertragen.</description>
+			<seq>
+				<script>
+					animate(name=x.x; to=0.7; end=3;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+					newObject(def=singv:=pfeil(punkt(phi,0),vektor({0 ,sin(phi)})); color=red; target=funktionen);
+					newObject(def=singg:=gerade(punkt(0,sin(phi)),vektor({1 ,0})); color=red; lineStyle=dot; target=funktionen,kreisF;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Der Graph der Sinus-Funktion</title>
+			<description>Wenn wir im rechten Fenster jetzt alle Punkte markieren, die so von der Spitze des roten Pfeils durchlaufen werden, erhalten wir den Graphen der Sinus-Funktion.
+<br/>Machen Sie ein paar Experimente, indem Sie den Winkel <f>phi</f> über den Doppelpfeil <f>x</f> mit der Maus verändern.
+<br/>Im nächsten Schritt zeichnen wir für positive Winkel <f>phi</f> den Graphen ...</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=x.x; to=0; end=3;);
+					
+					newObject(def=sing:=kurve(t,0, phi ,t,sin(t)); color=red; target=funktionen;);					
+					
+					animate(name=x.x; to=9; end=10;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Sinngemäß setzen wir die Definition auch für negative Winkel <f>phi</f> fort...</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					newObject(def=singp:=kurve(t,0, 9 ,t,sin(t)); color=red; target=funktionen;);
+					
+					animate(name=x.x; to=0; end=4;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=x.x; to=-1; end=6;);
+					
+					newObject(def=sf(x):=sin(x); color=red; target=funktionen;);
+					
+					animate(name=x.x; to=0.7; end=4;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Werte der Cosinus-Funktion</title>
+			<description>Nach dem gleichen Schema werden die Werte der Cosinus-Funktion eingezeichnet. 
+			<br/>Die Länge des grünen Pfeils gibt den Betrag des Cosinus.
+			<br/>Wenn er nach rechts zeigt, ist der entsprechende Sinus-Wert positiv,
+			<br/>wenn er nach links zeigt, ist der Sinus-Wert negativ. 
+		</description>
+			<seq>
+				<script>
+					deleteObject(name=singg,singp,sinv0,sinv1,sinv2,sinv3,sinv4,sinv5;);
+					funktionen.deleteGraph(name=sing;);
+					funktionen.deleteGraph(name=singv;);
+					kreisF.deleteGraph(name=gkv;);
+					kreisF.addGraph(name=akv;);
+					
+					animate(name=x.x; to=0.7; end=3;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Zuerst die Werte für spezielle Winkel...</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=x.x; to=0; end=6;);
+
+					newObject(def=cosv0:=marker(0,1); color=green; target=funktionen;);
+
+					animate(name=x.x; to=1.5708; end=5;);
+					
+					newObject(def=cosv1:=marker(pi/2,0); color=green; target=funktionen;);
+					
+					animate(name=x.x; to=3.1416; end=5;);
+
+					newObject(def=cosv2:=marker(pi,-1); color=green; target=funktionen;);
+					
+					animate(name=x.x; to=4.7124; end=3;);
+
+					newObject(def=cosv3:=marker(1.5*pi,0); color=green; target=funktionen;);
+					
+					animate(name=x.x; to=6.2832; end=3;);
+
+					newObject(def=cosv4:=marker(2*pi,1); color=green; target=funktionen;);
+					
+					animate(name=x.x; to=7.8540; end=3;);
+
+					newObject(def=cosv5:=marker(2.5*pi,0); color=green; target=funktionen;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Und im nächsten Schritt der komplette Graph...</description>
+			<seq>
+				<script>
+					animate(name=x.x; to=0; end=3;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+					newObject(def=cosg:=kurve(t,0, phi ,t,cos(t)); color=green; target=funktionen;);
+					newObject(def=cosgv:=pfeil(punkt(phi,0), vektor({0, cos(phi)})); color=green; target=funktionen;);
+					
+					animate(name=x.x; to=9; end=10;);
+					
+					newObject(def=cosgp:=kurve(t,0,9 ,t,cos(t)); color=green; target=funktionen;);
+					
+					animate(name=x.x; to=0; end=3;);
+					animate(name=x.x; to=-2; end=4;);
+					
+					newObject(def=cf(x):=cos(x); color=green; target=funktionen;);
+					deleteObject(name=cosg,cosgp;);
+					
+					animate(name=x.x; to=0.7; end=3;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>sin und cos</title>
+			<description>Nun ein Blick auf die beiden Funktionsgraphen:</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="funktionen"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					funktionen.zoom1To1(active=true);
+					newObject(def=funktionen.yMax := fix(2););
+					newObject(def=funktionen.yMin := fix(-2););
+					newObject(def=funktionen.xMin := fix(-4););
+					newObject(def=funktionen.xMax := fix(funktionen.xMin+15););					
+					
+					deleteObject(name=cosv0, cosv1, cosv2, cosv3, cosv4, cosv5;);
+					
+					kreisF.addGraph(name=gkv;);
+					funktionen.addGraph(name=sing;);
+					funktionen.addGraph(name=singv;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Beide Funktionen sind offensichtlich periodisch: Wenn wir den Einheitskreis einmal umrundet haben und den Winkel <f>phi</f> nun weiter vergrößern, dann wiederholen sich sämtliche Werte. Die primitive Periode ist <f>2*pi</f>.
+<br/>Im nächsten Schritt eine kleine Fahrt entlang der <f>x</f>-Achse...</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					newObject(def=funktionen.xMin := -4;);
+					newObject(def=x.x := funktionen.xMin+4.7;);
+					
+					animate(name=funktionen.xMin; to=20; end=20);
+					animate(name=funktionen.xMin; to=-20; end=20);
+					animate(name=funktionen.xMin; to=-4; end=10);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Die Tangens-Funktion</title>
+			<description>Nun kann man in unserem rechtwinkligen Dreieck noch ein weiteres Seitenverhältnisse betrachten, nämlich das Verhältnis von Gegenkathete (rot) zu Ankathete (grün) (oder umgekehrt). Auch dieses Verhältnis hängt nur vom Winkel &phi; und nicht von der konkreten Größe des Dreiecks ab. Man erhält so die Tangens-Funktion:
+<br/><f>tan(phi)=Gegenkathete/Ankathete</f>
+				</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="kreisF"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				    newObject( def = gk_text:=text(punkt( gkm.x, gkm.y), "Gegenkathete", B_NE ); color = red; hide = true; target = kreisF );	
+				    newObject( def = ak_text:=text(punkt( akm.x, akm.y), "Ankathete", B_SE ); color = green; hide = true; target = kreisF );	
+
+
+
+					kreisF.zoom1To1(active=true);
+					newObject(def=kreisF.yMax:=fix(2.5););
+					newObject(def=kreisF.xMax:=fix(6););
+					newObject(def=kreisF.xMin:=fix(-3););
+					newObject(def=x.x := 0.7;);					
+					
+					animate(name=x.x; to=0.5; end=2;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man diese Definition des Tangens umformt, indem man den Zähler und den Nenner jeweils durch die Länge der Hypotenuse dividiert, sieh man, dass man den Tangens auch einfach als Quotienten der soeben eingeführten Funktionen Sinus und Cosinus definieren kann
+			<br/><f>tan(phi)=Gegenkathete/Ankathete=(Gegenkathete/Hypotenuse)/(Ankathete/Hypotenuse)=sin(phi)/cos(phi)</f></description>
+		</step>
+		<step>
+			<description>Will man das Verhalten der Tangens-Funktion geometrisch ermitteln, so ist es jetzt günstig, die Größe des Dreiecks so zu wählen, dass die Ankathete die Länge <f>1</f> hat ...
+	</description>
+			<seq>
+				<script>
+				  animate(name = radius; to = 1.139; end= 5 );
+				newObject( def = ak_text:=text(punkt( akm.x, akm.y), "Ankathete hat Länge 1", B_SE ); color = green; hide = true; target = kreisF );	
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt gilt: <f>tan(phi)</f> = Länge der Gegenkathete = Länge des roten Pfeils.</description>
+		</step>
+		<step>
+			<description>Im folgenen soll der Graph der Tangens-Funktion blau eingezeichnet werden, deshalb ist der relevante Pfeil jetzt auch blau (statt rot) gefärbt.</description>
+			<seq>
+				<script>
+					deleteObject(name=gkv,akv);
+					newObject(def=tanv:=pfeil(punkt(1,0),vektor({0,tan(phi)})); color=blue; target=kreisF;);	
+				    newObject( def = gk_text:=text(punkt( gkm.x, gkm.y), "tan(&phi;)=Länge der Gegenkathete", B_NE ); color = blue; hide = true; target = kreisF );					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Graph der Tangens-Funktion</title>
+			<description>Im rechten Fenster sehen Sie jetzt den Graphen der Tangens-Funktion blau eingezeichnet.
+		<br/>Der Funktionswert ergibt sich an jeder Stelle aus <f>tan(phi):=sin(phi)/cos(phi)</f>. 
+		<br/>Nun zu den Definitionslücken und zu wichtigen Funktionswerten:</description>
+			<layout>
+				<row perc="100">
+					<col perc="30" name="kreisF"/>
+					<col perc="70" name="funktionen"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				     deleteObject(name = ak_text);
+				     deleteObject( name = gk_text );
+					kreisF.zoom1To1(active=true);
+					funktionen.zoom1To1(active=true);
+					newObject( def = radius := 1);
+					newObject(def=kreisF.yMax := fix(2););
+					newObject(def=kreisF.xMax := fix(2););
+					newObject(def=kreisF.xMin := fix(-2););
+					newObject(def=funktionen.yMin := -2;);
+					newObject(def=funktionen.yMax := fix(2););
+					newObject(def=funktionen.xMax := fix(7.3););
+					newObject(def=funktionen.xMin := fix(-2););
+					newObject(def=x.x:=0.5;);
+					
+					funktionen.deleteGraph(name=singv,cosgv;);
+					newObject(def=tangv:=pfeil(punkt(phi,0),vektor({0, tan(phi)})); color=blue; target=funktionen;);
+					newObject(def=tanf(x):=tan(x);color=blue;target=funktionen;);
+					newObject(def=xphigg:=strecke(punkt(0,0),punkt(-10*cos(phi),-10*sin(phi))); color=gray; target=kreisF; lineStyle=dot;);
+					
+					animate(name=x.x; to=0.6; end=1;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Definitionslücken</title>
+			<description>Der Tangens ist offensichtlich dort nicht definiert, wo der Nenner, also die Cosinus-Funktion (grün) den Wert <f>0</f> annimmt.
+			<br/>Diese Stellen sind im rechten Fenster jetzt durch orange gefärbte vertikale Geraden gekennzeichnet.</description>
+			<seq>
+				<script>
+					newObject(
+						def=tanas05:=gerade(punkt(1.57,0),vektor({0,1}));
+						color=orange;
+						lineStyle=dot;
+						target=funktionen;
+					);
+					
+					newObject(
+						def=tanas15:=gerade(punkt(4.71,0),vektor({0,1}));
+						color=orange;						
+						lineStyle=dot;
+						target=funktionen;
+					);
+					
+					newObject(
+						def=tanasm05:=gerade(punkt(-1.57,0),vektor({0,1}));
+						color=orange;
+						lineStyle=dot;
+						target=funktionen;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Werte für spezielle Winkel</title>
+			<description>Sowohl geometrisch als auch algebraisch sieht man folgende Werte der Tanges-Funktion einfach:
+		<br/>Der Tangens hat genau dort eine Nullstelle, wo auch der Sinus eine Nullstelle hat: bei allen ganzzahligen Vielfachen von <f>pi</f>.</description>
+		</step>
+		<step>
+			<description>Eine weiter einfache Situation ergibt sich bei <f>phi=pi/2</f>: dort haben Sinus und Cosinus den gleichen Wert, man hat also:
+		<br/><f>tan(pi/2)=1</f>, </description>
+			<seq>
+				<script>
+					animate(name=x.x; to=0.785; end=3;);
+					newObject(def=tanv025:=kreis(punkt(0.785,1),0.04); color=blue; target=funktionen;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>beim Winkel<f>phi=-pi/2</f> haben Sinus und Cosinus bis auf Vorzeichen den gleichen Wert, also:
+			<br/><f>tan(-pi/2) = -1</f>.		
+			</description>
+			<seq>
+				<script>
+					animate(name=x.x; to=-0.785; end=6;);
+					newObject(def=tanvm025:=kreis(punkt(-0.785,-1),0.04); color=blue; target=funktionen;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Für Winkel aus dem Bereich <f>-pi/2 $lt phi $lt pi/2</f> kann man sich die Werte der Tangens-Funktion geometrisch veranschaulichen, indem man (wie beim Sinus) vom Einheitskreis links die Position der Pfeilspitze des blauen Pfeils als entsprechenden Funktionswert nach rechts überträgt.</description>
+			<seq>
+				<script>
+					newObject(
+						def=tangg:=gerade(punkt(0,tan(phi)), vektor({1 ,0})); 
+						color=blue;
+						lineStyle=dot;
+						target=funktionen,kreisF;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=x.x; to=1.57; end=5;);
+					animate(name=x.x; to=-1.57; end=5;);
+					animate(name=x.x; to=0.7; end=5;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Anders als beim Sinus gilt bei der geometrischen Ermittlung der Tangens-Werte für alle anderen Winkel <f>phi</f>: Der Pfeil bleibt immer am selben Punkt verankert, dieser Punkt ist jetzt links mit <f>p</f> gekennzeichnet. Verfolgen Sie im nächsten Schritt die Übertragung der Werte von links nach rechts. ...</description>
+			<seq>
+				<script>
+					newObject(def=P:=punkt(fix(1),fix(0)); color=blue; target=kreisF;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=x.x; to=8; end=10;);
+					animate(name=x.x; to=0; end=2;);
+					animate(name=x.x; to=-2.5; end=5;);					
+					animate(name=x.x; to=0.7; end=3;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Periode</title>
+			<description>Der Tangens hat die primitive Periode <f>pi</f>.</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Max Weiß (Fachhochschule Augsburg) -->
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.1</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Integration</location>
+		<title>Zusammengesetzte Newton-Cotes-Formeln</title>
+		<summary>Zusammengesetzte Newton-Cotes-Formeln</summary>
+		<step>
+			<description>Wir ersetzen den Integranden durch das Interpolationspolynom vom Grad <f>2</f>: <f>f(x)=p[2](x)</f>,
+		   <br/>dann wird aus dem Integral <f>int(x,a,b,f(x))=int(x,a,b,p[2](x))</f>
+			</description>
+		</step>
+		<step>
+			<description>Das Interpolationspolynom <f>p[2](x)</f> bestimmen wir mit dem Ansatz von Lagrange:
+		   <br/>
+				<f>p[2](x)=f(x[0])*l[0](x)+f(x[1])*l[1](x)+f(x[2])*l[2](x)</f>
+			</description>
+		</step>
+		<step>
+			<description>Wir schreiben das entstehende Integral
+		   <br/>
+				<f>int(x,a,b,p[2](x))=int(x,a,b,(f(x[0])*l[0](x)+f(x[1])*l[1](x)+f(x[2])*l[2](x)))</f> als Summe von Integralen
+		   <br/>
+				<f>int(x,a,b,f(x[0])*l[0](x))+int(x,a,b,f(x[1])*l[1](x))+int(x,a,b,f(x[2])*l[2](x))</f> und ziehen die Zahlenfaktoren .. vor das Integral
+		   <br/>
+				<f>f(x[0])*int(x,a,b,l[0](x))+f(x[1])*int(x,a,b,l[1](x))+f(x[2])*int(x,a,b,l[2](x))</f>
+			</description>
+		</step>
+		<step>
+			<description>Übrig bleiben die Integrale über die Lagrangefaktoren <f>l[0](x), l[1](x)</f> und <f>l[2](x)</f>.
+		   <br/>Wichtig ist: Diese Integrale hängen nicht mehr von der zu integrierenden Funktion <f>f(x)</f> ab, sondern nur noch vom Integrationsintervall, letztlich nur noch von dessen Breite <f>h</f>. Wir können Sie also ohne Kenntnis von <f>f(x)</f> berechnen.
+		   </description>
+		</step>
+		<step>
+			<title>Aufgabe</title>
+			<description>
+				<f>int(x,a,b,p[2](x))=int(x,a,b,(f(x[0])*l[0](x)+f(x[1])*l[1](x)+f(x[2])*l[2](x)))=f(x[0])*int(x,a,b,l[0](x))+f(x[1])*int(x,a,b,l[1](x))+f(x[2])*int(x,a,b,l[2](x))</f>
+				<br/>
+				<f>int(x,a,b,l[0](x))=int(x,a,b,((x-x[1])*(x-x[2]))/((x[0]-x[1])*(x[0]-x[2])))=int(x,a,a+h,((x-(a+h/2))*(x-(a+h)))/((-h/2)*(-h)))=1/3*h</f>
+				<br/>
+				<f>int(x,a,b,l[1](x))=int(x,a,b,((x-x[0])*(x-x[2]))/((x[1]-x[0])*(x[1]-x[2])))=int(x,a,(a+h),((x-a)*(x-(a+h)))/(h/2*(-h/2)))=4/3*h</f>
+				<br/>
+				<f>int(x,a,b,l[2](x))=int(x,a,b,((x-x[0])*(x-x[1]))/((x[2]-x[0])*(x[2]-x[1])))=int(x,a,(a+h),((x-a)*(x-(a+h/2)))/((h)*(h/2)))=1/3*h</f>
+				<br/>
+				<f>int(x,a,b,f(x))=int(x,a,b,p[2](x))=int(x,a,b,(sum(i,0,2,f(x[i])*l[i](x))))=sum(i,0,2,(f(x[i])*int(x,a,b,l[i](x))))</f>
+			</description>
+			<layout>
+				<row perc="50">
+					<col perc="40" name="integ"/>
+					<col perc="10" name="integV"/>
+					<col perc="40" name="trap"/>
+					<col perc="10" name="trapV"/>
+				</row>
+				<row perc="50">
+					<col perc="40" name="simp"/>
+					<col perc="10" name="simpV"/>
+					<col perc="40" name="bool"/>
+					<col perc="10" name="boolV"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			        expand( left = false; right = false );
+			        deleteAll();
+			        integ.setTitle( title = "Integral" );
+			        trap.setTitle( title = "Trapez-Regel" );
+			        simp.setTitle( title = "Simpson-Regel" );
+			        bool.setTitle( title = "Boole-Regel" );
+			        newObject( def = integ.xMin := -1);
+			        newObject( def = trap.xMin := integ.xMin);
+			        newObject( def = simp.xMin := integ.xMin);
+			        newObject( def = bool.xMin := integ.xMin);
+			        newObject( def = integ.xMax := 9);
+			        newObject( def = trap.xMax := integ.xMax);
+			        newObject( def = simp.xMax := integ.xMax);
+			        newObject( def = bool.xMax := integ.xMax);
+			        newObject( def = integ.yMin := -1.5);
+			        newObject( def = trap.yMin := integ.yMin);
+			        newObject( def = simp.yMin := integ.yMin);
+			        newObject( def = bool.yMin := integ.yMin);
+			        newObject( def = integ.yMax := 7);
+			        newObject( def = trap.yMax := integ.yMax);
+			        newObject( def = simp.yMax := integ.yMax);
+			        newObject( def = bool.yMax := integ.yMax);
+			        newObject( def = a:= punkt( 1, -0.7*1 ); target = integ );
+			        newObject( def = b:= punkt( 7, -0.7*1 ); target = integ );
+			        newObject( def = vy := vektor( {0,1}) );
+			        newObject( def = ag:= gerade( a, vy ); target = integ );
+			        trap.addGraph( name = ag );
+			        simp.addGraph( name = ag );
+			        bool.addGraph( name = ag );
+			         newObject( def = bg:= gerade( b, vy ); target = integ );
+			        trap.addGraph( name = bg );
+			        simp.addGraph( name = bg );
+			        bool.addGraph( name = bg );
+			        newObject( def = ax := a.x );
+			        newObject( def = bx := b.x );
+			        newObject( def = f(x):=2+sin(2*sin(x)+2*x); target = integ);
+			        trap.addGraph( name = f );
+			        bool.addGraph( name = f );
+			        	newObject( def = intfl:=flaeche({punkt(ax,0),punkt(bx,0),kurve(t,bx,ax,t,f(t))}); color = gray; target = integ; hide = true );
+			        	newObject( def = h := (bx - ax)/4 );
+                     newObject( def = xpos(i) := ax + i*h );
+			        	newObject( def = sxg1 := gerade( punkt( xpos(1), 0 ) , vy ); linestyle = dash; target = trap );
+			        	newObject( def = sxg2 := gerade( punkt( xpos(2), 0 ) , vy ); linestyle = dash; target = trap );
+			        	newObject( def = sxg3 := gerade( punkt( xpos(3), 0 ) , vy ); linestyle = dash; target = trap );
+			        	newObject( def = trapfl:=flaeche({punkt(ax,0),punkt(ax,f(ax)),punkt(xpos(1),f(xpos(1) )),punkt(xpos(2),f(xpos(2) )),punkt(xpos(3),f(xpos(3) )),punkt(xpos(4),f(xpos(4)) ),punkt(xpos(4),0 ) }); color = blue; target = trap; hide = true );
+newObject( def = boolM := matrix(i,5,k,5, xpos(i-1)^(k-1) ); );
+newObject( def = boolB := vektor(k,5,f(xpos(k-1) ))) ;
+newObject( def = boolK := solvelin(boolM, boolB ) );
+newObject( def = boolPoly(x):= sum(i,1,5, boolK[i]*x^(i-1) ) ; color = red; target = bool );
+newObject( def = boolfl:=flaeche({punkt(ax,0),punkt(bx,0),kurve(t,bx,ax,t,boolPoly(t))}); color = red; target = bool; hide = true );
+newObject( def = simpM1 := matrix(i,3,k,3, xpos(i-1)^(k-1) ); );
+newObject( def = simpB1 := vektor(k,3,f(xpos(k-1) ))) ;
+newObject( def = simpK1 := solvelin(simpM1, simpB1 ) );
+newObject( def = simpPoly1(x):= sum(i,1,3, simpK1[i]*x^(i-1) ) ; color = cyan; target = simp );
+newObject( def = simpfl1:=flaeche({punkt(ax,0),punkt(xpos(2),0),kurve(t,xpos(2),ax,t,simpPoly1(t))}); color = cyan; target = simp; hide = true );
+
+newObject( def = simpM2 := matrix(i,3,k,3, xpos(i+1)^(k-1) ); );
+newObject( def = simpB2 := vektor(k,3,f(xpos(k+1) ))) ;
+newObject( def = simpK2 := solvelin(simpM2, simpB2 ) );
+newObject( def = simpPoly2(x):= sum(i,1,3, simpK2[i]*x^(i-1) ) ; color = magenta; target = simp );
+newObject( def = simpfl2:=flaeche({punkt(xpos(2),0),punkt(bx,0),kurve(t,bx, xpos(2),t,simpPoly2(t))}); color = magenta; target = simp; hide = true );
+simp.addGraph( name = f );
+simp.addGraph( name = sxg2 );
+
+
+
+
+			        
+
+			         
+
+			        
+			        
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir ersetzen <f>f(x)=p[3](x)</f>, schreiben das Interpolationspolynom mit Hilfe der entsprechenden Lagrange-Faktoren <f>p[3](x)=f(x[0])*l[0](x)+f(x[1])*l[1](x)+f(x[2])*l[2](x)+f(x[3])*l[3](x)</f>,
+		<br/>erhalten für das Integral <f>int(x,a,b,f(x))=f(x[0])*int(x,a,b,l[0](x))+f(x[1])*int(x,a,b,l[1](x))+f(x[2])*int(x,a,b,l[2](x))+f(x[3])*int(x,a,b,l[3](x))</f>,
+		<br/>
+				<f>int(x,a,b,l[0](x))=3/8*h=int(x,a,b,l[3](x))</f> und  <f>int(x,a,b,l[1](x))=9/8*h=int(x,a,b,l[2](x))</f>
+				<br/>nach der Integration über die Lagrange-Faktoren die Quadratur-Formel: 
+		<br/>
+				<strong>3/8-Regel</strong>
+				<f>Q[3](f)=f(x[0])*3/8*h+f(x[1])*9/8*h+f(x[2])*9/8*h+f(x[3])*3/8*h</f>
+			</description>
+		</step>
+		<step>
+			<description>
+				<table>
+					<tr>
+						<td>Name</td>
+						<td>Quadratur-Formel</td>
+					</tr>
+					<tr>
+						<td>Trapez-Regel</td>
+						<td>
+							<f>Q[1](f)=h/2*(f(x[0])+f(x[1]))</f>
+						</td>
+					</tr>
+					<tr>
+						<td>Simpson-Regel</td>
+						<td>
+							<f>Q[2](f)=h/3*(f(x[0])+4*f(x[1])+f(x[2]))</f>
+						</td>
+					</tr>
+					<tr>
+						<td>3/8-Regel</td>
+						<td>
+							<f>Q[3](f)=(3*h)/8*(f(x[0])+3*f(x[1])+3*f(x[2])+f(x[3]))</f>
+						</td>
+					</tr>
+					<tr>
+						<td>Boole-Regel</td>
+						<td>
+							<f>Q[4](f)=(2*h)/45*(7*f(x[0])+32*f(x[1])+12*f(x[2])+32*f(x[3])+7*f(x[4]))</f>
+						</td>
+					</tr>
+				</table>
+			</description>
+		</step>
+	</body>
+</math4u2>

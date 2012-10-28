@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Kurven/Kubische Kurven</location>
+		<title>Hermite-Kurven</title>
+		<step>
+			<title>Hermite-Kurven</title>
+			<description>Eine sehr gebräuchliche Art von parametrisierten Kurven sind die Hermite-Kurven.
+			<br/>Eine Hermite-Kurve wird durch 4 geometrische Größen beeinflusst (rechtes Fenster):
+			<ul>
+					<li>Startpunkt p1 (rot) und Endpunkt p2 (grün)</li>
+					<li>Startgeschwindigkeit (blauer Vektor) und Endgeschwindigkeit (magenta)</li>
+				</ul>
+				<br/>Sie können diese Größen  im folgenden stets mit der Maus manipulieren.
+</description>
+			<layout>
+				<row perc="100">
+					<col perc="40" name="gewichte"/>
+					<col perc="60" name="kurve"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			      deleteAll();
+				  gewichte.coordinateSystem(xMin=-0.2; xMax=1.3; yMin=-0.2; yMax=1.2);
+				  kurve.coordinateSystem(xMin=0.2;xMax=3.5;yMin=0.2; yMax=2.4);
+				  
+			      expand( left = false; right = false );
+			      gewichte.setTitle( title="Gewichtsfunktionen" );
+			      kurve.setTitle( title="Geometrische Größen, Kurve" );
+
+                  newObject( def = gg1 := gerade( punkt( 1, 0 ) , vektor({0,1} ) ) ; target = gewichte );
+			      newObject( def =  p1:=punkt(1.3,0.6); color = red; target = kurve);
+			      newObject( def =  p2:=punkt(2.3,1.9); color = green; target = kurve);
+			      newObject( def = v1:= vektor({ -0.7, 1.2 } ) );
+			      newObject( def = pf1 := pfeil( p1, v1 ) ; color = blue; target = kurve );
+			       newObject( def = v2:= vektor({ 0.3, -0.7 } ) );
+			      newObject( def = pf2 := pfeil( p2, v2 ) ; color = magenta; target = kurve );  
+			      newObject( def = recl:= flaeche({ punkt(-1,-1), punkt(0,-1), punkt( 0, 2), punkt(-1,2)}); fillcolor = 255.255.255.220; target = gewichte);
+			      newObject( def = recr:= flaeche({ punkt(1,-1), punkt(2,-1), punkt( 2, 2), punkt(1,2)}); fillcolor = 255.255.255.220; target = gewichte);
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>
+		    Die Gewichtsfunktionen
+		  </title>
+			<description>
+			Den Gewichtsfunktionen liegt das Definitionsintervall [0 ; 1] zugrunde. 
+			<br/>Sie beschreiben jeweils, von welcher Bedeutung zu einem Zeitpunkt t &Element; [0 ; 1] die entsprechende geometrische Größe für den Kurvenpunkt ist.</description>
+			<seq>
+				<script>
+			       newObject( def =  f1(t):=2*t^3-3*t^2+1;   );
+			       newObject( def =  f2(t):=-2*t^3+3*t^2 );
+			       newObject( def =   f3(t):=t^3-2*t^2+t);
+			       newObject( def =  f4(t):=t^3-t^2 );
+			       newObject( def =  sx(t):=p1.x*f1(t)+p2.x*f2(t)+v1.x*f3(t)+v2.x*f4(t) );
+			       newObject( def =  sy(t):=p1.y*f1(t)+p2.y*f2(t)+v1.y*f3(t)+v2.y*f4(t) );
+			       newObject( def = s:=kurve(t,0,1,sx(t),sy(t))  );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Im linken Fenster sehen Sie jetzt die Gewichtsfunktion zum Startpunkt p1.
+		  <br/>Die Kurve startet (t=0) beim Punkt p1 und endet (t=1) irgenwo anders.
+		  <br/>Für t=0 hat die Gewichtsfunktion deshalb den Wert 1, für t=1 den Wert 0.
+		  <br/>Sie ist gegeben durch das kubische Polynom <f>f1</f> (rot).</description>
+			<seq>
+			   <script>
+			      newObject( def = f1g:=kurve(t,0,1,t,f1(t)); color = red; target = gewichte );
+			      newObject( def = ttt:=text(p1, "Gewicht 1 bei <f>t=0</f> :<br/>Startpunkt", B_NW ); target = kurve);
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Genau umgekehrt ist die Situation beim Endpunkt p2:
+		  <br/>Die Kurve startet irgendwo, endet aber beim Punkt p2.
+		  <br/>Für t=0 hat die Gewichtsfunktion deshalb den Wert 0, für t=1 den Wert 1.
+		  <br/>Sie ist gegeben durch das kubische Polynom <f>f2</f> (grün).</description>
+			<seq>
+			    <script>
+			       newObject( def = f2g:=kurve(t,0,1,t,f2(t)); color = green; target = gewichte);
+			       newObject( def = ttt:=text(p2, "Gewicht 1 bei <f>t=1</f> :<br/>Endpunkt", B_SW ); target = kurve);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Nach dem Start beim Punkt p1 soll die Kurve zunächst die Richtung einschlagen, die durch den dort eingestellten Geschwindigkeitsvektor (blau) gegeben ist. <br/>Für kleine t-Werte wächst deshalb die entsprechende Gewichtsfunktion linear, für t &rarr; 1 nimmt sie quadratisch (d.h. wie eine Parabel) ab.		  <br/>Sie ist gegeben durch das kubische Polynom <f>f3</f> (blau).</description>
+			<seq>
+			    <script>
+			       newObject( def =f3g:=kurve(t,0,1,t,f3(t)) ; color = blue; target = gewichte);
+			       newObject( 
+						def = ttt:=text(punkt(p1.x+v1.x/2,p1.y + v1.y/2 ), "Gewicht nimmt bei <f>t=0</f><br/>linear zu:<br/>Startgeschwindigkeit", B_NE ); 
+						target = kurve;
+				   );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Entsprechend zuletzt die Gewichtsfunktion für die Endgeschindigkeit.<br/>Sie ist gegeben durch das kubische Polynom <f>f4</f> (magenta).</description>
+			<seq>
+			   <script>
+			      newObject( def = f4g:=kurve(t,0,1,t,f4(t)); color = magenta; target = gewichte );
+			      newObject( def = ttt:=text(punkt(p2.x+v2.x/2,p2.y + v2.y/2 ), "Gewicht nimmt bei <f>t=1</f><br/>linear ab:<br/>Endgeschwindigkeit", B_NE )); 
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Die Koordinatenfunktionen</title>
+			<description>Die 4 hier verwendeten Gewichtsfunktionen f1, ..., f4 werden als Hermite-Funktionen bezeichnet.
+			<br/>Damit konstuieren wir die beiden Koordinatenfunktionen: 
+		<br/>
+				<table>
+					<tr>
+						<td>Koordinate</td>
+						<td>Funktion</td>
+					</tr>
+					<tr>
+						<td>x</td>
+						<td>
+							<f>sx</f>
+						</td>
+					</tr>
+					<tr>
+						<td>y</td>
+						<td>
+							<f>sy</f>
+						</td>
+					</tr>
+				</table>
+			</description>
+			<seq>
+			    <script>
+			       deleteObject( name = ttt );
+			       newObject( def = A:=punkt(0.2,fix(0.5)); color = orange; style =  ARROW_H; target = gewichte );
+			       newObject( def = ttt:=text(A, "hier <f>t</f> einstellen", B_SE); target = gewichte); 
+			       newObject( def = t0:=max(0,min(A.x,1)) );
+			       newObject( def = g:=gerade(punkt(t0,0),e2y) ; color =darkGray ; target = gewichte; linestyle = dot);
+			       newObject( def =pt:=punkt(fix(sx(t0)),fix(sy(t0))) ; style = CIRCLE_DOT; target = kurve );
+				   newObject( def = ttt2:=text(pt, "Kurvenpunkt zum<br/>Zeitpunkt <f>t</f>", B_NW); target = kurve); 
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Kurvenpunkte zeichnen</title>
+			<description>Im folgenden können Sie verfolgen und ausprobieren, wie die Gewichtsfunktionen bei einem bestimmten Parameterwert t auf die Lage des Kurvenpunktes pt Einfluss nehmen.<br/>Der aktuelle Parameterwert ist durch die gepunktete Gerade im linken Fenster markiert. Sie können diese Gerade über den Schieber A bewegen und so in jedem Schritt selbst experimentieren.</description>
+		</step>
+		<step>
+			<description>
+Die Kurve mit dem Kurvenpunkt pt startet zunächst mit dem Parameterwert t=0 beim Punkt p1.</description>
+			<seq>
+			    <script>
+			       deleteObject( name = ttt );
+			    </script>
+				<animate object="main" parameterName="A.x" to="0" end="0.1"/>
+			</seq>
+		</step>
+		<step>
+			<description>Sie verläßt den Punkt p2 in der Richtung, die vom Geschwindigkeitsvektor vorgegeben ist:</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="A.x" to="0" end="0.3"/>
+				<animate object="main" parameterName="A.x" to="0.07" end="4"/>
+			</seq>
+		</step>
+		<step>
+			<description>Nun wird der Einfluss des Punktes p2 spürbar. Der Kurvenpunkt pt wird in diese Richtung gelenkt:</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="A.x" to="0.07" end="0.3"/>
+				<animate object="main" parameterName="A.x" to="0.28" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Sie nähert sich immer stärker dem Punkt p2:</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="A.x" to="0.28" end="0.3"/>
+				<animate object="main" parameterName="A.x" to="0.9" end="6"/>
+			</seq>
+		</step>
+		<step>
+			<description>In der Nähe des Punktes p2 bestimmt schließlich der zweite  Geschwindigkeitsvektor alleine die Richtung, aus der sich die Kurve dem Punkt p2 nähert.</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="A.x" to="0.9" end="0.3"/>
+				<animate object="main" parameterName="A.x" to="1" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>Kurve zeichnen</title>
+			<description>Insgesamt hat der Kurvenpunkt pt die jetzt grau gezeichnete Kurve durchlaufen.</description>
+			<seq>
+			    <script>
+			       deleteObject( name = ttt2 );
+			       modifyObject( name = s; color = gray; target = kurve );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Experimentieren Sie!</title>
+			<description>Verschieben Sie die Punkte p1 und p2 und verändern Sie die Geschwindigkeitsvektoren.
+		    <br/>Verfolgen Sie z.B. folgende Fragen:
+		    <ul>
+					<li>Wann wir die Kurve zu einer Verbindungsstrecke?</li>
+					<li>Welchen Einfluss hat der Betrag der Geschwindigkeitsvektoren bei gleichbleibender Richtung auf die Kurve, z.B. auf die Krümmung am Start- und Endpunkt?</li>
+				</ul>
+			</description>
+			<seq>
+				<animate object="main" parameterName="A.x" to="0.3" end="1"/>
+			</seq>
+		</step>
+	</body>
+</math4u2>

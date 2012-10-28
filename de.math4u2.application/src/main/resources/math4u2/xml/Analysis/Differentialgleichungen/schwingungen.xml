@@ -1,0 +1,1172 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>unknown</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Analysis/Differentialgleichungen</location>
+		<title>Erzwungene Schwingungen</title>
+		<summary>Federpendel, Schwingung, Dämpfung, Resonanz</summary>
+		<step>
+			<title>Pendel</title>
+			<description>
+		    Federpendel einrichten			</description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="pendel"/>
+					<col perc="50" name="kurven"/>
+				</row>
+			</layout>
+			<seq>
+				<call object="main" action="deleteAll"/>
+				<call object="main" action="expandLists">
+					<param type="Boolean" value="false"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kurven.xMin:=-0.3*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kurven.xMax:=45*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kurven.yMin:=-0.004*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kurven.yMax:=0.07*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="pendel.xMin:=-6*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="pendel.xMax:=3*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="pendel.yMin:=-10*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="pendel.yMax:=12*1"/>
+				</call>
+				<call object="pendel" action="setGridColor">
+					<param type="Color" value="white"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="ka:=3"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="m:=1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="k:=200"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="alpha:=2"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="beta:=alpha/(2*m)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="omega:=10"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="t:=0"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="amp:=3"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="phi:=omega*t"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kraft:=pfeil(punkt(-3,0),vektor({0,ka*sin(phi)}))"/>
+				</call>
+				<call object="pendel" action="addGraph">
+					<param type="String" value="kraft"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="s:=0.1+0.02*sin(phi)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="yf(t):=abs(t-floor(t)-0.5)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="decke:=flaeche({punkt(-10,10),punkt(10,10),punkt(10,20),punkt(-10,20)})"/>
+				</call>
+				<call object="pendel" action="addGraph">
+					<param type="String" value="decke"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="omega0 := sqrt(k/m)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="amplitude(x) := 1/(sqrt( (omega0^2-x^2)^2+4*beta^2*x^2))"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="omegaD := sqrt( omega0^2-2*beta^2)"/>
+				</call>
+				<call object="kurven" action="addGraph">
+					<param type="String" value="amplitude"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="omegaD := sqrt( omega0^2-2*beta^2)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="phiaa(x) := (arctan( 2*beta*x/(omega0^2-x^2))+max( (x-omega0)/|x-omega0|, 0)*pi)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="phia(x) := phiaa(x)/pi*kurven.yMax"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="kurven" action="addGraph">
+					<param type="String" value="phia"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="aa := 50*ka*amplitude(omega)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="feder:=kurve(t,0,1,yf(10*t)-0.25,10-(10-aa*sin(phi+phiaa(omega)))*t)"/>
+				</call>
+				<call object="pendel" action="addGraph">
+					<param type="String" value="feder"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="masse:=kreis(punkt(0,aa*sin(phi+phiaa(omega))), m)"/>
+					<param type="Color" value="gray"/>
+				</call>
+				<call object="pendel" action="addGraph">
+					<param type="String" value="masse"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="p:=punkt(10,0*1)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="kurven" action="addGraph">
+					<param type="String" value="p"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="omega:=p.x"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="gD:=gerade(punkt(p.x,0),vektor({0,1}))"/>
+					<param type="Color" value="255.0.0"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="g0:=gerade(punkt(omega0,0),vektor({0,1}))"/>
+					<param type="Color" value="0.255.0"/>
+				</call>
+				<call object="kurven" action="addGraph">
+					<param type="String" value="gD"/>
+				</call>
+				<call object="kurven" action="addGraph">
+					<param type="String" value="g0"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Schwingung</title>
+			<description>
+			Masse: <fd>m</fd>,  Reibung: <fd>alpha</fd>,  Federkonstante: <fd>k</fd>
+			</description>
+			<seq>
+				<animate object="main" parameterName="t" to="40" end="100"/>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<br/>Die jetzt rot markierte Kathete liegt dem Winkel phi gegenüber, sie wird deshalb als <strong>Gegenkathete</strong> bezeichnet.
+<br/>Die andere Kathete liegt am fraglichen Winkel, sie heißt deshalb <strong>Ankathete</strong>. Sie ist im folgenden grün markiert.
+<br>In der folgenden Tabelle sind diese Größen nochmals zusammengestellt:</br>
+				<br/>
+				<table>
+					<tr>
+						<td bgcolor="cyan">Winkel phi</td>
+						<td/>
+					</tr>
+					<tr>
+						<td bgcolor="magenta">Hypotenuse</td>
+						<td>Liegt dem rechten Winkel gegenüber</td>
+					</tr>
+					<tr>
+						<td bgcolor="green">Ankathete</td>
+						<td>Liegt am fraglichen Winkel phi</td>
+					</tr>
+					<tr>
+						<td bgcolor="red">Gegenkathete</td>
+						<td>Liegt den fraglichen Winkel phi gegenüber</td>
+					</tr>
+				</table>
+			</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="gkv:=vektor(radius*cos(phi),0,0,radius*sin(phi))"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="gkv"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="hypv:=strecke(0,0,radius*cos(phi),radius*sin(phi))"/>
+					<param type="Color" value="magenta"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="hypv"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="akv:=vektor(0,0,radius*cos(phi),0)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="akv"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Sinus</title>
+			<description>
+			  Der Sinus(phi) ist definiert als das Längenverhältnis <f>Sinus(phi):=Gegenkathete/Hypotenuse</f>
+			</description>
+			<seq/>
+		</step>
+		<step>
+			<title>Cosinus</title>
+			<description>
+			  Der Cosinus(phi) ist definiert als das Längenverhältnis <f>Cosinus(phi):=Ankathete/Hypotenuse</f>
+			</description>
+			<seq/>
+		</step>
+		<step>
+			<title>Ähnlichkeitstransformation</title>
+			<description>
+		Zunächst sieht es vielleicht so aus, als ob die beiden Quotienten <f>Sinus(phi):=Gegenkathete/Hypotenuse</f> und <f>Cosinus(phi):=Ankathete/Hypotenuse </f>nicht nur vom Winkel phi abhängen, sondern auch von der tatsächlichen Länge der beteiligten Seiten.
+<br/>Wenn man das Dreieck unter Beibehaltung der Winkel größer oder kleiner macht, werden alle Seiten jeweils um den gleichen Faktor größer oder kleiner, die Verhältnisse von je zwei Seiten ändern sich dabei dann nicht...
+		</description>
+			<seq/>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="radius" to="5" end="6"/>
+				<animate object="main" parameterName="radius" to="3" end="4"/>
+			</seq>
+		</step>
+		<step>
+			<description>Dies  ermöglicht eine besonders günstige Wahl der Größe des Dreiecks: 
+			<br/>Man wählt die Größe so, dass die Hypotenuse die Länge 1 bekommt. In einem solchen Dreieck gilt dann: <ul>
+					<li>
+						<strong>Sinus(phi)=Länge der Gegenkathete</strong> und </li>
+					<li>
+						<strong>Cosinus(phi)=Länge der Ankathete</strong>
+					</li>
+				</ul>Bei der gewählten Situation spricht man von der Darstellung der Winkelfunktionen am Einheitskreis, weil sich bei Veränderung des Winkels phi eine Ecke des Dreiecks auf der Kreislinie mit Radius 1 bewegt, der Mittelpunkt dieses Kreises liegt im Ursprung des Koordinatensystems....
+			</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="ek:=kreis(0,0,1)"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="ek"/>
+				</call>
+				<animate object="main" parameterName="radius" to="1" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="phi" to="1.4" end="3"/>
+				<animate object="main" parameterName="phi" to="0.5" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>Das Koordinatensystem</title>
+			<description>Im Folgenden konzentrieren wir uns auf den <strong>Sinus</strong> des Winkels <strong>phi</strong>.
+			<br/>Sie sehen jetzt links den Einheitskreis mit unserem rechtwinkligen Dreieck, im Koordinatensystem rechts soll der Wert des Sinus über dem Winkel phi aufgetragen werden. Der Winkel wird im Bogenmaß gemessen, wir markieren zunächst besonders wichtige Winkel:</description>
+			<layout>
+				<row perc="100">
+					<col perc="30" name="kreis"/>
+					<col perc="70" name="funktionen"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					kreis.zoom1To1(active=true);
+					funktionen.zoom1To1(active=true);
+				</script>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.yMax := 2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.xMax := 2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.xMin := -2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.yMax := 2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.xMax := 8.3*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.xMin := -1*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="xphig:=strecke(0,0,10*cos(phi),10*sin(phi))"/>
+					<param type="Color" value="gray"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="xphig"/>
+				</call>
+				<call object="main" action="setLineStyle">
+					<param type="String" value="xphig"/>
+					<param type="String" value="dash"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="xg:=gerade(phi,0,0,1)"/>
+					<param type="Color" value="gray"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="xg"/>
+				</call>
+				<call object="main" action="setLineStyle">
+					<param type="String" value="xg"/>
+					<param type="String" value="dash"/>
+				</call>
+				<animate object="main" parameterName="phi" to="0.6" end="1"/>
+			</seq>
+		</step>
+		<step>
+			<description>Der rechte Winkel mit dem Bogenmaß <fb>ff:=pi/2</fb>&cong; 1.57</description>
+			<seq>
+				<animate object="main" parameterName="phi" to="1.571" end="10"/>
+				<call object="main" action="newObject">
+					<param type="String" value="pi05m:=strecke(0.5*pi,-0.1,0.5*pi,0.1)"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="pi05m"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>die Hälfte des rechten Winkels mit dem Bogenmaß <fb>ff:=pi/4</fb>&cong; 0.785</description>
+			<seq>
+				<animate object="main" parameterName="phi" to="0.785" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="pi025m:=strecke(0.25*pi,-0.1,0.25*pi,0.1)"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="pi025m"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>den gestreckten Winkel mit dem Bogenmaß <fb>ff:=pi</fb>&cong; 3.14</description>
+			<seq>
+				<animate object="main" parameterName="phi" to="3.14" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="pim:=strecke(pi,-0.1,pi,0.1)"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="pim"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>und weitere Vielfache von  <fb>ff:=pi/2</fb>
+			</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="pi2m:=strecke(2*pi,-0.1,2*pi,0.1)"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="pi2m"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="pi15m:=strecke(1.5*pi,-0.1,1.5*pi,0.1)"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="pi15m"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Nun können wir genauer verfolgen, wie der Sinus (=Länge des roten Pfeils) von seinem Winkel phi abhängt.
+		<br/>Sie können den Winkel phi jederzeit  über den Punkt X im rechten Fenster mit der Maus einstellen.
+		<br/>Experimentieren Sie ein bisschen!</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="x:=punkt(0.5,1.5*1)"/>
+					<param type="Color" value="orange"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="x"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="phi:=x.x"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="phis:=strecke(0,0,phi,0)"/>
+					<param type="Color" value="cyan"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="phis"/>
+				</call>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="akv"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Sinus-Werte für besondere Winkel</title>
+			<description>Nur für ganz wenige Winkel kann man algebraische Ausdrücke für die Sinus-Werte angeben.
+		  <br/>Wir beschränken uns hier auf die einfachsten Fälle:
+		  <br/>Wenn man den Winkel phi immer kleiner und letzlich zu 0 macht, wird auch der Pfeil immer kürzer und verschwindet letztlich ....</description>
+		</step>
+		<step>
+			<description>also: Sinus(0)=0 .</description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="0.5" end="2"/>
+				<animate object="main" parameterName="x.x" to="0" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sinv0:=kreis(0,0,0.04)"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sinv0"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man den Winkel phi zum rechten Winkel macht, bekommt der Pfeil die Länge 1 ...</description>
+		</step>
+		<step>
+			<description>also: Sinus(<fb>ff:=pi/2</fb>)=1 .</description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="1.5708" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sinv1:=kreis(pi/2,1,0.04)"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sinv1"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir jetzt den Winkel phi noch größer machen, ist er eigentlich kein Innenwinkel in einem rechtwinkligen Dreieck mehr....</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="x.x" to="2" end="6"/>
+			</seq>
+		</step>
+		<step>
+			<description>Wir definieren aber auch für diese Winkel den Sinus als Länge des roten Pfeils. 
+		   <br/>Eine besondere Situation tritt wieder ein, wenn phi zum gestreckten Winkel wird: Der Pfeil hat dann wieder die Länge 0.</description>
+		</step>
+		<step>
+			<description>also: Sinus(<fb>ff:=pi</fb>)=0
+		   </description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="3.1416" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sinv2:=kreis(pi,0,0.04)"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sinv2"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Wir machen den Winkel phi noch größer. Der rote Pfeil hat jetzt seine Orientierung geändert, er zeigt nach unten. Für solche Winkel erweitern wir die Definition von Sinus(phi) folgendermaßen:
+		  <ul>
+					<li>Betrag: <tab/>
+						<tab/>Länge des Pfeils</li>
+					<li>Vorzeichen: <tab/>Minus</li>
+				</ul>
+			</description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="4" end="6"/>
+			</seq>
+		</step>
+		<step>
+			<description>Eine besondere Situation tritt wieder beim Wert <fb>ff:=3/2*pi</fb> ein....</description>
+		</step>
+		<step>
+			<description>also: Sinus(<fb>ff:=3/2*pi</fb>)= &minus; 1
+		   </description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="4.7124" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sinv3:=kreis(1.5*pi,-1,0.04)"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sinv3"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>und so weiter ...</description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="6.2832" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sinv4:=kreis(2*pi,0,0.04)"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sinv4"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="7.8540" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sinv5:=kreis(2.5*pi,1,0.04)"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sinv5"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Man kann noch für einige andere ausgezeichnete Winkel den zugehörigen Sinus-Wert algebraisch berechnen.
+		<br/>Wir wollen uns hier damit begnügen, die restlichen Werte graphisch zu übertragen.</description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="0.7" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="singv:=vektor(phi,0, 0 ,sin(phi))"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="singv"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="singg:=gerade(0,sin(phi), 1 ,0)"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="main" action="setLineStyle">
+					<param type="String" value="singg"/>
+					<param type="String" value="dot"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="singg"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="singg"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Der Graph der Sinus-Funktion</title>
+			<description>Wenn wir im rechten Fenster jetzt alle Punkte markieren, die so von der Spitze des roten Pfeils durchlaufen werden, erhalten wir den Graphen der Sinus-Funktion.
+<br/>Machen Sie ein paar Experimente, indem Sie den Winkel phi über den Punkt X mit der Maus verändern.
+<br/>Im nächsten Schritt zeichnen wir für positive Winkel phi den Graphen ...</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="x.x" to="0" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sing:=kurve(t,0, phi ,t,sin(t))"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sing"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="9" end="10"/>
+			</seq>
+		</step>
+		<step>
+			<description>Sinngemäß setzen wir die Definition auch für negative Winkel phi fort...</description>
+		</step>
+		<step>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="singp:=kurve(t,0, 9 ,t,sin(t))"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="singp"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="0" end="4"/>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="x.x" to="-1" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sf(x):=sin(x)"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sf"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="0.7" end="4"/>
+			</seq>
+		</step>
+		<step>
+			<title>Werte der Cosinus-Funktion</title>
+			<description>Nach dem gleichen Schema werden die Werte der Cosinus-Funktion eingezeichnet. 
+			<br/>Die Länge des grünen Pfeils gibt den Betrag des Cosinus.
+			<br/>Wenn er nach rechts zeigt, ist der entsprechende Sinus-Wert positiv,
+			<br/>wenn er nach links zeigt, ist der Sinus-Wert negativ. 
+		</description>
+			<seq>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="singg"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="singg"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="singg"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="singp"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="singp"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="sinv0"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="sinv0"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="sinv1"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="sinv1"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="sinv2"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="sinv2"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="sinv3"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="sinv3"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="sinv4"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="sinv4"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="sinv5"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="sinv5"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="sing"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="singv"/>
+				</call>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="gkv"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="akv"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="0.7" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<description>Zuerst die Werte für spezielle Winkel...</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="x.x" to="0" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="cosv0:=kreis(0,1,0.04)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosv0"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="1.5708" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="cosv1:=kreis(pi/2,0,0.04)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosv1"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="3.1416" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="cosv2:=kreis(pi,-1,0.04)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosv2"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="4.7124" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="cosv3:=kreis(1.5*pi,0,0.04)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosv3"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="6.2832" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="cosv4:=kreis(2*pi,1,0.04)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosv4"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="7.8540" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="cosv5:=kreis(2.5*pi,0,0.04)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosv5"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Und im nächsten Schritt der komplette Graph...</description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="0" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="cosg:=kurve(t,0, phi ,t,cos(t))"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosg"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="cosgv:=vektor(phi,0, 0, cos(phi))"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosgv"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="9" end="10"/>
+				<call object="main" action="newObject">
+					<param type="String" value="cosgp:=kurve(t,0,9 ,t,cos(t))"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cosgp"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="0" end="3"/>
+				<animate object="main" parameterName="x.x" to="-2" end="4"/>
+				<call object="main" action="newObject">
+					<param type="String" value="cf(x):=cos(x)"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="cf"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosg"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="cosg"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosgp"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="cosgp"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="0.7" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>sin und cos</title>
+			<description>Nun ein Blick auf die beiden Funktionsgraphen</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="funktionen"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					funktionen.zoom1To1(active=false);
+				</script>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.yMax := 2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.yMin := -2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.xMin := -4*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.xMax := funktionen.xMin+15"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosv0"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="cosv0"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosv1"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="cosv1"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosv2"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="cosv2"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosv3"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="cosv3"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosv4"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="cosv4"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosv5"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="cosv5"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="gkv"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="sing"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="singv"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Beide Funktionen sind offensichtlich periodisch: Wenn wir den Einheitskreis einmal umrundet haben und den Winkel phi nun weiter vergrößern, dann wiederholen sich sämtliche Werte. Die primitive Periode ist <fb>ff:=2*pi</fb>.
+<br/>Im nächsten Schritt eine kleine Fahrt entlang der x-Achse...</description>
+		</step>
+		<step>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="x.x := funktionen.xMin+4.7"/>
+				</call>
+				<animate object="main" parameterName="funktionen.xMin" to="20" end="20"/>
+				<animate object="main" parameterName="funktionen.xMin" to="-20" end="20"/>
+				<animate object="main" parameterName="funktionen.xMin" to="-4" end="10"/>
+			</seq>
+		</step>
+		<step>
+			<title>Die Tangens-Funktion</title>
+			<description>Nun kann man in unserem rechtwinkligen Dreieck noch ein weiteres Seitenverhältnisse betrachten, nämlich das Verhältnis von Gegenkathete (rot) zu Ankathete (grün) (oder umgekehrt). Auch dieses Verhältnis hängt nur vom Winkel phi und nicht von der konkreten Größe des Dreiecks ab. Man erhält so die Tangens-Funktion:
+<br/>
+				<f>Tangens(phi):=Gegenkathete/Ankathete</f>.
+				</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="kreis"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					kreis.zoom1To1(active=true);
+				</script>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.yMax:=3*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.xMax:=6*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.xMin:=-3*1"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="0.5" end="2"/>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man diese Definition des Tangens umformt, indem man den Zähler und den Nenner jeweils durch die Länge der Hypotenuse dividiert, sieh man, dass man den Tangens auch einfach als Quotienten der soeben eingeführten Funktionen Sinus und Cosinus definieren kann
+				<f>Tangens(phi):=Gegenkathete/Ankathete</f>=<fb>ff:=(Gegenkathete/Hypotenuse)/(Ankathete/Hypotenuse)</fb>=<fb>fff(phi):=sin(phi)/cos(phi)</fb>
+			</description>
+		</step>
+		<step>
+			<description>Will man das Verhalten der Tangens-Funktion geometrisch ermitteln, so ist es jetzt günstig, die Größe des Dreiecks so zu wählen, dass die Ankathete die Länge 1 hat ...
+	</description>
+			<seq>
+				<animate object="main" parameterName="radius" to="1.139" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt gilt: Tangens = Länge der Gegenkathete = Länge des roten Pfeils.</description>
+		</step>
+		<step>
+			<description>Im folgenen soll der Graph der Tangens-Funktion blau eingezeichnet werden, deshalb ist der relevante Pfeil jetzt auch blau (statt rot) gefärbt.</description>
+			<seq>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="gkv"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="gkv"/>
+				</call>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="gk"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="gk"/>
+				</call>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="akv"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="akv"/>
+				</call>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="ak"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="ak"/>
+				</call>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="hyp"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="hyp"/>
+				</call>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="hypv"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="hypv"/>
+				</call>
+				<call object="kreis" action="deleteGraph">
+					<param type="String" value="rwinkel"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="rwinkel"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="tanv:=vektor(1,0,0,tan(phi))"/>
+					<param type="Color" value="blue"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="tanv"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Graph der Tangens-Funktion</title>
+			<description>Im rechten Fenster sehen Sie jetzt den Graphen der Tangens-Funktion blau eingezeichnet.
+		<br/>Der Funktionswert ergibt sich an jeder Stelle aus <f>Tangens(phi):=sin(phi)/cos(phi)</f>. 
+		<br/>Nun zu den Definitionslücken und zu wichtigen Funktionswerten:</description>
+			<layout>
+				<row perc="100">
+					<col perc="30" name="kreis"/>
+					<col perc="70" name="funktionen"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					kreis.zoom1To1(active=true);
+					funktionen.zoom1To1(active=true);
+				</script>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.yMax := 2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.xMax := 2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="kreis.xMin := -2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.yMin := -2"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.yMax := 2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.xMax := 7.3*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="funktionen.xMin := -2*1"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="x.x:=0.5"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="singv"/>
+				</call>
+				<call object="funktionen" action="deleteGraph">
+					<param type="String" value="cosgv"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="tangv:=vektor(phi,0, 0, tan(phi))"/>
+					<param type="Color" value="blue"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="tangv"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="tanf(x):=tan(x)"/>
+					<param type="Color" value="blue"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="tanf"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="xphigg:=strecke(0,0,-10*cos(phi),-10*sin(phi))"/>
+					<param type="Color" value="gray"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="xphigg"/>
+				</call>
+				<call object="main" action="setLineStyle">
+					<param type="String" value="xphigg"/>
+					<param type="String" value="dot"/>
+				</call>
+				<animate object="main" parameterName="x.x" to="0.6" end="1"/>
+			</seq>
+		</step>
+		<step>
+			<title>Definitionslücken</title>
+			<description>Der Tangens ist offensichtlich dort nicht definiert, wo der Nenner, also die Cosinus-Funktion (grün) den Wert 0 annimmt.
+			<br/>Diese Stellen sind im rechten Fenster jetzt durch orange gefärbte vertikale Geraden gekennzeichnet.</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="tanas05:=gerade(1.57,0,0,1)"/>
+					<param type="Color" value="orange"/>
+				</call>
+				<call object="main" action="setLineStyle">
+					<param type="String" value="tanas05"/>
+					<param type="String" value="dot"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="tanas05"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="tanas15:=gerade(4.71,0,0,1)"/>
+					<param type="Color" value="orange"/>
+				</call>
+				<call object="main" action="setLineStyle">
+					<param type="String" value="tanas15"/>
+					<param type="String" value="dot"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="tanas15"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="tanasm05:=gerade(-1.57,0,0,1)"/>
+					<param type="Color" value="orange"/>
+				</call>
+				<call object="main" action="setLineStyle">
+					<param type="String" value="tanasm05"/>
+					<param type="String" value="dot"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="tanasm05"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Werte für spezielle Winkel</title>
+			<description>Sowohl geometrisch als auch algebraisch sieht man folgende Werte der Tanges-Funktion einfach:
+		<br/>Der Tangens hat genau dort eine Nullstelle, wo auch der Sinus eine Nullstelle hat: bei allen ganzzahligen Vielfachen von <fb>ff:=pi</fb>.</description>
+		</step>
+		<step>
+			<description>Eine weiter einfache Situation ergibt sich bei phi=<fb>ff:=pi/2</fb>: dort haben Sinus und Cosinus den gleichen Wert, man hat also:
+		<br/>Tangens(<fb>ff:=pi/2</fb>)=1, </description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="0.785" end="3"/>
+				<call object="main" action="newObject">
+					<param type="String" value="tanv025:=kreis(0.785,1,0.04)"/>
+					<param type="Color" value="blue"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="tanv025"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>beim Winkel phi=<fb>ff:=-pi/2</fb> haben Sinus und Cosinus bis auf Vorzeichen den gleichen Wert, also:
+			<br/>Tangens(<fb>ff:=-pi/2</fb>)=&minus;1.		
+			</description>
+			<seq>
+				<animate object="main" parameterName="x.x" to="-0.785" end="6"/>
+				<call object="main" action="newObject">
+					<param type="String" value="tanvm025:=kreis(-0.785,-1,0.04)"/>
+					<param type="Color" value="blue"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="tanvm025"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Für Winkel aus dem Bereich -pi/2 &lt; phi &lt; pi/2 kann man sich die Werte der Tangens-Funktion geometrisch veranschaulichen, indem man (wie beim Sinus) vom Einheitskreis links die Position der Pfeilspitze des blauen Pfeils als entsprechenden Funktionswert nach rechts überträgt.</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="tangg:=gerade(0,tan(phi), 1 ,0)"/>
+					<param type="Color" value="blue"/>
+				</call>
+				<call object="main" action="setLineStyle">
+					<param type="String" value="tangg"/>
+					<param type="String" value="dot"/>
+				</call>
+				<call object="funktionen" action="addGraph">
+					<param type="String" value="tangg"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="tangg"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="x.x" to="1.57" end="5"/>
+				<animate object="main" parameterName="x.x" to="-1.57" end="5"/>
+				<animate object="main" parameterName="x.x" to="0.7" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Anders als beim Sinus gilt bei der geometrischen Ermittlung der Tangens-Werte für alle anderen Winkel phi: Der Pfeil bleibt immer am selben Punkt verankert, dieser Punkt ist jetzt links mit P gekennzeichnet. Verfolgen Sie im nächsten Schritt die Übertragung der Werte von links nach rechts. ...</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="P:=punkt(1*1,0*1)"/>
+					<param type="Color" value="blue"/>
+				</call>
+				<call object="kreis" action="addGraph">
+					<param type="String" value="P"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="x.x" to="8" end="10"/>
+				<animate object="main" parameterName="x.x" to="0" end="2"/>
+				<animate object="main" parameterName="x.x" to="-2.5" end="5"/>
+				<animate object="main" parameterName="x.x" to="0.7" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<title>Periode</title>
+			<description>Der Tangens hat die primitive Periode <fb>ff:=pi</fb>.</description>
+		</step>
+	</body>
+</math4u2>

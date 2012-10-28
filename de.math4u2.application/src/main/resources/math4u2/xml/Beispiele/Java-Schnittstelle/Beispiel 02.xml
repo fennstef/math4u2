@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>myFunc</name>
+				<result-type>ScalarType</result-type>
+				<arguments>
+					<argument type="ScalarType" name="x"/>
+					<argument type="ScalarType" name="limit"/>
+				</arguments>				
+				<method><![CDATA[
+					public Object eval(Object[] args) throws MathException{
+						//Parameter holen
+						int k=0;
+						double x = ((Result) args[k++]).getScalar();
+						double limit = ((Result) args[k++]).getScalar();				
+						//Variable für das Ergebniss
+						double result = 0;						
+				
+						//Berechnung des Funktionswertes
+						if(Math.abs(Math.sin(x))<limit){
+							result = 0.0;
+						}else{
+							result = Math.sin(x);
+						}
+						
+						//Ergebnisrückgabe
+						return new ScalarDoubleResult(result);
+					}
+				]]></method>				
+			</function>
+		</define>
+	</head>
+	<body>
+		<location>/Beispiele/Java-Schnittstelle</location>
+		<title>Beispiel 02</title>
+		<step>
+			<title>Beispiel 2: Funktion mit zwei Parametern</title>
+			<description>
+XML-Lektion hierzu:
+<code><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>myFunc</name>
+				<result-type>ScalarType</result-type>
+				<arguments>
+					<argument type="ScalarType" name="x"/>
+					<argument type="ScalarType" name="limit"/>
+				</arguments>				
+				<method><![CDATA[
+					public Object eval(Object[] args) throws MathException{
+						//Parameter holen
+						int k=0;
+						double x = ((Result) args[k++]).getScalar();
+						double limit = ((Result) args[k++]).getScalar();				
+						//Variable für das Ergebniss
+						double result = 0;						
+				
+						//Berechnung des Funktionswertes
+						if(Math.abs(Math.sin(x))<limit){
+							result = 0.0;
+						}else{
+							result = Math.sin(x);
+						}
+						
+						//Ergebnisrückgabe
+						return new ScalarDoubleResult(result);
+					}
+				]]>]]&gt;<![CDATA[</method>				
+			</function>
+		</define>
+	</head>
+	<body>
+		<location>/Beispiele/Java-Schnittstelle</location>
+		<title>02 zweites Beispiel</title>
+		<step>
+			<seq>
+				<script>
+					newObject(def=a:=0.3; select=true; min=0; max=1);
+					newObject(def=f(x) := myFunc(x,a); target=da;);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>
+]]></code>				
+			</description>
+			<seq>
+				<script>
+					newObject(def=a:=0.3; select=true; min=0; max=1);
+					newObject(def=f(x) := myFunc(x,a); target=da;);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

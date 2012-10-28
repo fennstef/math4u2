@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte</location>
+		<title>4.3 Die Schritte einer Lektion</title>
+		<step>
+			<title>4.3 Die Schritte einer Lektion</title>
+			<description>
+In einem oder mehreren <code>&lt;step></code>-Tags (Schritte) wird der Ablauf 
+der Lektion festgelegt. Beim Start der Lektion wird der Inhalt des ersten 
+Schritts abgearbeitet, beim Klick auf den Weiter-Button jeweils
+der Inhalt des folgenden Schritts.
+
+<p/><strong>Beispiel:</strong>
+<br/>
+<code><![CDATA[
+<step>
+	<title>
+		Fourier-Summe der Rechteckfunktion, Gibbsches Phänomen
+	</title>
+	<description>
+		<title2>
+			Die Koordinatensysteme
+		</title2>	
+		Links sehen Sie das gesamte Rechteck,
+		rechts den kritischen Ausschnitt
+	</description>
+	<layout>
+		<row perc="100">
+			<col perc="60" name="gesamt"/>
+			<col perc="40" name="detail"/>
+		</row>
+	</layout>
+	<seq>
+	</seq>
+</step>
+]]></code>
+
+<br/>Zu Beginn eines Schritts werden mit <code>&lt;title>(optional)</code> 
+und <code>&lt;title2>(optional)</code> die Überschriften für den Textbereich festgelegt.
+
+<p/><code>&lt;description>(optional)</code> definiert den erläuternden Text. 
+Näheres unten. 
+
+<p/><code>&lt;layout>(optional></code> definiert die Aufteilung der 
+Zeichenfläche in einzelne Fenster. Näheres unten.
+
+<p/><code>&lt;seq>(optional)</code> definiert die Aktionen zum Aufbau und Ablauf 
+des Schritts. Näheres unten.
+			</description>
+		</step>
+	</body>
+</math4u2>

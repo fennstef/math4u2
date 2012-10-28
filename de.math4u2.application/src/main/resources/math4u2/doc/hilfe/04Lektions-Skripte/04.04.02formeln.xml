@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.4 description-Tag: Text und Formelsatz</location>
+		<title>4.4.2 &lt;f>: Formeln und Ein-/Ausgabe</title>
+		<step>
+			<title>4.4.2 &lt;f>: Formeln und Ein-/Ausgabe</title>
+			<description>
+Mit <code>&lt;f></code>-Tags werden wie bei <code><![CDATA[<f>h(x,y):=x*sin(y)</f>]]></code> Formeln gesetzt.
+
+<p/><strong>Formeln zitieren</strong>
+<br/>Formeln von Objekten, die in einem der vorhergehenden Schritte oder im aktuellen Schritt definiert
+<br/>werden (wie z.B. die Funktion <code>g(x)</code> durch
+<code>newObject( def = g(x):=a*x+b; target = da );</code>),
+können im Text zitiert werden:
+<br/><code><![CDATA[
+<step>
+	<description>
+		<title2>Formel einer definierten Funktion anzeigen</title2>
+		Oben sehen Sie die Graphen der Funktionen <f>$fd(g)</f> und
+		<f>$fd(h)</f>.
+	</description>
+	<seq>
+		<script>
+			newObject( def = a:=1 );
+			newObject( def = b:=1 );
+			newObject( def = g(x):=a*x+b; target = da );
+			newObject( def = h(x):=sqrt(|g(x)|); target = da) ;
+		</script>
+	</seq>
+</step>
+
+]]></code>
+Hier werden im aktuellen Schritt die Funktionen <code>g(x)</code> und <code>h(x)</code> definiert.
+Ihre Definitionen werden durch <code><![CDATA[<f>$fd(g)</f>]]></code> bzw. <code><![CDATA[<f>$fd(h</f>]]></code> in den Text eingefügt.
+
+<p/>math4u2-Anzeige:				
+<br/>
+<table>
+	<tr>
+		<td>
+			<strong>Formel einer definierten Funktion anzeigen</strong>
+			<br/>Oben sehen Sie die Graphen der Funktionen <f>g(x):=a*x+b</f> und
+			<f>h(x):=sqrt(|g(x)|)</f>.
+		</td>
+	</tr>
+</table>
+
+<p/><strong>Allgemein gilt:</strong>
+<br/>Ist die Funktion wie <code>h(x):=sqrt(|g(x)|)</code> definiert, so kann man die Bestandteile 
+dieser Definition zitieren als:
+<p/>
+<table>
+	<tr>
+		<td bgcolor="fillorange">Anweisung</td>
+		<td bgcolor="fillorange">Beispiel</td>
+		<td bgcolor="fillorange">Ergebnis</td>
+	</tr>
+	<tr>
+		<td><code>$fd(...)</code> Vollständige Definition</td>
+		<td><code><![CDATA[<f>$fd(h)</f>]]></code></td>
+		<td><f>h(x):=sqrt(|g(x)|)</f></td>
+	</tr>
+	<tr>
+		<td><code>$fh(...)</code> Kopf (head) der Definition</td>
+		<td><code><![CDATA[<f>$fh(h)</f>]]></code></td>
+		<td><f>h(x)</f></td>
+	</tr>
+	<tr>
+		<td><code>$fb(...)</code> Rumpf (body) der Definition</td>
+		<td><code><![CDATA[<f>$fb(h)</f>]]></code></td>
+		<td><f>sqrt(|g(x)|)</f></td>
+	</tr>	
+</table>
+
+<p/>In der Klammer wird wie bei <code>$fd(h)</code> lediglich der Name des zitierten Objekts angegeben.
+Eine zitierte Formel kann auch ein Teil einer umfangreicheren Formel sein. Hat man die zweistellige
+Funktion <code>F(x,y):=y+x/2</code> definiert, so ergibt
+<p/><code><![CDATA[... <f>$fh(F)</f> auf den Hauptnenner: <f>$fb(F)=(2*y+x)/2</f> ...]]></code>
+<p/>die folgende Textpassage mit den beiden Formeln:
+<br/>... <f>F(x,y)</f> auf den Hauptnenner: <f>y+x/2=(2*y+x)/2</f> ...
+
+<p/><strong>Formeln setzen:</strong>
+Grundlage des Formelsatzes ist die auch bei der Definition von Objekten verwendetet Termschreibweise.
+<br/>
+<ul>
+	<li>Zahlen: <code>1.2</code> , <code>1.3E-3</code>, <code>-22.0E-12</code>.<br/></li>
+	<li>
+Bezeichner:
+<br/>Ein Bezeichner beginnt mit einem Buchstaben (keine Umlaute), es folgt eine beliebige Sequenz
+aus Buchstaben und Ziffern. Diese Sequenz kann einmal das Zeichen Unterstrich <code>_</code> oder das Zeichen
+Tilde <code>~</code> enthalten.
+Gültige Bezeichner sind z.B. : <code>a</code>, <code>a1</code>, <code>punkt1</code>, <code>aber</code>, <code>zwei_sin</code>, <code>einBez</code>.
+<p/>Bei der Darstellung von Bezeichnern im Formelsatz gelten folgende besonderen Konventionen:
+<br/><br/><command>Griechische Zeichen:</command>
+<br/>Die Bezeichner <code>alpha</code>, <code>beta</code>, <code>gamma</code>, <code>delta</code>, ... 
+und <code>Alpha</code>, <code>Beta</code>, <code>Gamma</code>, <code>Delta</code>, ...
+<br/>werden durch die Zeichen bzw. des griechischen Alphabets dargestellt.
+
+<br/><br/><command>Bezeichner, die einen Unterstrich <strong>_</strong> enthalten:</command>
+<br/>Wie bei <code>t_start</code> oder <code>x_alpha</code> wird der Bestandteil nach dem 
+Unterstrich als tiefgestellter Index gesetzt: <f>t_start</f> und <f>x_alpha</f>.
+
+<br/><br/><command>Bezeichner, die eine Tilde ~ enthalten:</command>
+<br/>Wie bei <code>t~neu</code> oder <code>alpha~beta</code> wird der Bestandteil nach der Tilde 
+als hochgestellter Index gesetzt: <f>t~neu</f> und <f>alpha~beta</f> .
+<br/>Hier ergeben folgende Bestandteile eine besondere Dekoration der Bezeichner:
+<code>x~quer</code>, <code>x~dach</code>, <code>x~tilde</code>, <code>x~stern</code> ergibt 
+<f>x~quer</f>, <f>x~dach</f>, <f>x~tilde</f>, <f>x~stern</f>.
+	</li>
+	<li>
+Indices:
+<br/><code>a[1]</code> erzeugt <f>a[1]</f>, <code>b[n+1,k]</code> erzeugt <f>b[n+1,k]</f> 
+und <code>alpha[0]</code> erzeugt <f>alpha[0]</f>.		
+	</li>
+	<li>
+Operatoren:
+<br/>Binäre Infix-Operatoren <code>=</code>, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, 
+<code>^</code>, unärer Postfix-Operator <code>!</code>.<br/>
+	</li>
+	<li>
+Aufzählungen:
+<br/>Das Komma "<code>,</code>" trennt die Elemente einer Aufzählung.
+Die Eingabe <code>sin(x),cos(x),tan(x)</code> ergibt die Aufzählung <f>sin(x),cos(x),tan(x)</f>.		
+	</li>
+	<li>
+Leerer Bezeichner und Fortsetzungspunkte:
+<br/>Ein Bezeichner kann ersetzt werden durch den leeren Bezeichner <code>$void</code> oder durch
+Fortsetzungspunkte <code>$dots</code>.
+Die Formel <code>&lt;f>a, b, c, $dots&lt;/f></code> ergibt <f>a, b, c, $dots</f>,
+die Formel <code>&lt;f>$void = 0&lt;/f></code> ergibt <f>$void = 0</f>.		
+	</li>
+	<li>
+Klammern: 
+<br/><code>(</code> und <code>)</code> , sie müssen paarweise auftreten.<br/>	
+	</li>
+	<li>
+Funktionen:
+<br/>Ein- und mehrstellinge Funktionen werden allgemein geschrieben wie <code>f(x,y)</code> und
+<code>f(2*x, sin(y))</code>.
+<br/><br/>Folgende Funktionen werden in der üblichen Spezialform dargestellt:
+
+<br/><br/><strong>Einstellige Funktionen mit spezieller Darstellung</strong>
+<br/><br/><table>
+	<tr>
+		<td><code>sqrt(x)</code></td><td><f>sqrt(x)</f></td>
+	</tr><tr>
+		<td><code>exp(x)</code></td><td><f>exp(x)</f></td>
+	</tr><tr>
+		<td><code>|x|</code></td><td><f>|x|</f></td>
+	</tr><tr>
+		<td><code>inverse(M)</code></td><td><f>inverse(M)</f></td>
+	</tr><tr>
+		<td><code>transpose(M)</code></td><td><f>transpose(M)</f></td>
+	</tr>
+</table>
+
+<br/><br/><strong>Zweistellige Funktionen mit spezieller Darstellung</strong>
+<br/><br/><table>
+	<tr>
+		<td><code>log(a,b)</code></td><td><f>log(a,b)</f></td>
+	</tr><tr>
+		<td><code>root(a+x,3)</code></td><td><f>root(a+x,3)</f></td>
+	</tr><tr>
+		<td><code>pow(x,2+n)</code></td><td><f>pow(x,2+n)</f></td>
+	</tr>
+</table>
+
+<br/><br/><strong>Ableitung</strong>
+<br/><br/><table>
+	<tr>
+		<td><code>derive(f(x),2)</code></td><td><f>derive(f(x),2)</f></td>
+	</tr><tr>
+		<td><code>derive(x+2,2)</code></td><td><f>derive(x+2,2)</f></td>
+	</tr><tr>
+		<td><code>derive(f(x), n+1)</code></td><td><f>derive(f(x), n+1)</f></td>
+	</tr><tr>
+		<td><code>derive(f(x), 2)(c)</code></td><td><f>derive(f(x), 2)(c)</f></td>
+	</tr><tr>
+		<td><code>derive(vars(x), x*sin(x), 1)(y^2)</code></td><td><f>derive(vars(x), x*sin(x), 1)(y^2)</f></td>
+	</tr>
+</table>
+
+<br/><br/><strong>Summe, Produkt und Integral</strong>
+<br/><br/><table>
+	<tr>
+		<td>Summe: <code>sum(i,3,n,f(x))</code></td><td><f>sum(i,3,n,f(x))</f></td>
+	</tr><tr>
+		<td>Produkt: <code>prod(i,3,n,f(x))</code></td><td><f>prod(i,3,n,f(x))</f></td>
+	</tr><tr>
+		<td>Bestimmtes Integral: <code>int(x,a,b,f(x))</code></td><td><f>int(x,a,b,f(x))</f></td>
+	</tr><tr>
+		<td>Unbestimmtes Integral: <code>int(x,f(x))</code></td><td><f>int(x,f(x))</f></td>
+	</tr>
+</table>
+
+<br/><br/><strong>Grenzwert</strong>
+<br/><br/><table>
+	<tr>
+		<td>Grenzwert:<br/><code>lim(vars(x),x^2/(x+1),$infin)</code></td>
+		<td><f>lim(vars(x),x^2/(x+1),$infin)</f></td>
+	</tr><tr>
+		<td>rechtsseitiger Grenzwert:<br/><code>lim+(vars(x),x^2/(x+1),-1)</code></td>
+		<td><f>lim+(vars(x),x^2/(x+1),-1)</f></td>
+	</tr><tr>
+		<td>linksseitiger Grenzwert:<br/><code>lim-(vars(x),x^2/(x+1),-1)</code></td>
+		<td><f>lim-(vars(x),x^2/(x+1),-1)</f></td>
+	</tr>
+</table>
+<br/>
+	</li>							
+	<li>Spezielle Symbole: <br/><code>$infin</code> wird dargestellt als <f>$infin</f>.<br/></li>
+	<li>
+Zweistellige Relationen und Operatoren:
+<br/>arithmetische Operatoren <code>+</code>, <code>-</code>, <code>*</code>, 
+<code>/</code>, <code>^</code> , weitere Operatoren und Relationen durch:		
+
+<br/><br/><table>
+	<tr>
+		<td><code>a = b</code></td><td><f>a = b</f></td>
+	</tr><tr>
+		<td><code>a $ne b</code></td><td><f>a $ne b</f></td>
+	</tr><tr>
+		<td><code>a $lt b</code></td><td><f>a $lt b</f></td>
+	</tr><tr>
+		<td><code>a $le b</code></td><td><f>a $le b</f></td>
+	</tr><tr>
+		<td><code>a $gt b</code></td><td><f>a $gt b</f></td>
+	</tr><tr>
+		<td><code>a $ge b</code></td><td><f>a $ge b</f></td>
+	</tr><tr>
+		<td><code>a $asymp b</code></td><td><f>a $asymp b</f></td>
+	</tr><tr>
+		<td><code>x $isin R</code></td><td><f>x $isin R</f></td>
+	</tr><tr>
+		<td><code>x $notin R</code></td><td><f>x $notin R</f></td>
+	</tr><tr>
+		<td><code>M $ni x</code></td><td><f>M $ni x</f></td>
+	</tr><tr>
+		<td><code>A $sub B</code></td><td><f>A $sub B</f></td>
+	</tr><tr>
+		<td><code>B $sup A</code></td><td><f>B $sup A</f></td>
+	</tr><tr>
+		<td><code>A $supe B</code></td><td><f>A $supe B</f></td>
+	</tr><tr>
+		<td><code>C $nsub E</code></td><td><f>C $nsub E</f></td>
+	</tr><tr>
+		<td><code>a $equiv B</code></td><td><f>a $equiv B</f></td>
+	</tr><tr>
+		<td><code>a $cong b</code></td><td><f>a $cong b</f></td>
+	</tr><tr>
+		<td><code>a $prop b</code></td><td><f>a $prop b</f></td>
+	</tr><tr>
+		<td><code>a $sim b</code></td><td><f>a $sim b</f></td>
+	</tr><tr>
+		<td><code>a $perp b</code></td><td><f>a $perp b</f></td>
+	</tr>
+</table><br/>
+	</li>
+	<li>
+Vektoren und Matrizen:
+<br/>Vektoren werden als Spalten gesetzt: <code>&lt;f>vektor({1,x,x^2})&lt;/f></code> erscheint 
+wie <f>vektor({1,x,x^2})</f>, 
+<br/>Dualvektoren als Zeilen: <code>&lt;f>dualvektor({1,x,x^2})&lt;/f></code> erscheint 
+wie <f>dualvektor({1,x,x^2})</f>,
+<br/>Matrizen wie üblich: <code>&lt;f>matrix({{1,2,3},{2,2,2}})&lt;/f></code> erscheint 
+wie <f>matrix({{1,2,3},{2,2,2}})</f>.
+	</li>		
+</ul>
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>2. Bedienung</location>
+		<title>2.4.2 Zeichenfläche interaktiv manipulieren</title>
+		<step>
+			<title>2.4.2 Zeichenfläche interaktiv manipulieren</title>
+			<description>			
+Auf einer Zeichenfläche steht über die rechte Maustaste ein Menü 
+mit verschiedenen Einstellmöglichkeiten zur Verfügung.
+
+<p/><strong>Ausschnitt einstellen: Zoom und Verschieben</strong>
+<br/>Die ersten Elemente des Menüs bieten verschiedene Zoom-Modi.
+Da diese sehr häufig benötigt werden, können sie auch ohne Umweg über das Menü durch entsprechende
+Tasten aktiviert werden:
+
+<p/><strong>Tipp:</strong> Zoom-Modus schnell über Tasten aktivieren!
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Menüelement</strong></td>
+		<td bgcolor="#F4C86C"><strong>Taste</strong></td>
+		<td bgcolor="#F4C86C"><strong>Aktion</strong></td>
+	</tr>
+	<tr>
+		<td>Zoom</td>
+		<td><command>z</command></td>
+		<td>
+Jetzt linke Maustaste drücken und Maus nach unten ziehen, gezeigter
+<br/>Ausschnitt wird größer (zoom-out), linke Maustaste drücken und
+<br/>Maus nach oben ziehen, Ausschnitt wird kleiner (zoom-in).
+		</td>
+	</tr>
+	<tr>
+		<td>Zoom in x-Richtung</td>
+		<td><command>x</command></td>
+		<td>
+Zoom wirkt nur in x-Richtung.
+		</td>
+	</tr>	
+	<tr>
+		<td>Zoom in y-Richtung</td>
+		<td><command>y</command></td>
+		<td>
+Zoom wirkt nur in y-Richtung.
+		</td>
+	</tr>		
+	<tr>
+		<td>Box-Zoom</td>
+		<td><command>b</command></td>
+		<td>
+Linke Maustaste drücken, dann Rechteck aufziehen und so
+<br/>den gewünschten Ausschnitt festlegen.
+		</td>
+	</tr>	
+	<tr>
+		<td>Zoom 1:1</td>
+		<td><command>1</command></td>
+		<td>
+Stellt zusätzlich zu Zoom auf beiden Achsen gleiche 
+<br/>Längeneinheiten her.
+		</td>
+	</tr>	
+	<tr>
+		<td>ständiger 1:1 Zoom</td>
+		<td></td>
+		<td></td>
+	</tr>	
+	<tr>
+		<td>Verschieben</td>
+		<td><command>v</command></td>
+		<td>
+Verschieben des Ausschnitts mit der Maus.
+		</td>
+	</tr>	
+	<tr>
+		<td>normaler Modus</td>
+		<td><command>Leertaste</command></td>
+		<td>
+Zoom-Funktion ausgeschaltet.			
+		</td>
+	</tr>	
+</table>
+
+<p/><strong>Einstellungen</strong>
+<br/>Hier können Sie für die aktuelle Zeichenfläche folgende Einstellungen vornehmen:
+
+<p/><command>Detail-Stufe:</command> Bei Detail-Stufe 1 werden die Funktionswerte zur 
+Darstellung eines Graphen horizontal in 1-Pixel-Abständen berechnet.
+<p/>Bei sehr rechenintensiven Funktionen kann dies zu längeren Wartezeiten 
+führen. Diese können durch eine Erhöhung der Detail-Stufe verkürzt werden. 
+Bei Detail-Stufe 20 wird nur für jedes 20. Pixel ein Funktionswert gerechnet, 
+die resultierenden Stützpunkte werden durch eine Kurve interpoliert. 
+Kleine Details des Graphen können durch diese Interpolation verfälscht werden.
+
+<p/>Durch Markieren von "grobes Detail beim Zoom" legen Sie fest, dass nur 
+während eines Zoom-Vorgangs die Anzahl der berechneten Stützpunkte reduziert 
+werden soll. Dies bewirkt, dass bei rechenintensiven Funktionen der 
+Zoom-Vorgang flüssiger bleibt. Nach Beendigung des Zoom-Vorgangs wird die 
+Anzahl der Stützpunkte automatisch wieder erhöht.
+
+<p/><command>Koordinaten</command>: Über die Eingabefelder können sie für das 
+Koordinatensystem einen Ausschnitt festlegen, dieser wird durch 
+Markieren von "Übernehmen" wirksam.
+
+<p/><command>Graphenstärke:</command> Stärke der Funktionsgraphen
+<p/><command>Farbe:</command> Farbe der Gitterlinien und Achsen
+<p/><command>Hilfslinien:</command> Abstand der Gitterlinien
+<p/><command>Titel:</command> Titel, der links oben im Fenster angezeigt wird.
+<p/>
+			</description>
+		</step>
+	</body>
+</math4u2>

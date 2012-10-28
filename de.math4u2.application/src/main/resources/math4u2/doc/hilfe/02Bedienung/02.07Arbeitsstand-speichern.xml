@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>2. Bedienung</location>
+		<title>2.7 Arbeitsstand speichern</title>
+		<step>
+			<title>2.7 Arbeitsstand speichern</title>
+			<description>			
+Durch die Auswahl des Elements "Speichern unter ..." im Menü der Steuerleiste leiten Sie das Speichern
+des aktuellen Arbeitsstands ein.
+<br/>Gespeichert werden dabei die aktuell definierten Funktionen und Objekte mit ihren Beziehungen.
+Nicht gespeichert werden: verschiedene Schritte einer Lektion und der Inhalt des Lektionen-Fensters.
+
+<p/>Zunächst legen Sie logisch fest, mit welchem Titel und an welcher Stelle der Gliederungsstruktur 
+der gespeicherte Arbeitsstand anschließend im Themen-Navigator angezeigt wird:
+
+<p/><img src="math4u2/doc/images/bedienung/speichern01.gif"/>
+
+<p/>Nach der Auswahl "Speichern" legen Sie im anschließenden Dialog einen Namen für die Datei fest, in
+der die nötigen Daten gespeichert werden. Das dort voreingestellt Verzeichnis muss unverändert bleiben:
+
+<p/><img src="math4u2/doc/images/bedienung/speichern02.gif"/>
+
+<p/>Nach nochmaliger Auswahl von "Speichern" wird die Datei auf der Festplatte abgelegt.
+<p/>Der Arbeitsstand kann nun bei Bedarf durch Doppelklick auf den entsprechenden Eintrag im Themen-
+Navigator wieder geladen werden.
+			</description>
+		</step>
+	</body>
+</math4u2>

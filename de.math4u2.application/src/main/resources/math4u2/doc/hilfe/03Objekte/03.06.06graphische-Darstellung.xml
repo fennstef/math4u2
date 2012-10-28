@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.6 Graphische Darstellung</title>
+		<step>
+			<title>3.6.6 Graphische Darstellung</title>
+			<description>
+				<p/>
+				<strong>Beispiel 7: Graphische Darstellung erstellen</strong>
+				<br/>Als letztes Beispiel wollen wir uns noch ansehen, wie eigene graphische
+Darstellungen geschrieben werden. Wir wollen eine Matrix graphisch darstellen,
+indem wir jede Zelle als ein Rechteck zeichnen. Der Wert in der Zelle gibt die
+Helligkeit des Rechtecks an.
+<code><![CDATA[
+
+<function>
+	<name>paintMatrix</name>
+	<with-graph/>
+	<result-type>ScalarType</result-type>
+	<arguments>
+		<argument type="MatrixType" name="m"/>
+	</arguments>
+	...
+
+]]></code>Die Funktion soll also paintMatrix heißen, eine Matrix als Parameter haben und
+einen skalaren Wert zurückgeben. In diesem Beispiel wird der Rückgabewert nicht
+benutzt und deswegen geben wir immer 0 zurück. Durch das Tag &lt;with-graph/>
+wird angezeigt, dass diese Funktion einen eigenen Graphen besitzt und wir die
+Methode <code>public void paint(Graphics2D g, DrawAreaInterface da)</code>
+überschreiben werden. Für das Zeichnen auf der Zeichenfläche sollten Sie sich
+mit <code>Graphics2D</code> auskennen oder ein Java-Tutorial zu diesem Thema
+machen. In unserem Beispiel werden wir aber nur die Methoden <code>fillRect(...)</code>
+und <code>drawRect(...)</code> benutzen.
+<code><![CDATA[
+
+public Object eval(Object[] args) throws MathException{
+	//Parameter holen
+	double[][] m = ((Result) args[0]).getMatrix();
+	//Mattrix im Cache speichern
+	cache = m;
+	//beliebigen Wert zurück liefern
+	return new ScalarDoubleResult(0.0);
+}//eval
+
+]]></code>In der <code>eval(...)</code> Methode wird nur die Matrix in der Variablen
+<code>cache</code> abgespeichert und eine 0 zurück gegeben.
+Bevor es zum Zeichnen geht, schreiben wir uns noch eine Hilfsmethode:
+<code><![CDATA[
+
+public int[] convert(double[] point, DrawAreaInterface da){
+	//Koordinaten in Pixel umrechnen
+	int[] result = new int[2];
+	result[0]=da.xCoordToPix(point[0]);
+	result[1]=da.yCoordToPix(point[1]);
+	return result;
+}//convert
+
+]]></code>Diese Methode rechnet mit Hilfe der Zeichenfläche (<code>DrawAreaInterface</code>)
+die Koordinaten in Pixelpositionen auf der Zeichenflächekomponente um. Die Zeichenmethode
+sieht schließlich folgendermaßen aus:
+<code><![CDATA[
+
+public void paint(Graphics2D g, DrawAreaInterface da){
+	//Matrix holen
+	double[][] matrix = (double[][]) cache;
+	int dim = matrix.length;
+			
+	//minimalen und maximalen Wert in der Matrix ermitteln
+	double min=0,max=0;
+	for(int i=0; i<matrix.length; i++){
+		for(int j=0; j<matrix[i].length; j++){
+			if(matrix[i][j]<min) min = matrix[i][j];
+			if(matrix[i][j]>max) max = matrix[i][j];	
+		}//for j
+	}//for i
+				
+	//Jede Zelle zeichnen
+	for(int i=0; i<matrix.length; i++){
+		for(int j=0; j<matrix[i].length; j++){
+			//Wert der Zelle relativ zu min/max berechnen
+			//Spezialfälle: 0 falls matrix[i][j]==min
+			//				1 falls matrix[i][j]==max
+			float b = (float) (matrix[i][j]-min)/(max-min);
+		
+			//Farbton (das H im HSB Farbmodell) der aktuellen Farbe
+			//berechnen
+			Color color = getColor();
+			float h = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(),null)[0];
+							
+			//Farbe holen, mit gleichen Farbton h und 
+			//Sättigung und Helligkeit mit Wert b
+			g.setColor( Color.getHSBColor(h, b, b));
+	
+			//linke untere Ecke in Pixel umrechnen
+			int[] p1 = convert(new double[]{(double)j,(double)(dim-i)},da);
+			//rechte obere Ecke in Pixel umrechnen				
+			int[] p2 = convert(new double[]{(double)(j+1),(double)(dim-i+1)},da);
+				
+			//gefülltes Viereck zeichnen
+			g.fillRect(p1[0], p1[1], p2[0]-p1[0], p1[1]-p2[1]);
+			g.drawRect(p1[0], p1[1], p2[0]-p1[0], p1[1]-p2[1]);
+		}//for j
+	}//for i
+}//paint
+
+]]></code>Als erstes wird die Matrix von der Variablen <code>cache</code> wieder geholt.
+Ferner wird das Minimum und Maximum der Matrixelemente bestimmt, um die Farbunterschiede
+möglichst groß zu machen. Danach wird jede einzelne Zelle gezeichnet. Hierzu wird
+zunächst eine Zahl <code>b</code> zwischen 0 und 1 berechnet.
+Der Graph hat schon eine bestimmte Farbe (<code>getColor()</code>). Dies ist die Farbe, die der Benutzer per 
+Auswahldialog einstellen kann. Von dieser
+Farbe bestimmen wir den Farbton, genauer das H im HSB Farbmodell (<strong>H</strong>ue) und
+speichern den Farbton in die Variable <code>h</code>. Wieder hat <code>h</code> Werte von
+0 bis 1. Als letztes erzeugen wir eine Farbe im HSB Farbmodell mit Farbton <code>h</code>,
+Farbsättigung <code>b</code> und Farbhelligkeit <code>b</code>.
+<br/>
+Nun werden die Positionen für die Rechtecke berechnet. Zum Beispiel liegt die Zelle
+1,2 als Rechteck links unten bei (1,2) und rechts oben bei (2,3). Da bei <code>fillRect(...)</code>
+und <code>drawRect(...)</code> der Startpunkt und die Ausdehnung angegeben werden muss, werden
+jeweils im dritten und vierten Argument die Punkte von einander abgezogen.
+
+<br/>
+				<br/>Sie können dieses Beispiel unter "Beispiele/Java-Schnittstelle/Beispiel 07" betrachten.
+			</description>
+		</step>
+	</body>
+</math4u2>

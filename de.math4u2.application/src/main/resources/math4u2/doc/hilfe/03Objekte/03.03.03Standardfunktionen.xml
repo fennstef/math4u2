@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Fenn Stefan</author>		
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.3 Funktionen</location>
+		<title>3.3.3 Standardfunktionen</title>
+		<step>
+			<title>3.3.3 Standardfunktionen</title>
+			<description>			
+Folgende Konstanten und Standardfunktionen sind vordefiniert:
+<p/><strong>Zahlen-Konstanten</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td><code>pi</code></td>
+		<td>Kreiszahl <f>pi</f></td>
+	</tr>	
+	<tr>
+		<td><code>e</code></td>
+		<td>Eulersche Zahl <f>e</f></td>
+	</tr>	
+</table>
+
+<p/><strong>Vordefinierte Vektoren</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td><code>e2x</code></td>
+		<td>Einheitsvektor in x-Richtung: <f>vektor({1,0})</f></td>
+	</tr>	
+	<tr>
+		<td><code>e2y</code></td>
+		<td>Einheitsvektor in y-Richtung: <f>vektor({0,1})</f></td>
+	</tr>	
+</table>
+
+<p/><strong>Einstellige Funktionen</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td><code>|x| oder abs(x)</code></td>
+		<td>Betrag, dabei <code>x</code>: reelle Zahl</td>
+	</tr>	
+	<tr>
+		<td><code>arccos(x)</code></td>
+		<td>Arcus-Cosinus</td>
+	</tr>	
+	<tr>
+		<td><code>arcsin(x)</code></td>
+		<td>Arcus-Sinus</td>
+	</tr>	
+	<tr>
+		<td><code>arctan(x)</code></td>
+		<td>Arcus-Tangens</td>
+	</tr>	
+	<tr>
+		<td><code>ceil(x)</code></td>
+		<td>aufrunden auf die nächst größere ganze Zahl</td>
+	</tr>	
+	<tr>
+		<td><code>cos(x)</code></td>
+		<td>Cosinus zum Bogenmaß <code>x</code></td>
+	</tr>	
+	<tr>
+		<td><code>exp(x)</code></td>
+		<td>Exponentialfunktion zur Basis e</td>
+	</tr>					
+	<tr>
+		<td><code>floor(x)</code></td>
+		<td>abrunden auf die nächst kleinere ganze Zahl</td>
+	</tr>	
+	<tr>
+		<td><code>ln(x)</code></td>
+		<td>natürlicher Logarithmus</td>
+	</tr>	
+	<tr>
+		<td><code>maxelem(MatVec)</code></td>
+		<td>Wert des größten Element einer Matrix oder eines Vektors MatVec</td>
+	</tr>	
+	<tr>
+		<td><code>minelem(MatVec)</code></td>
+		<td>Wert des kleinsten Element einer Matrix oder eines Vektors MatVec</td>
+	</tr>	
+	<tr>
+		<td><code>signum(x)</code></td>
+		<td>
+Vorzeichen-Funktion:
+signum (x):=
+<br/><tab/>-1 falls x&lt;0 
+<br/><tab/>0 falls x=0
+<br/><tab/>1 falls x>0			
+		</td>
+	</tr>
+	<tr>
+		<td><code>sin(x)</code></td>
+		<td>Sinus zum Bogenmaß <code>x</code></td>
+	</tr>
+	<tr>
+		<td><code>sqrt(x)</code></td>
+		<td>Quadratwurzel</td>
+	</tr>
+	<tr>
+		<td><code>tan(x)</code></td>
+		<td>Tangens zum Bogenmaß <code>x</code></td>
+	</tr>
+	<tr>
+		<td><code>x!</code></td>
+		<td>Fakultät, dabei x: 0,1,2,3,...</td>
+	</tr>										
+</table>
+
+<p/><strong>Zweistellige Funktionen mit Operatorschreibweise</strong>
+<br/>Es gilt die übliche Bindungsstärke "Exponentiation vor Punkt vor Strich".
+Die Assoziativität ist wie angegeben.
+
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Term</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+		<td bgcolor="#F4C86C"><strong>Assoziativität</strong></td>		
+	</tr>
+	<tr>
+		<td><code>x+y</code></td>
+		<td>
+Summe von zwei reellen Zahlen (d.h. Skalaren),
+<br/>zwei Vektoren, zwei Dualvektoren oder
+<br/>zwei Matrizen
+		</td>
+		<td>linksassoziativ</td>
+	</tr>	
+	<tr>
+		<td><code>x-y</code></td>
+		<td>
+Differenz von zwei reellen Zahlen (d.h. Skalaren),
+<br/>zwei Vektoren, zwei Dualvektoren oder
+<br/>zwei Matrizen
+		</td>
+		<td>linksassoziativ</td>
+	</tr>
+	<tr>
+		<td><code>x*y</code></td>
+		<td>
+Produkt von zwei reellen Zahlen <code>x</code>, <code>y</code>,
+<br/>von zwei Matrizen <code>x</code>, <code>y</code> oder
+<br/>einer Zahl <code>x</code> mit einer Matrix 
+<br/>(einem Vektor, einem Dualvektor) <code>y</code>
+<br/>oder einer Matrix 
+<br/>(eines Vektors, eines Dualvektors) <code>x</code>
+<br/>mit einer Zahl <code>y</code>
+		</td>
+		<td>linksassoziativ</td>
+	</tr>	
+	<tr>
+		<td><code>x/y</code></td>
+		<td>
+Quotient von zwei Zahlen <code>x</code>, <code>y</code>,
+<br/>Quotient einer Matrix (eines Vektors, eines Dualvektors) <code>x</code>
+<br/>durch eine Zahl <code>y</code>
+		</td>
+		<td>linksassoziativ</td>
+	</tr>	
+	<tr>
+		<td><code>x&lt;*>y</code></td>
+		<td>
+Skalarprodukt der beiden Vektoren <code>x</code>, <code>y</code>
+		</td>
+		<td>-</td>
+	</tr>	
+	<tr>
+		<td><code>x^y</code></td>
+		<td>
+Exponentiation der Zahl <code>x</code> mit dem Exponenten <code>y</code>.
+		</td>
+		<td>rechtsassoziativ</td>
+	</tr>		
+</table>
+
+<p/><strong>Zweistellige Funktionen</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td><code>max(x,y)</code></td>
+		<td>Maximum der beiden Zahlen <code>x</code>, <code>y</code></td>
+	</tr>	
+	<tr>
+		<td><code>min(x,y)</code></td>
+		<td>Minimum der beiden Zahlen <code>x</code>, <code>y</code></td>
+	</tr>	
+	<tr>
+		<td><code>mod(x,y)</code></td>
+		<td>
+Rest nach Division von <code>x</code> durch <code>y</code>.
+<br/>Das Ergebnis hat dasselbe Vorzeichen wie <code>x</code>.
+		</td>
+	</tr>	
+	<tr>
+		<td><code>polynom(cv,x)</code></td>
+		<td>
+Wert des Polynoms mit den Koeffizienten des Koeffizientenvektors <code>cv</code> an der
+<br/>Stelle <code>x</code>. Berechnet wird je nach Dimension des Vektors <code>cv</code> der Wert
+<br/><f>cv[1]+cv[2]*x+cv[3]*x^2+cv[4]*x^3</f> + ...
+		</td>
+	</tr>		
+</table>
+
+<p/><strong>Dreistellige Funktionen</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td><code>cond(bedingung, term1, term2)</code></td>
+		<td>Berechnet den Wert <f>B</f> des Terms <code>bedingung</code>.
+<br/>Im Fall <f>B $lt 0</f> ist das Ergebnis der Wert von <code>term1</code>,
+<br/>im Fall <f>B $ge 0</f> ist das Ergebnis der Wert von <code>term2</code>.
+		</td>
+	</tr>	
+</table>
+
+<p/><strong>Transformationen</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td><code>splinecoeff(xv, yv)</code></td>
+		<td>
+Spline-Koeffizienten
+<br/>Berechnet zu einem Vektor <code>xv</code> von Stützstellen und einem passenden
+<br/>Vektor <code>yv</code> von Stützwerten die Koeffizienten einer kubischen
+<br/>Spline-Interpolation. Die Koeffizienten werden als Matrix zurückgegeben.
+<br/>Mit der Funktion <code>spline(sc,x)</code> wird die eigentliche Interpolation erzeugt.			
+			
+		</td>
+	</tr>	
+	<tr>
+		<td><code>spline(sc, x)</code></td>
+		<td>
+Kubische Spline-Interpolation
+<br/>Wert einer Spline-Interpolatoin an der Stelle <code>x</code>.
+<br/>Die Koeffizienten <code>sc</code> der Interpolation werden mit der Funktion
+<br/><code>splinecoeff(xv, yv)</code> berechnet.
+		</td>
+	</tr>
+	<tr>
+		<td><code>ftap(daten)</code></td>
+		<td>
+Fourier-Transformation in Amplituden und Phasen.
+<br/>Der Vektor <code>daten</code> enthält die zu transformierenden Daten.
+<br/>Seine Länge <code>lg</code> muss eine Potenz von 2 sein, die kleinste zulässige Länge ist
+<br/>dabei 4. Zulässige Längen sind also z.B. 4, 8, 16, ..., 512, ...
+<br/>Das Ergebnis wird als zweispaltige Matrix <code>m</code> zurückgegeben.
+<br/>Die erste Spalte enthält die Amplituden, die zweite die Phasen.
+<br/>Die Anzahl der Zeilen von <code>m</code> hängt von der Länge <code>lv</code> des Vektors daten ab:
+<br/><code>m = lv/2 + 1</code>, z.B. ergibt sich zu <f>lv = 16</f> der Wert <f>m = 9</f>.
+		</td>
+	</tr>
+	<tr>
+		<td><code>ftcs(daten)</code></td>
+		<td>
+Fourier-Transformation in cos- und sin-Amplituden.
+<br/>Der Vektor daten enthält die zu transformierenden Daten.
+<br/>Seine Länge <code>lg</code> muss eine Potenz von 2 sein, die kleinste zulässige Länge ist
+<br/>dabei 4. Zulässige Längen sind also z.B. 4, 8, 16, ..., 512, ...
+<br/>Das Ergebnis wird als zweispaltige Matrix <code>m</code> zurückgegeben.
+<br/>Die erste Spalte enthält die cos-Amplituden, die zweite die sin-Amplituden.
+<br/>Die Anzahl der Zeilen von <code>m</code> hängt von der Länge <code>lv</code> des Vektors daten ab:
+<br/><code>m = lv/2 + 1</code>, z.B. ergibt sich zu <f>lv = 16</f> der Wert <f>m = 9</f>.
+		</td>
+	</tr>
+	<tr>
+		<td><code>ftiap(amp, phas)</code></td>
+		<td>
+Inverse Fourier-Transformation aus Gesamt-Amplituden und Phasen.
+<br/>Der Vektor <code>amp</code> enthält die Gesamt-Amplituden in aufsteigender Frequenz,
+<br/>der Vektor <code>phas</code> die Phasen.
+<br/>Die Anzahl <code>la</code> der Elemente muss einen Wert (Potenz von 2) + 1 haben,
+<br/>also z.B. la=4+1=5, la=8+1=9, ..., la=512+1=513, .....
+<br/>Der kleinste zulässige Wert ist la=3.
+<br/>Das Ergebnis ist der rücktransformierte Datenvektor.
+<br/>Er hat die Länge <code>lv=(la-1)*2</code>. Zu <f>la=9</f> gehört also <f>lv=16</f>.
+		</td>
+	</tr>
+	<tr>
+		<td><code>ftics(cos, sin)</code></td>
+		<td>
+Inverse Fourier-Transformation aus cos- und sin-Amplituden.
+<br/>Der Vektor <code>cos</code> enthält die cos-Amplituden in aufsteigender Frequenz,
+<br/>der Vektor <code>sin</code> entsprechend die sin-Amplituden.
+<br/>Die Anzahl <code>la</code> der Elemente muss einen Wert (Potenz von 2) + 1 haben,
+<br/>also z.B. la=4+1=5, la=8+1=9, ..., la=512+1=513, .....
+<br/>Der kleinste zulässige Wert ist la=3.
+<br/>Das Ergebnis ist der rücktransformierte Datenvektor.
+<br/>Er hat die Länge <code>lv=(la-1)*2</code>. Zu <f>la=9</f> gehört also <f>lv=16</f>.
+		</td>
+	</tr>	
+</table>
+
+<p/><strong>Lineare Algebra</strong>
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Bezeichner</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td><code>det(A)</code></td>
+		<td>Wert der Determinante der quadratischen Matrix <code>A</code></td>
+	</tr>
+	<tr>
+		<td><code>|A|</code></td>
+		<td>Frobenius-Norm für einen Vektor oder eine Matrix <code>A</code>.</td>
+	</tr>		
+	<tr>
+		<td><code>transpose(A)</code></td>
+		<td>Transposition der Matrix <code>A</code></td>
+	</tr>	
+	<tr>
+		<td><code>inverse(A)</code></td>
+		<td>Zur quadratischen Matrix <code>A</code> inverse Matrix, falls <f>det(A) != 0</f>
+		</td>
+	</tr>		
+	<tr>
+		<td><code>solvelin(A,b)</code></td>
+		<td>
+Berechnet den Lösungsvektor x eines linearen Gleichungssystems			
+<br/><f>A*x=b</f>. <code>A</code> ist dabei die quadratischen Matrix mit 
+	<f>det(A) != 0</f>, <code>b</code> ein von
+<br/>der Dimension her passender Vektor (rechte Seite, Inhomogenität).
+		</td>
+	</tr>
+</table>
+			</description>
+		</step>
+	</body>
+</math4u2>

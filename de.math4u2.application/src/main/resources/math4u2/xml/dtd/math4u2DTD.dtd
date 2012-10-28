@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--Hauptelement. Es dient als Wurzel für alle weiteren Knotenelemente.-->
+<!ELEMENT math4u2 (head?, body)>
+<!--Körper des Dokuments für den eigentlichen Inhalt-->
+<!ELEMENT body (location?, title, summary?, keywords?, step+, exercise*)>
+<!--Eine einfache Ja-/Nein-Frage-->
+<!ELEMENT choice (statement, solution, explanation?)>
+<!--Setzen des Layouts-->
+<!ELEMENT layout (row+)+>
+<!--Gruppe von parallel ausführbaren Plugin-Aktionen-->
+<!ELEMENT par (animate | call | par | seq | script)*>
+<!--Eine Multiple-Choice-Frage-->
+<!ELEMENT selection (description?, choice)+>
+<!ATTLIST selection
+	mutual CDATA #IMPLIED
+>
+<!--Gruppe von sequentiell ausführbaren Plugin-Aktionen-->
+<!ELEMENT seq (animate | call | par | seq | script)*>
+<!ATTLIST seq
+	repeat CDATA #IMPLIED
+>
+<!ELEMENT script ANY>
+<!ELEMENT location (#PCDATA)>
+<!--Datentyp für formattierbaren (gemischten) Text mit Formeln, Auszeichnungen und Bildern-->
+<!ELEMENT title (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!--Zusammenfassung des Themas-->
+<!ELEMENT summary (#PCDATA)>
+
+<!ELEMENT keywords (keyword)*>
+
+<!ELEMENT keyword (#PCDATA)>
+
+<!ELEMENT step (title?, description?, layout?, (par | seq)*)>
+<!--Übungen-->
+<!ELEMENT exercise (title?, description?, summary?, (seq | par)*, (choice | selection)+)>
+<!--Aussage-->
+<!ELEMENT statement (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!--Lösung-->
+<!ELEMENT solution (#PCDATA)>
+<!--Begründung-->
+<!ELEMENT explanation (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!--Reihe des Layouts-->
+<!ELEMENT row (col+)+>
+<!ATTLIST row
+	perc CDATA #REQUIRED
+>
+<!--Kopf des Dokuments für nicht sichtbare Definitionen-->
+<!ELEMENT head (version, author?, meta*, module*)>
+<!--Animation eines bestimmten Attributs eines Moduls-->
+<!ELEMENT animate EMPTY>
+<!ATTLIST animate
+	object CDATA #REQUIRED
+	getAction CDATA #IMPLIED
+	setAction CDATA #IMPLIED
+	parameterName CDATA #REQUIRED
+	from CDATA #IMPLIED
+	to CDATA #REQUIRED
+	by CDATA #IMPLIED
+	begin CDATA #IMPLIED
+	end CDATA #REQUIRED
+	dur CDATA #IMPLIED
+	timeFunction CDATA #IMPLIED
+>
+<!--Aktionsaufruf an ein Modul-->
+<!ELEMENT call (param*)>
+<!ATTLIST call
+	object CDATA #REQUIRED
+	action CDATA #REQUIRED
+	begin CDATA #IMPLIED
+	end CDATA #IMPLIED
+	dur CDATA #IMPLIED
+>
+<!--Stellen einer Frage-->
+<!ELEMENT description (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!--Mathematische Formel: Es ist MathML realisiert, sowie eine Math4u2-Schreibweise. Bei letzeren wird kein Attribut "type" angegeben. Bei "show=" können nun 3 verschiedene Darstellungsarten festgelegt werden. 1.formal z.B. f(x):=a*x. 2. actual z.B. f(x):=2*x (Parameter wird eingesetzt und kann verändert werden). 3. short z.B. f(x)-->
+<!ELEMENT formula (#PCDATA | conf)*>
+<!ATTLIST formula
+	type CDATA #IMPLIED
+	show CDATA #IMPLIED
+	bgcolor CDATA #IMPLIED
+>
+<!--Kurzform von formula-->
+<!ELEMENT f (#PCDATA | conf)*>
+<!ATTLIST f
+	bgcolor CDATA #IMPLIED
+>
+<!--Kurzform von formula show = "short"-->
+<!ELEMENT fh (#PCDATA | conf)*>
+<!ATTLIST fh
+	bgcolor CDATA #IMPLIED
+>
+<!--Kurzform von formula show="body"-->
+<!ELEMENT fb (#PCDATA | conf)*>
+<!ATTLIST fb
+	bgcolor CDATA #IMPLIED
+>
+<!--Formeldefinition-->
+<!ELEMENT fd (#PCDATA)>
+<!ATTLIST fd
+	bgcolor CDATA #IMPLIED
+	width CDATA #IMPLIED
+>
+<!ELEMENT conf (#PCDATA)>
+<!--Referenz auf andere Abschnitte-->
+<!ELEMENT ref (#PCDATA)>
+<!ATTLIST ref
+	target IDREF #IMPLIED
+>
+<!--Absatz-->
+<!ELEMENT p (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!--Zeilenumbruch-->
+<!ELEMENT br ANY>
+<!--Normal betonter Text-->
+<!ELEMENT em (#PCDATA)>
+<!--Stark betonter Text-->
+<!ELEMENT strong (#PCDATA)>
+<!--Verweis auf ein Bild-->
+<!ELEMENT img EMPTY>
+<!ATTLIST img
+	src CDATA #REQUIRED
+>
+<!--Code Text-->
+<!ELEMENT code (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!--Tablulator-->
+<!ELEMENT tab ANY>
+<!--Kommando bzw. Funktionalität-->
+<!ELEMENT command (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!--Tabelle angelehnt an HTML-->
+<!ELEMENT table (tr)+>
+<!ATTLIST table
+	border CDATA #IMPLIED
+	bgcolor CDATA #IMPLIED
+>
+<!--Unorderd List angelehnt an HTML-->
+<!ELEMENT ul (li)+>
+<!ELEMENT col EMPTY>
+<!ATTLIST col
+	perc CDATA #REQUIRED
+	name CDATA #REQUIRED
+	type CDATA #IMPLIED
+>
+<!--Versionsnummer des Dokuments-->
+<!ELEMENT version (#PCDATA)>
+<!--Autor(en) des  des Dokuments-->
+<!ELEMENT author (#PCDATA)>
+<!--Zusätzliche Meta-Information-->
+<!ELEMENT meta EMPTY>
+<!ATTLIST meta
+	name CDATA #REQUIRED
+	content CDATA #REQUIRED
+>
+<!--Zum Anmelden eines externes Moduls (z. B. von Graphendarstellung, Soundeinbindung oder von selbstgeschriebenen Modulen). Die Module werden in der Datei math4u2/conf/config.properties näher bestimmt. Jedes Modul muß in Java von JPanel abgeleitet sein.-->
+<!ELEMENT module EMPTY>
+<!ATTLIST module
+	class CDATA #REQUIRED
+	id ID #REQUIRED
+>
+<!--Einzelner Parameter für den Aktionsaufruf-->
+<!ELEMENT param EMPTY>
+<!ATTLIST param
+	type CDATA #REQUIRED
+	value CDATA #REQUIRED
+>
+<!ELEMENT tr (td)+>
+<!--list item-->
+<!ELEMENT li (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!--Datentyp für formattierbaren (gemischten) Text mit Formeln, Auszeichnungen und Bildern-->
+<!ELEMENT td (#PCDATA | formula | f | fd | fh | fb | ref | p | br | em | strong | img | code | tab | command | table | ul)*>
+<!ATTLIST td
+	bgcolor CDATA #IMPLIED
+>
+<!-- Entities -->
+<!ENTITY not "&#x000AC;">
+<!--/neg /lnot =not sign -->
+<!ENTITY ne "&#x02260;">
+<!--/ne /neq R: not equal -->
+<!ENTITY equals "&#x0003D;">
+<!--=equals sign R: -->
+<!ENTITY NotEqual "&#x02260;">
+<!--alias ISOTECH ne -->
+<!ENTITY equiv "&#x02261;">
+<!--/equiv R: identical with -->
+<!ENTITY le "&#x02264;">
+<!-- less equal -->
+<!ENTITY ge "&#x02265;">
+<!--/geq /ge R: greater-than-or-equal -->
+<!ENTITY sub "&#x02282;">
+<!--/subset R: subset or is implied by -->
+<!ENTITY sup "&#x02283;">
+<!--/supset R: superset or implies -->
+<!ENTITY nsub "&#x02284;">
+<!--not subset -->
+<!ENTITY sube "&#x02286;">
+<!--/subseteq R: subset, equals -->
+<!ENTITY supe "&#x02287;">
+<!--/supseteq R: superset, equals -->
+<!ENTITY oplus "&#x02295;">
+<!--/oplus B: plus sign in circle -->
+<!ENTITY otimes "&#x02297;">
+<!--/otimes B: multiply sign in circle -->
+<!ENTITY perp "&#x022A5;">
+<!--/perp R: perpendicular -->
+<!ENTITY forall "&#x02200;">
+<!--/forall for all -->
+<!ENTITY part "&#x02202;">
+<!--/partial partial differential -->
+<!ENTITY exist "&#x02203;">
+<!--/exists at least one exists -->
+<!ENTITY nabla "&#x02207;">
+<!--/nabla del, Hamilton operator -->
+<!ENTITY isin "&#x02208;">
+<!--/in R: set membership  -->
+<!ENTITY Element "&#x02208;">
+<!--/in R: set membership  -->
+<!ENTITY notin "&#x02209;">
+<!--/notin N: negated set membership -->
+<!ENTITY ni "&#x0220B;">
+<!--/ni /owns R: contains -->
+<!ENTITY prop "&#x0221D;">
+<!--/propto R: is proportional to -->
+<!ENTITY infin "&#x0221E;">
+<!--/infty infinity -->
+<!ENTITY ang "&#x02220;">
+<!--/angle - angle -->
+<!ENTITY and "&#x02227;">
+<!--/wedge /land B: logical and -->
+<!ENTITY or "&#x02228;">
+<!--/vee /lor B: logical or -->
+<!ENTITY cap "&#x02229;">
+<!--/cap B: intersection -->
+<!ENTITY cup "&#x0222A;">
+<!--/cup B: union or logical sum -->
+<!ENTITY sim "&#x0223C;">
+<!--/sim R: similar -->
+<!ENTITY cong "&#x02245;">
+<!--/cong R: congruent with -->
+<!ENTITY asymp "&#x0224D;">
+<!--/asymp R: asymptotically equal to -->
+<!ENTITY minus "&#x02212;">
+<!--B: minus sign -->
+<!ENTITY plus "&#x0002B;">
+<!--=plus sign B: -->
+<!ENTITY plusmn "&#x000B1;">
+<!--/pm B: =plus-or-minus sign -->
+<!-- Pfeille -->
+<!ENTITY larr "&#x02190;">
+<!--/leftarrow /gets A: =leftward arrow -->
+<!ENTITY rarr "&#x02192;">
+<!--/rightarrow /to A: =rightward arrow -->
+<!ENTITY uarr "&#x02191;">
+<!--/uparrow A: =upward arrow -->
+<!ENTITY darr "&#x02193;">
+<!--/downarrow A: =downward arrow -->
+<!ENTITY harr "&#x02194;">
+<!--/leftrightarrow A: l&r arrow -->
+<!ENTITY lArr "&#x021D0;">
+<!--/Leftarrow A: is implied by -->
+<!ENTITY rArr "&#x021D2;">
+<!--/Rightarrow A: implies -->
+<!ENTITY uArr "&#x021D1;">
+<!--/Uparrow A: up dbl arrow -->
+<!ENTITY dArr "&#x021D3;">
+<!--/Downarrow A: down dbl arrow -->
+<!ENTITY hArr "&#x021D4;">
+<!--/Leftrightarrow A: l&r dbl arrow -->
+<!-- Griechische Zeichen -->
+<!ENTITY fnof "&#x00192;">
+<!--function of (italic small f) -->
+<!ENTITY alpha "&#x003B1;">
+<!--/alpha small alpha, Greek -->
+<!ENTITY beta "&#x003B2;">
+<!--/beta small beta, Greek -->
+<!ENTITY chi "&#x003C7;">
+<!--/chi small chi, Greek -->
+<!ENTITY delta "&#x003B4;">
+<!--/delta small delta, Greek -->
+<!ENTITY Delta "&#x00394;">
+<!--/Delta capital Delta, Greek -->
+<!ENTITY epsi "&#x003B5;">
+<!--/straightepsilon, small epsilon, Greek -->
+<!ENTITY epsiv "&#x0025B;">
+<!--/varepsilon -->
+<!ENTITY eta "&#x003B7;">
+<!--/eta small eta, Greek -->
+<!ENTITY gamma "&#x003B3;">
+<!--/gamma small gamma, Greek -->
+<!ENTITY Gamma "&#x00393;">
+<!--/Gamma capital Gamma, Greek -->
+<!ENTITY gammad "&#x003DC;">
+<!--/digamma -->
+<!ENTITY Gammad "&#x003DC;">
+<!--capital digamma -->
+<!ENTITY iota "&#x003B9;">
+<!--/iota small iota, Greek -->
+<!ENTITY kappa "&#x003BA;">
+<!--/kappa small kappa, Greek -->
+<!ENTITY kappav "&#x003F0;">
+<!--/varkappa -->
+<!ENTITY lambda "&#x003BB;">
+<!--/lambda small lambda, Greek -->
+<!ENTITY Lambda "&#x0039B;">
+<!--/Lambda capital Lambda, Greek -->
+<!ENTITY mu "&#x003BC;">
+<!--/mu small mu, Greek -->
+<!ENTITY nu "&#x003BD;">
+<!--/nu small nu, Greek -->
+<!ENTITY omega "&#x003C9;">
+<!--/omega small omega, Greek -->
+<!ENTITY Omega "&#x003A9;">
+<!--/Omega capital Omega, Greek -->
+<!ENTITY phi "&#x003C6;">
+<!--/straightphi - small phi, Greek -->
+<!ENTITY Phi "&#x003A6;">
+<!--/Phi capital Phi, Greek -->
+<!ENTITY phiv "&#x003D5;">
+<!--/varphi - curly or open phi -->
+<!ENTITY pi "&#x003C0;">
+<!--/pi small pi, Greek -->
+<!ENTITY Pi "&#x003A0;">
+<!--/Pi capital Pi, Greek -->
+<!ENTITY piv "&#x003D6;">
+<!--/varpi -->
+<!ENTITY psi "&#x003C8;">
+<!--/psi small psi, Greek -->
+<!ENTITY Psi "&#x003A8;">
+<!--/Psi capital Psi, Greek -->
+<!ENTITY rho "&#x003C1;">
+<!--/rho small rho, Greek -->
+<!ENTITY rhov "&#x003F1;">
+<!--/varrho -->
+<!ENTITY sigma "&#x003C3;">
+<!--/sigma small sigma, Greek -->
+<!ENTITY Sigma "&#x003A3;">
+<!--/Sigma capital Sigma, Greek -->
+<!ENTITY sigmav "&#x003C2;">
+<!--/varsigma -->
+<!ENTITY tau "&#x003C4;">
+<!--/tau small tau, Greek -->
+<!ENTITY theta "&#x003B8;">
+<!--/theta straight theta, small theta, Greek -->
+<!ENTITY Theta "&#x00398;">
+<!--/Theta capital Theta, Greek -->
+<!ENTITY thetav "&#x003D1;">
+<!--/vartheta - curly or open theta -->
+<!ENTITY upsi "&#x003C5;">
+<!--/upsilon small upsilon, Greek -->
+<!ENTITY Upsi "&#x003D2;">
+<!--/Upsilon capital Upsilon, Greek -->
+<!ENTITY xi "&#x003BE;">
+<!--/xi small xi, Greek -->
+<!ENTITY Xi "&#x0039E;">
+<!--/Xi capital Xi, Greek -->
+<!ENTITY zeta "&#x003B6;">
+<!--/zeta small zeta, Greek -->
+<!ENTITY Upsilon "&#x003D2;">
+<!--alias ISOGRK3 Upsi -->
+<!ENTITY upsilon "&#x003C5;">
+<!--alias ISOGRK3 upsi -->

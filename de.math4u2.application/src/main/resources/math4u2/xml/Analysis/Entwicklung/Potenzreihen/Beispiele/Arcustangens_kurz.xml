@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. Weiss</author>
+		<location>Analysis/Entwicklung/Potenzreihen/Beispiele</location>
+		<title>Arcus-Tanges-Reihe - kurz</title>
+		<summary>Taylor-Entwicklung der Arcus-Tangens, Arcustangensreihe</summary>
+		<step>
+			<title>Arcustangensreihe</title>
+			<description>
+			Das allgemeine <strong>Taylorpolynom</strong> zum <f>arctan(x)</f> mit Entwicklungspunkt <f>c=0</f> ist:
+			<br/>
+				<f>$fd(p_arcustangens)</f>. 
+			</description>
+			<seq>
+				<script>
+				   expand(left=false;right=false);
+				   deleteAll();
+				   da.coordinateSystem(xMin=-3; xMax=3; yMin=-1.9; yMax=1.9;);
+				   newObject( def = k:=0 );
+				   modifyObject( name= k; min =0; max = 10; );
+				   newObject( def =f(x) :=arctan(x); target = da;  );
+				   newObject( def = p_arcustangens(x):=sum(i, 0,k, (-1)^i*x^(2*i+1)/(2*i+1)) ; color = red; target = da );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+			Geben Sie als obere Summationsgrenze eine natürliche Zahl oder <f>0</f> ein: <f>
+					<conf>k(style=text; width=3;pattern = ##0)</conf>$fd(p_arcustangens)</f>
+			</description>
+		</step>
+	</body>
+</math4u2>

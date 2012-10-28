@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.2 Datentypen</location>
+		<title>3.2.5 Listen</title>
+		<step>
+			<title>3.2.5 Listen</title>
+			<description>			
+<strong>Grundlagen</strong>
+<br/>Eine Liste dient zur Verwaltung einer Folge gleichartiger Elemente. Ein bestimmtes Element wird
+durch Angabe seines Index angesprochen. Beim Erzeugen einer Liste wird festgelegt, nach welcher
+Konvention die Indices verwendet werden:
+<p/><code>liste(...)</code> erzeugt eine Liste, bei der das erste Element mit dem 
+Index 1 angesprochen wird,
+<br/><code>liste0(...)</code> erzeugt eine Liste, bei der das erste Element mit dem 
+Index 0 angesprochen wird.
+<br/>Damit kann man die Indizierung auf die im jeweiligen Themengebiet übliche Konvention abstimmen.
+
+<p/><strong>Elementtypen</strong>
+
+<p/><command>Punkt-Listen</command>
+<br/>Listen von Punkten werden durch den Typbezeichner <code>&lt;punkt></code> gekennzeichnet. 
+Durch <code>pl:=&lt;punkt>liste({punkt(1,1), punkt(2,2)})</code> definiert man eine 
+Punkt-Liste mit zwei Punkten, das erste Element der Liste wird mit <code>pl[1]</code> angesprochen.
+
+<p/><command>Funktions-Listen</command>
+<br/>Listen von Funktionen werden durch den Typbezeichner <code>&lt;funktion></code> gekennzeichnet. 
+
+<p/>Bei nullstelligen Funktionen genügt diese Angabe:
+<br/><code>nullstFktListe:=&lt;funktion>liste({pi, 2*pi, 4*pi})</code> 
+<br/>erzeugt eine Liste mit drei nullstelligen Funktionen. 
+
+<p/>Nun eine Liste mit einstelligen Funktionen:
+<br/><code>einstFktL:=&lt;funktion(x)>liste({sin(x), cos(x), x^2})</code>
+<br/>wird durch den Typbezeichner <code>&lt;funktion(x)></code> vereinbart, dass die Liste 
+einstellige Funktionen enthält und dass das Argument mit <code>x</code> bezeichnet wird. Die Liste 
+<code>einstFktListe</code> enthält dann konkret die drei 
+Elemente <code>sin(x)</code>, <code>cos(x)</code> und <code>x^2</code>, mit <code>einstFktL[2](x*x)</code> 
+wird der Wert des zweiten Elements dieser Liste an der Stelle <code>x*x</code> 
+(also <code>cos(x*x)</code> ) berechnet.
+
+
+<p/><strong>Definieren über eine Elementliste</strong>
+<br/>Wie oben bei <code>einstFktL:=&lt;funktion(x)>liste({sin(x),cos(x),x^2})</code>
+kann man eine Liste definieren, indem man ihre Elemente, durch Kommata getrennt, aufzählt. Die
+Aufzählung wird in Klammern <code>{}</code> eingeschlossen.
+
+<p/><strong>Definieren über eine Vorschrift</strong>
+<br/>Wenn lange Listen erzeugt werden sollen, bietet sich die Definition über eine Vorschrift an.
+<code>pl2:=&lt;punkt>liste(i,11,punkt(i-6,1))</code> definiert eine Liste mit 11 Punkten, bei 
+sämtlichen Punkten hat die y-Koordinate den Wert 1, die x-Koordinaten haben der Reihe nach 
+die Werte <code>1-6</code>, <code>2-6</code>, ..., <code>11-6</code>.
+<p/>
+Allgemein gilt bei der Definition über eine Vorschrift: An der ersten Stelle wird der Name 
+eines lokalen Parameters vereinbart (hier: <code>i</code>), an der zweiten Stelle wird die 
+Länge der Liste (hier: <code>11</code>) festgelegt, zuletzt 
+Initialisierungsvorschrift (hier: <code>punkt(i-6,1)</code>).
+<p/>Bei der Erzeugung der Liste mit Schlüsselwort <code>liste</code> druchläuft der lokale 
+Parameter dann konkret die Werte <code>1</code>, <code>2</code>, ..., <code>11</code> und 
+belegt die Elemente mit den zugehörigen Ergebnissen aus der Initialisierungsvorschrift.
+Entsprechend erzeugt man mit <code>fl2:=&lt;funktion(x)>liste(i,10,sin(i*x))</code> eine 
+Liste aus einstelligen Funktionen.
+<p/>Mit <code>fl3:=&lt;funktion(x)>liste0(i,10,x^i)</code> wird ebenfalls eine Liste mit 
+10 Elementen erzeugt. Beim Erzeugen dieser Liste mit Schlüsselwort <code>liste0</code> 
+durchläuft der lokale Parameter die 10 Werte 0,1,2,...,9 .
+
+
+<p/><strong>Auf Elemente zugreifen</strong>
+<br/>Je nach Indizierungskonvention (<code>liste</code> bzw. <code>liste0</code>) sind die 
+Elemente einer Liste der Reihe nach durch die Zahlen 1, 2, 3, ... bzw. 0, 1, 2,... identifiziert. 
+Durch Angabe eines Index greift man auf das gewünsche Element zu: <code>pl2[1]</code> liefert 
+das erste Element aus der oben definierten Punkt-Liste, <code>pl2[2]</code> das zweite, ... . 
+Definiert man einen Parameter <code>a:=1</code>, so ist jetzt durch
+<code>s:=strecke(pl2[a], pl2[a+1])</code> zunächst die Verbindungsstrecke zwischen den ersten 
+beiden Punkten der Punktliste gemeint. Ändert man jetzt den Parameter zu <code>a:=2</code>, dann 
+verbindet <code>s</code> die Punkte mit dem Index 2 und 3 der Punktliste <code>pl2</code>.
+
+<p/>Bei einer Funktionsliste wählt man zuerst durch Angabe eines Index die gewünscht Funktion 
+aus, anschließend wird diese auf ein Argument angewendet: <code>einstFktL[2](2*3)</code>.
+
+<p/><strong>Methoden einer Liste</strong>
+<ul>
+	<li>
+Länge einer Liste
+<br/><code>.laenge</code> liefert die Anzahl der Elemente einer Liste.
+Konkret liefern <code>fl2.laenge</code> und <code>fl3.laenge</code> beide den Wert 10.
+	</li>
+	<li>
+Index des ersten Elements
+<br/><code>.startindex</code> liefert den Index des ersten Elements, also <code>fl2.startindex</code> 
+den Wert 1, <code>fl3.startindex</code> den Wert 0.		
+	</li>
+	<li>
+Index des letzten Elements
+<br/><code>.endeindex</code> liefert den Index des letzten Elements einer Liste, also
+<code>fl2.endeindex</code> den Wert 10, <code>fl3.endeindex</code> den Wert 9.	
+	</li>
+</ul>
+<br/>Mit <code>f(x):=sum(i,fl3.startindex,fl3.endeindex,fl3[i](x))</code> kann man jetzt eine
+Summation über sämtliche Elemente der Liste <code>fl3</code> ausführen.
+			</description>
+		</step>
+	</body>
+</math4u2>

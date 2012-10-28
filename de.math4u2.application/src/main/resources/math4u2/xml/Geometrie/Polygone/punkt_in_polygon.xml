@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Polygone</location>
+		<title>Punkt-in-Polygon-Test</title>
+		<summary>Wie man rechnerisch ermitteln kann, ob ein bestimmter Punkt sich innerhalb oder außerhalb eines Polygons befindet.</summary>
+		<step>
+			<description>
+				<strong>Aufgabenstellung:</strong> Gegeben ist ein Polygon (wie z.B. oben) und ein Punkt, hier der Punkt . Beantwortet werden sollen Fragen wie:<f>T</f>
+			<br/>
+				<ul>
+					<li>Wurde das Polygon mit einem Mausklick an der Stelle <f>T</f> getroffen?</li>
+					<li>Soll der Punkt <f>T</f> mit der Füllfarbe des Polygons "angemalt" werden oder nicht?</li>
+				</ul>
+				<br/>Die grundlegende Frage ist also jeweils, ob der Punkt <f>T</f> im Polygon liegt oder nicht. Dies wird kurz mit "Punkt-in-Polygon-Test" bezeichnet.		  </description>
+			<seq>
+				<script>
+					deleteAll();
+					da.coordinateSystem(xMin=-4; xMax=50; yMin=-11; yMax=12);
+					expand( left = false; right = false );
+					newObject( def =  T:=punkt(10, 3) ; color = blue; target = da );
+					newObject( def = P1 := punkt(3.2, -5.5) );
+					newObject( def = P2 :=punkt(9.7, -8.9) );
+					newObject( def = P3 :=  punkt(20.9, -8.3));
+					newObject( def = P4 := punkt(15.5, 8.7));
+					newObject( def = P5 := punkt(10.6, 9.7));
+					newObject( def = P6 := punkt(5.8, 7.7));
+					
+					
+					newObject( def = p := &lt;punkt&gt;liste( {P1 , P2, P3, P4, P5, P6  } );target = da );
+					newObject( def = zykl(i) := mod(i-1, 6) + 1 );                                                                    
+					newObject( def = diffvek:=&lt;funktion>liste(i,p.laenge+1, (p[zykl(i)].r-T.r)/| p[zykl(i)].r-T.r|) );   
+					newObject( def = phibetrag:=&lt;funktion>liste(i, p.laenge,   arccos(diffvek[i]&lt;*>diffvek[i+1])) );      
+					newObject( def = vorzeichen:= &lt;funktion>liste(i, p.laenge,signum( diffvek[i].x*diffvek[i+1].y-diffvek[i].y*diffvek[i+1].x ) ) );                                                 
+					newObject( def =  r:=kurvenzug({ p[1],p[2],p[3],p[4],p[5],p[6],p[1] }) ; target = da );
+					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Lösungsidee:</strong> Eine Lösungsidee kann man folgendermaßen beschreiben:
+		  <br/>
+				<ul>
+					<li>Man stelle sich (geistig!) auf den Punkt <f>T</f> und richte seinen Blick auf einen ersten Eckpunkt des Polygons, z.B. auf den Punkt <f>p[1]</f>.</li>
+					<li>Nun lässt man seinen Blick entlang einer an <f>p[1]</f> angrenzenden Seite wandern bis man zu einem weiteren Eckpunkt blickt, z.B. <f>p[2]</f>.</li>
+					<li>von hier aus entlang der zweiten an <f>p[2]</f> angrenzenden Seite genauso bis zum nächsten Punkt <f>p[3]</f>
+					</li>
+					<li>... und so weiter, bis man wieder zum Ausgangspunkt blickt.</li>
+				</ul>
+				<br/>Im folgenden ist das kurz vorgeführt ...</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+				   newObject( def = t01(t):= t - floor(t) );
+				   newObject( def = ind16(t):= floor(t - 6* floor(t/7) ) );
+				   newObject( def = v(t) := p[ind16(t)].r*(1-t01(t))+p[ind16(t+1)].r*t01(t)-T.r );
+				   newObject( def = tt:=1 );
+				   newObject( def = vv:=pfeil(T, v(tt) ); color = red; linestyle = dot; target = da );
+				   animate(name=tt; from=1; to=7; end=5);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn der Punkt <f>T</f> nun außerhalb des Polygons liegt, verläuft das Experiment wie folgt ....</description>
+			<par>
+				<animate object="main" parameterName="T.x" to="20" end="4"/>
+				<animate object="main" parameterName="T.y" to="5" end="4"/>
+			</par>
+		</step>
+		<step>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="tt:=1"/>
+				</call>
+				<animate object="main" parameterName="tt" to="7" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<description>Der grundlegende Unterschied ist also:
+		  <br/>
+				<ul>
+					<li>Wenn man sich beim Experiment <strong>innerhalb</strong> des Polygon befindet, hat man sich zuletzt einmal um die eigene Achse gedreht,</li>
+					<li>wenn man sich <strong>ausserhalb</strong> des Polygons befindet, dreht man sich insgesamt genauso viel in die eine Richtung wie in die andere.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>
+				<strong>Idee zur rechnerischen Umsetzung:</strong> Wenn man diese Idee rechnerisch umsetzen will, muss man die Blickrichtung nicht kontinuierlich verändern, es reicht vielmehr aus, jeweils die Winkeldifferenz für die Blickwinkel zu zwei benachbarten Punkten zu ermitteln (das allerdings unter Berücksichtigung der Drehrichtung) und diese Winkeldifferenzen aufzusummieren.</description>
+			<par>
+				<animate object="main" parameterName="T.x" to="10" end="4"/>
+				<animate object="main" parameterName="T.y" to="3" end="4"/>
+			</par>
+		</step>
+		<step>
+			<seq>
+				<script>
+			       deleteObject( name = vv );
+			       newObject( def = ttt := 1 );
+			       newObject( def = pfeil1:= pfeil( T, v(1) ); color = red; linestyle = dot; target = da );
+			       newObject( def = w1:= winkel( T, v(1), v(2), 4 ); color = red; target = da );
+			       newObject( def = pfeil2:= pfeil( T, v(2) ); color = red; linestyle = dot; target = da );
+				   
+				   animate(name=ttt; to=1; end=1);
+
+					newObject( def = pfeil3:= pfeil( T, v(3) ); color = red; linestyle = dot; target = da );
+			       newObject( def = w2:= winkel( T, v(2), v(3), 4 ); color = red; target = da );
+				   
+				   animate(name=ttt; to=1; end=1);
+
+					newObject( def = pfeil4:= pfeil( T, v(4) ); color = red; linestyle = dot; target = da );
+			       newObject( def = w3:= winkel( T, v(3), v(4), 4 ); color = red; target = da );
+
+				   animate(name=ttt; to=1; end=1);
+
+					newObject( def = pfeil5:= pfeil( T, v(5) ); color = red; linestyle = dot; target = da );
+			       newObject( def = w4:= winkel( T, v(4), v(5), 4 ); color = red; target = da );
+				   
+				   animate(name=ttt; to=1; end=1);
+
+			       	newObject( def = pfeil6:= pfeil( T, v(6) ); color = red; linestyle = dot; target = da );
+			       newObject( def = w5:= winkel( T, v(5), v(6), 4 ); color = red; target = da );
+
+				   animate(name=ttt; to=1; end=1);
+				   			      
+			       newObject( def = w6:= winkel( T, v(6), v(1), 4 ); color = red; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>Wenn diese Summe der Winkeldifferenzen den Wert <f>2*pi</f> ergibt, befinden wir uns im Polygon</li>
+					<li>Wenn die Summe der Winkeldifferenzen den Wert <f>0</f> ergibt, befinden wir uns ausserhalb.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>
+				<strong>Rechnerische Umsetzung:</strong> Zur Berechnung der Winkel aus den Koordinaten der Punkte stehen uns zwei Konstrukte zur Verfügung: das Skalarprodukt und das Vektorprodukt. Leider reicht keines von beiden alleine aus, um sämtliche Informationen zu erhalten, die wir benötigen:<br/>
+				<ul>
+					<li>Über das Skalarprodukt können wir den Cosinus des Zwischenwinkels berechen,  daraus mit dem <f>arccos(x)</f> aber leider nur den Betrag des Winkels im Bereich <f>0, $dots, pi</f> , es geht also die Drehrichtung verloren.</li>
+					<li>Über das Vektorprodukt (genauer: <f>z</f>-Komponente des Vektorprodukts, wenn wir die <f>x-y</f>-Ebene um die <f>z</f>-Dimension ergänzen) können wir den Sinus des Zwischenwinkels berechnen, daraus mit dem <f>arcsin(x)</f> allerdings nur Winkel im Bereich <f>-pi/2, $dots ,pi/2</f>, das Ergebnis gibt uns allerdings immer die richtige Drehrichtung.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Die Lösung ist: <br/>
+				<ul>
+					<li>Wir berechnen über das Skalarprodukt den Betrag des gesuchten Winkels</li>
+					<li> und ergänzen das richtige Vorzeichen aus der Rechnung über das Vektorprodukt.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>
+				<strong>Skalarprodukt:</strong> Betrag des Winkels
+				<br/>Wir wollen diese Idee nun schrittweise in die entsprechenden Formeln umsetzen. Zuerst der Betrag des Winkels über das Skalarprodukt:
+<br/>Wir blicken von <f>T</f> aus zuerst  in Richtung <f>p[1]</f>, unsere Blickrichtung ist also der Differenzvektor <f>p[1].r-T.r</f> der beiden Ortsvektoren.
+<br/>Zuletzt blicken wir von <f>T</f> aus in Richtung <f>p[2]</f>, dann haben wir als Differenzvektor <f>p[2].r-T.r</f>.
+		   </description>
+			<seq>
+				<script>
+		       deleteObject( name = pfeil3 );
+				    deleteObject( name = pfeil4 );
+				    deleteObject( name = pfeil5 );
+				    deleteObject( name = pfeil6 );
+				    deleteObject( name = w2 );
+				    deleteObject( name = w3 );
+				    deleteObject( name = w4 );
+				    deleteObject( name = w5 );
+				    deleteObject( name = w6 );
+				    newObject( def = sp_1 := (p[1].x-T.x)*(p[2].x-T.x)+(p[1].y-T.y)*(p[2].y-T.y) );				   	
+				   	 newObject( def = richtung1:= (p[1].r-T.r)/|p[1].r-T.r| );
+				   	 newObject( def = richtung2:= (p[2].r-T.r)/|p[2].r-T.r|);
+				     newObject( def = phi_1b:=arccos(sp_1/(|p[1].r-T.r|*|p[2].r-T.r|)) );
+			         newObject( def = phi1 := phi_1b);
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+		      Wir berechnen das Skalarporodukt <f>$fd(sp_1)</f> dieser beiden Differenzvektoren und erhalten mit <f>$fd(phi_1b)</f> den gesuchten Winkel bis aufs Vorzeichen.
+ </description>
+			<seq>
+				<script/>
+			</seq>
+		</step>
+		<step>
+			<description>Sie sehen den so berechneten Wert jetzt oben rechts als Balken aufgetragen.<br/>Sie können den Punkt T mit der Maus bewegen. Je nach Lage zu den Punkten <f>p[1]</f> und <f>p[2]</f> stellt sich ein anderer Winkel ein. Der berechnete Winkel ist immer <f>$void $ge 0</f>.
+		   </description>
+			<layout>
+				<row perc="100">
+					<col perc="80" name="da"/>
+					<col perc="20" name="wink"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					newObject( def = da.xMax := 39 );
+				   	newObject( def = wink.xMin := -1.1 );
+				   	newObject( def = wink.xMax := 7.1 );
+				   	newObject( def = wink.yMin := -13 );
+				   	newObject( def = wink.yMax := 18 );
+					newObject( def = phi:=vektor({phi1}); target = wink; color = red );
+			        da.setTitle(title="Polygon");
+			        wink.setTitle(title = "Einzelwinkel" );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Vektorprodukt:</strong> Vorzeichen des Winkels 
+			<br/>Die <f>z</f>-Komponente des Vektorprodukts berechnen wir aus den Koordinaten der beteiligten Punkte als <br/>
+				<f>$fd(vz_1)</f>.<br/>Davon benötigen wir allerdings nur das Vorzeichen. Dieses erhalten wir durch die Signum-Funktion als <f>$fd(sign_1)</f>
+			</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="vz_1:=(p[1].x-T.x)*(p[2].y-T.y)-(p[1].y-T.y)*(p[2].x-T.x)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="sign_1:=signum(vz_1)"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Nun bilden wir <f>phi[1]:=phi_1b*sign_1</f>. <br/>Rechts ist jetzt die Größe des Winkels samt Vorzeichen angetragen.
+<br/>Bewegen Sie T mit der Maus. Je nach Lage zu den Punkten <f>p[1]</f> und <f>p[2]</f> stellt sich ein anderer Winkel ein. Wenn T die Verbindungsstreckie von <f>p[1]</f> und <f>p[2]</f> erreicht, wechselt der Winkel das Vorzeichen.
+		   </description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="phi1:=phi_1b*sign_1"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Summe der Winkel:</strong> Analog berechnen wir nun die restlichen Winkel <f>phi[2]</f>, ..., <f>phi[6]</f>. Sie sind alle oben angezeigt.
+				<br/>Ganz rechts ist die Summe der Winkel jetzt als Balken aufgetragen.
+				<br/>Experimentieren Sie! </description>
+			<layout>
+				<row perc="100">
+					<col perc="60" name="da"/>
+					<col perc="20" name="wink"/>
+					<col perc="20" name="winkS"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			       deleteObject( name = pfeil1 );
+				    deleteObject( name = pfeil2 );
+				    deleteObject( name = w1 );
+
+			       winkS.setTitle(title = "Winkelsumme" );
+                   newObject( def = da.xMax := 28 );
+				   	newObject( def = wink.xMin := -1.1 );
+				   	newObject( def = wink.xMax := 7.1 );
+				   	newObject( def = wink.yMin := -13 );
+				   	newObject( def = wink.yMax := 18 );
+
+				   	newObject( def = winkS.xMin := -1.1 );
+				   	newObject( def = winkS.xMax := 7.1 );
+				   	
+				   	newObject( def = winkS.yMin := -13 );
+				   	newObject( def = winkS.yMax := 18 );
+
+
+			       newObject( def = vekProdZ(&lt;vektor&gt;v1, &lt;vektor&gt;v2):=v1[1]*v2[2]-v1[2]*v2[1] );
+			       newObject( def = sign(&lt;vektor&gt;v1, &lt;vektor&gt;v2):= vekProdZ(v1, v2)/|vekProdZ(v1,v2)| );
+			       newObject( def = phi12(&lt;vektor&gt;v1, &lt;vektor&gt;v2):=arccos( (v1 &lt;*&gt; v2)/(|v1|*|v2| ) ) * sign(v1, v2 ) );
+			       newObject( def = phi := vektor( { phi12(v(1), v(2)), phi12(v(2), v(3)), phi12(v(3), v(4)), phi12(v(4), v(5)), phi12(v(5), v(6)), phi12(v(6), v(1)) } ) );	
+			       newObject( def = phiS := sum(i,1,6, phi[i] ) );
+			       newObject( def = phiSv := vektor( { phiS } ) ; color = magenta; target = winkS );	    
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man die Eckpunkte anders plaziert, bekommt man neue Situationen ....</description>
+		</step>
+		<step>
+			<description>
+				<strong>Neue Situation:</strong> Jetzt gibt es Stellen, an denen die Winkelsumme den Wert <f>-2*pi</f> hat.
+				<br/>Experimentieren Sie!</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="P4.x" to="11.5" end="2"/>
+					<animate object="main" parameterName="P4.y" to="5" end="2"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="P3.x" to="15.2" end="2"/>
+					<animate object="main" parameterName="P3.y" to="4.7" end="2"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="P5.x" to="14.2" end="2"/>
+					<animate object="main" parameterName="P5.y" to="-7" end="2"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Neue Situation:</strong> Jetzt gibt es Stellen, an denen die Winkelsumme den Wert <f>4*pi</f> hat.
+				<br/>Experimentieren Sie!</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="P4.x" to="6.5" end="2"/>
+					<animate object="main" parameterName="P4.y" to="0.8" end="2"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="P3.x" to="19" end="2"/>
+					<animate object="main" parameterName="P3.y" to="6" end="2"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="P5.x" to="10.6" end="2"/>
+					<animate object="main" parameterName="P5.y" to="-0.8" end="2"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Gesetze beim Füllen einer Fläche: </strong> Nun fordern wir die Grafikkarte auf, das Polygon zu füllen. 
+		<br/>Wenn Sie die Lage der Punkte nicht verändert haben, bleibt jetzt ein Dreieck im "Inneren" des Polygons ungefüllt.			</description>
+			<seq>
+				<script>
+			      newObject( def = fff:=flaeche({P1,P2,P3,P4,P5,P6}) ; color = cyan; target = da );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+		   Experimentieren Sie durch Verschieben von <f>T</f> und/oder durch Verschieben der Eckpunkte.<br/>Bestätigen Sie dadurch folgende Gesetzmäßigkeit für das Füllen von Vielecken:
+<br/>
+				<ul>
+					<li>Wenn die Winkelsumme an einem Punkt ein ungeradzahliges Vielfaches von <f>2*pi</f> ist, wird diese Stelle "gefüllt",</li>
+					<li>Wenn die Winkelsumme  <f>0</f> oder ein geradzahliges Vielfaches von <f>2*pi</f> ist, wird die Stelle nicht gefüllt.</li>
+				</ul>
+			</description>
+		</step>
+	</body>
+</math4u2>

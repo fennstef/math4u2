@@ -145,7 +145,7 @@ public class AffPoint extends AbstractAffineObject
 		try {
 			return getX().evalScalar();
 		} catch (MathException e) {
-			ExceptionManager.doError("Fehler beim Holen der X-Koordinate ("+getIdentifier()+").",e);
+			ExceptionManager.doError("Fehler beim Holen der X-Koordinate ("+getKey()+").",e);
 		} //catch
 		return 0;
 	} //evalX
@@ -154,7 +154,7 @@ public class AffPoint extends AbstractAffineObject
 		try {
 			return getY().evalScalar();
 		} catch (MathException e) {
-			ExceptionManager.doError("Fehler beim Holen der y-Koordinate ("+getIdentifier()+").",e);
+			ExceptionManager.doError("Fehler beim Holen der y-Koordinate ("+getKey()+").",e);
 		} //catch
 		return 0;
 	} //evalY
@@ -205,7 +205,7 @@ public class AffPoint extends AbstractAffineObject
 		try {
 			broker.propagateChange(xf);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'x' ("+getIdentifier()+").",e);
+			ExceptionManager.doError("Fehler bei der Methode 'x' ("+getKey()+").",e);
 		}
 		return null;
 	} //operator_x
@@ -229,7 +229,7 @@ public class AffPoint extends AbstractAffineObject
 		try {
 			broker.propagateChange(yf);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'y' ("+getIdentifier()+").",e);
+			ExceptionManager.doError("Fehler bei der Methode 'y' ("+getKey()+").",e);
 		}
 		return null;
 	} //operator_set_y

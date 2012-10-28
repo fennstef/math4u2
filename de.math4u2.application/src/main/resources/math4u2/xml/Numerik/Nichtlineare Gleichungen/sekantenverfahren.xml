@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Max Weiß (Fachhochschule Augsburg) -->
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Nichtlineare Gleichungen</location>
+		<title>Sekantenverfahren</title>
+		<summary/>
+		<step>
+			<layout>
+				<row perc="70">
+					<col perc="100" name="da"/>
+				</row>
+				<row perc="30">
+					<col perc="100" name="intervalle"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+		          expand( left = false; right = false );
+						    newObject( def = da.xMin := -2);
+						    newObject( def = da.xMax := 8);
+						    newObject( def = da.yMin := -2);
+						    newObject( def = da.yMax := 3);
+						    newObject( def = intervalle.xMin := da.xMin);
+						    newObject( def = intervalle.xMax := da.xMax);
+						    
+						    newObject( def = intervalle.yMin := -1);
+						    newObject( def = intervalle.yMax := 8);
+						    da.setTitle( title = "Funktion");
+						    intervalle.setTitle( title = "Konvergenz");
+						    newObject( def = a0:= 2);
+						    newObject( def = a1 := 4);
+						    newObject( def = mey:= vektor( {0,-1} ) );
+						    newObject( def = deltay:= 0.1*(da.yMax-da.yMin ) ; hide = true );
+						    newObject( def = mey2:= vektor( {0, -deltay } ) );
+						    //newObject( def = pp0:=pfeil( punkt(a0, deltay), mey2 ); color = blue; target = da );
+						    
+						    newObject( def = pos:= a0; hide = true );
+						    newObject( def = gy := gerade( punkt( pos, 0 ) , mey ) ; color = blue; linestyle = dot; target = da );
+						    intervalle.addGraph( name = gy );
+						    newObject( def = ta0:=text( punkt(a0, 0), "<f>x[0]</f>", C_N ); bordercolor = blue; target = da );
+
+						    newObject( def = p0:=pfeil( punkt(a0, 1), mey ); color = blue; target = intervalle );
+						    
+
+						    
+						    newObject( def = fl(x):=-0.2*(x-3)*(x+1)^2; color = red);
+						    //newObject( def = graphl:=kurve(t,-20, 1.5, t, fl(t)); color = red; target = da );
+						    newObject( def = fr(x):=-(x+5.4)/(x-10)-2; color = blue);
+						    //newObject( def = graphr:=kurve(t,1.5, 20, t, fr(t)); color = red; target = da );   
+						    newObject( def = f(x):=cond( x-1.5, fl(x), fr(x) ) ; color = red; target = da );
+						    
+						    
+						    
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>    
+				// zweiten x-Wert markieren
+				newObject( def = a1 := 4 );
+				newObject( def = pos:= a1 );	
+				
+				//newObject( def = pp1:=pfeil( punkt(a1, deltay), mey2 ); color = blue; target = da );
+				newObject( def = p1:=pfeil( punkt(a1, 2), mey ); color = blue; target = intervalle );
+				newObject( def = ta1:=text( punkt(a1, 0), "<f>x[1]</f>", C_N ); bordercolor = blue; target = da );
+					   
+		      </script>
+			</seq>
+		</step>
+		<step>
+		</step>
+		<step>
+			<seq>
+				<script>  
+				// sekante Zeichnen
+				newObject( def = pos := 1000);
+				newObject( def = g0:= marker( a0, fr(a0) ) ; target = da );
+				newObject( def = g1:= marker( a1, fr(a1) ) ; target = da );
+					  
+				newObject( def = sec := gerade( g0, g0.r-g1.r ); target = da );   
+					   
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>  
+				//Schnittpunkt mit x-Achse markieren
+				//deleteObject( name = pp0 );
+				//deleteObject( name = pp1 );
+				newObject( def = a2 := a0-fr(a0)*(a0-a1)/(fr(a0)-fr(a1)) );
+				newObject( def = pos:= a2 );	
+				newObject( def = g20:= marker( a2, 0 ); color = blue; target = da );
+				
+	   
+		      </script>
+			</seq>
+		</step>
+		<step>
+		   <description><f>x[2] = x[0]-fr(x[0])*(x[0]-x[1])/(fr(x[0])-fr(x[1]))</f>
+		   </description>
+		   <seq>
+		      <script>
+		          newObject( def = p2:=pfeil( punkt(a2,3), mey ); color = blue; target = intervalle );
+							newObject( def = ta2:=text( punkt(a2, 0), "<f>x[2]</f>", C_N ); bordercolor = blue; target = da );
+							deleteObject( name = g20 );
+				
+		      </script>
+		   </seq>
+		</step>
+		<step>
+		   <seq>
+		      <script>
+		      newObject( def = g2:= marker( a2, fr(a2) ) ; target = da );	    
+				newObject( def = sec := gerade( g1, g1.r-g2.r ); target = da );  
+				deleteObject( name = ta0, g0 );
+				newObject( def = a3 := a1-fr(a1)*(a1-a2)/(fr(a1)-fr(a2)) );
+				newObject( def = g30:= marker( a3, 0); color = blue; target = da );
+		           
+		      </script>
+		   </seq>
+		</step>
+		<step>
+			<seq>
+				<script>  
+				deleteObject( name = g30);				
+				newObject( def = pos:= a3 );	
+				newObject( def = p3:=pfeil( punkt(a3, 4), mey ); color = blue; target = intervalle );
+				newObject( def = ta3:=text( punkt(a3, 0), "<f>x[3]</f>", C_N ); bordercolor = blue; target = da );
+
+		   
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>  
+				deleteObject( name = ta1, ta2, ta3, sec, g2 );
+				//deleteObject( name = pp3 );
+				//newObject( def = g3:= punkt( a3, fr(a3) ) ; target = da );	  
+				//newObject( def = sec := gerade( g2, g2.r-g3.r ); target = da );  
+				deleteObject( name = g1 ); 
+				newObject( def = a4 := a2-fr(a2)*(a2-a3)/(fr(a2)-fr(a3)) );
+				newObject( def = pos:= a4 );	
+				newObject( def = p4:=pfeil( punkt(a4, 5), mey ); color = blue; target = intervalle );
+				newObject( def = ta4:= text( punkt(a4, 0), "<f>x[4]</f>", C_N ); bordercolor = blue; target = da );
+				//newObject( def = pp4:=pfeil( punkt(a4, deltay), mey2 ); color = blue; target = da );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>  
+				deleteObject( name = ta4);
+				newObject( def = a5 := a3-fr(a3)*(a3-a4)/(fr(a3)-fr(a4)) );
+				newObject( def = pos:= a5 );	
+				newObject( def = p5:=pfeil( punkt(a5, 6), mey ); color = blue; target = intervalle );
+				newObject( def = ta5:= text( punkt(a5, 0), "<f>x[5]</f>", C_N ); bordercolor = blue; target = da );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>  
+				deleteObject( name = ta5);
+				
+				newObject( def = a6 := a4-fr(a4)*(a4-a5)/(fr(a4)-fr(a5)) );
+				newObject( def = pos:= a6 );	
+				newObject( def = p6:=pfeil( punkt(a6, 7), mey ); color = blue; target = intervalle );
+				newObject( def = ta6:= text( punkt(a6, 0), "<f>x[6]</f>", C_N ); bordercolor = blue; target = da );
+
+		      </script>
+			</seq>
+		</step>
+
+
+					</body>
+</math4u2>

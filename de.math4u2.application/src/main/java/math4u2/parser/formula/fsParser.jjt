@@ -1,0 +1,1477 @@
+/*options {
+	MULTI=true;
+    NODE_PACKAGE= "math4u2.parser.formula.parserNodes";
+    STATIC = false;
+	OUTPUT_DIRECTORY = "math4u2\\parser\\formula";
+}*/
+
+
+PARSER_BEGIN(fsParser)
+
+package math4u2.parser.formula;
+
+import java.io.StringReader;
+import java.util.*;
+import math4u2.parser.formula.parserNodes.*;
+import math4u2.controller.*;
+import math4u2.exercises.EParser;
+
+public class fsParser {
+	private Broker broker;
+    private String formula;
+    private Map modifierMap;
+    public static void main(String args[]) {
+    	try {
+            Node node=fsParser.parseFormula("a(x)_3_1_2(y)_2(z)(w)",null,null);
+            System.out.println(node.toString());
+            SimpleNode.treeTraversal(node);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void setModifierMap(Map modifierMap) {
+    	if(modifierMap==null){
+    		this.modifierMap= new HashMap(1);
+    	}else{
+    		this.modifierMap= new HashMap(modifierMap);
+    	}
+    }
+    
+    public static Node parseFormula(String formula, Map modifierMap, Broker broker)throws ParseException{
+        fsParser fsp= new fsParser(new StringReader(formula));
+            fsp.formula= formula;
+            fsp.setModifierMap(modifierMap);
+            fsp.broker = broker;
+        try{
+            return fsp.Start();
+        }catch(ParseException pe){
+            throw new ParseException("Fehler bei Formel: "+formula+"\n"+pe.getMessage());
+        }
+    }
+
+    public String getFormulaString(){
+        return formula;
+    }
+        
+    public Map getModifierMap() {
+        return modifierMap;
+    }
+
+    public Node parse(Broker broker) throws ParseException{
+        this.broker=broker;
+        return Start();
+    }
+}
+
+PARSER_END(fsParser)
+
+SKIP :
+{
+	" " 
+	|
+	"\t" 
+	|
+	"\n" 
+	|
+	"\r" 
+	|
+	< 
+		"//"
+		( ~[ "\n", "\r" ] )*
+		( "\n" | "\r" | "\r\n" )
+	>
+	|
+	< 
+		"/*"
+		( ~[ "*" ] )*
+		"*"
+		(
+			~[ "/" ]
+			( ~[ "*" ] )*
+			"*"
+		)*
+		"/"
+	>
+}
+
+TOKEN :
+/*INFIX_OPERATORS*/
+
+{
+	<RELATIONSYMBOL : 
+		(  "="  | "!=" | "<=" | ">=" )
+		|
+		<ARROW>
+		|
+		<REL_STRING_INFIX>
+	>
+	|
+	<LT:
+		"$lt"|"<"
+	>
+	|
+	<GT:
+		"$gt"|">"
+	>
+	|
+	<#ARROW : 
+		"$"
+		( "larr" | "rarr" | "uarr" | "darr" | "harr" | "lArr" | "rArr" | "uArr" | "dArr" | "hArr" )
+	>
+	|
+	<#REL_STRING_INFIX : 
+		"$"
+		(
+			"ne"
+			|
+			"equiv"
+			|
+			"le"
+			|
+			"ge"
+			|
+			"sub"
+			|
+			"sup"
+			|
+			"nsub"
+			|
+			"supe"
+			|
+			"perp"
+			|
+			"isin"
+			|
+			"notin"
+			|
+			"ni"
+			|
+			"prop"
+			|
+			"sim"
+			|
+			"cong"
+			|
+			"asymp"
+			|
+			"and"
+			|
+			"or"
+			|
+			"cap"
+			|
+			"cup"
+		)
+	>
+	|
+	<ADDITIONSYMBOL : 
+		[ "+", "-" ]
+		|
+		"+-"
+		|
+		<ADD_STRING>
+	>
+	|
+	<#ADD_STRING : 
+		"$"
+		( "plusmn" | "oplus" )
+	>
+	|
+	<MULTIPLICATIONSYMBOL : 
+		<MULT >
+		|
+		<MULT_STRING>
+	>
+	|
+	<#MULT : 
+		"*"
+		|
+		"<*>"
+	>
+	|
+	<#MULT_STRING : 
+		"$otimes"
+		|
+		"$sdot"
+		|
+		"$mdot"
+		|
+		"$sp"
+	>
+	|
+	<DIVIDE : 
+		"/"
+	>
+}
+
+TOKEN :
+/* POST_PREFIX_OPERATORS */
+
+{
+	<POSTFIX : 
+		"%"
+		|
+		"!"
+	>
+	|
+	<STRING_PREFIX : 
+		"$"
+		( "not" | "ang" )
+	>
+}
+
+TOKEN :
+/* SPECIALS */
+
+{
+	<FUNCTION_PREFIX:
+		"$f"
+		("d"|"h"|"b")
+	>
+	|
+	<NABLA : 
+		"$nabla"
+	>
+	|
+	<VOIDELEMENT:
+		"$void"
+	>
+	|
+	<DOTS :
+		"$dots"
+		|
+		"$hdots"
+		|
+		"$vdots"
+		|
+		"$ddots"
+		|
+		"$nddots"
+	>
+	
+}
+
+TOKEN :
+/* FUNCTIONS */
+
+{
+	<ROOT : 
+		"root"
+	>
+	|
+	<SQRT : 
+		"sqrt"
+	>
+	|
+	<LIM:
+		"lim"
+		|
+		"lim+"
+		|
+		"lim-"
+	>
+	|
+	<SUM : 
+		"sum"
+	>
+	|
+	<INT : 
+		"int"
+	>
+	|
+	<PROD : 
+		"prod"
+	>
+	|
+	<DERIVE : 
+		"derive"
+	>
+	|
+	<PDERIVE : 
+		"pderive"
+	>
+	|
+	<EXIST : 
+		"exist"
+	>
+	|
+	<FORALL : 
+		"forall"
+	>
+	|
+	<VARS :
+		"vars"
+	>
+	|
+	<MATHFUNCTION : 
+		"sin"
+		|
+		"cos"
+		|
+		"tan"
+		|
+		"arcsin"
+		|
+		"arccos"
+		|
+		"arctan"
+		|
+		"ln"
+		|
+		"lg"
+	>
+	|
+	<LOG : 
+		"log"
+	>
+	|
+	<FAC : 
+		"fac"
+	>
+	|
+	<EXPO : 
+		"exp"
+	>
+	|
+	<POW:
+		"pow"
+	>
+	|
+	<INVERSE:
+		"inverse"
+	>
+	|
+	<TRANSPOSE:
+		"transpose"
+	>
+	|
+	<VECMATH : 
+		<MATRIX>
+		|
+		<VECTOR>
+		|
+		<DUALVEKTOR>
+	>
+	|
+	<#MATRIX : 
+		"matrix"
+	>
+	|
+	<#VECTOR : 
+		"vektor"
+	>
+	|
+	<#DUALVEKTOR : 
+		"dualvektor"
+	>
+	|
+	<VECMATHSYMBOL:
+		<LT> ( <VECMATH> ) <GT>
+	>
+	|
+	<UNDEFVECTOR : 
+		<LT> ("vektor(" | "dualvektor(")
+	>
+	|
+	<UNDEFMATRIX : 
+		<LT> "matrix("
+	>
+}
+
+TOKEN :
+/* LITERALS */
+
+{
+	<FLOAT_LITERAL : 
+		<INTEGER_LITERAL>
+		"."
+		<INTEGER_LITERAL>
+	>
+	|
+	<INTEGER_LITERAL : 
+		<DIGIT>
+		( <DIGIT> )*
+	>
+	|
+	<#DIGIT : 
+		[ "0"-"9" ]
+		( [ "0"-"9" ] )*
+	>
+	|
+	<ENUMBER:
+		<INTEGER_LITERAL>("."<INTEGER_LITERAL>)?("E"|"e")("-")?<INTEGER_LITERAL>
+	>
+	|
+	<INFIN : 
+		"$infin"
+	>
+	|
+	<EULER : 
+		"e"
+	>
+	|
+	<PI : 
+		"$pi"
+	>
+	|
+	<STRUCTURE:
+		<INTEGER_LITERAL><IDENTIFIER>
+	>
+}
+
+TOKEN :
+/* SYMBOLS */
+
+{
+	<SYMBOL : 
+		<GR_LETTER_UC>
+	>
+	|
+	<#GR_LETTER_LC : 
+		
+		(
+			"fnof"
+			|
+			"alpha"
+			|
+			"beta"
+			|
+			"gamma"
+			|
+			"delta"
+			|
+			"epsilon"
+			|
+			"zeta"
+			|
+			"eta"
+			|
+			"theta"
+			|
+			"iota"
+			|
+			"kappa"
+			|
+			"lambda"
+			|
+			"mu"
+			|
+			"nu"
+			|
+			"xi"
+			|
+			"sigma"
+			|
+			"tau"
+			|
+			"upsilon"
+			|
+			"phi"
+			|
+			"chi"
+			|
+			"psi"
+			|
+			"omega"
+		)
+	>
+	|
+	<#GR_LETTER_UC : 
+		
+		(
+			"Alpha"
+			|
+			"Beta"
+			|
+			"Gamma"
+			|
+			"Delta"
+			|
+			"Theta"
+			|
+			"Lambda"
+			|
+			"Xi"
+			|
+			"Sigma"
+			|
+			"Upsilon"
+			|
+			"Omicron"
+			|
+			"Phi"
+			|
+			"Psi"
+			|
+			"Omega"
+		)
+	>
+}
+
+TOKEN :
+/* IDENTIFIERS */
+
+{
+	< IDENTIFIER : 
+		<LETTER>
+		( <LETTER> | <DIGIT> )*
+	>
+	|
+	< #LETTER : 
+		[ "a"-"z", "A"-"Z" ]
+	>
+}
+
+ASTStart Start() : {}
+{
+	Expression()
+	<EOF> 
+	{
+
+		return jjtThis;
+
+	}
+	
+}
+
+/*
+ * Ein Ausdruck kann sein
+ * - Definition wie f(x):=
+ * - Relation wie x+3 = 2*y - 4
+ */
+void Expression() #void : {}
+{
+	LOOKAHEAD(Definition())
+	Definition() 
+	|
+	RelationExpression() 
+}
+
+/*
+ * eine Definition ist gekennzeichnet durch ein ":="
+ */
+void Definition() #void : {}
+{
+	(
+		FunctionExpression() ":=" RelationExpression() 
+		{
+			jjtThis.setName(":=");
+		}
+	)
+	#NormalExpression(>1) 
+}
+
+/*
+ * eine Relation besteht aus:
+ * - min. zwei Ausdrücken mit Operatoren deren Bindungsstärke nicht höher als die der Addition
+ * - zwischen zwei Ausdrücken steht ein Relationszeichen: <, >, =, ...
+ */
+void RelationExpression() #void : {
+
+	Token symbol;
+
+}
+{
+	(
+		AdditiveExpression() 
+		(
+			(
+				symbol= <RELATIONSYMBOL> 
+				|
+				symbol= <LT>
+				|
+				symbol= <GT>
+				|
+				symbol=","
+			)
+			AdditiveExpression() 
+			(
+				{
+					jjtThis.setName(symbol.image);
+				}
+			)
+			#NormalExpression(2) 
+			//immer 2 Knoten bekommen einem Elternknoten "Relation"
+		)*
+	)
+}
+
+/*
+ * eine Addition besteht aus:
+ * - min. zwei Ausdrücken mit Operatoren deren Bindungsstärke nicht höher als die der Multiplikation
+ * - dem additionszeichen: + oder - oder +- zwischen jeweils zwei Ausdrücken
+ * - der erste term kann ein vorzeichen haben
+ */
+void AdditiveExpression() #void : {
+
+	Token symbol;
+
+}
+{
+	(
+		PraefixExpression() 
+		|
+		MultiplicativeExpression() 
+	)
+	(
+		symbol= <ADDITIONSYMBOL> MultiplicativeExpression() 
+		(
+			{
+				jjtThis.setName(symbol.image);
+			}
+		)
+		#NormalExpression(2) 
+	)*
+}
+
+/*
+ * Eine PraefixExpression hat zwei kinder
+ * - das Praefix
+ * - einem mult-Ausdruck 
+ */
+void PraefixExpression() : {}
+{
+	Praefix() MultiplicativeExpression() 
+}
+
+/*
+ * ein PraefixOperator wie:  "-" kann auch ein "+" sein. 
+ */
+void Praefix() : {
+
+	Token symbol;
+
+}
+{
+	symbol= <ADDITIONSYMBOL> 
+	{
+
+		jjtThis.setName(symbol.image);
+
+	}
+}
+
+/*
+ * eine Multiplikation besteht aus:
+ * - min zwei Ausdrücken mit Operatoren deren Bindungsstärke nicht höher als Division
+ * - dem multiplikationszeichen zwischen jeweils 2 Operanden
+ */
+void MultiplicativeExpression() #void : {
+	Token symbol;
+}
+{
+	DivisiveExpression() 
+	(
+		symbol= <MULTIPLICATIONSYMBOL> DivisiveExpression() 
+		(
+			{
+				jjtThis.setName(symbol.image);
+			}
+		)
+		#NormalExpression(2) 
+	)*
+}
+
+/*
+ * eine Division wird extra behandelt 
+ * um einen Ausdruck wie 3*4/5 wie 3*(4/5) darzustellen 
+ * die 3 steht so vor dem bruch
+ */
+void DivisiveExpression() #void : {}
+{
+	ExponentialExpression() 
+	(
+		<DIVIDE> ExponentialExpression() #Div(2) 
+	)*
+}
+
+/*
+ * Ein exponentieller Ausdruck ist gekennzeichnet durch:
+ * - min zwei Ausdrücken ohne Präfix- und Infixoperatoren
+ * - ein Dach "^" zwischen jeweils zwei Ausdrücken
+ */
+void ExponentialExpression() #void : {}
+{
+	PostfixExpression() 
+	(
+		"^" PostfixExpression() 
+		
+		#Expo(2) 
+		
+	)*
+}
+
+/*
+*Eine Postfix Expression ist gekennzeichnet durch: 
+*- einen Term,ohne Infix- und Praefixoperatoren
+* -einem Postfixoperator
+*/
+void PostfixExpression() #void : {}
+{
+	(
+		(
+			LOOKAHEAD(SymbolExpression())
+			SymbolExpression() 
+			|
+			FunctionExpression() 
+		)
+		(
+			Postfix() 
+		)?
+	)
+	#PostfixExpression(>1) 
+}
+
+/*
+ * ein Postfix operator wie "!" (Fakultät)
+*/
+void Postfix() : {
+
+	Token symbol;
+
+}
+{
+	symbol= <POSTFIX> 
+	{
+
+		jjtThis.setName(symbol.image);
+
+	}
+}
+
+/*
+ * Ein Ausdruck mit dem Nabla-symbol
+ * Nabla kann vor , hinter einem Ausdruck und alleine stehen
+ */
+void SymbolExpression() : {}
+{
+	(
+		FunctionExpression() SpecialSymbol() 
+	)
+}
+
+/*
+ * der Nabla-knoten
+ */
+void SpecialSymbol() : {
+	Token symbol;
+}
+{
+	symbol=<NABLA> | symbol= <DOTS>
+	{
+		jjtThis.setName(symbol.image);
+	}
+}
+
+void FunctionExpression() #void : {}
+{
+	MethodPath() 
+	|
+	Function()
+	|
+	Number()
+	|
+	Brackets()
+}
+
+void Function() #void :{}
+{
+	FunctionDetailChooser()
+	|
+	MathFunction() 
+	|
+	SpecialFunction() 
+	|
+	DoubleFunction() 
+	|
+	Root()
+	|
+	Limes()
+	|
+	VecmathDefinition()
+}
+
+/*
+ * eine eigens definierte Funktion wie f(x), kann auch einen index haben f[1](x)
+*/
+void MethodPath() #void : {}
+{
+	//folgende Grammatik funktioniert leider nicht:
+	//Eval*(Indeces|( (Indeces Eval+)+ Indeces?)?
+	(
+		Variable()
+		(
+			(
+				EvalStep()
+				{jjtThis.setFunction(true);}
+			)
+			|
+			(
+				Indeces()
+				{jjtThis.setFunction(false);}
+			)
+		)*
+		{
+			jjtThis.setModifierMap(modifierMap);
+			jjtThis.setBroker(broker);
+		}
+	)#MethodPath(>1)
+	
+}
+
+void FunctionDetailChooser():{
+	Token type;
+}
+{
+	type= <FUNCTION_PREFIX>
+	{
+		jjtThis.setName(type.image);
+		jjtThis.setBroker(broker);
+		jjtThis.setModifierMap(modifierMap);
+	}
+	"("
+	(
+	MethodPath()
+	)
+	")"
+}
+
+/*
+ * Funktionen, wie: sin, cos, tan,...
+*/
+void MathFunction() : {
+
+	Token type;
+
+}
+{
+	(
+		(type= <MATHFUNCTION> ("(" AdditiveExpression() ")" )?)
+		|
+		(type= <LOG> (TwoDigitFunction() )?)
+	)
+	{
+		jjtThis.setName(type.image);
+	}
+}
+
+/*
+ * spezielle Funktionen sind sum(..), int(..), prod(..) usw.
+*/
+void SpecialFunction() #void : {
+	Token symbol;
+}
+{
+	(
+		(
+			symbol= <SUM> Sum() 
+			{
+				jjtThis.setName(symbol.image);
+			}
+		)
+		|
+		(
+			symbol= <PROD> Prod() 
+			{
+				jjtThis.setName(symbol.image);
+			}
+		)
+		|
+		(
+			symbol= <INT> Int() 
+			{
+				jjtThis.setName(symbol.image);
+			}
+		)
+	)
+	#SpecialFunction
+	|
+	Derive() 
+	|
+	PDerive() 
+	|
+	Transpose()
+	|
+	Inverse()
+	|
+	(
+		symbol= <EXIST> Exist() 
+	)
+	|
+	(
+		symbol= <FORALL> ForAll() 
+	)
+}
+
+void Sum() #void : {}
+{
+	"(" FunctionExpression() "," AdditiveExpression() "," AdditiveExpression() "," AdditiveExpression() ")" 
+}
+
+void Prod() #void : {}
+{
+	"(" FunctionExpression() "," AdditiveExpression() "," AdditiveExpression() "," AdditiveExpression() ")" 
+}
+
+void Derive() : {
+}
+{
+	<DERIVE> "(" 
+	(
+		<VARS> EvalStep()","
+		{
+			jjtThis.setVars(true);
+		}
+	)?
+	AdditiveExpression() 
+	(
+		(
+			"," AdditiveExpression()")"
+			{
+				jjtThis.setDim(true);
+			}
+		)
+		|
+		(
+			")" 
+			{jjtThis.setName("1");}
+		)#Number
+	)
+	(EvalStep(){jjtThis.setEval(true);})?
+}
+
+void PDerive() : {}
+{
+	<PDERIVE> "("
+	(
+		<VARS> EvalStep()","
+		{
+			jjtThis.setVars(true);
+		}
+	)?
+	AdditiveExpression() ("," FunctionExpression())+ ")" 
+	(
+		EvalStep()
+		{
+			jjtThis.setEval(true);
+		}
+	)?
+}
+
+void Int() #void : {}
+{
+	"(" FunctionExpression() "," 
+	AdditiveExpression() 
+	(
+		"," 
+		AdditiveExpression() ","
+		AdditiveExpression()
+	)?
+	")" 
+}
+
+void Transpose() #void:{}
+{
+	(
+		<TRANSPOSE> 
+		"(" Variable() ")" 
+		(
+			{jjtThis.setName("T");}
+		)#Symbol
+	)#Expo
+}
+
+void Inverse() #void:{}
+{
+	(
+	<INVERSE> "(" Variable() ")" ({jjtThis.setName("-1");})#Number
+	)#Expo
+}
+
+// 3-stellige funktion schreibweise und parameter??
+void Exist() #void : {}
+{
+	"(" FunctionExpression() "," FunctionExpression() "," FunctionExpression() ")" 
+}
+
+// 3-stellige funktion schreibweise und parameter??
+void ForAll() #void : {}
+{
+	"(" FunctionExpression() "," FunctionExpression() "," FunctionExpression() ")" 
+}
+
+// body für 2-stellige Funktionen
+void TwoDigitFunction() #void : {}
+{
+	"(" AdditiveExpression() "," AdditiveExpression() ")" 
+}
+
+/**
+ * Ausdrücke die sowohl durch OperationsZeichen als auch durch Funktionen erzeugt werden können
+ * expo(..,..) und fac(..)
+ */
+void DoubleFunction() #void : {
+	Token type;
+
+}
+{
+	(
+		<FAC> "(" 
+		(
+			AdditiveExpression() 
+		)
+		#Brackets( ((SimpleNode)jjtree.peekNode()).getId() < 16)")" 
+		(
+			{
+				jjtThis.setName("!");
+			}
+		)
+		#Postfix
+	)
+	#PostfixExpression
+	|
+	(
+		<POW> "(" 
+		(
+			AdditiveExpression() 
+		)
+		#Brackets(((SimpleNode)jjtree.peekNode()).getId() < 18 )
+		"," (AdditiveExpression())#Brackets ")"
+	)
+	#Expo
+	|
+	(
+		<EXPO> "("
+		(
+			{
+				jjtThis.setName("e");
+			}
+		)#Number()
+		(
+			AdditiveExpression()
+		)#Brackets 
+		")"
+	)
+	#Expo
+}
+
+void Root() : {
+	Token symbol;
+}
+{
+	(
+		(
+			symbol=<SQRT>
+			"(" AdditiveExpression() ")"
+			(
+				{jjtThis.setName("2");}
+			)#Number
+		)
+		|
+		symbol=<ROOT>
+		"(" AdditiveExpression() "," AdditiveExpression() ")"
+	)
+	{
+		jjtThis.setName(symbol.image);
+	}
+}
+
+void Limes():{
+	Token symbol;
+}
+{
+	symbol=<LIM>
+		{
+			jjtThis.setName(symbol.image);
+		}
+	"("
+	<VARS>"("Ident()")"
+	","
+	AdditiveExpression()
+	","
+	AdditiveExpression()
+	")"
+}
+
+/*
+ * spezieller Ausdruck zur Definition von Vektoren und Matrizen 
+*/
+void VecmathDefinition() : {
+	int test;
+	int test2;
+	Token type;
+
+}
+{
+	type= <VECMATH> 
+	{
+		jjtThis.setName(type.image);
+	}
+	"("
+	
+	(
+		LOOKAHEAD(2)
+		"{"test= Braces() "}"
+		|
+		(
+			"{""{"
+			test= Braces()
+			"}"
+			(
+				",""{" test2= Braces() "}"
+				{
+					if (test != test2) 
+					{
+						throw new ParseException(
+							"Ungleiche Spalten bei Matrix in Zeile: " + token.next.beginLine);
+					}
+				}
+			)*
+			"}"
+		)
+	)
+	")" 
+}
+
+
+void EvalStep() : {}
+{
+
+	"(" AdditiveExpression() 
+	(
+		"," AdditiveExpression() 
+	)*
+	")"
+}
+
+/*
+ * wird zur Definition von Vektoren und Matrizen verwendet "{...}"
+ */
+int Braces() : {
+	int counter= 1;
+}
+{
+	AdditiveExpression() 
+	(
+		"," AdditiveExpression() 
+		{
+			counter++;
+		}
+	)* 
+	{
+		return counter;
+	}
+}
+
+/*
+ * ein Indeces- Knoten
+ */
+void Indeces(): {
+	Token t;
+}
+{
+		("[" AdditiveExpression() ( "," AdditiveExpression() )* "]" {jjtThis.setName("[");})
+		|
+		(PointExpression(){jjtThis.setName(".");})
+		|
+		(
+			"_" 
+			{jjtThis.setName("_");}
+			(
+				Number()
+				|
+				(
+					(
+						t=<STRUCTURE>
+					)
+					{jjtThis.setName(t.image);}
+				)#Ident()
+				|
+				Ident()
+				|
+				FunctionHeader()
+			)	
+		)
+	
+}
+
+/*
+ * ein geklammerter Ausdruck. sowohl "(...)" als auch "|...|"
+ */
+void Brackets() : {
+
+	Token symbol;
+
+}
+{
+	(
+		(
+			symbol= "(" Expression() ")" 
+		)
+		|
+		(
+			symbol= "|" AdditiveExpression() "|" 
+		)
+		|
+		(
+			symbol= "[" AdditiveExpression() "]" 
+		)
+	)
+	{
+		jjtThis.setName(symbol.image);
+	}
+}
+
+/*
+ * eine Variable kann sowohl ein Identifier als auch ein symbol wie gr. Buchstabe sein
+ * außerdem kann es ein Nabla sein oder ein Nabla und eine variable.
+ */
+void Variable() #void : {}
+{
+	(
+		(
+			SpecialSymbol() 
+			(
+				//(
+				//	LOOKAHEAD(PointExpression())
+				//	PointExpression() 
+				//	|
+				//	Ident()
+				//)
+				Ident()
+				|
+				UndefinedVector() 
+				|
+				VecmathSymbol() 
+				|
+				UndefinedMatrix()
+			)?
+		)
+		|
+		(
+			//(
+				//	LOOKAHEAD(PointExpression())
+				//	PointExpression() 
+				//	|
+				//	Ident()
+				//)
+			Ident()
+			|
+			UndefinedVector() 
+			|
+			VecmathSymbol() 
+			|
+			UndefinedMatrix()
+		)
+	)
+	#SymbolExpression(>1) 
+}
+
+void VecmathSymbol() : {
+	Token t;
+}
+{
+	(
+		t=<VECMATHSYMBOL>
+		{
+			jjtThis.setName(t.image);
+		}
+	)
+	Ident() 
+}
+
+void UndefinedVector() : {
+	Token t;
+	Token t2;
+}
+{
+	t= <UNDEFVECTOR> 
+	{
+		jjtThis.setName(t.image);
+	}
+	(
+		(
+			(
+				t2= <INTEGER_LITERAL> 
+				|
+				t2= <IDENTIFIER> 
+			)
+			{
+				jjtThis.setName(t2.image);
+			}
+		)
+		#Number
+	)
+	")" <GT>
+	Ident() 
+}
+
+
+  //erstellt eine matrix mit werten vom Typ m[1][1],m[1][2],...,m[1][n],m[2][1],...m[n][k];
+void UndefinedMatrix() : {
+	Token t;
+}
+{
+	<UNDEFMATRIX>
+	(
+		(
+			t= <INTEGER_LITERAL> 
+			|
+			t= <IDENTIFIER> 
+		)
+		{
+			jjtThis.setName(t.image);
+		}
+	)
+	#Number"," 
+	(
+		(
+			t= <INTEGER_LITERAL> 
+			|
+			t= <IDENTIFIER> 
+		)
+		{
+			jjtThis.setName(t.image);
+		}
+	)
+	#Number()")"( <GT>) Ident() 
+}
+
+void PointExpression() #void:{}
+{
+	"."
+	Ident()
+}
+
+void FunctionHeader() #void:{
+Token t;
+}
+{
+	(
+		(
+			t=<ROOT>
+			|
+			t=<SQRT>
+			|
+			t=<LIM>
+			|
+			t=<SUM>
+			|
+			t=<INT>
+			|
+			t=<PROD>
+			|
+			t=<DERIVE>
+			|
+			t=<PDERIVE>
+			|
+			t=<EXIST>
+			|
+			t=<FORALL>
+			|
+			t=<VARS>
+			|
+			t=<MATHFUNCTION>
+			|
+			t=<LOG>
+			|
+			t=<FAC>
+			|
+			t=<EXPO>
+			|
+			t=<POW>
+			|
+			t=<INVERSE>
+			|
+			t=<TRANSPOSE>
+			|
+			t=<VECMATH>
+		)
+		{jjtThis.setName(t.image);}
+	)#Ident()
+}
+
+void Ident() #void: {
+
+	Token symbol;
+	String s;
+
+}
+{
+	(
+	
+		PureIdent()
+		(
+			(symbol="~") (Number()|PureIdent())
+			{
+				jjtThis.setName(symbol.image);
+				jjtThis.setModifierMap(modifierMap);
+				jjtThis.setBroker(broker);
+				
+			}
+		)?
+	)#SpecialIdent(>1)
+	
+	
+}
+
+void PureIdent() #void: {
+
+	Token t;
+	String s;
+
+}
+{
+	(
+		(
+			t= <IDENTIFIER>
+			|
+			t=<SYMBOL>
+			|
+			t=<VOIDELEMENT>
+		)
+		{
+			jjtThis.setName(t.image);
+			Map m = (Map)modifierMap.get(t.image);
+			if(m!=null){
+				jjtThis.setModifier(m);
+				jjtThis.setBroker(broker);
+			}
+		}
+	)#Ident
+	
+}
+
+void Number() : {
+
+	Token symbol;
+
+}
+{
+	(
+		symbol= <INFIN> 
+		|
+		symbol= <EULER> 
+		|
+		symbol= <PI> 
+		|
+		symbol= <FLOAT_LITERAL> 
+		|
+		symbol= <INTEGER_LITERAL> 
+		
+	)
+	{
+
+		jjtThis.setName(symbol.image);
+
+	}
+	|
+	(
+		symbol= <ENUMBER>
+		{
+			jjtThis.setName(symbol.image.replace('e','E'));
+		}
+	)
+}

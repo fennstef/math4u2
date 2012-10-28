@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+	<author>Dr. M. Weiss</author>
+		<location>Numerik/Approximation</location>
+		<title>Fourier-Transformation</title>
+		<summary>Diskrete Fourier-Transformation zum Experimentieren</summary>
+		<keywords>
+			<keyword>Fourier-Transformation</keyword>
+			<keyword>Fourier-Koeffizienten</keyword>
+			<keyword>Fourier-Summe</keyword>
+		</keywords>
+		<step>
+			<title>Aufgabenstellung der Fourier-Transformation</title>
+			<description>Die Aufgabe der Fourier-Transformation ist: 
+			<ul>
+					<li>Gegeben ist eine periodische Funktion <f>f(x)</f> mit der primitiven Periode <f>p</f>.</li>
+					<li>Nähere diese Funktion <f>f(x)</f> möglichst gut an durch eine Summe <f>g(x)</f> von <f>cosinus</f>- und <f>sinus</f>-artigen Funktionen.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Der Einfachheit halber haben wir die primitive Periode <f>p=2*pi</f> gewählt. 
+			<br/>Im Koordinatensystem ganz oben entpricht der weiß hinterlegte Bereich dem Intervall [<f>-pi</f>;<f>pi</f>], also genau der primitiven Periode, der hellgraue Bereich rechts davon entspricht einer zweiten Periode.</description>
+			<layout>
+				<row perc="60">
+					<col perc="100" name="funk"/>
+				</row>
+				<row perc="40">
+					<col perc="50" name="cosinus"/>
+					<col perc="50" name="sinus"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false;right=false);
+
+					newObject(
+						def = funk.xMax := fix(9);
+					);					
+					
+					newObject(
+						def = funk.xMin := fix(-7);
+					);	
+					
+					newObject(
+						def = funk.yMax := fix(3);
+					);	
+					
+					newObject(
+						def = funk.yMin := fix(-3);
+					);	
+					
+					newObject(
+						def = sinus.xMax := fix(5.5);
+					);		
+					
+					newObject(
+						def = sinus.xMin := fix(-0.5);
+					);	
+					
+					newObject(
+						def = sinus.yMax := fix(2.5);
+					);	
+					
+					newObject(
+						def = sinus.yMin := fix(-1.5);
+					);	
+					
+					newObject(
+						def = cosinus.xMax := fix(5.5);
+					);	
+					
+					newObject(
+						def = cosinus.xMin := fix(-0.5);
+					);	
+					
+					newObject(
+						def = cosinus.yMax := fix(2.5);
+					);	
+					
+					newObject(
+						def = cosinus.yMin := fix(-1.5);
+					);	
+					
+					newObject(
+						def = fll:=flaeche({punkt(-20,-20),punkt(-pi,-20),punkt(-pi,20),punkt(-20,20)});
+						color = lightGray;
+						target = funk;
+						hide = true;
+					);																																																									
+					
+					newObject(
+						def = flrr:=flaeche({punkt(pi,-20),punkt(3*pi,-20),punkt(3*pi,20),punkt(pi,20)});
+						color = lightGray;
+						target = funk;
+						hide = true;
+					);	
+					
+
+
+					
+										
+					newObject( def = a:=&lt;punkt>liste0({punkt(fix(0),0), punkt(fix(1),0),punkt(fix(2), 0),punkt(fix(3),0),punkt(fix(4),0)}); color = red );	
+					newObject( def = b:=&lt;punkt>liste({punkt(fix(1),0),punkt(fix(2), 0),punkt(fix(3),0),punkt(fix(4),0)}); color = red );																							
+                       
+					
+										
+					 newObject( def = afv:=vektor(i,5,a[i-1].y) );
+					newObject( def = as:=balken(vektor({0,1,2,3,4}), afv, 0.2); color = red );	
+					newObject( def = b:=&lt;punkt>liste({punkt(fix(1), 0), punkt(fix(2), 0),punkt(fix(3), 0),punkt(fix(4), 0)}); color =blue);					
+					 newObject( def = bfv:=vektor(i,4,b[i].y) );
+					newObject( def = bs:=balken(vektor({1,2,3,4}), bfv, 0.2); color = blue );
+					
+					newObject(
+						def = frt(x):=a[0].y+a[1].y*cos(x)+a[2].y*cos(2*x)+a[3].y*cos(3*x)+a[4].y*cos(4*x)+b[1].y*sin(x)+b[2].y*sin(2*x)+b[3].y*sin(3*x)+b[4].y*sin(4*x);
+						color = green;
+						target = funk;
+					);		
+					funk.setTitle(title="Funktionswerte");
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Gerade Fourier-Summen</title>
+			<description>Im Folgenden zeigen wir zunächst, wie aus Summen von <f>cosinus</f>-Schwingungen Funktionen mit der gewünchten Periode entstehen:
+			<br/>Wir machen den Ansatz <f>p_g(x)=a_0+a_1*cos(1*x)+a_2*cos(2*x)+a_3*cos(3*x)+a_4*cos(4*x)</f> und variieren darin die Parameter <f>a_0, $dots, a_4</f>. Diese Parameter werden auch als Amplituden bezeichnet.
+
+		</description>
+		</step>
+		<step>
+			<description>Eine Kombination von <f>cosinus</f>- und <f>sinus</f>-Schwingungen wird allgemein als Fourier-Summe (oder Fourier-Polynom) bezeichnet. Weil wir zunächst nur die geraden Cosinus-Funktionen verwenden, kann man <f>p_g(x)</f> als Fourier-Summe aus geraden Funktionen oder kurz als gerade Fourier-Summe bezeichnen.
+<br/>Im Fenster unten links kann man jetzt diese Amplituden einstellen:</description>
+			<seq>
+				<script>
+				cosinus.setTitle(title="Cosinus - Koeffizienten");
+				cosinus.addGraph(name=as, a);
+			</script>
+			</seq>
+		</step>
+		<step>
+			<description>Mit <f>a_1</f> stellen Sie die Amplitude der Grundschwingung <f>cos(1*x)</f>, </description>
+			<seq>
+				<animate object="main" parameterName="a[1].y" to="1" end="5"/>
+				<animate object="main" parameterName="a[1].y" to="-1" end="3"/>
+				<animate object="main" parameterName="a[1].y" to="0" end="1"/>
+			</seq>
+		</step>
+		<step>
+			<description>mit <f>a_2</f> die Amplitude der ersten Oberschwingung <f>cos(2*x)</f>
+			</description>
+			<seq>
+				<animate object="main" parameterName="a[2].y" to="1" end="5"/>
+				<animate object="main" parameterName="a[2].y" to="-1" end="3"/>
+				<animate object="main" parameterName="a[2].y" to="0" end="1"/>
+			</seq>
+		</step>
+		<step>
+			<description>und mit <f>a_3</f> bzw. <f>a_4</f> die Amplitunden der nächsten Oberschwingungen <f>cos(3*x)</f> bzw. <f>cos(4*x)</f>,</description>
+			<seq>
+				<animate object="main" parameterName="a[3].y" to="1" end="3"/>
+				<animate object="main" parameterName="a[3].y" to="-1" end="2"/>
+				<animate object="main" parameterName="a[3].y" to="0" end="0.5"/>
+				<animate object="main" parameterName="a[4].y" to="1" end="3"/>
+				<animate object="main" parameterName="a[4].y" to="-1" end="2"/>
+				<animate object="main" parameterName="a[4].y" to="0" end="0.5"/>
+			</seq>
+		</step>
+		<step>
+			<description>mit <f>a_0</f> zuletzt die Amplitude der konstanten Funktion <f>cos(0*x)=1</f>.</description>
+			<seq>
+				<animate object="main" parameterName="a[0].y" to="1" end="5"/>
+				<animate object="main" parameterName="a[0].y" to="-1" end="2"/>
+				<animate object="main" parameterName="a[0].y" to="0" end="0.5"/>
+			</seq>
+		</step>
+		<step>
+			<title>Überlagerung von Grund- und Oberschwingungen</title>
+			<description>Durch Überlagerung (d.h. Linearkombination) von Grund- und Oberschwingungen lassen sich jetzt viele unterschiedliche Funktionen erstellen...</description>
+		</step>
+		<step>
+			<seq>
+				<par>
+					<animate object="main" parameterName="a[0].y" to="1" end="7"/>
+					<animate object="main" parameterName="a[1].y" to="-1" end="7"/>
+					<animate object="main" parameterName="a[2].y" to="1.5" end="7"/>
+					<animate object="main" parameterName="a[3].y" to="-1" end="7"/>
+					<animate object="main" parameterName="a[4].y" to="1" end="7"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="a[0].y" to="1" end="3"/>
+					<animate object="main" parameterName="a[1].y" to="1" end="3"/>
+					<animate object="main" parameterName="a[2].y" to="1" end="3"/>
+					<animate object="main" parameterName="a[3].y" to="1" end="3"/>
+					<animate object="main" parameterName="a[4].y" to="1" end="3"/>
+				</par>
+				<animate object="main" parameterName="a[0].y" to="0" end="2"/>
+				<animate object="main" parameterName="a[1].y" to="0" end="2"/>
+				<animate object="main" parameterName="a[2].y" to="0" end="2"/>
+				<animate object="main" parameterName="a[3].y" to="0" end="2"/>
+				<animate object="main" parameterName="a[4].y" to="0" end="2"/>
+			</seq>
+		</step>
+		<step>
+			<description>Experimentieren Sie durch Verstellen der Amplituden <f>a_0,$dots,a_4</f> im Fenster unten links mit der Maus.</description>
+					</step>
+		<step>
+			<title>Ungerade Fourier-Summen</title>
+			<description>Weil die verwendeten <f>cosinus</f>-Funktionen alle gerade sind, sind alle Funktionen, die man durch Überlagerung dieser Funktionen erstellen kann, ebenfalls gerade.
+		<br/>Umgekehrt kann man für die Grund- und Oberschwingungen <f>sinus</f>-Funktionen verwenden. Im Fenster unten rechts sind jetzt die Amplituden <f>b_1</f>, <f>b_2</f>, <f>b_3</f> und <f>b_4</f> der Sinus-Schwingungen <f>sin(1*x)</f>, <f>sin(2*x)</f>, <f>sin(3*x)</f> und <f>sin(4*x)</f> aufgetragen. Eine Amplitude <f>b_0</f> zur Funktion <f>sin(0*x)</f> ist nicht sinnvoll, da die Funktion <f>sin(0*x)=0</f> keinen sinnvollen Beitrag zum Funktionsverlauf liefert.
+		</description>
+			<seq>
+				<script>
+				sinus.setTitle(title="Sinus - Koeffinzienten");
+				sinus.addGraph(name=bs,b);
+			</script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Fourier-Summe aus den ungeraden Sinus-Anteilen hat also die Form <f>p_u(x)=b_1*sin(1*x)+b_2*sin(2*x)+b_3*sin(3*x)+b_4*sin(4*x)</f>, wir bezeichnen sie als ungerade Fourier-Summe.
+</description>
+		</step>
+		<step>
+			<description>Wenn wir nur diese Amplituden variieren, erhalten wir wieder viele unterschiedliche Funktionen, alle Funktionen sind jetzt ungerade....</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="a[0].y" to="0" end="0.1"/>
+					<animate object="main" parameterName="a[1].y" to="0" end="0.1"/>
+					<animate object="main" parameterName="a[2].y" to="0" end="0.1"/>
+					<animate object="main" parameterName="a[3].y" to="0" end="0.1"/>
+					<animate object="main" parameterName="a[4].y" to="0" end="0.1"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="b[1].y" to="-1" end="7"/>
+					<animate object="main" parameterName="b[2].y" to="1.5" end="7"/>
+					<animate object="main" parameterName="b[3].y" to="-1" end="7"/>
+					<animate object="main" parameterName="b[4].y" to="0.8" end="7"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="b[1].y" to="1" end="3"/>
+					<animate object="main" parameterName="b[2].y" to="1" end="3"/>
+					<animate object="main" parameterName="b[3].y" to="1" end="3"/>
+					<animate object="main" parameterName="b[4].y" to="1" end="3"/>
+				</par>
+				<animate object="main" parameterName="b[1].y" to="0" end="2"/>
+				<animate object="main" parameterName="b[2].y" to="0" end="2"/>
+				<animate object="main" parameterName="b[3].y" to="0" end="2"/>
+				<animate object="main" parameterName="b[4].y" to="0" end="2"/>
+			</seq>
+		</step>
+		<step>
+			<description>Experimentieren Sie durch Verstellen der Amplituden <f>b_1, $dots, b_4</f> im Fenster unten rechts mit der Maus.</description>
+		</step>
+		<step>
+			<title>Allgemeine Fourier-Summen</title>
+			<description>Wenn man nun sämtliche Amplituden verwendet, erhält man mit <f>p(x)=p_g(x)+p_u(x)</f> stets Funktionen mit der Periode <f>2*pi</f>, sie sind in der Regel aber weder gerade noch ungerade...</description>
+		</step>
+		<step>
+			<seq>
+				<par>
+					<animate object="main" parameterName="a[0].y" to="1" end="7"/>
+					<animate object="main" parameterName="a[1].y" to="-1" end="7"/>
+					<animate object="main" parameterName="a[2].y" to="1.5" end="7"/>
+					<animate object="main" parameterName="a[3].y" to="-1" end="7"/>
+					<animate object="main" parameterName="a[4].y" to="1" end="7"/>
+					<animate object="main" parameterName="b[1].y" to="-1" end="7"/>
+					<animate object="main" parameterName="b[2].y" to="1.5" end="7"/>
+					<animate object="main" parameterName="b[3].y" to="-1" end="7"/>
+					<animate object="main" parameterName="b[4].y" to="0.8" end="7"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="a[0].y" to="1" end="3"/>
+					<animate object="main" parameterName="a[1].y" to="1" end="3"/>
+					<animate object="main" parameterName="a[2].y" to="1" end="3"/>
+					<animate object="main" parameterName="a[3].y" to="1" end="3"/>
+					<animate object="main" parameterName="a[4].y" to="1" end="3"/>
+					<animate object="main" parameterName="b[1].y" to="1" end="3"/>
+					<animate object="main" parameterName="b[2].y" to="1" end="3"/>
+					<animate object="main" parameterName="b[3].y" to="1" end="3"/>
+					<animate object="main" parameterName="b[4].y" to="1" end="3"/>
+				</par>
+				<animate object="main" parameterName="a[0].y" to="0" end="2"/>
+				<animate object="main" parameterName="a[1].y" to="0" end="2"/>
+				<animate object="main" parameterName="a[2].y" to="0" end="2"/>
+				<animate object="main" parameterName="a[3].y" to="0" end="2"/>
+				<animate object="main" parameterName="a[4].y" to="0" end="2"/>
+				<animate object="main" parameterName="b[1].y" to="0" end="2"/>
+				<animate object="main" parameterName="b[2].y" to="0" end="2"/>
+				<animate object="main" parameterName="b[3].y" to="0" end="2"/>
+				<animate object="main" parameterName="b[4].y" to="0" end="2"/>
+			</seq>
+		</step>
+		<step>
+			<description>Experimentieren Sie durch Verstellen sämtlicher Amplituden mit der Maus. Stellen Sie insbesondere ein:
+           <ul>
+					<li>Gerade und ungerade Grund- und Oberschwingungen.</li>
+					<li>Funktionen, bei denen nur die Amplituden <f>a_1</f> und <f>b_2</f> bzw. <f>a_2</f> und <f>b_2</f> oder <f>a_3</f> und <f>b_3</f> verwendet werden. Was ist die Besonderheit dieser Kombinationen?</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<title>Diskrete Fourier-Transformation</title>
+			<description>Nun lautet die Aufgabenstellung der Fourier-Transfornation konkreter:
+				<ul>
+					<li>Gegeben ist eine periodische Funktion <f>f(x)</f> mit der Periode <f>2*pi</f>. </li>
+					<li>Finde Werte für die Amplituden <f>a_0,$dots,a_4</f> und <f>b_1, $dots, b_4</f> so, dass die entstehende Fourier-Summe <f>p(x)</f> die gegebene Funktion <f>f(x)</f> möglichst gut annähert.
+					</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+					newObject(
+						def = f(x):=2*(1/(2*pi)*(x-pi)-floor(1/(2*pi)*(x-pi)));
+					);
+					
+					newObject(
+						def = fp0:=kurve(t,-pi,pi,t-2*pi,f(t));
+						target = funk;
+					);					
+
+					newObject(
+						def = fp1:=kurve(t,-pi,pi,t,f(t));
+						target = funk;
+					);
+					
+					newObject(
+						def = fp2:=kurve(t,-pi,pi,t+2*pi,f(t));
+						target = funk;
+					);
+
+					newObject(
+						def = fp3:=kurve(t,-pi,pi,t+4*pi,f(t));
+						target = funk;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<br/>Im Fenster ganz oben ist jetzt der Graph einer Funktion <fh>f(x)</fh> mit entsprechender Periode schwarz eingezeichnet.
+			<br/>Sie können zunächst versuchen, die Fourier-Transformation "per Hand" durchzuführen:
+		<br/>Stellen Sie die Amplituden <f>a_0, $dots, a_4</f> und <f>b_1, $dots, b_4</f> so ein, dass der grüne Graph der Fourier-Summe den schwarzen Graph der Funktion <f>f(x)</f> möglichst gut annähert.</description>
+		</step>
+		<step>
+			<description>Bei der diskreten Fourier-Transformation kann man die Anforderung "möglichst gut" ganz konkret so formulieren:
+           <br/>Verteile im Intervall [<f>-pi</f>;<f>pi</f>] in gleichen Abständen eine bestimmte Anzahl von Stützstellen und bestimme die Amplituden <f>a_0, $dots, a_4</f> und <f>b_1, $dots, b_4</f> so, dass die Funktion <f>f(x)</f> und die entstehende Fourier-Summe <f>p(x)</f> an diesen Stellen den gleichen Wert haben.</description>
+		</step>
+		<step>
+			<description>Im Koordinatensystem ganz oben ist jetzt die Position der Stützstellen durch gestrichelte Geraden markiert. Insgesamt sind <f>9</f> Stützstellen markiert. Da aber wegen der Periodizität stets an der Stelle <f>-pi</f> und an der Stelle <f>pi</f> der gleiche Funktionswert vorliegt, sind so <f>8</f> verschiedene Funktionswerte markiert, die durch Einstellen der insgesamt <f>9</f> Amplituden <f>a_0, $dots, a_4</f> und <f>b_1, $dots, b_4</f> angepasst werden sollen. 
+		  </description>
+		  <seq>
+		    <script>
+		        newObject(
+						def = xpos(i):=-pi+2*pi/8*i;
+					);
+		      newObject(
+						def = x0g:=gerade(punkt(xpos(0),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);
+					
+					newObject(
+						def = x1g:=gerade(punkt(xpos(1),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);
+					
+					newObject(
+						def = x2g:=gerade(punkt(xpos(2),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);
+					
+					newObject(
+						def = x3g:=gerade(punkt(xpos(3),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);			
+					
+					newObject(
+						def = x4g:=gerade(punkt(xpos(4),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);	
+					
+					newObject(
+						def = x5g:=gerade(punkt(xpos(5),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);	
+					
+					newObject(
+						def = x6g:=gerade(punkt(xpos(6),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);																							
+					
+					newObject(
+						def = x7g:=gerade(punkt(xpos(7),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);		
+
+					newObject(
+						def = x8g:=gerade(punkt(xpos(8),0),vektor({0,1}));
+						color = magenta;
+						linestyle = dot;
+						target = funk;
+					);		
+		    </script>
+		  </seq>
+		</step>
+		<step>
+		    <seq>
+		       <script>
+		          
+		       </script>
+		    </seq>
+		</step>
+		<step>
+			<description>Das so entstehende Gleichungssystem kann nicht eindeutig lösbar sein, weil mehr Unbekannte (<f>9</f> Amplituden) als Informationen (<f>8</f> Funktionswerte) vorliegen. Eine genauere Analyse der Aufgabenstellung zeigt, das man die <f>8</f> Funktonswerte stets treffen kann, wenn man die <f>5</f> Amplituden <f>a_0, $dots , a_4</f>  und dazu die <f>3</f> Amplituden <f>b_1, $dots, b_3</f> verwendet. Diese <f>8</f> Amplituden kann man durch die <f>8</f> Funktionswerte eindeutig bestimmen. Die dabei zugrunde liegende Vorschrift wird als diskrete Fourier-Transformation bezeichnet.</description>
+
+		</step>
+		<step>
+			<description>In den beiden unteren Fenstern sind jetzt die Amplituden aufgetragen, die sich durch die diskrete Fourier-Transformation der Funktion <f>f(x)</f> mit Hilfe der gezeigten Stützstellen ergeben. 
+<br/>Die resultierende Fourier-Summe (grün) hat an allen Stützstellen den gleichen Funktionswert wie die ursprüngliche Funktion <f>f(x)</f>. </description>
+			<seq>
+				<script>
+						deleteObject( name = frt, bs, bfv, b, as, afv, b, a);
+		        
+
+		          newObject( def = cf(k):=0.25*sum(i,1,8,f(xpos(i))*cos(xpos(i)*k)) );
+		          newObject( def = sf(k):=0.25*sum(i,1,8,f(xpos(i))*sin(xpos(i)*k)) );
+		          newObject( def = a:=&lt;punkt>liste0({punkt(fix(0),fix(cf(0))), punkt(fix(1),fix(cf(1))),punkt(fix(2), fix(cf(2))),punkt(fix(3),fix(cf(3))),punkt(fix(4),fix(cf(4)))}); color = red );	
+					newObject( def = b:=&lt;punkt>liste({punkt(fix(1),fix(sf(1))),punkt(fix(2), fix(sf(2))),punkt(fix(3),fix(sf(3))) }); color = red );																							
+                       
+					
+										
+					 newObject( def = afv:=vektor(i,5,a[i-1].y) );
+					newObject( def = as:=balken(vektor({0,1,2,3,4}), afv, 0.2); color = red; target = cosinus);						
+					 newObject( def = bfv:=vektor(i,3,b[i].y) );
+					newObject( def = bs:=balken(vektor({1,2,3}), bfv, 0.2); color = blue; target = sinus );
+					
+					newObject(
+						def = frt(x):=0.5*a[0].y+a[1].y*cos(x)+a[2].y*cos(2*x)+a[3].y*cos(3*x)+0.5*a[4].y*cos(4*x)+b[1].y*sin(x)+b[2].y*sin(2*x)+b[3].y*sin(3*x);
+						color = green;
+						target = funk;
+					);																															
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Eigenschaften, Experimente</title>
+			<description>Durch Verändern der Funktion <f>f(x)</f> kann man jetzt verschiedene Eigenschaften der Fourier-Transformation studieren...</description>
+		</step>
+		<step>
+			<description>Wählt man als Funktion <f>f(x)</f> eine der verwendeten Grund- oder Oberschwingungen, dann hat genau die Amplitude dieser Schwingung einen Wert <f>$void $ne 0</f> und die Fourier-Summe gibt die Funktion <f>f(x)</f> exakt wieder.</description>
+			<seq>
+				<script>
+					newObject(def = f(x):=sin(2*x));
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wählt man eine Funktion <f>f(x)</f>, die sich sehr rasch verändert, dann kann unsere Fourier-Transformation die raschen Änderungen nicht wiedergeben.
+		  <br/>Das kann in manchen Situationen gewollt sein, weil man vielleicht nicht an den raschen Veränderungen interessiert ist, sondern an den langsamen Veränderungen, die diesen überlagert sind. Der grüne Graph der Fourier-Summe gibt hier genau diese langsamen Veränderungen wieder.
+<br/>Wenn in anderen Fällen die Fourier-Summe auch die raschen Veränderungen wieder geben soll, dann müssen mehr Oberschwingungen berücksichtigt werden, also auch  solche, die sich ähnlich rasch verändern wie die Funktion <f>f(x)</f>.</description>
+			<seq>
+				<script>
+					newObject(def=f(x):=0.3*sin(x)+sin(8*x));
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Bei der Fourier-Transformation einer geraden Funktion haben alle Koeffizienten zu ungeraden Schwingungen (hier: <f>b_1</f>, <f>b_2</f> und <f>b_3</f>) den Wert <f>0</f>.</description>
+			<seq>
+				<script>
+					newObject(def = cc:=0);
+					newObject(def = f(x):=cc+0.2*x^2);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man eine Funktion <f>f(x)</f> durch Addition einer Konstante verändert, ändert sich ausschließlich der Fourier-Koeffizient <f>a_0</f> ....</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="cc" to="0.5" end="5"/>
+				<animate object="main" parameterName="cc" to="-5" end="5"/>
+				<animate object="main" parameterName="cc" to="0" end="1"/>
+			</seq>
+		</step>
+		<step>
+			<title>Transformation diskreter Funktionswerte</title>
+			<description>In der Technik liegt meist eine Situation vor, die der diskreten Fourier-Transformation noch besser entspricht: Anstelle der Funktion <f>f(x)</f>, die transformiert werden soll, werden ohnehin nur Werte dieser Funktion in gewissen Zeitabständen gemessen. Am besten ist es in diesem Fall, wenn man die Stützstellen für die Fourier-Transformation genau auf die Zeitpunkte legt, zu denen die Funktionswerte gemessen werden. 
+
+           </description>
+		</step>
+		<step>
+			<description>Das obere Fenster gibt jetzt diese Situation modellhaft wieder: Durch Verschieben der Punkte <f>w_1, $dots, w_8</f> kann man ein Muster von Funktonswerten einstellen. In den beiden unteren Fenstern werden die Koeffizienten angezeigt, die sich durch Fourier-Transformation aus diesem Muster ergeben. Mit diesen Koeffizienten wird die Fourier-Summe berechnet. Der entsprechende Graph ist im oberen Fenster wieder grün eingezeichnet.</description>
+			<seq>
+				<script>
+				    deleteObject( name = fp0, fp1, fp2, fp3 );
+					newObject(
+						def = f1:=punkt(fix(xpos(1)),0);
+					);
+					
+					newObject(
+						def = f2:=punkt(fix(xpos(2)),0);
+					);
+					
+					newObject(
+						def = f3:=punkt(fix(xpos(3)),0);
+					);					
+					
+					newObject(
+						def = f4:=punkt(fix(xpos(4)),0);
+					);	
+					
+					newObject(
+						def = f5:=punkt(fix(xpos(5)),0);
+					);	
+					
+					newObject(
+						def = f6:=punkt(fix(xpos(6)),0);
+					);		
+					
+					newObject(
+						def = f7:=punkt(fix(xpos(7)),0);
+					);	
+					
+					newObject(
+						def = f8:=punkt(fix(xpos(8)),0);
+					);	
+					
+					newObject( def = w:=&lt;punkt>liste({f1,f2,f3,f4,f5,f6,f7,f8}); target = funk );	
+					
+					newObject( def = cf(k):=0.25*sum(i,1,8,w[i].y*cos(xpos(i)*k)) );
+		          newObject( def = sf(k):=0.25*sum(i,1,8,w[i].y*sin(xpos(i)*k)) );
+
+					
+									</script>
+			</seq>
+		</step>
+		<step>
+			<description>Jedes Muster der Stützstellen wird jetzt durch die entsprechende Fourier-Summe interpoliert:
+		  <br/>dieses, oder ...</description>
+			<seq>
+				<script>
+					newObject(def = f3.y:=1);	
+					newObject(def = f4.y:=-0.8);	
+					newObject(def = f5.y:=-1.2);	
+					newObject(def = f7.y:=1.2);																
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>dieses, oder ...</description>
+			<seq>
+				<script>
+					newObject(def = f1.y:=1);	
+					newObject(def = f2.y:=1);	
+					newObject(def = f3.y:=1);	
+					newObject(def = f4.y:=1);	
+					newObject(def = f5.y:=1);	
+					newObject(def = f6.y:=1);	
+					newObject(def = f7.y:=1);
+					newObject(def = f8.y:=1);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>dieses:</description>
+			<seq>
+				<script>
+					newObject(def = f1.y:=1);
+					newObject(def = f2.y:=1);
+					newObject(def = f3.y:=1);
+					newObject(def = f4.y:=-1);
+					newObject(def = f5.y:=1);
+					newObject(def = f6.y:=1);
+					newObject(def = f7.y:=1);
+					newObject(def = f8.y:=1);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Experimentieren Sie!</title>
+			<description>Verstellen Sie die Stützpunkte mit der Maus.
+		  <br/>Überprüfen Sie insbesondere folgende Eigenschaften bzw. Aussagen:
+		  <ul>
+					<li>Wenn das Muster ungefähr der <f>cosinus</f>-Gundschwingung oder einer der <f>cosinus</f>-Oberschwingungen entspricht, dann hat genau der Koeffizient den (betragsmäßig) größten Wert, der dieser Schwingung entspricht.</li>
+					<li>Analog bei <f>sinus</f>-Grundschwingung und Oberschwingungen.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>Wenn man eine gerades Muster einstellt, dann haben alle Koeffizienten <f>b_1,b_2,b_3</f> den Wert <f>0</f>.</li>
+					<li>Analog bei einem ungeraden Muster.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>Wenn man einen "scharfen" geraden Puls einstellt (alle Funktionswerte außer <f>w_4</f> bekommen den Wert <f>0</f>), dann haben alle Koeffizienten <f>a_1,$dots,a_4</f> den gleichen Wert.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<title>Vom Modell zur Praxis</title>
+			<description>Zwischen dem vorliegenden Modell und realen Anwendungen der diskreten Fourier-Transformation in der Praxis bestehet ein wichtige Unterschied:
+		</description>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>In realen Anwendungsfällen muss man den Funktionsverlauf in der Regel wesentlich genauer wiedergeben, als dies mit den hier verwendeten <f>8</f> Stützstellen möglich ist. Je nach Anwendungsfall werden einige zehn bis vielen tausend Stützstellen verwendet. Bei der Fourier-Transformation müssen dann genauso viele Fourier-Koeffizienten berechnet werden. Oft müssen diese Koeffizienten zudem in kurzen Zeitintervallen neu berechnet werden.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>Um diese großen Berechnungen in kurzer Zeit bewältigen zu können, verwendet man eine spezielle Berechnungstechnik für die Fourier-Koeffizienten, die sog. schnelle Fourier-Transformation. Hier werden bestimmte algebraische Zusammenhänge zwischen den Fourier-Koeffizienten dazu genutz, den Zeitbedarf für die Berechnung zu minimieren. Bei der schnellen Fourier-Transformation wächst der Zeitbedarf für die Transformation in Abhängigkeit von der Anzahl <f>n</f> der Stützstellen nach einem Gesetz der Form <f>n*ln(n)</f>. </li>
+				</ul>
+			</description>
+		</step>
+	</body>
+</math4u2>

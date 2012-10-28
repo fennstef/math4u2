@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.6 Aktionen eines Schritts festlegen</location>
+		<title>4.6.0 Aktionen eines Schritts festlegen</title>
+		<step>
+			<title>4.6.0 Aktionen eines Schritts festlegen</title>
+			<description>
+Die Aktionen eines Schritts werden durch ein <code>&lt;seq></code>-Tag (optional) beschrieben.
+
+<p/><strong>Beispiel:</strong>
+<br/>
+<code><![CDATA[
+<step>
+	<description>
+		Punkt p1:=punkt(a,b) erzeugen, dann seine Koordinaten a und b
+		parallel animieren.
+	</description>
+	<seq>
+		<script>
+			deleteAll();
+			da.coordinateSystem(xMin=-10; xMax=10; yMin=-3; yMax=1.5);
+			newObject( def = a:=0 );
+			newObject( def = b:= -2 );
+			newObject( def = p1:=punkt( a, b );
+		</script>
+		<par>
+			<script>
+				animate( name = a; to = 8; end = 5 );
+				animate( name = b; to = 1; end = 10 );
+			</script>
+		</par>
+	</seq>
+</step>
+]]></code>
+
+<br/>Dabei werden elementare Aktionen/Prozesse durch <code>&lt;script></code>-Tags 
+zu Gruppen zusammengefasst. Aus diesen Gruppen wird mit <code>&lt;seq></code>-Tags 
+(sequentiell) und <code>&lt;par></code>-Tags (parallel) ein Gesamtprozess
+von sequentiellen und parallelen Abläufen definiert.
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.7 Elementare Anweisungen</location>
+		<title>4.7.3 Animation</title>
+		<step>
+			<title>4.7.3 Animation</title>
+			<description>
+Eine Animation wird im allgemeinsten Fall durch eine <code>animate</code>-Anweisung 
+mit 5 Attributen beschrieben. Durch
+<br/><code>animate( name = par1; from = -7; to = 5; start = 3; end = 10 )</code>
+<br/>wird vereinbart, dass der Wert des Parameters (der nullstelligen Funktion) 
+<code>par1</code> animiert wird.
+Der Wert des Parameters wird dabei von <code>-7</code> nach <code>5</code> 
+linear verändert. Die Veränderung beginnt <code>3</code> Zeiteinheiten
+(Sekunden) nach dem Aufruf der Anweisung und endet <code>10</code> Zeiteinheiten 
+(Sekunden) nach dem Aufruf der Anweisung.
+
+<p/>Als Zeiteinheit für die Animation ist zunächst eine Sekunde eingestellt.
+<br/>Der Benutzer kann diese Zeiteinheit über den Schieberegler Langsam/Normal/Schnell 
+rechts unten in der Benutzeroberfläche verändern.
+
+<p/>Die Attribute der Anweisung bedeuten im Detail:
+<p/><code>name</code><tab/><tab/><tab/>Name des Parameters, der animiert werden soll.
+<p/><code>from (optional)</code><tab/>Zahlenwert, der zu Beginn der Animation eingestellt wird.
+<br/>Wenn dieses Atribut nicht angegeben ist, wird zu Beginn der Animation
+der aktuell vorliegende Wert des Parameters eingestellt.
+
+<p/><code>to</code><tab/><tab/><tab/>Zahlenwert, der am Ende der Animation erreicht wird.
+
+<p/><code>start (optional)</code><tab/>Zeitpunkt (Zahl), zu dem die 
+eigentliche Animation beginnt.
+<br/>Wenn dieses Attribut nicht angegeben ist, wird der Standard-Wert
+<code>start=0</code> verwendet.
+
+<p/><code>end</code><tab/><tab/><tab/>Zeitpunkt (Zahl), zu dem die Animation endet.
+			</description>
+		</step>
+	</body>
+</math4u2>

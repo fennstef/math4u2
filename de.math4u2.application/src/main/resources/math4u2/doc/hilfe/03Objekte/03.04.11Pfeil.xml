@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.11 Pfeil</title>
+		<step>
+			<title>3.4.11 Pfeil</title>
+			<description>
+Ein Pfeil ist ein Repräsentant eines zweidimensionalen Vektors <code>v</code>. Neben diesem Vektor ist zu seiner
+Definition noch ein Aufpunkt erforderlich.							
+
+<p/><strong>Pfeil definieren</strong>
+<br/>Ein Pfeil wird definiert wie:
+<br/><code>pf:=pfeil(punkt(2,-1),vektor({1.5,1}))</code>.
+<p/>Hat man einen Vektor <code>vek:=vektor({1,-3})</code> definiert, so erhält man mit 
+<br/><code>pf1:=pfeil(punkt(1,1),vek)</code> und <code>pf2:=pfeil(punkt(1,3),vek)</code>
+<br/>zwei Repräsentanten des einen Vektors <code>vek</code>, also zwei parallelgleiche Pfeile.
+
+<p/><strong>Detailsicht</strong>
+<p/><img src="math4u2/doc/images/objekte/pfeil-detail01.jpg"/>
+
+<p/><strong>Pfeil mit der Maus verändern</strong>
+<br/>Wenn ein Pfeil <code>pf1</code> auf der Zeichenebene dargestellt 
+wird, dann kann man seine Spitze mit der Maus bewegen und so die 
+Komponenten des zugehörigen Vektors <code>vek</code> verändern.
+Alle anderen Repräsentanten des Vektors <code>vek</code> verändern sich 
+dann parallelgleich.
+
+<p/><strong>Methoden eines Pfeils</strong>
+<br/>Zu einem Pfeil pf1 liefert
+<br/><code>pf1.start   </code><tab/> den Aufpunkt und
+<br/><code>pf1.richtung</code><tab/> die Richtung des Pfeils, also den Vektor, den der Pfeil repräsentiert.
+
+<p/><strong>Beispiel:</strong> Vektor mit zwei Repräsentanten
+<p/><img src="math4u2/doc/images/objekte/pfeil01.jpg"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

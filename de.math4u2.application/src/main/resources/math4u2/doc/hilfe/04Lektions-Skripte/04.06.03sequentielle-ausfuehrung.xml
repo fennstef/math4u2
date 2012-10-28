@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.6 Aktionen eines Schritts festlegen</location>
+		<title>4.6.4 par-Tag: parallele Ausführung</title>
+		<step>
+			<title>4.6.4 &lt;par>-Tag: parallele Ausführung</title>
+			<description>
+Ein <code>&lt;par></code>-Tag beschreibt die parallele Ausführung mehrerer Prozesse. 
+Es enthält eine beliebige Sequenz von:
+
+<p/><code>&lt;script></code>-Tag<tab/>Enthält ein oder mehrere Elementarprozesse.
+
+<p/><code>&lt;seq></code>-Tag<tab/>Beschreibt einen zusammengesetzten Prozess.
+
+<p/>Dadurch ist eine Menge von Prozessen definiert. Diese Prozesse werden parallel ausgeführt.
+			</description>
+		</step>
+	</body>
+</math4u2>

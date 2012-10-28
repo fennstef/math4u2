@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte</location>
+		<title>4.1 Überblick: Skript einer leeren Lektion</title>
+		<step>
+			<title>4.1 Überblick: Skript einer leeren Lektion</title>
+			<description>
+Folgende Zeilen zeigen die notwendige Grundstruktur eines Lektions-Skripts. Durch dieses Skript wird
+eine "leere" Lektion erzeugt.
+<br/>
+<code><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" 
+	"http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Test/Lektionen</location>
+		<title>Leere Lektion</title>
+		<step></step>
+	</body>
+</math4u2>
+]]></code>
+
+<br/>Die ersten drei Zeilen vereinbaren das zugrunde liegende XML-Schema und dürfen nicht verändert
+werden.
+
+<p/>Die eigentliche Lektion ist in das <code>&lt;math4u2></code>-Tag eingeschlossen.
+Zunächst werden im <code>&lt;head></code>-Tag grundsätzliche Vereinbarungen über Version und System getroffen,
+auch diese werden unverändert übernommen.
+
+<p/>Zuletzt folgt im <code>&lt;body></code>-Tag der Inhalt der Lektion. Er gliedert sich in
+<br/>
+<ul>
+	<li>
+Allgemeine Dokumentinformationen:
+Hier muss in <code>&lt;location></code> der Pfad angegeben werden, unter dem die Lektion im Themen-
+Navigator zu finden ist und in <code>&lt;title></code> der Titel der Lektion.
+	</li>
+	<li>
+Die Schritte der Lektion:
+Mit dem leeren <code>&lt;step></code>-Tag wird der erste Schritt der Lektion angelegt.	
+	</li>
+</ul>
+
+<br/>Im Folgenden werden diese beiden Abschnitte näher beschrieben.
+			</description>
+		</step>
+	</body>
+</math4u2>

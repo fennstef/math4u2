@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. M. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Abbildungen</location>
+		<title>Zentralprojektion, Normalisierungs-Transformation</title>
+		<summary>Schrittweise Konstruktion der Normalisierungs-Transformation für eine Zentralprojektion</summary>
+		<keywords>
+			<keyword>Zentral-Projektion</keyword>
+			<keyword>Zentralprojektion</keyword>
+			<keyword>Normalisierungs-Transformation</keyword>
+			<keyword>Normalisierungtransformation</keyword>
+		</keywords>
+		<step>
+			<title>Zentralprojektion einer dreidimensionalen Szene</title>
+			<description>Der Betrachter sitzt am Projektions-Referenz-Punkt (PRP). Er sieht das Bild, das auf die Bildebene VP projeziert wird. Der Bildpunkt B eines Punktes P der Szene entsteht als Schnittpunkt der Bildebene mit der Verbindungsgerade von PRP und P. Für den nächsten Punkt P1 und die vielen, vielen weiteren Punkte der Szene entsprechend.
+<br/>Im Prinzip könnte man diese Schnittpunkte alle mit Rechenvorschriften der analytischen Geometrie berechnen.
+<br/>Die Normalisierungtransformation ist ein anderer (und letztlich schnellerer) Weg, den Bildpunkt zu bestimmen. Dies soll im Folgenden gezeigt werden.
+</description>
+			<layout>
+				<row perc="100.0">
+					<col perc="100.0" name="da"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+deleteAll();
+
+expand(left=false;right=false);
+da.coordinateSystem(xMin=-0.017016524150788033;xMax=8.610361220298799;yMin=-0.0966406875651175;yMax=8.530737056884476;);
+newObject(
+	def=pl := &lt;punkt> liste({punkt(3.02,7.01), punkt(3,3), punkt(6,2), punkt(6,6)});
+);
+newObject(
+	def=hh := flaeche({punkt(-20,20),punkt(-20,-20),punkt(20,-20),punkt(20,20)});
+	color=255.255.255;
+	target=da;
+);
+
+newObject(
+	def=k := flaeche({pl[1],pl[2],pl[3],pl[4]});
+	color=0.0.255;
+	target=da;
+);
+
+
+
+
+
+newObject(
+	def=PRP := punkt(fix(1.46),fix(2.59));
+	target=da;
+);
+
+newObject(
+	def=B1 := punkt(fix(4.26),fix(5.16));
+	target=da;
+);
+
+newObject(
+	def=P1 := punkt(5.67,6.47);
+	target=da;
+);
+
+newObject(
+	def=g := gerade(PRP,P1.r-PRP.r);
+	linestyle=dot;
+	target=da;
+);
+
+newObject(
+	def=B := punkt(5.13,3.1);
+	target=da;
+);
+
+newObject(
+	def=s1 := strecke(B1,B);
+	linestyle=dash;
+	target=da;
+);
+
+
+newObject(
+	def=PRPtext := text(PRP,"Projektions-Referenz-Punkt&lt;br/>= Betrachter",B_SE);
+	target=da;
+);
+newObject( def = VPtext:= text(punkt(3,6), "Bildebene VP = Video Plane", B_NW); target = da );
+
+newObject(
+	def=P := punkt(7.79,3.44);
+	target=da;
+);
+
+newObject(
+	def=Ptext := text(P,"Punkt, der abgebildet &lt;br/>werden soll",B_SW);
+	target=da;
+);
+
+newObject(
+	def=s21 := strecke(P1,P);
+	color=255.51.51;
+	linestyle=dash;
+	target=da;
+);
+
+newObject(
+	def=g2 := gerade(PRP,P.r-PRP.r);
+	linestyle=dot;
+	target=da;
+);
+
+
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Um das geometrische Vorstellungsvermögen nicht allzu stark zu beanspruchen (und weil die Formeln, die das Ganze mathematisch abwickeln, auch einfacher sind), reduzieren wir unsere Szene auf zwei Dimensionen:
+<br/>Wir schauen von oben auf die Bildebene, sie ist reduziert zu einer blauen Strecke.
+		   </description>
+		</step>
+		<step>
+			<title>Modell, Ausgangslage</title>
+			<description>Der Betrachter sitzt am Projektions-Referenz-Punkt (PRP). Er sieht das Bild, das auf die Bildebene VP projeziert wird. Der Sehbereich des Betrachters ist kegelförmig, hier wird der  Sehbereich durch die beiden grünen Geraden begrenzt. Der (sichtbare) Projektionsbereich ist in unserem Modell also die Strecke zwischen den Punkten E und F.</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="start"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				deleteAll();
+			       expand( left = false; right = false );
+			       newObject( def =  start.xMin:=fix(-1) );
+			       newObject( def =  start.xMax:=fix(9) );
+			       newObject( def =  start.yMin:=fix(-2) );
+			       newObject( def =   start.yMax:=fix(6));
+			       
+			       newObject( def =   PRP:=punkt(1.5,-1); target = start; hide = true;);  // Projektions-Referenz-Punkt
+			       newObject( def =   P:=punkt(3,3); target = start; hide = true;);
+			       newObject( def =  E:=punkt(1,3); target = start; hide = true; );
+			       newObject( def = F:=punkt(3,1); target = start ; hide = true;);
+			       newObject( def = A:=punkt(4,-1) ; hide = true; );
+			       newObject( def =  D:=punkt(8,-1); hide = true;);
+			       newObject( def = v:=F.r-E.r ; hide = true;);
+			       newObject( def = vn := v/|v|; hide = true; );
+			       newObject( def = nn := vektor( { -vn[2], vn[1] } ); hide = true;);
+			       newObject( def = l := E.r - PRP.r ; hide = true;);
+			       newObject( def = r := F.r-PRP.r ; hide = true;);
+			       newObject( def = dB := nn&lt;*&gt;(D.r-PRP.r); hide = true; );
+			       newObject( def = dV := nn&lt;*&gt;r; hide = true; );
+			       newObject( def = Bfac:=dB/dV ; hide = true;);
+			       newObject( def = dF := nn&lt;*&gt;(A.r-PRP.r); hide = true; );
+			       newObject( def = Ffac:=dF/dV ; hide = true;);
+			       newObject( def = LOv := PRP.r+l*Bfac ; hide = true;);
+			       newObject( def = LUv := PRP.r+l*Ffac ; hide = true;);
+			        newObject( def = ROv := PRP.r+r*Bfac ; hide = true;);
+			       newObject( def = RUv := PRP.r+r*Ffac ; hide = true;);
+                   newObject( def = IS := flaeche( { punkt(LOv[1], LOv[2]), punkt(LUv[1], LUv[2]), punkt(RUv[1], RUv[2]), punkt(ROv[1], ROv[2]) } ) ;  hide = true; );
+                   newObject( def = VP := gerade( E, v ); color = blue; linestyle = dot; target = start ; hide = true;);
+                   newObject( def = VPs := strecke( E,F ); color = blue; target = start ; hide = true;);
+                   newObject( def = lb := gerade( E, l ) ; color = green; target = start ; hide = true;);
+                   newObject( def = rb := gerade( F, r ); color = green; target = start  ; hide = true;);
+                   newObject( def = proj := gerade( P, P.r-PRP.r); linestyle = dash; target = start ; hide = true; );
+                   newObject( def = FCP := gerade( A, v); color = red; hide = true;);
+                   newObject( def = BCP := gerade( D, v) ; color = magenta ; hide = true;);
+                   newObject(def=PRPtext := text(PRP,"Projektions-Referenz-Punkt&lt;br/>= Betrachter",B_NW);	target=start;);
+                   newObject(def=Ptext := text(P,"Punkt, der abgebildet werden soll",B_SE);target=start;);
+
+	
+
+                  	
+
+                   newObject( def = VPv:=F.r+0.8*(F.r-E.r) );
+                   newObject( def = VPtext:= text( punkt(VPv.x, VPv.y), "Bildebene VP = Video Plane<br/>Projektionsbereich ist die Strecke zwischen E und F", B_NE); target = start );	   
+                   newObject( def = projv:= P.r+0.5*(P.r-PRP.r) );
+                   newObject( def = projtext:= text( punkt( projv.x, projv.y), "Projektor = Verbindungsgerade von P und PRP", B_SE); target = start );
+                   			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Der Bildpunkt eines Punktes P entsteht auf der Bildebene als Schnittpunkt des entsprechenden Projektors (= Verbindungsgerade zwischen P und PRP) mit der Bildebene. 
+<br/>Natürlich könnte man diesen Schnittpunkt mit Methoden der analytischen Geometrie berechnen, aber:
+<br/>Die Normalisierungtransformation ist ein anderer (und letztlich schnellerer) Weg, den Bildpunkt zu bestimmen.</description>
+			<seq>
+				<script>
+		           deleteObject( name = PRPtext, Ptext);	           
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>In der Regel muss natürlich nicht nur ein Punkt P abgebildet werden, sondern sehr, sehr, sehr viele Punkte eines Modells.
+		   <br/>Um die erforderliche Rechenzeit in Grenzen zu halten, begrenzt man die Menge der Punkte, die überhaupt abgebildet werden, wie folgt:
+		   <br/>Man bildet nur Punkte ab, die vom Betrachter nicht zu weit entfernt sind, konkret die, die sich vom Betrachter aus vor der hinteren Abschneide-Ebene BCP befinden.
+<br/>Ebenso nur solche Punkte, die sich vom Betrachter aus gesehen hinter der vorderen Abschneide-Ebene FCP befinden.
+<br/>Sichtbar sind also nur Punkte im jetzt grau hinterlegten Bereich.</description>
+			<seq>
+				<script>
+		         deleteObject(name =  projtext, projv );
+		         modifyObject( name = BCP; target = start );
+		         modifyObject( name = FCP; target = start );
+		         modifyObject( name = A; target = start );
+		         modifyObject( name = D; target = start );
+		         modifyObject( name = IS; target = start );
+		         
+		         newObject( def = BCPv:= ROv - 0.2*(F.r-E.r) );
+		         newObject( def = BCPtext:= text( punkt( BCPv.x, BCPv.y), "Hintere Abschneide-Ebene<br/>Back Clipping Plane BCP", B_NE); target = start );
+		         newObject( def = FCPv:= LUv + 0.3*(F.r-E.r) );
+		         newObject( def = FCPtext:= text( punkt( FCPv.x, FCPv.y), "Vordere Abschneide-Ebene<br/>Front Clipping Plane FCP", B_SW); target = start );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Vordere und hintere Abschneide-Ebene sind parallel zur Bildebene.
+		   <br/>Sie können im Folgenden stets mit dem Modell experimentieren, indem Sie die verschiedenen Bestandteile der Modell-Situation über die entsprechenden Punkte beeinflussen.</description>
+			<seq>
+				<script>
+		           			      deleteObject( name = FCPtext, FCPv, BCPtext, BCPv, VPtext, VPv );
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<title>Schritte der Normalisierungstransformation</title>
+			<description>Die Idee der Normalisierungs-Transformation ist es, die Modell-Situation durch geschickte Abbildungen (Transformationen) so zu verändern, dass die Berechnung des Bildpunkts immer einfacher wird.
+<br/>Im Folgenden werden diese Abbildungen schrittweise ausgeführt. 
+<br/>Zuletzt kann man diese Abbildungen zu einer Gesamtabblidung (=Normalisierungstransformation) zusammenfassen, mit dieser ist es dann möglich, die Koordinaten eines Punktes P in einem Schritt so zu transformieren, dass als Ergebnis die Lage des Bildpunktes auf der Projektionsfläche entsteht.
+<br/>
+			</description>
+			<layout>
+				<row perc="50">
+					<col perc="34" name="start"/>
+					<col perc="33" name="translation"/>
+					<col perc="33" name="rotation"/>
+				</row>
+				<row perc="50">
+					<col perc="34" name="scherung"/>
+					<col perc="33" name="skalierung"/>
+					<col perc="33" name="nichtaffin"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			      newObject( def =  translation.xMin:=fix(-1));
+			       newObject( def =  translation.xMax:=fix(9));
+			       newObject( def =  translation.yMin:=fix(-2));
+			       newObject( def =  translation.yMax:=fix(6));
+			       newObject( def =  rotation.xMin:=fix(-5));
+			       newObject( def =  rotation.xMax:=fix(5));
+			       newObject( def =  rotation.yMin:=fix(-1));
+			       newObject( def =   rotation.yMax:=fix(7));
+			       newObject( def =  scherung.xMin:=fix(-5));
+			       newObject( def =  scherung.xMax:=fix(5));
+			       newObject( def =  scherung.yMin:=fix(-1));
+			       newObject( def =  scherung.yMax:=fix(7));
+			       newObject( def =  skalierung.xMin:=fix(-5));
+			       newObject( def =   skalierung.xMax:=fix(5));
+			       newObject( def =  skalierung.yMin:=fix(-1));
+			       newObject( def =  skalierung.yMax:=fix(7));
+			       newObject( def =  nichtaffin.xMin:=fix(-5));
+			       newObject( def =  nichtaffin.xMax:=fix(5));
+			       newObject( def =  nichtaffin.yMin:=fix(-5));
+			       newObject( def =   nichtaffin.yMax:=fix(3));
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Translation</strong>
+				<br/>Bringe durch eine Translation den Betrachter (PRP) in den Ursprung des Koordinatensystems. Aus P wird P1.</description>
+			<seq>
+				<script>
+			        newObject( def = tfac := 0 );
+			        newObject( def = t:=( -tfac)*PRP.r; hide = true ); // Translationsvektor
+			        newObject( def = tx := t[1] );
+			        newObject( def = ty := t[2] );
+			        newObject( def = PRP1:=punkt(PRP.x+tx,PRP.y+ty) ; target = translation);
+			        newObject( def = P1:=punkt(fix(P.x+tx),fix(P.y+ty)) ; target = translation);
+			        newObject( def =  E1:=punkt(E.x+tx,E.y+ty) ; hide = true;);
+			        newObject( def = F1:=punkt(F.x+tx,F.y+ty) ; hide = true;);
+			        newObject( def = A1:=punkt(A.x+tx,A.y+ty) ; hide = true;);
+			        newObject( def = D1:=punkt(D.x+tx,D.y+ty) ; hide = true;);
+			        newObject( def =proj1:=gerade(P1,P1.r-PRP1.r); linestyle = dash; target = translation  );
+			        newObject( def = LO1v := PRP1.r*(1-Bfac)+E1.r*Bfac ; hide = true;);
+			       newObject( def = LU1v := PRP1.r*(1-Ffac)+E1.r*Ffac ; hide = true;);
+			        newObject( def = RO1v := PRP1.r*(1-Bfac)+F1.r*Bfac ; hide = true;);
+			       newObject( def = RU1v := PRP1.r*(1-Ffac)+F1.r*Ffac ; hide = true;);
+                   newObject( def = IS1 := flaeche( { punkt(LO1v[1], LO1v[2]), punkt(LU1v[1], LU1v[2]), punkt(RU1v[1], RU1v[2]), punkt(RO1v[1], RO1v[2]) } ); target =translation ; hide = true; );
+                   newObject( def = VP1 := gerade( E1, v ); color = blue; linestyle = dot; target = translation ; hide = true;);
+                   newObject( def = lb1 := gerade( E1, l ) ; color = green; target = translation ; hide = true;);
+                   newObject( def = rb1 := gerade( F1, r ); color = green; target = translation  ; hide = true;);
+                   newObject( def = FCP1 := gerade( A1, v); color = red; target = translation  ; hide = true;); 		
+                   newObject( def = BCP1 := gerade( D1, v) ; color = magenta; target =translation ; hide = true;);		
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="tfac" to="1" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="tfac:=1*1"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Rotation</strong>
+				<br/>Rotiere so, dass die Bildebene (blau) parallel zur x-Achse in der Halbebene mit y>0 liegt. Aus P1 wird P2.</description>
+			<seq>
+				<script>
+				    newObject( def = rotfac:= 0; hide = true );
+				    newObject( def = theta := -arctan( vn.y/vn.x ) * rotfac; hide = true);
+			        newObject( def = rot( &lt;vektor&gt; v ) := vektor( { cos(theta)*v.x-sin(theta)*v.y, sin(theta)*v.x+cos(theta)*v.y } ) );
+			        newObject( def = v2:= rot(v) );
+			         newObject( def = l2:= rot(l) );
+			          newObject( def = r2:= rot(r) );
+			        newObject( def = P2r:= rot( P1.r ) );
+			        newObject( def = P2 := punkt(fix(P2r[1]), fix(P2r[2]) ); target = rotation );
+			        newObject( def = A2r:= rot( A1.r ) );
+			        newObject( def = A2 := punkt(A2r[1], A2r[2] ); hide = true; );
+			        newObject( def = D2r:= rot( D1.r ) );
+			        newObject( def = D2 := punkt(D2r[1], D2r[2] ); hide = true; );
+			        newObject( def = E2r:= rot( E1.r ) );
+			        newObject( def = E2 := punkt(E2r[1], E2r[2] ); hide = true; );
+			        newObject( def = F2r:= rot( F1.r ) );
+			        newObject( def = F2 := punkt(F2r[1], F2r[2] ); hide = true; );
+			        newObject( def = LO2v:= rot( LO1v ) );
+			        newObject( def = LU2v:= rot( LU1v ) );
+			        newObject( def = RO2v:= rot( RO1v ) );
+			        newObject( def = RU2v:= rot( RU1v) );
+			        newObject( def = IS2 := flaeche( { punkt(LO2v[1], LO2v[2]), punkt(LU2v[1], LU2v[2]), punkt(RU2v[1], RU2v[2]), punkt(RO2v[1], RO2v[2]) } ); target =rotation ; hide = true; );
+			         newObject( def = VP2 := gerade( E2, v2 ); color = blue; linestyle = dot; target = rotation; hide = true;);
+                   newObject( def = lb2 := gerade( E2, l2 ) ; color = green; target = rotation ; hide = true;);
+                   newObject( def = rb2 := gerade( F2, r2 ); color = green; target = rotation  ; hide = true;);
+                   newObject( def = FCP2 := gerade( A2, v2); color = red; target = rotation  ; hide = true;); 		// Front Clipping Plane
+                   newObject( def = BCP2 := gerade( D2, v2) ; color = magenta; target =rotation ; hide = true;);	
+                   newObject( def = proj2 := gerade( P2, P2.r ) ; target = rotation; linestyle = dash );
+                   newObject( def = O:=punkt(fix(0),fix(0)); target = rotation; hide = true);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="rotfac" to="1" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="rotfac:=1*1"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Scherung</strong>
+				<br/>Schere so in x-Richtung, dass der Bild-Bereich (grau) achsensymmetrisch zur y-Achse liegt. Aus P2 wird P3.</description>
+			<seq>
+				<script>
+			  newObject( def = m:=(E.r+F.r)/2-PRP.r  ; hide = true);
+				newObject( def = sffac:=0 ; hide = true );
+				newObject( def = sf := - m&lt;*&gt;vn/(m&lt;*&gt;nn)*sffac ; hide = true );
+                 newObject( def = shx(&lt;vektor&gt;r):=r.x+sf*r.y  ; hide = true);
+                 newObject( def =  P3:=punkt(fix(shx(P2.r)),fix(P2.y));  target =scherung ; hide = true;);
+                 newObject( def =  A3:=punkt(shx(A2.r),A2.y) ;  hide = true;);
+                 newObject( def =  D3:=punkt(shx(D2.r),D2.y) ;   hide = true;);
+                 newObject( def =  E3:=punkt(shx(E2.r),E2.y) ;   hide = true;);
+                 newObject( def =  F3:=punkt(shx(F2.r),F2.y) ;   hide = true;);
+                 newObject( def = shxv(&lt;vektor&gt;r):=vektor({shx(r),r.y}));
+                 newObject( def = LO3v := shxv(LO2v)  ; hide = true);
+                 newObject( def = LU3v := shxv(LU2v)  ; hide = true);
+                 newObject( def = RO3v := shxv(RO2v)  ; hide = true);
+                 newObject( def = RU3v := shxv(RU2v)  ; hide = true);
+                 newObject( def = IS3 := flaeche( { punkt(LO3v.x, LO3v.y), punkt(LU3v.x, LU3v.y), punkt(RU3v.x, RU3v.y), punkt(RO3v.x, RO3v.y) } ); target =scherung ; hide = true; );
+                 scherung.addGraph( name = VP2 );
+                 scherung.addGraph( name = FCP2 );         
+                 scherung.addGraph( name = BCP2 );   
+                 newObject( def =  l3:=E3.r-PRP1.r   );
+                  newObject( def = lb3:=gerade(E3,l3); color= green; target = scherung  );
+                  newObject( def = r3:=F3.r-PRP1.r );
+                  newObject( def = rb3:=gerade(F3,r3); color= green; target = scherung  );
+                  newObject( def = proj3 := gerade( P3, P3.r); linestyle = dash; target = scherung);
+                  scherung.addGraph( name = O);
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="sffac" to="1" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sffac:=1*1"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Skalierung</strong>
+				<br/>Skaliere:
+			<br/>In y-Richtung so, dass die hintere Abschneide-Ebene (magenta) bei y=1 zu liegen kommt und
+			<br/>in x-Richtung so, dass die äussersten Ecken des Bildbereichs bei den Koordinaten x=-1 bzw. x=1 zu liegen kommen. Aus P3 wird P4.</description>
+			<seq>
+				<script>
+			      newObject( def = sxfac:=0; hide = true );
+			      newObject( def = syfac:=0; hide = true );
+			      newObject( def = sx:=1-(1-2*(nn&lt;*&gt;E1.r)/(|v|*(nn&lt;*&gt;D1.r)))*sxfac; hide = true );
+			      newObject( def =sy:=1-(1-1/(nn&lt;*&gt;D1.r))*syfac ; hide = true );
+			      newObject( def = P4:=punkt(fix(P3.x*sx), fix(P3.y*sy)); target = skalierung  ;);
+			      newObject( def = A4:=punkt(A3.x*sx, A3.y*sy)  ;);
+			      newObject( def = D4:=punkt(D3.x*sx,D3.y*sy)  ;);
+			      newObject( def = E4:=punkt(E3.x*sx,E3.y*sy)  ;);
+			      newObject( def = F4:=punkt(F3.x*sx,F3.y*sy)  ;);
+			      newObject( def =  LO4:=punkt(PRP1.x*(1-Bfac)+E4.x*Bfac, PRP1.y*(1-Bfac)+E4.y*Bfac) ;);
+			      newObject( def =  LU4:=punkt(PRP1.x*(1-Ffac)+E4.x*Ffac, PRP1.y*(1-Ffac)+E4.y*Ffac) ;);
+			      newObject( def =  RO4:=punkt(PRP1.x*(1-Bfac)+F4.x*Bfac, PRP1.y*(1-Bfac)+F4.y*Bfac) ;);
+			      newObject( def = RU4:=punkt(PRP1.x*(1-Ffac)+F4.x*Ffac, PRP1.y*(1-Ffac)+F4.y*Ffac)  ;);
+			      newObject( def = IS4:=flaeche({LO4,LU4,RU4,RO4})  ;target = skalierung);
+			      newObject( def = VP4:=gerade(E4,e2x) ; color = blue; linestyle = dot; target = skalierung ;);
+			      newObject( def =  FCP4:=gerade(A4,e2x); color = red; target = skalierung ;);
+			      newObject( def =  BCP4:=gerade(D4,e2x); color = magenta; target = skalierung ;);
+			      newObject( def = l4:=E4.r-PRP1.r  ;);
+			      newObject( def = r4:=F4.r-PRP1.r  ;);
+			      newObject( def =  lb4:=gerade(E4,l4); color = green; target = skalierung ;);
+			      newObject( def =  rb4:=gerade(F4,r4); color = green; target = skalierung ;);
+			      newObject( def = proj4:=gerade(P4,P4.r) ; linestyle = dash; target = skalierung ;);
+			      skalierung.addGraph(name = O);
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="syfac" to="1" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="syfac:=1*1"/>
+				</call>
+				<animate object="main" parameterName="sxfac" to="1" end="5"/>
+				<call object="main" action="newObject">
+					<param type="String" value="sxfac:=1*1"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Nicht-affine Transformation</strong>
+				<br/>Einfacher als eine Zentralprojektion wäre natürlich eine Paralellprojektion auf die x-Achse zu berechnen.
+			<br/>Bildlich gesprochen erreiche wir diesen Effekt, indem wir den Betrachter entlang der y-Achse ins "Unendliche" ziehen.
+			<br/>Dadurch entstehen aus den beiden sich jetzt schneidenden grünen Geraden zwei parallele Geraden. Dies ist ein Effekt, der bei einer affinen Abbildung nicht auftreten kann. Der letzte Schritt besteht also (im Gegensatz zu allen anderen) aus einer nicht-affinen Transformation. 
+			</description>
+			<seq>
+				<script>
+				
+		       newObject( def = th:=0; hide = true );
+		       newObject( def = tnf:=0; hide = true );
+		       newObject( def = snf:=0; hide = true );
+		       newObject( def = i:=A4.y ; hide = true );
+		       newObject( def = narotx(&lt;vektor&gt;r):=r.x/(r.y*sin(th)+cos(th)) ; hide = true);
+		       newObject( def = naroty(&lt;vektor&gt;r):=((r.y*cos(th)-sin(th))/(r.y*sin(th)+cos(th))+tnf/i )*(1-(1-i/(1-i))*snf); hide = true);
+			      newObject( def = P5:=punkt(fix(narotx(P4.r)), fix(naroty(P4.r))); target = nichtaffin  ;);
+			      newObject( def = A5:=punkt(narotx(A4.r), naroty(A4.r)); );
+			      newObject( def = D5:=punkt(narotx(D4.r), naroty(D4.r)); );
+			      newObject( def = E5:=punkt(narotx(E4.r), naroty(E4.r)); );
+			      newObject( def = F5:=punkt(narotx(F4.r), naroty(F4.r)); );
+			      newObject( def = LO5:=punkt(narotx(LO4.r), naroty(LO4.r)); );
+			      newObject( def = RO5:=punkt(narotx(RO4.r), naroty(RO4.r)););
+			      newObject( def = LU5:=punkt(narotx(LU4.r), naroty(LU4.r)); );
+			      newObject( def = RU5:=punkt(narotx(RU4.r), naroty(RU4.r)); );
+			      newObject( def = nullv:=vektor({0,0}); hide = true );
+			      newObject( def = O5:=punkt(narotx(nullv), naroty(nullv)); );
+			      newObject( def = IS5:=flaeche({LO5,LU5,RU5,RO5})  ;target = nichtaffin);
+			      newObject( def = VP5:=gerade(E5,e2x) ; color = blue; linestyle = dot; target = nichtaffin ;);
+			      newObject( def =  FCP5:=gerade(A5,e2x); color = red; target = nichtaffin ;);
+			      newObject( def =  BCP5:=gerade(D5,e2x); color = magenta; target = nichtaffin ;);
+			      newObject( def =  lb5:=gerade(E5,LO5.r-LU5.r); color = green; target = nichtaffin ;);
+			      newObject( def =  rb5:=gerade(F5,RO5.r-RU5.r); color = green; target = nichtaffin ;);
+			      newObject( def = proj5:=gerade(P5,P5.r-O5.r) ; linestyle = dash; taget=nichtaffin; hide=true );
+
+			      
+
+
+
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="th" to="1.57" end="5"/>
+				<animate object="main" parameterName="tnf" to="1" end="5"/>
+				<animate object="main" parameterName="snf" to="1" end="5"/>
+			</seq>
+		</step>
+		<step>
+			<title>Der Bildpunkt</title>
+			<description>Der Bildpunkt B vom P läßt sich bei der jetzt vorliegenden Parallelprojektion einfach bestimmen: Er liegt auf der Bildebene, seine y-Koordinate stimmt mit der y-Koordinate des transformierten Punktes P5 überein. </description>
+			<seq>
+				<script>
+				 newObject( def = LO5:=punkt(-1, 1); );
+			      newObject( def = RO5:=punkt(1,1););
+			      newObject( def = LU5:=punkt(-1,0); );
+			      newObject( def = RU5:=punkt(1,0); );
+			      newObject( def = proj5:=gerade(P5,e2y) ; linestyle = dash; taget=nichtaffin; hide=true );
+			      newObject( def =  lb5:=gerade(LO5,e2y); color = green; target = nichtaffin ;);
+			      newObject( def =  rb5:=gerade(RO5,e2y); color = green; target = nichtaffin ;);
+			      newObject( def = VP5:=gerade(E5,e2x) ; color = blue; linestyle = dot; target = nichtaffin ;);
+			      newObject( def =  FCP5:=gerade(LU5,e2x); color = red; target = nichtaffin ;);
+			      newObject( def =  BCP5:=gerade(LO5,e2x); color = magenta; target = nichtaffin ;);
+
+
+			      
+
+			      newObject( def = B:=punkt(fix(P5.x), fix(E5.y) ); target = nichtaffin; hide = true );
+			      			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Normalisierungstransformation</title>
+			<description>Die oben gezeigten Schritte lassen sich zu einer Gesamt-Transformation zusammenfassen. 
+			<br/>Experimentieren Sie:
+			<br/>Verschieben des Betrachters, Verschieben von P, Verschieben der hinteren und vorderen Abschneideebene.</description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="start"/>
+					<col perc="50" name="nichtaffin"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				newObject( def =  nichtaffin.xMin:=-5 );
+			       newObject( def =  nichtaffin.xMax:=5 );
+			       newObject( def =  nichtaffin.yMin:=-5 );
+			       newObject( def =   nichtaffin.yMax:=3);
+			     			   </script>
+				<par>
+					<animate object="main" parameterName="nichtaffin.xMin" to="-1.5" end="5"/>
+					<animate object="main" parameterName="nichtaffin.xMax" to="1.5" end="5"/>
+					<animate object="main" parameterName="nichtaffin.yMin" to="-0.5" end="5"/>
+					<animate object="main" parameterName="nichtaffin.yMax" to="1.5" end="5"/>
+				</par>
+			</seq>
+		</step>
+	</body>
+</math4u2>

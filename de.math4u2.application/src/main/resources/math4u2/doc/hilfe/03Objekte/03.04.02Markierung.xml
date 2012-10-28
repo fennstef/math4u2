@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.02 Markierung</title>
+		<step>
+			<title>3.4.2 Markierung</title>
+			<description>		
+Die Markierung ist eine optisch und funktional reduzierte Variante des Punktes.
+
+<p/>Wenn eine bestimmte Stelle der Zeichenfläche mit einem Text beschrieben werden soll, dann steht
+hierfür das Text-Element (siehe 3.5.2 ) zur Verfügung.					
+
+<p/><strong>Markierung definieren</strong>
+<br/>Mit <code>m1:=marker(1,1)</code> wird eine Markierung mit den Koordinaten <code>(1,1)</code> erzeugt.
+Eine Markierung kann nicht mit der Maus bewegt werden.
+Der Name einer Markierung wird auf der Zeichenfläche nicht angezeigt.
+
+<p/><strong>Detailsicht</strong>
+<p/><img src="math4u2/doc/images/objekte/marker-detail01.jpg"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

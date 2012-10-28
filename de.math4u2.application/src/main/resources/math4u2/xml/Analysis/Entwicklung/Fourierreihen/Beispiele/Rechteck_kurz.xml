@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. Weiss</author>
+		<location>Analysis/Entwicklung/Fourierreihen/Beispiele</location>
+		<title>Rechteck - kurz</title>
+		<summary>Zeigt die Fourier-Entwicklung der Rechteck-Funktion</summary>
+		<keywords>
+			<keyword>Rechteck</keyword>
+			<keyword>Fourier-Reihe</keyword>
+			<keyword>Gibb</keyword>
+			<keyword>Gibbsches Phänomen</keyword>
+		</keywords>
+		<step>
+			<title>Fourier-Summe der Rechteckfunktion, Gibbsches Phänomen</title>
+			<description>Die Fourier-Summe für die Rechtekfunktion ist <f>$fd(f)</f>.
+				<br/>
+				<br/>Experimentieren Sie: Sie können die obere Summationsgrenze hier einstellen: <f>
+					<conf>n(style=dtext; width=4; pattern = ##0)</conf>n</f>. 
+					<br/>Wählen Sie z.B. die Werte <f>5,  50, 500</f>.<br/>
+			</description>
+			<layout>
+				<row perc="100">
+					<col perc="60" name="gesamt"/>
+					<col perc="40" name="detail"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			       deleteAll();
+			       expand( left = false; right = false );
+			      newObject( def = rechteck(x) :=sin(x)/abs(sin(x)) ; target = gesamt; hide = true );
+			      gesamt.setTitle(title="Gesamt");
+                   detail.setTitle(title="Detail");
+                   newObject(def = gesamt.xMin := -1);
+                   newObject(def = gesamt.xMax := 8);
+                   newObject(def = gesamt.yMin := -2);
+                   newObject(def = gesamt.yMax := 2);
+
+                   
+                   newObject(def = detail.xMin := 2.8);
+                   newObject(def = detail.xMax := 3.2);
+                   newObject(def = detail.yMin := 0.7);
+                   newObject(def = detail.yMax := 1.3);
+                   newObject( def = dx:= (detail.xMax - detail.xMin)/40; hide = true );
+                   newObject( def = dy:= (detail.yMax - detail.yMin)/40; hide = true );
+                   
+                   newObject(def = r:=kurvenzug( { punkt(detail.xMin+dx, detail.yMin+dx),
+															     punkt(detail.xMax-dx, detail.yMin+dx),
+															    	punkt(detail.xMax-dx, detail.yMax-dy),
+															   	punkt(detail.xMin+dx, detail.yMax-dy),
+															   	punkt(detail.xMin+dx, detail.yMin+dy) } );
+										color= blue;
+										target=gesamt; hide = true; );		
+					detail.addGraph( name = r );
+				newObject( def = n := 0 );
+				newObject( def = f(x) :=4/pi*sum(i, 0, n, sin( (2*i+1)*x)/(2*i+1)) ; color = red; target = gesamt );						
+				 detail.addGraph(name = f);
+				 detail.addGraph(name = rechteck);									 
+
+			    </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Interpolation</location>
+		<title>Newton-Interpolation V3</title>
+		<summary>Konstruktion eines Interpolationspolynoms nach der Idee von Newton</summary>
+		<step>
+			<title>Polynom-Interpolation: Aufgabenstellung</title>
+			<description>Die <em>Aufgabenstellung</em> bei der Polynom-Interpolation lautet:
+			<br/>Gegeben sind <f>n+1</f> Punkte <f>S[0]</f>, <f>S[1]</f>, ..., <f>S[n]</f> mit paarweise verschiedenen <f>x</f>-Koordinaten.
+		    <br/>Finde ein Polynom <f>p(x)</f> vom Grad <f>$void $le n</f>, das diese Punkte interpoliert, d.h. <f>p(S[0].x)=S[0].y</f>, ..., <f>p(S[n].x)=S[n].y</f>
+				<br/>
+			</description>
+			<seq>
+				<script>
+			  		deleteAll();
+					da.coordinateSystem(xMin=-3.5; xMax=3.5; yMin=-2; yMax=5);
+					expand(left=false; right=false);
+			         
+
+			  </script>
+			</seq>
+		</step>
+		<step>
+			<title>Das konkrete Beispiel</title>
+			<description>Gegeben sind hier <f>4+1=5</f> Punkte <f>S[0]</f>, <f>S[1]</f>, ..., <f>S[4]</f>.
+		    <br/>Finde ein Polynom <f>p(x)</f> vom Grad <f>$void $le 4</f>, das diese Punkte interpoliert, d.h. <f>p(S[0].x)=S[0].y</f>, ..., <f>p(S[4].x)=S[4].y</f>.
+		    <br/>Die Punkte sind jetzt oben farbig eingezeichnet. Sie können sie jederzeit mit der Maus bewegen und so experimentieren.
+		    <br/>In den folgenden Termen wird die x-Koodinate eines Punktes mit <f>S[i].x</f> angesprochen, seine y-Koordinate mit <f>S[i].y</f> .
+</description>
+			<seq>
+				<script>
+				newObject( def = S:=&lt;punkt>liste0({punkt(-0.4, 1.2),punkt(0.2, 2.5), punkt(0.6, 1.3), punkt(1.6,1.15), punkt(2.1, 1.3) }) ; target = da );
+			         newObject( def = m4:=marker(S[4].x, S[4].y) ; color = orange; target = da; hide = true;);
+					newObject( def = m3:=marker(S[3].x, S[3].y); hide = true; color = gray; target = da);
+					newObject( def = m2:=marker(S[2].x, S[2].y); hide = true; color = red; target = da);
+					newObject( def = m1:=marker(S[1].x, S[1].y); hide = true; color = blue; target = da);
+					newObject( def = m0:=marker(S[0].x, S[0].y); hide = true; color = green; target = da);
+					newObject( def = f0:=S[0].y);
+					newObject( def = f1:=S[1].y);
+					newObject( def = f2:=S[2].y);
+					newObject( def = f3:=S[3].y);
+					newObject( def = f4:=S[4].y);
+					newObject( def = f10:=(f1-f0)/(S[1].x-S[0].x));
+					newObject( def = f21:=(f2-f1)/(S[2].x-S[1].x));
+					newObject( def = f32:=(f3-f2)/(S[3].x-S[2].x));
+					newObject( def = f43:=(f4-f3)/(S[4].x-S[3].x));
+					newObject( def = f210:=(f21-f10)/(S[2].x-S[0].x));
+					newObject( def =f321:=(f32-f21)/(S[3].x-S[1].x) );
+					newObject( def = f432:=(f43-f32)/(S[4].x-S[2].x));
+					newObject( def = f3210:=(f321-f210)/(S[3].x-S[0].x));
+					newObject( def = f4321:=(f432-f321)/(S[4].x-S[1].x));
+					newObject( def = f43210:=(f4321-f3210)/(S[4].x-S[0].x));
+					newObject( def =aa:=-1;hide = true; );
+					newObject( def =a:=&lt;funktion>liste0({f0, f10, f210, f3210, f43210}) );
+				</script>
+				<script/>
+			</seq>
+		</step>
+		<step>
+			<title>Idee der Newton-Interpolation</title>
+			<description>Die zentrale Idee bei der Konstruktion des Interpolationspolynoms nach der Idee von Newton ist es, schrittweise vorzugehen:
+			<ul>
+					<li>Man startet mit einem Polynom <f>p[0](x)</f>, das den ersten Punkt <f>S[0]</f> "interpoliert".</li>
+					<li>Nun ergänzt man das Polynom <f>p[0](x)</f> "vorsichtig" so zu einem Polynom <f>p[1](x)</f>, dass dieses sowohl <f>S[0]</f> als auch <f>S[1]</f> interpoliert,</li>
+					<li>dann ergänzt man <f>p[1](x)</f> so zu einem Polynom <f>p[2](x)</f>, dass dieses zusätzlich den Punkt <f>S[2]</f> interpoliert,</li>
+					<li>dann ergänzt man <f>p[2](x)</f> ....</li>
+				</ul>
+			</description>
+			<seq>
+				<script>newObject( def = aa:=0.5 );
+			       newObject( def = a1:=aa*f10 );
+
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Einen Punkt interpolieren</title>
+			<description>Einen Punkt zu interpolieren ist einfach: wir nehmen ein Polynom vom Grad <f>0</f>: <f>p[0](x):=a[0]</f>, für den Parameter <f>a[0]</f> setzen wir <f>a[0]:=S[0].y</f>. Wir erhalten eine Parallele zur <f>x</f>-Achse durch den Punkt <f>S[0]</f>.</description>
+			<seq>
+				<script>
+			       newObject( def = a0:=f0 );
+			       newObject( def = p0(x) :=a[0]; color = green; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Der zweite Punkt</title>
+			<description>Um bei der zusätzlichen Interpolation des zweiten Punktes das Ergebnis aus dem ersten Schritt nicht wieder zu verlieren, gehen wir wie folgt vor: Wir addieren zum Ergebnis <f bgcolor="green">p[0](x):=a[0]</f> aus dem ersten Schritt ein lineares Polynom, das an der Stelle <f>S[0].x</f> eine Nullstelle hat: <f>l[1](x):=a[1]*(x-S[0].x)</f>. Die ensprechende Gerade ist oben schwarz gestrichelt eingezeichnet.</description>
+			<seq>
+				<script>
+			       
+			       newObject( def = g0:=gerade(punkt(S[0].x,0),e2y); color = green; linestyle = dot; target = da );
+			       newObject( def = p1a(x) :=a1*(x-S[0].x); linestyle = dash; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir diese beiden Polynome addieren, erhalten wir <f bgcolor="blue">p[1](x):=a[0]+a[1]*(x-S[0].x)</f>, die entsprechende Gerade ist jetzt blau eingezeichnet.
+		<br/>Über den Parameter <f>a[1]</f> können wir noch die Steigung beeinflussen ...</description>
+			<seq>
+				<script>
+			       deleteObject( name = p0 );
+			       deleteObject( name = p1a );
+			       newObject( def = p1(x) :=a[0]+ a1*(x-S[0].x) ; color = blue; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="aa" to="2" end="5"/>
+				<animate object="main" parameterName="aa" to="-1" end="5"/>
+				<animate object="main" parameterName="aa" to="0.5" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<description>Offensichtlich gibt es einen passenden Wert für die Steigung <f>a[1]</f>, er läßt sich aus den Koordinaten der Punkte auch leicht berechnen: <f>a[1]:=(S[1].y-S[0].y)/(S[1].x-S[0].x)</f>
+			</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="a1 :=f10"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Der dritte Punkt</title>
+			<description>Um nun bei der zusätzlichen Interpolation des dritten Punktes das Ergebnis aus den ersten beiden Schritten nicht wieder zu verlieren, gehen wir wie folgt vor: Wir addieren zum Ergebnis <f bgcolor="blue">p[1](x):=a[0]+a[1]*(x-S[0].x)</f> aus dem vorhergehenden Schritt ein quadratisches Polynom, das an den beiden Stelle <f>S[0].x</f> und <f>S[1].x</f> eine Nullstelle hat: <f>q[2](x):=a[2]*(x-S[0].x)*(x-S[1].x)</f>. 
+<br/>Die ensprechende Parabel ist oben schwarz gestrichelt eingezeichnet.</description>
+			<seq>
+				<script>
+			       newObject( def = g1:=gerade(punkt(S[1].x,0), e2y); color = blue; linestyle = dot ; target = da );
+			       newObject( def = a2:=aa*f210 );
+			       newObject( def = p2a(x) :=a2*(x-S[0].x)*(x-S[1].x); linestyle = dash; target = da ); 
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir nun diese beiden Polynome addieren, erhalten wir <f bgcolor="red">p[2](x) :=a[0] + a[1]*(x-S[0].x)+a[2]*(x-S[0].x)*(x-S[1].x)</f>, 
+			<br/>die entsprechende Parabel ist jetzt rot eingezeichnet.
+		<br/>Über den Parameter <f>a[2]</f> können wir deren Kümmung beeinflussen ...</description>
+			<seq>
+				<script>
+			       deleteObject( name = p1 );
+			       deleteObject( name = p2a );
+			       newObject( def = p2(x) :=a[0] + a[1]*(x-S[0].x)+a2*(x-S[0].x)*(x-S[1].x); color = red; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="aa" to="2" end="5"/>
+				<animate object="main" parameterName="aa" to="-1" end="5"/>
+				<animate object="main" parameterName="aa" to="0.5" end="3"/>
+			</seq>
+		</step>
+		<step>
+			<description>Offensichtlich gibt es einen Wert für <f>a[2]</f>, bei dem die rote Parabel zusätzlich den Punkte <f>S[2]</f> interpoliert. Hier ist es nicht so einfach, die Berechnungsvorschrift anzugeben, wie man aus den Punktkoordinaten den richtigen Wert für <f>a[2]</f> ermittelt. Wir werden diese Vorschrift etwas später angeben. 
+		   </description>
+		</step>
+		<step>
+			<description>Zunächst ist einfach der richtige Wert eingesetzt.</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="a2:=f210"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Der vierte Punkt</title>
+			<description>Jetzt ist wohl klar wie es weitergeht: Ein Polynom vom Grad <f>3</f> konstruieren, das bei den schon interpolierten Punkten Nullstellen hat,</description>
+			<seq>
+				<script>
+			      newObject( def = g2:=gerade(punkt( S[2].x,0) , e2y); color = red; linestyle = dot; target = da );
+			      newObject( def = a3:=aa*f3210 );
+			      newObject( def = p3a(x) :=a[3]*(x-S[0].x)*(x-S[1].x)*(x-S[2].x); linestyle = dash; target = da );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>zum Ergebnis aus dem vorhergehenden Schritt addieren, ergibt 
+			<br/>
+				<f bgcolor="gray">p[3](x) :=a[0] + a[1]*(x-S[0].x)+a[2]*(x-S[0].x)*(x-S[1].x)+a[3]*(x-S[0].x)*(x-S[1].x)*(x-S[2].x)</f>
+			</description>
+			<seq>
+				<script>
+			       deleteObject( name = p2 );
+			       deleteObject( name = p3a );
+			       newObject( def = p3(x) :=a[0] + a[1]*(x-S[0].x)+a[2]*(x-S[0].x)*(x-S[1].x)+a3*(x-S[0].x)*(x-S[1].x)*(x-S[2].x); color = gray; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>den Parameter <f>a[3]</f> so einstellen, dass man den nächsten Punkt <f>S[3]</f> trifft ...</description>
+			<seq>
+				<animate object="main" parameterName="aa" to="2" end="6"/>
+				<animate object="main" parameterName="aa" to="-0.5" end="3"/>
+				<animate object="main" parameterName="aa" to="1" end="4"/>
+				<call object="main" action="newObject">
+					<param type="String" value="a3:=f3210"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Der fünfte Punkt</title>
+			<description>Für den letzten Punkt entsprechend, insgesamt hat man dann das Polynom 
+			<f>p[4](x) :=a[0] + a[1]*(x-S[0].x)+a[2]*(x-S[0].x)*(x-S[1].x)+a[3]*(x-S[0].x)*(x-S[1].x)*(x-S[2].x)+a[4]*(x-S[0].x)*(x-S[1].x)*(x-S[2].x)*(x-S[3].x)</f>.</description>
+			<seq>
+				<script>
+			      deleteObject( name = g0 );
+			      deleteObject( name = g1 );
+			      deleteObject( name = g2 );
+			      deleteObject( name = p3 );
+			      newObject( def = a4:=f43210 );
+			      newObject(def = p4(x) :=a[0] + a[1]*(x-S[0].x)+a[2]*(x-S[0].x)*(x-S[1].x)+a[3]*(x-S[0].x)*(x-S[1].x)*(x-S[2].x)+a[4]*(x-S[0].x)*(x-S[1].x)*(x-S[2].x)*(x-S[3].x); color = orange; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Zur Bestimmung der Parameter <f>a[0]</f>, <f>a[1]</f>, <f>a[2]</f>, <f>a[3]</f> und <f>a[4]</f> zu den einzelnen Termen (Newton-Polynome) erhält man aus den Interpolationsbedingungen zunächst ein lineres Gleichungssystem. Da es in Dreiecksform vorliegt, kann man es direkt auflösen. <br/>Die tatsächliche Berechnung der Werte organisiert man wie in der Matrix unten dargestellt im Schema der sog. dividierten Differenzen. 
+		  </description>
+		</step>
+		<step>
+			<title>Die dividierten Differenzen
+		   </title>
+			<description>
+				<table>
+					<tr>
+						<td bgcolor="green">
+							<f>f[0]:=S[0].y</f>
+						</td>
+						<td bgcolor="lightGray"/>
+						<td bgcolor="lightGray"/>
+						<td bgcolor="lightGray"/>
+						<td bgcolor="lightGray"/>
+					</tr>
+					<tr>
+						<td>
+							<f>f[1]:=S[1].y</f>
+						</td>
+						<td bgcolor="blue">
+							<f>f[1,0]:=(f[1]-f[0])/(S[1].x-S[0].x)</f>
+						</td>
+						<td bgcolor="lightGray"/>
+						<td bgcolor="lightGray"/>
+						<td bgcolor="lightGray"/>
+					</tr>
+					<tr>
+						<td>
+							<f>f[2]:=S[2].y</f>
+						</td>
+						<td>
+							<f>f[2,1]:=(f[2]-f[1])/(S[2].x-S[1].x)</f>
+						</td>
+						<td bgcolor="red">
+							<f>f[2,1,0]:=(f[2,1]-f[1,0])/(S[2].x-S[0].x)</f>
+						</td>
+						<td bgcolor="lightGray"/>
+						<td bgcolor="lightGray"/>
+					</tr>
+					<tr>
+						<td>
+							<f>f[3]:=S[3].y</f>
+						</td>
+						<td>
+							<f>f[3,2]:=(f[3]-f[2])/(S[3].x-S[2].x)</f>
+						</td>
+						<td>
+							<f>f[3,2,1]:=(f[3,2]-f[2,1])/(S[3].x-S[1].x)</f>
+						</td>
+						<td bgcolor="gray">
+							<f>f[3,2,1,0]:=(f[3,2,1]-f[2,1,0])/(S[3].x-S[0].x)</f>
+						</td>
+						<td bgcolor="lightGray"/>
+					</tr>
+					<tr>
+						<td>
+							<f>f[4]:=S[4].y</f>
+						</td>
+						<td>
+							<f>f[4,3]:=(f[4]-f[3])/(S[4].x-S[3].x)</f>
+						</td>
+						<td>
+							<f>f[4,3,2]:=(f[4,3]-f[3,2])/(S[4].x-S[2].x)</f>
+						</td>
+						<td>
+							<f>f[4,3,2,1]:=(f[4,3,2]-f[3,2,1])/(S[4].x-S[1].x)</f>
+						</td>
+						<td bgcolor="orange">
+							<f>f[4,3,2,1,0]:=(f[4,3,2,1]-f[3,2,1,0])/(S[4].x-S[0].x)</f>
+						</td>
+					</tr>
+				</table>
+			</description>
+		</step>
+		<step>
+			<description>In der ersten Spalte dieser Matrix stehen <f>y</f>-Koordinaten der Punkte <f>S[0]</f>, ..., <f>S[4]</f>, die Werte der restlichen Elemente ergeben sich durch die angegebene Berechnungsvorschrift.
+<br/>Die gesuchten Linearfaktoren sind die Diagonalelemente dieser Matrix: 
+<br/>
+				<f bgcolor="green">a[0]:=f[0]</f>, <f bgcolor="blue">a[1]:=f[1,0]</f>, <f bgcolor="red">a[2]:=f[2,1,0]</f>, <f bgcolor="gray">a[3]:=f[3,2,1,0]</f>, <f bgcolor="orange">a[4]:=f[4,3,2,1,0]</f>.
+			  
+			</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="a0:=f0"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="a1:=f10"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="a2:=f210"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="a3:=f3210"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="a4:=f43210"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Interpretation
+		   </title>
+			<description>Neben der Werten in der ersten Spalte (<f>y</f>-Koordinaten der Punkte) kann man auch die Werte in der zweiten Spalte noch einfach geometrisch interpretieren: Hier steht jeweils die Steigung der Verbindungsgerade zwischen zwei benachbarten Punkten.
+		   </description>
+		</step>
+		<step>
+			<title>Experimente</title>
+			<description>Experimentieren Sie:
+<ul>
+					<li>Die Interpolation funktioniert auch, wenn Sie z.B. den Punkt <f>S[3]</f> rechts vom Punkt <f>S[4]</f> plazieren.</li>
+					<li>Die Interpolation schlägt fehl, wenn Sie zwei Punkte bei der gleichen <f>x</f>-Koordinaten (d.h. übereinander) plazieren. Warum? An welcher Stelle bricht die Rechnung zusammen?</li>
+					<li>Wenn man alle Punkte beim gleichen <f>y</f>-Wert plaziert, erhält man als Interpolationskurve eine Parallele zur <f>x</f>-Achse. Rekonstruieren Sie am Schema der dividierten Differenzen, dass sich dort dann tatsächlich <f>f[1,0]=f[2,1,0]=f[3,2,1,0]=f[4,3,2,1,0]=0</f> ergibt, d.h. dass im Interpolationspolynom alle Koeffizienten zu <f>x</f> und höheren Potenzen in <f>x</f> den Wert <f>0</f> haben.</li>
+					<li>Analog: Wenn man alle Punkte auf einer Gerade beliebiger Steigung positioniert, stellt das Interpolationspolynom natürlich wieder diese Gerade dar. Wie ergibt sich dieser Sachverhalt im Schema der dividierten Differenzen?</li>
+				</ul>
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>M.Weiss</author>
+		<location>/Physik/Elektrostatik</location>
+		<title>Punktpotentiale</title>
+		<summary/>
+		<step>
+			<title>dipol</title>
+			<description>
+Dokument vom 20.09.2005
+			</description>
+			<layout>
+				<row perc="50.0">
+					<col perc="33" name="da1"/>
+					<col perc="34" name="da2"/>
+					<col perc="33" name="da3"/>
+				</row>
+				<row perc="50.0">
+					<col perc="33" name="da4"/>
+					<col perc="34" name="da5"/>
+					<col perc="33" name="da6"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+deleteAll();
+newObject( def = cutoff := 2 ; select = true );
+expand(left=false;right=true);
+da1.coordinateSystem(xMin=-2;  xMax=2; yMin=-2; yMax=2;);
+newObject(def=punktpot(xp,yp,x,y) := 1/(sqrt((xp-x)^2+(yp-y)^2)););
+
+newObject(
+	def=B1 := punkt(0,0);
+);
+
+
+
+newObject(def=pot1(x,y) := punktpot(B1.x, B1.y, x, y) );
+newObject(
+	def=k1 := karte(pot1,vektor({-20,20}));
+	target=da1;);
+	
+	newObject( def = v1(x,y):=vektor({pderive(pot1(x,y), x), pderive(pot1(x,y),y)}) );    
+newObject( def = nv1(x,y) := 0.25*v1(x,y) );
+			       newObject( def = g1:=feld(nv1,punkt(0,0), da1.xDist/2, da1.yDist/2,cutoff,  NV); target = da1 ); 
+
+
+
+
+
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		   da2.coordinateSystem(xMin=-2;  xMax=2; yMin=-2; yMax=2;);
+		   newObject(
+	def=B2 := punkt(0,0);
+);
+newObject(def=pot2(x,y) := -punktpot(B1.x, B1.y, x, y) );
+newObject(
+	def=k2 := karte(pot2,vektor({-20,20}));
+	target=da2; );
+	newObject( def = v2(x,y):=vektor({pderive(pot2(x,y), x), pderive(pot2(x,y),y)}) );    
+newObject( def = nv2(x,y) := 0.25*v2(x,y) );
+			       newObject( def = g2:=feld(nv2,punkt(0,0), da2.xDist/2, da2.yDist/2,cutoff,  NV); target = da2 ); 
+
+
+
+
+
+		   
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		   da3.coordinateSystem(xMin=-2;  xMax=2; yMin=-2; yMax=2;);
+		   newObject(
+	def=B := punkt(0.5,0);
+);
+
+newObject(
+	def=A := punkt(-0.5,0);
+);
+
+newObject(def=pot3(x,y) := punktpot(A.x, A.y, x, y)-punktpot(B.x, B.y, x, y););
+newObject( def=k := karte(pot3,vektor({-20,20})); target=da3; );
+newObject( def = v3(x,y):=vektor({pderive(pot3(x,y), x), pderive(pot3(x,y),y)}) );    
+newObject( def = nv3(x,y) := 0.25*v3(x,y) );
+			       newObject( def = g3:=feld(nv3,punkt(0,0), da3.xDist/2, da3.yDist/2,cutoff,  NV); target = da3 ); 
+
+
+
+		   
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		   da4.coordinateSystem(xMin=-2;  xMax=2; yMin=-2; yMax=2;);
+		   newObject(def=q1 := punkt(-1,-1););
+newObject(def=q2 := punkt(-1,1););
+	newObject(def=q3 := punkt(1,1););
+		newObject(def=q4 := punkt(1,-1););
+
+
+
+newObject(def=pot4(x,y) := punktpot(q1.x, q1.y, x, y)-punktpot(q2.x, q2.y, x, y)+punktpot(q3.x, q3.y, x, y)-punktpot(q4.x, q4.y, x, y););
+newObject( def=k4 := karte(pot4,vektor({-20,20})); target=da4; );
+newObject( def = v(x,y):=vektor({pderive(pot4(x,y), x), pderive(pot4(x,y),y)}) );    
+newObject( def = nv(x,y) := 0.25*v(x,y));
+			       newObject( def = g:=feld(nv,punkt(0,0), da4.xDist/2, da4.yDist/2,cutoff,  NV); target = da4 ); 
+
+
+
+		   
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+				newObject( def = dist:=1; select = true );
+		     da5.coordinateSystem(xMin=-2;  xMax=2; yMin=-2; yMax=2;);
+
+		      newObject( def = pot5(x,y):=sum(i,0,4, punktpot(-1+0.5*i, dist, x, y) ) -sum(i,0,4, punktpot(-1+0.5*i, -dist, x, y) ));
+     newObject( def=k5 := karte(pot5,vektor({-20,20})); target=da5; );
+     newObject( def = v5(x,y):=vektor({pderive(pot5(x,y), x), pderive(pot5(x,y),y)}) );    
+newObject( def = nv5(x,y) := 0.25*v5(x,y));
+			       newObject( def = g5:=feld(nv5,punkt(0,0), da5.xDist/2, da5.yDist/2,cutoff,  NV); target = da5 ); 
+
+
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		     da6.coordinateSystem(xMin=-2;  xMax=2; yMin=-2; yMax=2;);
+
+		      newObject( def = pot6(x,y):=0.45*(sum(i,0,11, punktpot(-1+i/5, dist, x, y) ) -sum(i,0,11, punktpot(-1+i/5, -dist, x, y)) ));
+     newObject( def=k6 := karte(pot6,vektor({-20,20})); target=da6; );
+     newObject( def = v6(x,y):=vektor({pderive(pot6(x,y), x), pderive(pot6(x,y),y)}) );    
+newObject( def = nv6(x,y) := 0.25*v6(x,y) );
+			       newObject( def = g6:=feld(nv6,punkt(0,0), da6.xDist/2, da6.yDist/2,cutoff,  NV); target = da6 ); 
+
+
+		    </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

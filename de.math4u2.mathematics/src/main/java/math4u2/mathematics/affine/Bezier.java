@@ -252,7 +252,7 @@ public class Bezier extends AbstractAffineObject implements
 		try {
 			broker.propagateChange(startPoint);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'p1' (" + getIdentifier()
+			ExceptionManager.doError("Fehler bei der Methode 'p1' (" + getKey()
 					+ ").", e);
 		}
 		return null;
@@ -286,7 +286,7 @@ public class Bezier extends AbstractAffineObject implements
 		try {
 			broker.propagateChange(startDirPoint);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'p2' (" + getIdentifier()
+			ExceptionManager.doError("Fehler bei der Methode 'p2' (" + getKey()
 					+ ").", e);
 		}
 		return null;
@@ -320,7 +320,7 @@ public class Bezier extends AbstractAffineObject implements
 		try {
 			broker.propagateChange(endPoint);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'p3' (" + getIdentifier()
+			ExceptionManager.doError("Fehler bei der Methode 'p3' (" + getKey()
 					+ ").", e);
 		}
 		return null;
@@ -354,7 +354,7 @@ public class Bezier extends AbstractAffineObject implements
 		try {
 			broker.propagateChange(endPoint);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'p4' (" + getIdentifier()
+			ExceptionManager.doError("Fehler bei der Methode 'p4' (" + getKey()
 					+ ").", e);
 		}
 		return null;

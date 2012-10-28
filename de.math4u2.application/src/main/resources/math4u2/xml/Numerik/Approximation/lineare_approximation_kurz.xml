@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>unknown</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Approximation</location>
+		<title>Ausgleichsgerade - kurz</title>
+		<step>
+			<title>Ausgleichsgerade - Aufgabenstellung</title>
+			<description>
+		   Bei technischen Messungen oder naturwissenschaftlichen Experimenten nimmt man häufig eine Reihe von Messpunkten auf, von denen bekannt ist, dass ihre Lage einer bestimmten Gesetzmäßigkeit genügen sollte. 
+<br/>Im einfachsten Fall erwartet man, dass sämtliche Messpunkte auf einer Gerade liegen.
+		   </description>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false; right=false);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Experiment</title>
+			<description>Auf Grund von Messfehlern erhält man oft Punkte, die nicht alle auf einer Gerade liegen.
+		<br/>Man versucht eine Gerade zu finden, die alle Punkte möglichst gut approximiert.
+			<br/>Über den grünen Punkt und Pfeil soll  die Gerade so plaziert werden, dass die rechts gezeigte Abweichung minimal wird.</description>
+			<layout>
+				<row perc="100">
+					<col perc="80" name="Experiment"/>
+					<col perc="20" name="Abweichung"/>
+				</row>
+			</layout>
+			<seq>
+				<script>				
+					Experiment.setTitle(title="Experiment");
+          
+					Experiment.coordinateSystem(xMin=-4; xMax=5; yMin=-7; yMax=6);
+
+					newObject( def = p:=&lt;punkt&gt;liste({  
+							punkt( fix(-3), -3),
+               				punkt( fix(-2),-3.3),
+                            punkt( fix(-1.2), -1.6),
+							punkt( fix(1.5), 1.3),
+                            punkt( fix(2.5),3),
+                            punkt( fix(3.2), 3.4),
+                            punkt( fix(4), 4.0) }) ; 
+							
+						target = Experiment;
+					);
+                
+					newObject(def = bf:=punkt( fix(0), -2); color = green;);      
+					newObject( def = vf := vektor( {fix(1), 1.5}) );
+					newObject( def = rf := pfeil( bf, vf ); color = green; );
+					newObject( def =bb:=bf.y);                                                     
+					newObject( def = aa:=vf[2]);                                                           
+					newObject( def = f(x):=  aa*x + bb; target = Experiment; color = blue;  );
+					modifyObject( name = rf; target = Experiment );
+					modifyObject( name = bf; target = Experiment );
+					newObject(  def = pf:=&lt;punkt&gt;liste(i,7, punkt(p[i].x, f(p[i].x))) );
+					newObject( def = s1 := strecke(p[1], pf[1]); color = red; target = Experiment );             
+					newObject( def = s2 := strecke(p[2], pf[2]); color = red; target = Experiment );
+					newObject( def = s3 := strecke(p[3], pf[3]); color = red; target = Experiment );
+					newObject( def = s4 := strecke(p[4], pf[4]); color = red; target = Experiment );
+					newObject( def = s5 := strecke(p[5], pf[5]); color = red; target = Experiment );
+					newObject( def = s6 := strecke(p[6], pf[6]); color = red; target = Experiment );
+					newObject( def = s7 := strecke(p[7], pf[7]); color = red; target = Experiment );
+						
+					Experiment.setTitle(title="Experiment");
+					Abweichung.setTitle(title="Abweichung");
+
+					newObject( def= Abweichung.xMin := -0.5 );
+					newObject( def= Abweichung.xMax := 2 );
+					newObject( def= Abweichung.yMin := -1 );
+					newObject( def= Abweichung.yMax := 25);
+
+                    newObject( def = fehler := sum(i,1,7, (p[i].y-f(p[i].x))^2 ) );
+					newObject( def = fehlerv:=vektor({fehler}); color = red; target = Abweichung );
+                                     
+			 		newObject( def = D := 7*(  sum(i,1,7,p[i].x^2)   )-(  sum(i,1,7,p[i].x)   )^2    );
+					newObject( def = Db := 7*( sum(i,1,7,p[i].x*p[i].y) ) - ( sum(i,1,7,p[i].x) ) * ( sum(i,1,7, p[i].y) ) );
+					newObject( def = Da := ( sum( i,1,7, p[i].x^2) ) * ( sum ( i,1,7, p[i].y) ) - ( sum(i,1,7, p[i].x*p[i].y)  ) * ( sum(i,1,7, p[i].x)  ) );
+					newObject( def = a:= Da/D );
+					newObject( def = b := Db/D);
+					newObject( def = g(x):= a + b*x; linestyle = dash; color = magenta;  );   
+					newObject( def = minfehler := sum(i,1,7, (p[i].y-g(p[i].x))^2 ) );   
+					newObject( def = mfg(x):= minfehler; color = magenta; linestyle = dash; target = Abweichung );          
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title/>
+			<description>Die beste Lösung läßt sich rechnerisch ermitteln. Sie ist jetzt gestrichelt eingezeichnet.
+			<br/>Experimentieren Sie! Sie können auch die Punkte verschieben.</description>
+			<seq>
+				<script>
+		     Experiment.addGraph( name = g );
+		  </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

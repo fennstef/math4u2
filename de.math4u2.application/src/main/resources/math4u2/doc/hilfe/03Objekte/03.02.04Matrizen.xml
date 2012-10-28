@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.2 Datentypen</location>
+		<title>3.2.4 Matrizen</title>
+		<step>
+			<title>3.2.4 Matrizen</title>
+			<description>			
+<p/><strong>Definieren über eine Zeilenliste</strong>
+<br/>Die Elemente einer Matrix können Zahlen oder Terme aus Zahlen und Parametern sein. 
+Wenn man zuvor mit <code>a:=2</code> einen Parameter definiert hat, dann erhält man mit
+<br/><code>zm := matrix({ {a*1, a*2, a*3 }, {a*4, a*5, a*6}, {a*7, a*8, a*9} })</code>
+<br/>eine quadratische Matrix der Ordnung 3. Die erste Zeile enthält die Elemente (Terme)
+<code>a*1</code>, <code>a*2</code> und <code>a*3</code>.
+
+<br/>Die Definition <code>pm := matrix({ {1, 2, 3}, {0, 1, 2} })</code> erzeugt eine 
+2x3-Matrix mit den Elementen <code>1</code>, <code>2</code>, <code>3</code> in der ersten Zeile.
+
+<p/>Allgemein werden die Zeilen durch Kommata getrennt aufgezählt, die Aufzählung wird in Klammern
+<code>{}</code> eingeschlossen. Jede Zeile ist ihrerseits wieder eine Liste von Elementen, diese werden wiederum
+in <code>{}</code> eingeschlossen.
+
+<p/><strong>Definieren über eine Vorschrift</strong>
+<br/>Wenn sich alle Elemente einer Matrix durch einen allgemeinen Term beschreiben 
+lassen, dann kann die Matrix mit Hilfe dieses Terms erzeugt werden wie 
+<br/><code>zm1 := matrix( zei, 3 , spa, 4, (-1)^(zei+spa) )</code>.
+<p/>
+Die Parameter haben der Reihe nach folgende Bedeutung:
+<ul>
+	<li>lokaler Zeilenindex, hier: <code>zei</code>,</li>
+	<li>Anzahl der Zeilen, hier <code>3</code>,</li>
+	<li>lokaler Spaltenindex, hier <code>spa</code>,</li>
+	<li>Anzahl der Spalten, hier <code>4</code> und</li>
+	<li>allgemeiner Term für die Initialisierung, hier <code>(-1)^(zei+spa)</code>.</li>
+</ul>
+So entsteht eine 3x4-Matrix mit den Elementen (Termen)
+<code>(-1)^(1+1)</code>, <code>(-1)^(1+2)</code>, <code>(-1)^(1+3)</code> 
+und <code>(-1)^(1+4)</code> in der ersten Zeile.
+
+<p/><strong>Matrix durch ASCII-Datei initialisieren</strong>
+<br/><command>Dateiauswahl durch Pfadangabe</command>
+<br/>In der Definition <code>mat1:=matrix( finput:C:/work/temp/testmat.txt )</code> bewirkt das
+Schlüsselwort <code>finput</code>, dass die Komponenten der Matrix <code>mat1</code> aus der Datei mit 
+dem Pfad <code>C:/work/temp/testmat.txt</code> eingelesen werden.
+<br/>Das Schlüsselwort und die Pfadangabe werden dabei durch einen Doppelpunkt getrennt.
+
+<p/><command>Dateiauswahl durch Benutzerdialog</command>
+<br/>Wenn wie bei <code>mat2:=matrix( finput )</code> keine Datei angegeben ist, wird der Pfad 
+beim Laden der Definition über einen Benutzerdialog ermittelt.
+
+<p/><command>Struktur der ASCII-Datei</command>
+<br/>Die Komponenten einer Matrix werden dabei in einer ASCII-Datei zeilenweise durch Zahlen 
+angegeben. Folgende Daten erzeugen eine Matrix mit drei Zeilen und 4 Spalten:
+<br/><code>1.23 1.0e-4 -23.77 -17.23</code>
+<br/><code>1 2 4 5</code>
+<br/><code>-123.555 0 1 1e-12</code>
+<br/>Die einzelnen Komponenten einer Zeile werden durch Leerzeichen oder Tabulatoren voneinander
+getrennt.
+
+<p/><strong>Matrizen in ASCII-Datei exportieren</strong>
+<br/>Bei nullstelligen matrixwertigen Funktionen wie <code>m:=matrix({1,2},{1,3})</code> oder 
+<code>w:=m*m/3</code> kann das aktuelle Ergebnis in eine ASCII-Datei exportiert werden. 
+Dazu klickt man mit der rechten Maustaste auf das entsprechende Element der Definitions- oder 
+Detailliste und startet über das Menüelement <strong>Exportieren ...</strong> den Speicherdialog.
+<p/>Zunächst werden aus dem vorliegenden Term die aktuellen Werte der Komponenten berechnet. Diese
+werden zeilenweise als Gleitpunktzahlen, durch Tabulatoren getrennt, in der Datei abgelegt.
+
+<p/><strong>Matrixwertige Funktionen</strong>
+<br/>Matrixwertige Funktionen werden ähnlich wie skalare Funktionen definiert:
+<br/><code>mm(x):=matrix({ {1, x, x^2, x^3}, { 1*x, 2*x, 3*x, 4*x} })</code> oder
+<br/><code>mm1(x):=matrix(i, 4, k, 4, x^(i+k))</code> .
+<br/>Mehrstellige matrixwertige Funktionen sind möglich.
+
+
+<p/><strong>Auf Elemente zugreifen</strong>
+<ul>
+	<li>
+Zugriff auf Elemente einer Matrix:
+<br/>Wie in <code>t:=zm[1,2]</code> greift man auf ein Element einer 
+Matrix <code>zm</code> durch Angabe eines Zeilenindex (hier: 1) und eines 
+Spaltenindex (hier: 2) zu. Beide Angaben können durch einen Term gegeben
+sein. Der Term muss zum Zeitpunkt der Auswertung einen gültigen Index liefern. 
+Indexwerte werden abgerundet.
+	</li>
+	<li>
+Zugriff auf Ergebnis-Elemente eines Matrix-Terms:
+<br/>Wie bei <code>(mat1*mat2-3*mat3)[1,3]</code> muss man den Term zuerst 
+mit <code>()</code> klammern, dann
+erfolgt durch Angabe der entsprechenden Indices der Zugriff auf das gewünschte Element.		
+	</li>
+	<li>
+Zugriff auf Elemente einer matrixwertigen Funktion:
+<br/>Auf die Elemente einer matrixwertigen Funktion wie <code>mm1(x)</code> oder
+<code>m2(x):=mm1(x)*mm1(x*x)</code> greift man zu, indem man zuerst durch Angabe 
+eines Arguments eine Ergebnismatrix berechnet und anschließend durch Angabe eines 
+Indexpaars das gewünschte Element auswählt, wie z.B. bei <code>a:=m2(1.7)[1,2]</code> oder
+<code>f(x):=m2(x*x)[2,3]</code> oder <code>g(x):=(mm1(x*x)+mm1(x)*mm1(x))[3,4]</code>.		
+	</li>
+</ul>
+
+<p/><strong>Methoden</strong>
+<ul>
+	<li>
+Zeilenzahl
+<br/>Für Matrizen wie <code>zm</code>, <code>pm</code> und <code>zm1</code> von oben 
+liefert die Methode <code>.zeilen</code> die Anzahl der Zeilen, also liefert z.B. 
+zur 2x3-Matrix <code>pm := matrix({ {1, 2, 3}, {0, 1, 2} })</code> der Ausdruck
+<code>pm.zeilen</code> den Wert 2.
+<br/>Definiert man hier zusätzlich die 3x4-Matrix <code>rm:=matrix(i,3,k,4,i+k)</code> und 
+das Produkt <code>pr:=pm*rm</code>, dann liefert <code>pr.zeilen</code> den Wert 2.		
+	</li>
+	<li>
+Spaltenzahl
+<br/>Die Methode <code>.spalten</code> liefert analog die Anzahl der Spalten einer Matrix. 
+Im obigen Beispiel liefert <code>pr.spalten</code> den Wert 4.	
+	</li>	
+</ul>
+<br/>Diese Methoden sind nur auf einzelne Matrizen anwendbar, nicht aber auf Matrix-Terme.
+<strong>Ungültig</strong> ist also ein Ausdruck wie <code>(pm*rm).zeilen</code>.	
+
+<p/><strong>Wichtige Funktionen für Matrizen</strong>
+Für zwei Matrizen <code>mat1</code> und <code>mat2</code> und eine quadratische 
+Matrix <code>qmat</code> berechnet (bei passenden Zeilen- und Spaltendimensionen):
+<ul>
+	<li><code>mat1 + mat2</code> : Summe</li>
+	<li><code>mat1 - mat2</code> : Differenz</li>
+	<li><code>mat1*mat2</code> : Matrixprodukt</li>
+	<li><code>| mat1 |</code> : Frobenius-Norm</li>
+	<li><code>det(qmat)</code> : Determinante</li>
+	<li><code>inverse(qmat)</code>:Inverse Matrix, falls <f>det(qmat) != 0</f>.</li>
+	<li>
+<code>solvelin(qmat,inhom)</code> : Lösung des linearen Gleichungssystems mit der 
+Koeffizientenmatrix <code>qmat</code> und der Inhomogenität <code>inhom</code>, falls 
+<f>det(qmat) != 0</f>.
+	</li>
+</ul>
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,1221 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>logReg</name>
+				<import>java.util</import>
+				<import>java.awt.image</import>
+				<with-graph/>
+				<result-type>MatrixType</result-type>
+				<arguments>
+					<!-- Start der Iteration -->
+					<argument type="ScalarType" name="x0"/>
+					<!-- Anzahl an Iterationen, die nicht gezeichnet werden soll -->
+					<argument type="ScalarType" name="n0"/>
+					<!-- Angabe, wie weit gezeichnet werden soll -->
+					<argument type="ScalarType" name="xEnd"/>
+				</arguments>
+				<method><![CDATA[
+		public void paint(Graphics2D g, DrawAreaInterface da){
+			g.setColor(getColor());
+			
+			HashMap map = (HashMap) cache;
+			double x0 = ((Double)map.get("x0")).doubleValue();
+			double n0 = ((Double)map.get("n0")).doubleValue();
+			double xEnd = ((Double)map.get("xEnd")).doubleValue();	
+	
+			double oldXMin = 0;
+			double oldXMax = 0;
+			double oldYMin = 0;
+			double oldYMax = 0;	
+			double oldX0 = 0;
+			double oldN0 = 0;
+			if(map.get("oldXMin")!=null){
+				oldXMin = ((Double)map.get("oldXMin")).doubleValue();
+				oldYMin = ((Double)map.get("oldYMin")).doubleValue();
+				oldXMax = ((Double)map.get("oldXMax")).doubleValue();
+				oldYMax = ((Double)map.get("oldYMax")).doubleValue();
+				oldX0 = ((Double)map.get("oldX0")).doubleValue();
+				oldN0 = ((Double)map.get("oldN0")).doubleValue();
+			}
+	
+			int width = da.getWidth();
+			int height = da.getHeight();
+			double xMax = da.getXMax();
+			double xMin = da.getXMin();
+			double yMax = da.getYMax();
+			double yMin = da.getYMin();
+	
+			if(oldXMax!=xMax || oldYMax!=yMax || oldXMin!=xMin || oldYMin!=yMin || oldX0!=x0 || oldN0!=n0){
+				map.put("oldXMax",new Double(xMax));
+				map.put("oldYMax",new Double(yMax));
+				map.put("oldXMin",new Double(xMin));
+				map.put("oldYMin",new Double(yMin));
+				map.put("oldX0",new Double(x0));
+				map.put("oldN0",new Double(n0));
+	
+				double[][] pixels = new double[width][];
+				for(int i=0; i<width; i++){
+					double r = da.xPixToCoord(i);	
+					double x = x0;
+					if(x<0) x=0;
+					if(x>1) x=1;
+					
+					int maxSize=3000;
+					LinkedList list = new LinkedList();
+					double oldX = x;
+					int hits = 0;
+					
+					for(int j=0; j<n0; j++){
+						x = r * (1-x)*x;
+					}//for j
+	
+					for(int j=0; j<maxSize; j++){
+
+						x = r * (1-x)*x;
+						int y = da.yCoordToPix(x);
+						if(y<0 || y>height) continue;
+		
+						list.add(new Double(x));
+						hits++;
+						if(hits==60){
+							break;
+						}
+						if(oldX==x) break;
+					}//for j
+
+	
+					pixels[i] = new double[list.size()];
+					int k=0;
+					for(Iterator iter = list.iterator(); iter.hasNext();k++){
+						pixels[i][k]=((Double)iter.next()).doubleValue();
+					}//for iter
+				}//for i
+	
+				BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				for(int i=0; i<width-10; i++){
+					for(int j=0; j<pixels[i].length; j++){
+						int y = da.yCoordToPix(pixels[i][j]);
+						if(y<0 || y>height) continue;
+	
+						try{
+						image.setRGB(i,y,0xFF000000);				
+						}catch(Throwable t){}
+					}//for j
+				}//for i
+				map.put("pixels", image);
+			}
+			BufferedImage image = (BufferedImage)map.get("pixels");
+			int imgWidth = da.xCoordToPix(xEnd);
+			g.drawImage(image,0,0,imgWidth,height,0,0,imgWidth,height,null);
+		}//paint
+	]]></method>
+				<method><![CDATA[
+		public Object eval(Object[] args) throws MathException{
+			int k=0;
+			double x0 = ((Result) args[k++]).getScalar();
+			double n0 = ((Result) args[k++]).getScalar();
+			double xEnd = ((Result) args[k++]).getScalar();	
+			
+			if(cache==null) cache = new HashMap();
+			HashMap map = (HashMap) cache;
+			map.put("x0", new Double(x0));
+			map.put("n0", new Double(n0));	
+			map.put("xEnd", new Double(xEnd));
+			return null;
+		}
+	]]></method>
+			</function>
+		</define>
+	</head>
+	<body>
+		<author>Fenn/Weiss</author>
+		<location>/Chaos</location>
+		<title>Logistische Abbildung - Ein Weg ins Chaos</title>
+		<summary/>
+		<step>
+			<title>Logistische Abbildung - Ein Weg ins Chaos</title>
+			<description>Die logistische Abbildung wurde ursprünglich vom belgischen Mathematiker und Sozilogen Pierre François Verhulst (1804 - 1949) eingeführt. Er modellierte damit das Wachstumsverhalten einer Population bei begrenzten Ressourcen.  
+<br/>Die logistische Abbildung ist ein Beispiel dafür, wie komplexes, chaotisches Verhalten aus einer einfachen nichtlinearen Abbildung (Gleichung) entstehen kann.
+		   </description>
+			<seq>
+				<script>
+		    deleteAll();
+		      expand(left=none;right=none);
+		       newObject( def = daXMin := -0.4 );
+		        newObject( def = daXMax := 1.2 );
+		         newObject( def = daYMin := -0.24 );
+		          newObject( def = daYMax :=1.12 );
+		       newObject( def = da.xMin := fix( daXMin) );
+		       newObject( def = da.xMax := fix( daXMax) );
+		       newObject( def = da.yMin := fix( daYMin) );
+		       newObject( def = da.yMax := fix( daYMax) );
+newObject(def=a := 0.17; select=true;min = 0; max = 1);
+
+
+
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Modellbildung: Wachstum einer Population</title>
+			<description>Im Folgenden entwickeln wir ein Modell für das Wachstum einer bestimmten Population von Lebewesen. 
+			<br/>Zu Beginn der Beobachtung hat die Population eine bestimmte Größe  <f>x_0</f>. 
+			<br/>
+				<f>x_0</f> wird im folgenden auch als <strong>Startwert</strong> bezeichnet.
+			<br/>Ein Jahr später notieren wir wieder die Größe der Population, diesen Wert bezeichnen wir mit <f>x_1</f>, ein Jahr später haben wir den Wert <f>x_2</f>, ....
+<br/>Diese so aufeinander folgenden Zahlenwerte <f>x_0,x_1,x_2,$dots</f> werden in der Mathematik als <strong>Zahlenfolge</strong>  bezeichnet. 
+			<br/>Dabei beschreiben die Werte <f>x_0,x_1,$dots</f> nicht die Anzahl der Mitglieder der Population, sondern sie sind die Maßzahl bezüglich einer Grundeinheit (z.B. 100000). Die Grundeinheit sei so gewählt, dass eine Maßzahl <f>x_i</f> in aller Regel einen Wert <f>0$lex_i$le1</f> hat. 
+
+
+</description>
+		</step>
+		<step>
+			<title>Einfaches Wachstumsgesetz: Exponentielles Wachstum</title>
+			<description>Zur konkreten Modellierung des Wachstums brauchen wir ein Wachstumsgesetz. Wir gehen zunächst von der einfachen Idee aus, dass sich die Größe der Population von einem Jahr bis zum nächsten jeweils um einen Faktor <f>k$gt1</f> erhöht. Damit lassen sich die Werte der Folge einfach berechnen: Startwert <f>x_0</f>, dann <f>x_1=k*x_0,x_2=k^2*x_0, x_3=k^3*x_0,$dots</f>, die Größe ist damit im <f>n</f>-ten Jahr allgemein: <f>x_n=k^n*x_0</f>. Ein Wachstum mit dieser Gesätzmäßigkeit <f>x_n=k^n*x_0</f> wird als <strong>exponentielles Wachstum</strong>  bezeichnet. Der Faktor <f>k</f> heißt <strong>Reproduktionsrate</strong>.
+<br/>Eine Vorschrift, die der Berechnung eines Wertes einer Folge aus den vorhergehenden Werten zugrunde liegt, wird als <strong>Iterationsvorschrift</strong> bezeichnet. Ein exponentielle Wachstum hat  die Iterationsvorschrift <f>x[n+1]=k*x_n</f>.
+
+		   </description>
+		</step>
+		<step>
+			<title>Graphische Darstellung</title>
+			<description>Jetzt soll die Zahlenfolge graphisch konstruiert und dargestellt werden. Der Grund dafür ist, dass man an dieser graphischen Darstellung später interessante Phänomene sehen kann, die man bei einer rein zahlenmäßigen Darstellung nur sehr viel schwerer erkennt.
+<br/>Zunächst markieren wir den Startwert <f>x_0</f> auf der vertikalen Achse.
+</description>
+			<seq>
+				<script>
+          
+
+newObject(def=k := 2; select=true;min=0; max= 4);
+newObject( def = ka:= k; hide = true );
+
+newObject( def = m0 := text(punkt(0,a),"Startwert <f>x_0</f>",B_SW) ; target = da; color = blue );
+newObject( def = fa:=0);
+
+           </script>
+			</seq>
+		</step>
+		<step>
+			<description>Weiter zeichnen wir den Graphen der Funktion <f>y=k*x</f>, diese Funktion soll als <strong>Wachstumsfunktion</strong> bezeichnet werden. Wir wollen sie schon jetzt etwas abstrakter mit <f>f(x)</f> bezeichnen. Sie spielt nämlich die zentrale Rolle. Später soll dann der Funktionsterm <f>k*x</f> der Wachstumsfunktion durch einen anderen (etwas realistischeren) Term ersetzt werden - und dann treten phantastische Phänomene auf.
+		  </description>
+			<seq>
+				<script>
+		     newObject(def=f(x) := k*x; target=da; color = green);
+newObject( def = mf := text(punkt(0.45,f(0.45)),"Wachstumsfunktion: 
+<br/>
+					<f>y=f(x)=k*x</f>
+					<br/>
+					<f>
+						<conf>ka(style = eval; width = 8; pattern= 0.00000)</conf>k=ka</f>",B_SE) ; target = da; color = green );
+
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ausserdem benötigen wir den Graphen der Funktion <f>y=x</f>, das ist die <strong>Winkelhalbierende</strong>  (im 1. und 3. Quandranten).
+		  </description>
+			<seq>
+				<script>
+		      newObject(def=g(x) := x; target=da;linestyle = dot);
+		      newObject( def = mg := text(punkt(0.5,g(0.5)),"Winkelhalbierende: <br/>
+					<f>y=x</f>",B_SE) ; target = da; color = gray );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Graphische Konstruktion der Folge</title>
+			<description>Das Ziel der folgenden Konstruktion ist es, die Werte der Folge <f>x_0,x_1=k*x_0,x_2=k^2*x_0, x_3=k^3*x_0,$dots</f> graphisch zu konstruieren und auf der vertikalen Achse aufzutragen. Wir zeigen den ersten (Iterations-)Schritt vom Startwert <f>x_0</f> zum Wert <f>x_1=k*x_0</f> ausführlich:
+		</description>
+		</step>
+		<step>
+			<title>Erster Iterationsschritt</title>
+			<description>Zunächst bewegen wir uns ausgehend vom Startwert <f>x_0</f> auf der vertikalen Achse horizontal zum Punkt (<f>x_0</f>, <f>x_0</f>) der Winkelhalbierenden, ...
+		    </description>
+			<seq>
+				<script>
+		      newObject( def = s1y := strecke(punkt(0,a),punkt(fa*a,a)); linestyle = dot; color = blue; target = da );
+animate( name = fa; from = 0; to = 1; end = 10 );
+newObject( def = m0w:= text( punkt( a,a), "(<f>x_0</f>, <f>x_0</f>)", B_NW ); color = blue; target = da );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>von dort aus vertikal zum Wert <f>x_0</f> der horizontalen Achse, ...
+		   </description>
+			<seq>
+				<script>
+		     newObject( def = fax:=a);
+		     newObject( def = s1x := strecke(punkt(a,a),punkt(a,fax)); linestyle = dot; color = blue; target = da );
+		     animate( name = fax;  to = 0; end = 10 );
+newObject( def = m1x := text(punkt(a,0),"<f>x_0</f>",B_SE) ; target = da; color = blue );
+
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>jetzt ermittlen wir mit dem Graphen der Wachstumsfunktion <f>f(x)</f>den zugehörigen Funktionswert <f>f(x_0)=k*x_0</f>,
+			</description>
+			<seq>
+				<script>
+				deleteObject( name = m0w);
+		       newObject( def = faa:=0);
+		       newObject( def = x_1 := f(a) );
+		       newObject( def = s2y := strecke(punkt(a,0),punkt(a, faa*x_1)); linestyle = dot; color = blue; target = da );
+animate( name = faa; from = 0; to = 1; end = 10 );
+		       newObject( def = m1f:= text( punkt(a, x_1), "(<f>x_0</f>, <f>f(x_0)=k*x_0</f>)", B_SE); target = da; color = red);
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>zuletzt tragen wir den gefundenen Wert wieder auf die vertikale Achse ab.
+		  </description>
+			<seq>
+				<script>		       newObject( def = faaa:=1);
+		      newObject( def = s2 := strecke(punkt(a,f(a)),punkt(faaa*a,f(a))); linestyle = dot; color = blue; target = da );
+		      animate( name = faaa; from = 1; to = 0; end = 10 );
+		      newObject( def = m1 := text(punkt(0,f(a)),"1. Iterationswert: <f>x_1=f(x_0)</f>",B_NW) ; target = da; color = blue );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Insgesamt haben wir so im ersten Iterationsschritt aus dem Startwert <f>x_0</f> den 1. Iterationswert <f>x_1</f> konstuiert.
+		<br/>Ausgehend von der Größe <f>x_0</f> hat die Population nach einem Jahr die Größe <f>x_1</f>.
+			</description>
+		</step>
+		<step>
+			<title>Zweiter Iterationsschritt</title>
+			<description>Der zweite Iterationsschritt geht analog:</description>
+		</step>
+		<step>
+			<description>Wert <f>x_1</f> über den Punkt (<f>x_1</f>, <f>x_1</f>) der Winkelhalbierenden auf die horizontale Achse abtragen,</description>
+			<seq>
+				<script>
+		     deleteObject( name =m1x, m1f);
+		     newObject( def = m1w:= text( punkt( x_1,x_1), "(<f>x_1</f>, <f>x_1</f>)", B_NW ); color = blue; target = da );
+		     newObject( def = s3y:= strecke( punkt( 0, x_1 ), punkt( x_1, x_1)); target = da; linestyle = dot; color = blue );
+		      newObject( def = s2x:= strecke( punkt( x_1, x_1 ), punkt( x_1, 0)); target = da; linestyle = dot; color = blue );
+		      newObject( def = m2x := text(punkt(x_1,0),"<f>x_1</f>",B_SE) ; target = da; color = blue );
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>zugehörigen Fuktionswert <f>x_2=k*x_1</f> über den Graphen von <f>f(x)=k*x</f> ermitteln und auf die vertikale Achse übertragen.</description>
+			<seq>
+				<script>
+		     deleteObject( name = m1w);
+		     newObject( def = x_2 := f( x_1) );
+		      newObject( def = m2f:= text( punkt(x_1, x_2), "(<f>x_1</f>, <f>f(x_1)=k*x_1</f>)", B_SE); target = da; color = red);
+
+		     newObject( def = s2f:= strecke( punkt( x_1, 0 ), punkt( x_1, x_2)); target = da; linestyle = dot; color = blue );
+		      newObject( def = s2fy:= strecke( punkt( x_1, x_2 ), punkt( 0, x_2)); target = da; linestyle = dot; color = blue );
+		      newObject( def = m2 := text(punkt(0,x_2),"2. Iterationswert: <f>x_2=f(x_1)</f>",B_NW) ; target = da; color = blue );
+
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Das Wesentliche an der Konstruktion sind eigentlich die beiden blau durchgezogenen Stufen,</description>
+			<seq>
+				<script>
+				deleteObject( name = m2x, m2f);
+				newObject(def=n := 4; select=true;min = 0; max = 200);
+newObject(def=n1 := 0; select=true;min = 0; max = 100);
+		       newObject(def=la := &lt;skalar>folge(i, { a },f(la[i-1])););
+newObject(def=la1 := &lt;skalar>folge(i, { la[2] },la[i+1]););
+newObject(def=ff := &lt;skalar>folge(i, {a  },la[floor(i/2+1/2)]););
+newObject(def=ff1 := &lt;skalar>folge(i, { },ff[floor(2*n1)+i]););
+newObject(def=ff2 := &lt;skalar>folge(i, { },ff[floor(2*n1)+i+1]););
+newObject(def=kf := &lt;skalar>folge(i, {  },k););
+newObject(def=pf1 := punktFolge(ff1,ff2,n,3, S); fillcolor=blue; bordercolor=blue; target=da;);
+		      newObject( def = s3 := strecke(punkt(f(a),f(f(a))),punkt(0,f(f(a)))); linestyle = dot; color = blue; target = da );
+		         
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>alles andere lassen wir jetzt weg.</description>
+			<seq>
+				<script>
+		           modifyObject( name = m1; visible = false);
+		        modifyObject( name = m2; visible = false);
+		        //modifyObject( name = mf; visible = false);
+		        modifyObject( name = mg; visible = false);
+		        //modifyObject( name = s1y; visible = false);
+		        modifyObject( name = s1x; visible = false);
+		        modifyObject( name = s2y; visible = false);
+		        modifyObject( name = s2; visible = false);
+		        modifyObject( name = s2x; visible = false);
+		        modifyObject( name = s2f; visible = false);
+		        modifyObject( name = s2fy; visible = false);
+		        modifyObject( name = s3y; visible = false);
+		        modifyObject( name = s3; visible = false);
+		        
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>Weitere Iterationsschritte</title>
+			<description>Für die weiteren Iterationsschritte ändern wir den Ausschnitt, 
+			<br/>bei der Konstruktion  können wir uns sicher auf dieses Wesentliche beschränken, die Konstruktion weiterer Stufen.</description>
+			<par>
+				<script>
+		       animate( name = daXMin ; to = -1.0;end = 20 );
+		       animate( name = daXMax ; to = 6; end = 20 );
+		       animate( name = daYMin ; to = -1.1; end = 20 );
+		       animate( name = daYMax ; to = 6; end = 20 );
+		    </script>
+			</par>
+		</step>
+		<step>
+			<description>Wert zur Winkelhalbierenden übertragen,</description>
+			<seq>
+				<script>
+		      newObject( def = n := 5 );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>von dort zum Graphen und neuen Funktionswert ermitteln.</description>
+			<seq>
+				<script>
+		      newObject( def = n := 6 );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Das Wesentliche ist der durchgezogene Treppenzug. Nochmal:</description>
+			<seq>
+				<script>
+		      newObject( def = n := 8 );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		    animate( name = n ; to = 10; end = 4 );
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Grenzenloses Wachstum</title>
+			<description>Jetzt sehen wir deutlich, was im Lauf der Jahre passieren wird: 
+		<br/>Die Größe der Population wird von Jahr zu Jahr stärker zunehmen, sie wird letztlich über alle Grenzen wachsen.
+		<br/>Dies ist auch der Fall, wenn wir eine kleinere Reproduktionsrate <f>1$ltk</f> wählen, d.h. wenn wir die Steigung <f>k</f>der "Reproduktionsgeraden" kleiner machen, aber noch im Bereich <f>1$ltk</f> bleiben.</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+				deleteObject( name = s1x, s2y, s2, s3y, s2x, s2f, s2fy, s3 );
+		        animate( name = k; to = 1.5; end = 10 );
+		        
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Der jährliche Zuwachs ist jetzt anfangs kleiner, nach genügend vielen Schritten wird die Population aber auch jetzt  beliebig groß.
+		</description>
+			<seq>
+				<script>
+		  animate( name = n; to = 20; end = 10 );
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Zurück zur ursprünglichen Situation:</description>
+			<seq>
+				<script>
+		        animate( name = k; to =2; end = 5 );
+		      </script>
+			</seq>
+			<par>
+				<script>
+		       animate( name = daXMin ; to = -0.4;end = 10 );
+		       animate( name = daXMax ; to = 1.2; end = 10 );
+		       animate( name = daYMin ; to = -0.24; end = 10 );
+		       animate( name = daYMax ; to = 1.12; end = 10 );
+		    </script>
+			</par>
+		</step>
+		<step>
+			<title>Kleine Reproduktionsrate: Die Population stribt aus</title>
+			<description>Ganz anders sieht die Situation aus, wenn wir eine Reproduktionsrate <f>0 $lt k $lt 1</f>, konkret <f>k=0.7</f> wählen:</description>
+		</step>
+		<step>
+			<description>Mit jedem Iterationsschritt wird die Population kleiner, sie ist zum Aussterben verurteilt.</description>
+			<seq>
+				<script>
+		        animate( name = k; to = 0.7; end = 10 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Und wieder zurück zum Wert <f>k=2</f>.</description>
+			<seq>
+				<script>
+		        animate( name = k; to =2; end = 10 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>Realistisches Wachstumsgesetz</title>
+			<description>Das gezeigte Wchstumsgesetz, das letzlich zu einem exponentiellen Wachstum (oder Aussterben) führt, ist auf lange Zeit gesehen nicht realistisch. 
+			<br/>Realistischer ist es sicher, wenn man davon ausgeht, dass sich eine schon sehr große Population irgendwann nicht mehr sehr stark vermehren kann, weil z.B. einfach nicht mehr genügend Futter (allgemein: Ressourcen) vorhanden ist. 
+<br/>Dies können wir dadurch modellieren, dass wir die feste Reproduktionsrate <f>k</f> durch eine Rate <f>k(x)</f>ersetzen, die selbst von der Größe <f>x</f>der Population abhängig ist. Ein sehr einfacher Modellansatz dafür ist <f>k(x)=k*(1-x)</f>.
+<br/>Solange die Population klein ist (<f>x</f> deutlich kleiner als <f>1</f>), haben wir fast den ursprünglichen Faktor <f>k</f>, wenn <f>x</f> größer wird, reduziert sich die Reproduktionsrate und damit das Wachstum.
+          <br/>Die  <strong>Iterationsvorschrift</strong> lautet jetzt: <f>x[n+1]=k*(1-x_n)*x_n</f>,
+				<br/>die <strong>Wachstumsfunktion</strong>
+				<f>f(x)=k*(1-x)*x</f> ist ein Polynom vom Grad <f>2</f>.
+			</description>
+		</step>
+		<step>
+			<description>Der Graph der neuen Wachstumsfunktion ist jetzt oben eingezeichnet: Eine nach unten geöffnete Parabel.
+			<br/>Jetzt wollen wir wieder einige Iterationsschritte ausgehend von einem Startwert <f>x_0</f>verfolgen:</description>
+			<seq>
+				<script>
+				da.setTitle( title = "Logistische Abbildung");
+		    newObject(def=k := 2.8; select=true;min=0; max= 4);
+newObject(def=n := 2; select=true;min = 0; max = 200);
+newObject(def=n1 := 0; select=true;min = 0; max = 100);
+newObject(def=f(x) := k*x*(1-x); target=da;);
+newObject( def = mf := text(punkt(0.8,f(0.8)),"Wachstumsfunktion
+<br/>
+					<f>y=f(x)=k*(1-x)*x</f>
+					<br/>
+					<f>
+						<conf>ka(style = eval; width = 8; pattern= 0.00000)</conf>k=ka</f>",B_NE) ; target = da; color = green );	
+					newObject( def = n:= 1);	    
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Im ersten Schritt findet ein deutliches Wachstum statt.
+		</description>
+			<seq>
+				<script>newObject(def=n := 2);
+				modifyObject( name = m1; visible = true);
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Das Wachstum im zweiten Schritt ist vergleichbar groß wie das im ersten Schritt, obwohl die Population schon größer ist.
+		</description>
+			<seq>
+				<script>newObject(def=n :=4);
+				modifyObject( name = m2; visible = true);
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Im dritten Schritt nimmt die Größe der Population jetzt ab.
+		</description>
+			<seq>
+				<script>newObject(def=n := 6);
+						     newObject( def = m3 := text(punkt(0,f(f(f(a)))),"3. Iterationswert: <f>x_3=f(x_2)</f>",B_SE) ; target = da; color = blue );
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>In den folgenden Schritten werden die Veränderungen immer kleiner, die Größe nähert sich einem Grenzwert.
+		   </description>
+			<seq>
+				<script>
+		        animate( name = n ; to = 30; end = 10 );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir diese Schritte alle so ausführlich an der vertikalen Achse markieren wollten, würde die Darstellung sehr schnell sehr unübersichtlich.
+		<br/>Wir markieren jeden Wert deshalb nur mit einem kleinen roten Punkt auf der vertikalen Achse.</description>
+			<seq>
+				<script>
+		    newObject( def = n := 6 );
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Das hat allerdings den Nachteil, dass wir die Reihenfolge der Werte nicht mehr nachvollziehen können.
+		  <br/>Für das, was wir später zeigen wollen, ist das allerdings nicht so schlimm: Wir wollen später vor allem sehen, welche Werte vorkommen,
+		  die Reihenfolge ist dann nicht mehr ganz so wichtig.</description>
+			<seq>
+				<script>
+		        deleteObject( name = m1, m2, m3 );
+		        newObject( def = n_max:= 3);
+		        newObject(def =  n := 2*n_max -1);
+		         newObject( def = k :=2.5 );
+		       newObject(def=f2(p,x) := p*x*(1-x); );
+			  newObject(def=la_L := &lt;skalar>folge(i, { a },f2(k,la_L[i-1])););
+newObject(def=ff_L := &lt;skalar>folge(i, {  },la_L[floor(n1+i)]););
+
+newObject(def=kf_L:= &lt;skalar>folge(i, {  },0););
+
+newObject(
+	def=pf_L := punktFolge(kf_L,ff_L,n_max,2, P); 
+	fillcolor=255.51.0.127; 
+	bordercolor=255.51.0; 
+	target=da;
+);
+
+		        
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Zusätzlich haben wir oben jetzt eine Anzeige eingeblendet, die den höchsten Index <f>n_max</f> anzeigt, zu dem der entsprechende Iterationswert <f>x_n</f>gezeichnet wird.
+		</description>
+			<seq>
+				<script>
+		      //newObject( def = nMax:= floor( n/2 ) );
+		      newObject( def =tn:= text( punkt( 0.6,-0.05), "<f>n_max</f>: <f>
+						<conf>n_max(style = eval; width = 5; pattern= ###0)</conf>n_max</f>",POSTIT); target = da; color = orange );
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir mehr Interationswerte konstruieren, nähern sich die Werte immer näher an einen Wert an, den sog. <strong>Grenzwert der Folge</strong>.
+			<br/>In der Graphik sind wegen der beschränkten Auflösung die letzten Schritte leider nicht mehr wahrzunehmen.
+		  </description>
+			<seq>
+				<script>
+		         animate( name = n_max; to = 80; end = 10 );
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Änderung des Startwerts</title>
+			<description>Jetzt wollen wir untersuchen, was passiert, wenn wir den Startwert der Folge verändern: 
+		<br/>Achten Sie bei der folgenden Animation auf den Grenzwert.
+		</description>
+		</step>
+		<step>
+			<seq>
+				<script>animate( name = a; to = 1; end = 10);
+		     animate( name = a; to = 0.03; end = 10 );
+		     animate( name = a; to = 0.17; end = 10 );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Man sieht: Der Grenzwert ist unabhängig vom Startwert <f>x_0</f>.
+		</description>
+		</step>
+		<step>
+			<title>Erste Folgenglieder ausblenden</title>
+			<description>Wir wollen diesen Grenzwert jetzt näherungsweise graphisch einfach so markieren, dass wir die Werte ganz am Anfang der Folge, die deutlich 
+		vom Startwert abhängen, einfach nicht zeichnen.  
+		<br/>Eine weitere Anzeige zeigt jetzt den Index <f>n_start</f> des ersten gezeichneten Folgenglieds.</description>
+			<seq>
+				<script>
+		      newObject( def = nStart := floor( n1 ) );
+		       newObject( def =tn1:= text( punkt( 0.1,-0.05), "<f>n_start</f>: <f>
+						<conf>nStart(style = eval; width = 5; pattern= ###0)</conf>nStart</f>",POSTIT); target = da; color = orange );
+		  </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir <f>n_start</f> genügend groß machen, markieren die restlichen Glieder der Folge alle den gleichen Punkt der Zeichenfläche, obwohl sich die Werte natürlich leicht unterscheiden und nicht exakt mit dem Grenzwert übereinstimmen.
+<br/>Auf der vertikalen Achse ist nur noch ein roter Punkt zu sehen, dieser markiert den Grenzwert.</description>
+			<seq>
+				<script>
+		        animate( name = n1; to = 2; end = 5 );
+		        animate( name = n1; to = 3; end =3 );
+		        animate( name = n1; to = 5; end = 4 );
+		        animate( name = n1; to = 20; end = 5 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt machen wir die Reproduktionsrate <f>k</f> kleiner.
+		  </description>
+			<seq>
+				<script>
+		    animate( name = k; to = 1.8; end = 10 );
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Das Bild bleibt im Prinzip sehr ähnlich, der Grenzwert verschiebt sich etwas, er wird ebenfalls kleiner.</description>
+		</step>
+		<step>
+			<title>Stabiler Bereich</title>
+			<description>Die <f>k</f>-Werte aus dem bisher untersuchten Bereich  haben eines gemeinsam: 
+		<br/>Für jedes <f>k</f>nähern sich die Iterationswerte  nach anfänglichen Schwankungen einem bestimmten Grenzwert. 
+		<br/>Im Populationsmodell heißt das: Nach anfänglichen Schwankungen nähert sich die Größe der Population über die Jahre immer mehr einem "stabilen" Wert (dem Grenzwert). 
+<br/>Der bisher untersuchte Bereich der <f>k</f>-Werte wird deshalb auch als <strong>stabiler Bereich</strong> bezeichnet.</description>
+		</step>
+		<step>
+			<title>Periodischer Bereich</title>
+			<description>Wenn wir die Reproduktionsrate <f>k</f> deutlich größer machen, passiert plötzlich etwas seltsames:</description>
+			<seq>
+				<script>
+		     animate( name = k; to = 3.1; end = 20 );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir die ersten Iterationswerte hinter uns haben, pendelt die Folge abwechselnd zwischen zwei Werten.</description>
+			<seq>
+				<script>
+		      newObject( def = na := 1 );
+		   newObject(def = n1:=1 );
+		   newObject( def = nInd := n1+na );
+		   newObject( def = mn := text(punkt(0,ff_L[na]),"<f>
+						<conf>nInd(style = eval; width = 4; pattern= ##0)</conf>x[nInd]</f>",B_NW) ; target = da; color = blue );
+           
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>  animate( name = na; to = 20; end = 20 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Im Populationsmodell: Die Größe der Population nimmt in zwei aufeinander folgeden Jahren zwei verschhiedene Werte an. Nach <strong>2</strong> Jahren wiederholen sich diese Werte, nach jeweils zwei weiteren Jahren wieder. Man spricht kurz von einer <strong>Periode der Länge 2</strong>
+			</description>
+		</step>
+		<step>
+			<description>Wenn wir die Reproduktionsrate nochmals erhöhen, ergibt sich wieder eine neue Situation:
+		  </description>
+			<seq>
+				<script>
+		        animate( name = k; to = 3.47; end = 10 );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Folge pendelt jetzt zwischen vier Werten.
+			<br/>Wir haben eine <strong>Periode der Länge 4</strong>, die Länge der Periode hat sich von <f>2</f> auf <f>4</f> verdoppelt.
+			<br/>Dieses Phänomen wird als <strong>Periodenverdopplung</strong> bezeichnet.
+		  </description>
+			<seq>
+				<script>
+		     newObject( def = na := 1 );
+		               animate( name = na; to = 20; end = 20 );
+
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt sind sie dran: Mit den Schiebereglern können Sie die wichtigen Größen einstellen:<br/>
+				<f>k</f>: <f>
+					<conf>k(style=slider;min=2;max=4.2)</conf>k</f>
+				<f>n_start</f>: <f>
+					<conf>n1(style=slider;min=1;max=100)</conf>n1</f>
+				<f>n_max</f>: <f>
+					<conf>n_max(style=slider;min=1;max=200)</conf>n_max</f>
+				<br/>Experimentieren Sie: Interessant wird es, wenn sich der Wert von <f>k</f> der <f>3.6</f> nähert.
+		   </description>
+			<seq>
+				<script>
+		         deleteObject( name = mn );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>In Abhängigkeit von <f>k</f> ergeben sich offenbar viele grundsätzlich unterschiedliche Situationen.
+		  <br/>Diese wollen wir jetzt systematisch protokollieren. Dazu richten wir ein zweites Koordinatensystem ein:</description>
+		</step>
+		<step>
+			<description>Auf der horizontalen Achse wird der Wert der Reproduktionsrate <f>k</f>aufgetragen.
+		<br/>Über einem bestimmten Wert von <f>k</f> soll dann das Muster aufgetragen werden, das die Folgenglieder bilden.
+		</description>
+			<layout>
+				<row perc="100.0">
+					<col perc="50" name="da"/>
+					<col perc="50" name="da2"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				da2.setTitle( title = "Feigenbaum-Szenario");
+				modifyObject( name = tn; visible = false);
+				modifyObject( name = tn1; visible = false);
+		      newObject( def = rInf := 3.569945 );
+		      newObject( def =rInfGer := gerade(punkt(rInf,0),e2y); target = da2 );
+		      newObject( def = rSta := flaeche({punkt(1,-10), punkt(3, -10), punkt(3, 10), punkt(1,10)}); visible = false; color = magenta ; target = da2 );
+		     newObject( def = rPer := flaeche({punkt(3,-10), punkt(rInf, -10), punkt(rInf, 10), punkt(3,10)}); visible = false; color = green ; target = da2 );
+		     newObject( def = rCha := flaeche({punkt(rInf, -10), punkt(4, -10), punkt(4,10), punkt(rInf, 10)}); visible = false; color = blue ; target = da2 );
+		     newObject( def = mSta := text(punkt(2.8,0.2),"Stabiler Bereich",B_NW); visible = false; color = magenta; target = da2 );
+		     newObject( def =mPer := text(punkt(3.4,0.4),"Periodischer Bereich",B_NW); visible = false; color = green; target = da2 );
+		     newObject( def =mCha := text(punkt(3.9,0.6),"Chaorischer Bereich",B_NW); visible = false; color = blue; target = da2 );
+		     
+	
+
+		   newObject( def = n2LogStart := max(500, 50 /sqrt( da2.yMax - da2.yMin )) );
+		    da2.coordinateSystem(xMin=-0.4;xMax=5;yMin=-0.2406481415751627;yMax=1.1248264041977645;);
+			 
+			 newObject( def =  km := text(punkt(da2.xMax,0),"<f>k</f>",K_W); target = da2; color = green );
+			 modifyObject( name = mf; visible = false );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Fangen wir mal an: Für <f>k=2.5</f> ergibt sich ein Grenzwert.</description>
+			<seq>
+				<script>
+				newObject( def = n1:= 20 );
+				   animate( name = k; to = 2.5; end = 10 );
+				
+			 
+			   newObject( def = gk:=gerade( punkt(k, 0), e2y); linestyle = dot; target = da2 );
+			  		     
+			  		     newObject(def=kf_R:= &lt;skalar>folge(i, {  },k););
+
+newObject(
+	def=pf_R := punktFolge(kf_R,ff_L,n,2, P); 
+	fillcolor=255.51.0.127; 
+	bordercolor=255.51.0; 
+	target=da2;
+);
+
+                  
+                      newObject(def=la_2 := &lt;skalar>folge(i, { a },f2(2.5,la_2[i-1])););
+newObject(def=ff_2 := &lt;skalar>folge(i, {  },la_2[floor(n1+i )]););
+newObject(def=kf_2 := &lt;skalar>folge(i, {  },2.5););
+
+
+newObject(
+	def=pf_2 := punktFolge(kf_2,ff_2,n,1, P); 
+	fillcolor=255.51.0.127; 
+	bordercolor=255.51.0; 
+	target=da2;
+);
+			  
+
+
+ </script>
+			</seq>
+		</step>
+		<step>
+			<description>Ebenso für <f>k=1.8</f>
+			</description>
+			<seq>
+				<script>
+                   animate( name = k; to = 1.8; end = 10 );
+                      newObject(def=la_3 := &lt;skalar>folge(i, { a },f2(1.8,la_3[i-1])););
+newObject(def=ff_3 := &lt;skalar>folge(i, {  },la_3[floor(n1+i )]););
+newObject(def=kf_3 := &lt;skalar>folge(i, {  },1.8););
+
+
+newObject(
+	def=pf_3 := punktFolge(kf_3,ff_3,n,1, P); 
+	fillcolor=255.51.0.127; 
+	bordercolor=255.51.0; 
+	target=da2;
+);
+
+                   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Bei <f>k=3.1</f> pendelt die Folge zwischen zwei Werten.
+             </description>
+			<seq>
+				<script>
+                    animate( name = k; to = 3.1; end = 10 );
+                      newObject(def=la_4 := &lt;skalar>folge(i, { a },f2(3.1,la_4[i-1])););
+newObject(def=ff_4 := &lt;skalar>folge(i, {  },la_4[floor(n1+i )]););
+newObject(def=kf_4 := &lt;skalar>folge(i, {  },3.1););
+
+
+newObject(
+	def=pf_4 := punktFolge(kf_4,ff_4,n,1, P); 
+	fillcolor=255.51.0.127; 
+	bordercolor=255.51.0; 
+	target=da2;
+);
+
+
+                   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Bei <f>k=3.5</f> pendelt die Folge zwischen vier Werten.
+             </description>
+			<seq>
+				<script>
+                    animate( name = k; to = 3.5; end = 10 );
+                      newObject(def=la_5 := &lt;skalar>folge(i, { a },f2(3.5,la_5[i-1])););
+newObject(def=ff_5 := &lt;skalar>folge(i, {  },la_5[floor(n1+i )]););
+newObject(def=kf_5 := &lt;skalar>folge(i, {  },3.5););
+
+
+newObject(
+	def=pf_5 := punktFolge(kf_5,ff_5,n,1, P); 
+	fillcolor=255.51.0.127; 
+	bordercolor=255.51.0; 
+	target=da2;
+);
+
+
+                   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Experimentieren Sie nochmal: Über den Doppelpfeil im rechten Fenster können Sie <f>k</f> verändern.
+			<br/>Probieren Sie insbesondere <f>k</f>-Werte in der Umgebung von <f>3.5</f> aus!</description>
+			<seq>
+				<script>
+                 newObject( def = k_punkt := punkt( k, fix(0) ); style =ARROW_H; target = da2 );
+			  newObject( def = k := k_punkt.x );
+			  newObject( def = k_beschr:=text( k_punkt, "Hier können Sie <f>k</f> verändern", B_SW) ; target = da2 );
+
+                </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt wollen wir die Muster für die restlichen <f>k</f>-Werte ergänzen:
+               
+            </description>
+		</step>
+		<step>
+			<seq>
+				<script>
+				modifyObject( name = k_punkt; visible = false );
+				modifyObject( name = k_beschr; visible = false );
+           newObject( def = k := 1);
+
+newObject(def=kEnd:=k);
+newObject(def=logistReg := logReg(a,n2LogStart,kEnd); target=da2);	
+
+newObject(def=kf:= &lt;skalar>folge(i, {  },k););
+
+newObject(
+	def=pf := punktFolge(kf,ff_L,n,2, P); 
+	fillcolor=255.51.0.127; 
+	bordercolor=255.51.0; 
+	target=da2;
+);
+animate( name = k; to = 4.05; end = 20 );
+                 newObject( def = k_punkt := punkt( k, fix(0) ); style =ARROW_H; target = da2 );
+			  newObject( def = k := k_punkt.x );
+			  modifyObject( name = k_punkt; visible = true );
+				modifyObject( name = k_beschr; visible =true );
+            </script>
+			</seq>
+		</step>
+		<step>
+			<title>Die Bereiche des Feigenbaum-Szenarios</title>
+			<description>Das entstehende Bild wird nach seinem Entdecker "Feigenbaum-Szenario" genannt.
+			<br/>Im stabilen Bereich stellt sich letztlich ein konstanter Wert ein
+		   		 </description>
+			<seq>
+				<script>
+		   		      modifyObject( name = k_punkt; visible = false );
+		   		      modifyObject( name = k_beschr; visible = false );
+		   		      modifyObject( name = rSta; visible = true );
+		   		      modifyObject( name = mSta; visible = true );
+		   		      //newObject( def = n2LogStart := 500 );
+		   		      animate( name = k; to = 1.4; end = 1 );
+		   		      animate( name = k; to = 2.95; end = 20 );
+                		   		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Im periodischen Bereich treten periodische Muster auf.
+		   		 </description>
+			<seq>
+				<script>
+		   		     modifyObject( name = rPer; visible = true );
+		   		      modifyObject( name = mPer; visible = true );
+		   		      animate( name = k; to = 3.2; end = 1 );
+		   		      animate( name = k; to = 3.45; end = 20 );
+                		   		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Für noch größere <f>k</f>-Werte folgt ein Bereich, in dem zunächst keine Regelmäßigkeit (in Form einer Periode) zu erkennen ist.
+			<br/>Dieser Bereich wird als <strong>chaotischer Bereich</strong> bezeichnet.
+		   		 </description>
+			<seq>
+				<script>
+		   		     modifyObject( name = rCha; visible = true );
+		   		      modifyObject( name = mCha; visible = true );
+		   		      animate( name = k; to = 3.6; end = 1 );
+		   		      animate( name = k; to = 4; end = 20 );
+                		   		    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Experimentieren Sie!</title>
+			<layout>
+				<row perc="100.0">
+					<col perc="100" name="da2"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+
+		   		      modifyObject( name = mSta; visible = false );
+		   		      modifyObject( name = mPer; visible = false );
+		   		      modifyObject( name = mCha; visible = false );
+			      newObject( def = da2.xMin := 2.3 );
+                     newObject(  def = da2.xMax := 4.02 );
+                     newObject(  def = da2.yMin := -0.24 );
+                     newObject(  def = da2.yMax := 1.125 );
+                     animate( name = k; to = 2.95; end = 8 );
+                      newObject( def = k_punkt := punkt( k, fix(0) ); style =ARROW_H; target = da2 );
+			  newObject( def = k := k_punkt.x );
+			       modifyObject( name = k_punkt; visible =true );
+		   		      modifyObject( name = k_beschr; visible =true );
+			  
+
+
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Bifurkation</title>
+			<description>Das Aufspalten der stabilen Situation in die Situation mit der Periode <f>2</f> wird als <strong>Bifurkation</strong> (auf Deutsch: Zwei-Gabelung) bezeichnet. </description>
+			<seq>
+				<script>
+		   		           modifyObject( name = k_punkt; visible = false );
+				modifyObject( name = k_beschr; visible = false );
+
+		   		           animate( name = k; to = 3.02; end = 8 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Mit wachsenden <f>k</f> entwickeln sich nach der Bifurkation  zwei Zweige.</description>
+			<seq>
+				<script>
+		   		           animate( name = k; to = 3.44; end = 20 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>In einer zweiten Bifurkation spaltet sich jeder Zweig in je zwei Zweige auf.</description>
+			<seq>
+				<script>
+		   		           animate( name = k; to = 3.46; end = 10 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Aus jedem der nunmehr <f>4</f> Zweige</description>
+			<seq>
+				<script>
+		   		           animate( name = k; to = 3.53; end = 5 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>entstehen in der nächsten Bifurkation wieder zwei Zweige. </description>
+			<seq>
+				<script>
+		   		           animate( name = k; to = 3.556; end = 10 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Selbstähnlichkeit</title>
+			<description>Die letzten Schritte könnte man auch so beschreiben: Es passiert eigentlich in immer kürzeren Abständen immer wieder das selbe.
+			<br/>Betrachtet man den jetzt rot eingerahmten Ausschnitt des gesamten Graphen, so stellt man fest, das das Gesamtbild und der Ausschnitt zueinander sehr "ähnlich" sind.
+			<br/>Im Ausschnitt passiert wieder das selbe wie im Gesamtbild.</description>
+			<seq>
+				<script>
+		   		        newObject( def = zoomRec := kurvenzug( { punkt( 3.3,0.75), punkt( 3.6, 0.75) , punkt( 3.6, 0.95), punkt( 3.3, 0.95), punkt( 3.3, 0.75) } ); color = red; target = da2 ); 
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<par>
+				<script>
+		             animate( name = da2.xMin; to = 3.3; end = 20 );
+		             animate( name = da2.xMax; to = 3.6; end = 20 );
+		             animate( name = da2.yMin; to = 0.75; end = 20 );
+		             animate( name = da2.yMax; to = 0.95; end = 20 );
+		          </script>
+			</par>
+		</step>
+		<step>
+			<description>In diesem Ausschnitt könnenn wir genauer verfolgen, wie die nächste Bifurkation stattfindet.
+			<br/>Von der Periode <f>4</f> (Im Ausschnitt seit man davon nur <f>2</f> Zweige) zur Periode <f>8</f> (Im Ausschnitt <f>4</f> Zweige).</description>
+			<seq>
+				<script>
+		   		           animate( name = k; to = 3.56; end = 15 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die nächste Bifurkation führt zur Periode <f>16</f>.</description>
+			<seq>
+				<script>
+		   		           animate( name = k; to = 3.567; end = 20 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Und wieder sieht man, dass kleine Ausschnitte des aktuell sichtbaren Graphen (z.B. der rot eingerahmte Ausschnitt) zum Gesamtgraphen sehr ähnlich sind.</description>
+			<seq>
+				<script>
+		   		        newObject( def = zoomRec2 := kurvenzug( { punkt( 3.52,0.87), punkt( 3.573, 0.87) , punkt( 3.573, 0.9), punkt( 3.52, 0.9), punkt( 3.52, 0.87) } );color = red; target = da2 ); 
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+			      newObject( def = da2.xMin := 2.3 );
+                     newObject(  def = da2.xMax := 4.02 );
+                     newObject(  def = da2.yMin := -0.24 );
+                     newObject(  def = da2.yMax := 1.125 );
+
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Feigenbaumkonstante</title>
+			<description>Wenn wir wieder zum Gesamtbild zurückkehren, sehen wir deutlich:
+			<br/>Je weiter wir den Parameter <f>k</f> erhöhen, desto schneller folgen die einzelnen Bifurkationen aufeinander.
+			<br/>Anders gesagt: die einzelnen Gabeln werden mit jedem Schritt kürzer. 
+			<br/>Wir sind damit einem weiteren wichtigen Phänomen auf der Spur: Mit jedem Schritt werden die Gabeln näherungsweise um einen Faktor <f>1/4.7</f> kürzer. 
+			<br/>Dies gilt umso genauer, je mehr Bifurkationen schon stattgefunden haben.
+			<br/>Die Zahl <f>4.7</f> wird nach ihrem Entdecker als <strong>Feigenbaumkonstante</strong> bezeichnet.</description>
+		</step>
+		<step>
+			<title>Phasenübergang</title>
+			<description>Wenn wir den Wert von <f>k</f> weiter erhähen, folgen in immer kürzerem Abstand die Bifurkationen zu den Perioden <f>32, 64, 128, $dots</f>, bei einem bestimmten <f>k</f>-Wert haben wir dann quasi eine "unendlich lage" Periode erreicht.</description>
+			<seq>
+				<script>
+		   		           animate( name = k; to = 3.569; end = 4 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Und jenseits dieses <f>k</f>-Werts gibt es (in der Regel) keine Periode mehr: Wir sich in einem Bereich ohne Ordnung, dem sog. chaotischen Bereich.
+			<br/>Dieser Übergang von einem Bereich mit Ordnung (=Periode) zu einem Bereich ohne Ordnung erinnert uns an bekannte Phänomene aus der Natur, die Phasenübergänge.
+			<br/>Eine Substanz geht bei steigender Temperatur <f>T</f> von einem geordneten (=kristallinen) Aggregatzustand in einen ungeordneten, flüssigen Aggregatzustand über.
+			<br/>Der Wachstumsfaktor <f>k</f> unseres Modells entspricht also der Termperatur <f>T</f>, die Analogie geht aber noch viel weiter. 
+			<br/>Man spricht deshalb auch in diesem Fall von einem Phasenübergang.</description>
+			<seq>
+				<script>
+		   		           animate( name = k; to = 3.59; end = 20 );
+
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Ein Fenster in eine phantastische Welt</title>
+			<description>Wenn man genauer hinsieht, bemerkt man, dass es im chaotischen Bereich durchaus auch Strukturen gibt: Keine einzelnen Zweige, sondern breite Bänder.
+			<br/>Auch diese Bänder spalten wiederholt auf. 
+			<br/>Und bei genauerem Hinsehen findet man dort kleine Ausschnitte, die sie selbe Struktur haben wie unser ganzer Graph.
+						</description>
+		</step>
+		<step>
+			<description>Zur genaueren Inspektion dieser Eigenschaften haben wir jetzt   links nochmals die Gesamtgraphik eingeblendet.
+				<br/>In der rechten Graphik kann man Details betrachten, der gewählte Ausschnitt ist in der linken Graphik rot gekennzeichnet.
+		<br/>
+			</description>
+			<layout>
+				<row perc="100.0">
+					<col perc="50" name="da3"/>
+					<col perc="50" name="da2"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				modifyObject( name = rSta; visible = false );
+				modifyObject( name = rPer; visible = false );
+				modifyObject( name = rCha; visible = false );
+				deleteObject( name = rInfGer, zoomRec, zoomRec2, pf, pf_R, pf_2, pf_3, pf_4, pf_5 );
+newObject( def = back_1 := flaeche( {punkt(-1,-1), punkt(3,-1), punkt(3,3), punkt(-1,3)}); color = green; target = da3; visible = false);
+newObject( def = back_2 := flaeche( {punkt(3,-1), punkt(3.569945621,-1), punkt(3.569945621,3), punkt(3,3)}); color = orange; target = da3; visible = false);
+newObject( def = back_3 := flaeche( {punkt(3.569945621,-1), punkt(4.1,-1), punkt(4.1,3), punkt(3.569945621,3)}); color = magenta; target = da3; visible = false);
+newObject( def = kEnd := 4.02 );				
+newObject( def = k := 3);	
+deleteObject( name = k_beschr);			
+deleteObject( name = k_punkt, gk );
+newObject( def = da3.xMin := fix(-0.4) );
+newObject(  def = da3.xMax := fix(5) );
+newObject(  def = da3.yMin := fix(-0.24) );
+newObject(  def = da3.yMax := fix(1.125) );
+newObject( def = da2.xMin :=-0.4 );
+newObject(  def = da2.xMax := 5 );
+newObject(  def = da2.yMin := -0.24 );
+newObject(  def = da2.yMax := 1.125 );
+newObject(def=logistReg2 := logReg(a,500, 4.02); target=da3);	
+newObject(
+	def = rrr := kurvenzug({punkt(da2.xMin,da2.yMin),punkt(da2.xMin,da2.yMax),punkt(da2.xMax,da2.yMax),punkt(da2.xMax,da2.yMin),punkt(da2.xMin,da2.yMin)});
+	target=da3;
+	color=red;
+);
+newObject(
+	def = rrl := kurvenzug({punkt(da3.xMin,da3.yMin),punkt(da3.xMin,da3.yMax),punkt(da3.xMax,da3.yMax),punkt(da3.xMax,da3.yMin),punkt(da3.xMin,da3.yMin)});
+	target=da2;
+	color=blue;					
+);
+
+ newObject( def = zoom_text3 := text(punkt(da3.xMin,da3.yMax),"Gesamtansicht",POSTIT); target = da3 );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<par>
+					<script>
+		             animate( name = da2.xMin; to = 3.3; end = 20 );
+		             animate( name = da2.xMax; to = 3.6; end = 20 );
+		             animate( name = da2.yMin; to = 0.75; end = 20 );
+		             animate( name = da2.yMax; to = 0.95; end = 20 );
+		          </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<par>
+					<script>
+		             animate( name = da2.xMin; to = 3.515; end = 20 );
+		             animate( name = da2.xMax; to = 3.602; end = 20 );
+		             animate( name = da2.yMin; to = 0.871; end = 20 );
+		             animate( name = da2.yMax; to = 0.898; end = 20 );
+		          </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+				newObject( def = da2.xMin :=-0.4 );
+newObject(  def = da2.xMax := 5 );
+newObject(  def = da2.yMin := -0.24 );
+newObject(  def = da2.yMax := 1.125 );
+		      
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Sie können in der rechten Graphik zoomen (Aktivieren über rechte Maustatste, Box-Zoom).  In der linken Graphik ist der gewählte Ausschnitt rot gekennzeichnet.
+		<br/>Experimentieren Sie!
+		
+		</description>
+			<seq>
+				<script> newObject( def = zoom_text2 := text(punkt(da2.xMin,da2.yMax),"In diesem Fenster können Sie zoomen!",POSTIT); target = da2 );
+		</script>
+			</seq>
+		</step>
+		<step>
+			<title>Literatur</title>
+			<description>Wenn Sie etwas tiefer in diese phantastische Welt schauen wollen: 
+			<br/>Klaus Richer und Jan-Michael Rost: Komplexe Systeme, Fischer Taschenbuch.</description>
+		</step>
+	</body>
+</math4u2>

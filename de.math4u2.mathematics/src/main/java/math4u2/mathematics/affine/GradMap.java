@@ -161,7 +161,7 @@ public class GradMap extends Map {
 			broker.propagateChange(gradFunc);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'gradation' ("
-					+ getIdentifier() + ").", e);
+					+ getKey() + ").", e);
 		}
 		return null;
 	} // operator_gradation

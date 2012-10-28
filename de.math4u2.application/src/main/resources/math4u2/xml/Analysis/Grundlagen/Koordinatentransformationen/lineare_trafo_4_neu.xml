@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Analysis/Grundlagen/Koordinatentransformationen</location>
+		<title>Koordinatentrafo: Übung 4</title>
+		<step>
+			<title>Lineare Koordinatentransformationen 4</title>
+			<description>Gegeben ist die Funktion <fh>f</fh> mit dem schwarzen Graphen.
+			<br/>Wählen Sie in der Funktion <f>g</f> (roter Graph) die Parameter so, dass sie folgende Eigenschaften hat:
+			<br/>
+				<ul>
+					<li>
+						<fh>g</fh> hat die primitive Periode 4.</li>
+					<li>Der Graph von <fh>g</fh> verläuft vollständig zwischen den beiden grünen Geraden.</li>
+					<li>Der Graph von <fh>g</fh> enthält die beiden Punkte P1 und P2.</li>
+				</ul>
+				<br/>Geben Sie oben passende Werte ein.</description>
+			<seq>
+				<script>
+					deleteAll();
+					da.coordinateSystem(xMin=-1; xMax=7; yMin=-3; yMax=4;);
+					newObject( def =P1:=punkt(fix(2),fix(1)) ; color = blue; target = da );
+					newObject( def = P2:=punkt(fix(3),fix(0)); color = blue; target = da );
+					newObject( def =g2:=gerade(punkt(0,2),vektor({1,0})) ; color = green; target = da );
+					newObject( def =g1:=gerade(punkt(0,-2),vektor({1,0})) ; color = green; target = da );
+					newObject( def = a := 0; select = true );
+					newObject( def = b := 0; select = true );
+					newObject( def = c := 0; select = true );
+					newObject( def = d := 0; select = true );
+					newObject( def = f(x):=x-floor(x); target = da );
+					newObject( def = g(x):=a*f(b*(x-c))+d; color = red; target = da );
+					expand(left = false; right = true );
+				</script>
+				
+			</seq>
+		</step>
+	</body>
+</math4u2>

@@ -134,6 +134,10 @@ public class UserDefinedFunction extends Function implements HasGraph {
 	public Object getIdentifier() {
 		return getName();
 	}
+	
+	public String getKey() {
+		return getName();
+	}
 
 	public void paintGraph(Graphics gr, DrawAreaInterface da) {
 		if (!isVisible())

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.3 Funktionen</location>
+		<title>3.3.2 Funktionen definieren</title>
+		<step>
+			<title>3.3.2 Funktionen definieren</title>
+			<description>			
+Eine Funktion wird im einfachsten Fall wie <code>funkt1(x):=x*sin(x)</code> definiert.
+	
+<p/>Auf der linken Seite des Definitionssymbols <code>:=</code> wird mit <code>funkt1</code> 
+der <strong>Name</strong> der Funktion vereinbart und eine reelle <strong>Variable</strong> mit
+dem Namen <code>x</code>. 
+Beide werden nach den Regeln für Bezeichner (vgl. 3.1)
+gebildet.
+<p/>Der Name der Funktion muss eindeutig sein, d.h. Sie können keine andere Funktion 
+(und kein anderes Objekt) mit dem gleichen Namen vereinbaren. Der Name der Variable 
+gilt nur lokal in der aktuellen Definition. Sie können also in mehreren (in allen)
+Definitionen die Variable mit <code>x</code> bezeichnen.
+
+<p/>Die Zuordnungsvorschrift wird durch den <strong>Funktionsterm</strong> auf der rechten Seite 
+von <code>:=</code> festgelegt.
+
+<p/><strong>Anzahl der Variablen, Stelligkeit</strong>
+<br/>Neben den typischen einstelligen Funktionen können auch Funktionen mit einer 
+anderen Anzahl von Variablen (d.h. einer anderen Stelligkeit) definiert werden.
+
+<p/>Mit <code>mult(x,y):=x*y</code> wird eine zweistellige Funktion, mit
+<code>minmax(x,y,z):=max(min(x,y), z)</code> wird eine dreistellige Funktion definiert.
+
+<p/>Beim Aufruf einer mehrsteligen Funktion erfolgt die Zuordnung der Argumente über die 
+Position: <code>minmax(3,7,5)</code> berechnet zunächst <code>min(3,7)=3</code> und 
+dann <code>max(3,5)=5</code> als Endergebnis.
+Bei der Definition einer nullstelligen Funktion wie <code>a:=pi*sin(3)</code> kann die 
+Angabe der leeren Klammern <code>()</code> entfallen.
+
+<p/><strong>Typ der Variablen</strong>
+<br/>Häufig werden Variablen verwendet, die einen reellen Zahlenwert (Skalar) vertreten. 
+Bei solchen Variablen wird kein Typ angegeben.
+
+<p/>Bei einer Variable, die einen Vektor (Spaltenvektor), Dualvektor (Zeilenvektor) oder eine 
+Matrix vertritt, muss der entsprechende Typ angegeben werden.
+
+<p/>In <code>vv(&lt;vektor>x,&lt;vektor>y,a) := sum(i, 1, a, v1[i]*v2[i])</code>
+
+<p/>werden zwei Vektor-wertige Variable <code>x</code> und <code>y</code> vereinbart und als 
+dritte Variable eine Zahlenvariable <code>a</code>.
+
+<p/>Die Typangaben sind:
+<br/><code>&lt;vektor></code><tab/>für einen Vektor (Spaltenvektor)
+<br/><code>&lt;dualvektor></code><tab/>für einen Dualvektor (Zeilenvektor) und
+<br/><code>&lt;matrix></code><tab/>für eine Matrix.
+
+
+<p/><strong>Funktionsterm</strong>
+<br/>Zum Aufbau des Funktoinsterms können sie verwenden:
+<ul>
+	<li>Zahlen, Vektoren und Matrizen,</li>
+	<li>vordefinierte Operatoren und Funktionen,
+insbesondere die Operatoren <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code> und <code>^</code> ,</li>
+	<li>Funktionen, die Sie vorher schon definiert haben und</li>
+	<li>
+Methodenaufrufe für Objekte, die Sie vorher schon definiert haben,
+z.B. erhalten Sie zu einem schon definierten Punkt <code>p</code> mit dem 
+Methodenaufruf <code>p.x</code> dessen aktuelle x-Koordinate.
+	</li>
+</ul>
+
+
+<p/><strong>Ergebnistyp</strong>
+<br/>Der Ergebnistyp einer Funktion ist durch den Funktionsterm festgelegt. Definiert man z.B.
+<br/><code>f1(&lt;vektor>x, &lt;vektor>y):=2*x&lt;*>y</code> und
+<br/><code>f2(&lt;vektor>x, &lt;vektor>y):=x[1]*y</code>, dann gilt:
+<p/><code>f1(&lt;vektor>x, &lt;vektor>y)</code> liefert als Ergebnis das zweifache 
+Skalarprodukt der Vektoren <code>x</code> und <code>y</code>, also eine Zahl (Skalar),
+<code>f2(&lt;vektor>x, &lt;vektor>y)</code> multipliziert die erste Komponente des 
+Vektors <code>x</code> (das ist eine Zahl) mit dem Vektor <code>y</code>, das Ergebnis 
+ist ein Vektor.
+
+<p/><strong>Nullstellige reelle Funktionen: Parameter</strong>
+<br/>Nullstellige reelle Funktionen werden oft bereitgestellt, um sie später als Parameter 
+in anderen Funktionen zu verwenden. Sie werden im Folgenden deshalb auch kurz als Parameter 
+bezeichnet. Definiert man z.B. zunächst <code>a:=2</code>, <code>b:=1</code>, <code>c:=1</code> und 
+dann das Polynom <code>p(x):=a*x^2+b*x+c</code>, dann kann man leicht experimentell verfogen, 
+welchen Einfluß diese Parameter auf die Eigenschaften des Polynoms haben.
+
+<p/>Wenn Sie dieses Element der Definitionsliste nach rechs ziehen, erhalten Sie folgende 
+Detailsicht:
+<p/><img src="math4u2/doc/images/objekte/parameter-slider01.jpg"/>
+
+<p/>Sie können den Wert jetzt bequem mit dem Schieberegler verändern. 
+Wenn der Regelbereich nicht ausreicht, aktivieren Sie die Eingabe für 
+Minimum bzw. Maximum und ändern ihn.
+
+<p/>An einer anderen Stelle kann es sinnvoll sein, den Wert eines 
+Parameters durch einen Term festzulegen. Definiert man <code>d:=2*pi</code>, dann 
+wird beim Erzeugen der Detailsicht der Definitionsterm angezeigt:
+
+<p/><img src="math4u2/doc/images/objekte/parameter-text01.jpg"/>
+
+<p/>Bei Bedarf kann man in der Detailsicht durch Klicken auf das 
+Alternativ-Symbol zwischen Schieberegler und Feld für Term-Eingabe wechseln.
+
+<p/><strong>Einstellige reelle Funktionen einer reellen Variable</strong>
+<br/>Wenn Sie die Definition <code>f(x):=x+2*sin(x)</code> der 
+Definitionsliste nach rechs ziehen, erhalten Sie die unten dargestellte 
+Detailsicht. 
+
+<p/>Sie können eine einstellige reelle Funktion zeichnen (genauer: einen 
+zugehörigen Graphen), indem Sie das entsprechende Element der 
+Definitionsliste mit gedrückter Maustaste auf eine Zeichenfläche ziehen.
+
+<p/><img src="math4u2/doc/images/objekte/funktion-graph01.jpg"/>
+
+<p/>Sie können über die Detailsicht den Funktionsterm einer Funktion 
+redefinieren, d.h. durch einen anderen Term ersetzen.
+
+<p/>Wenn Sie zu einer Funktion bereits eine Detailsicht erzeugt 
+haben, dann können Sie einen Graphen auch erzeugen, indem Sie diese 
+Detailsicht auf eine Zeichenfläche ziehen.
+			</description>
+		</step>
+	</body>
+</math4u2>

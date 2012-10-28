@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4 Affine Objekte</title>
+		<step>
+			<title>3.4 Affine Objekte</title>
+			<description>			
+Die folgende Tabelle gibt einen Überblick über die affinen Objekte
+Anschließend sind sie in der gleichen Reihenfolge ausführlich beschrieben.
+<p/>
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Objekt</strong></td>
+		<td bgcolor="#F4C86C"><strong>Eigenschaften</strong></td>
+	</tr>
+	<tr>
+		<td><code>punkt(xf,yf)</code></td>
+		<td>
+Punkt mit den Koordeinatenfunktionen <code>xf</code> und <code>yf</code>.
+<br/>Die beiden Koordinatenfunktoinen <code>xf</code> und <code>yf</code> sind nullstellige Funktionen.
+<br/>Methoden:
+<br/><code>.x</code> : x-Koordinate (nullstellige Funktion)
+<br/><code>.y</code> : y-Koordinate (nullstellige Funktion)
+<br/><code>.r</code> : Ortsvektor (zweidimensionaler Vektor)
+<br/>Interaktion:
+<br/>Der Punkt kann mit der Maus bewegt werden. Dadurch werden
+<br/>die Koordinaten des Punkts verändert.			
+		</td>
+	</tr>	
+	<tr>
+		<td><code>marker(xf,yf)</code></td>
+		<td>
+Markierung mit den Koordinatenfunktionen <code>xf</code> und <code>yf</code>.
+<br/>Anders als beim Punkt wird der Name nicht angezeigt,
+<br/>eine Markierung kann nicht mit der Maus bewegt werden.			
+		</td>
+	</tr>	
+	<tr>
+		<td><code>strecke(p1,p2)</code></td>
+		<td>
+Verbindungsstrecke der Punkte <code>p1</code> und <code>p2</code>.
+<br/>Methoden:
+<br/><code>.begin</code> : Startpunkt der Strecke
+<br/><code>.ende</code> : Endpunkt der Strecke						
+		</td>
+	</tr>	
+	<tr>
+		<td><code>gerade(p,v)</code></td>
+		<td>
+Gerade durch den Punkt <code>p</code> mit dem Richtungsvektor <code>v</code>.
+<br/><code>v</code> ist eine nullstellige Funktion, die als Ergebnis einen zweidimensionalen
+<br/>Vektor liefert.
+<br/>Methoden:
+<br/><code>.start</code> : Punkt <code>p</code> auf der Gerade
+<br/><code>.richtung</code> : Richtungsvektor <code>v</code> der Gerade					
+		</td>
+	</tr>	
+	<tr>
+		<td><code>kreis(p,r)</code></td>
+		<td>
+Kreis mit Mittelpunkt <code>p</code> und Radius <code>r</code>.
+<br/><code>r</code> ist eine nullstellige Funktion, die als Ergebnis eine Zahl liefert.
+<br/>Methoden:
+<br/><code>.mitte</code> : Mittelpunkt
+<br/><code>.radius</code> : Radius
+<br/><code>.flaeche</code> : Flächeninhalt					
+		</td>
+	</tr>	
+	<tr>
+		<td><code>winkel(ps, v1, v2, r)</code></td>
+		<td>
+Winkel mit Scheitelpunkt <code>ps</code> und den beiden
+<br/>Richtungen <code>v1</code> und <code>v2</code>.
+<br/><code>r</code> legt den Radius fest, mit dem der Winkel gezeichnet wird.
+<br/>Methoden:
+<br/><code>.scheitelpunkt</code> : Scheitelpunkt des Winkels					
+		</td>
+	</tr>	
+	<tr>
+		<td><code>kurve(t, s, e, fx(t), fy(t))</code></td>
+		<td>
+Parametrisierte Kurve mit Kurvenparameter <code>t</code>.
+<br/><code>s</code> und <code>e</code> sind zwei nullstellige Funktionen, sie liefern Start- und
+<br/>Endwert für das Parameterintervall.
+<br/><code>fx(t)</code> und <code>fy(t)</code> sind die Koordinatenfunktionen für die x- bzw. y-
+<br/>Koordinate.
+<br/>Methoden:
+<br/><code>.min</code> : Untere Grenze des Parameterintervalls
+<br/><code>.max</code> : Obere Grenze des Parameterintervalls
+<br/><code>.x</code> : x-Koordinatenfunktion (einstellige Funktion)
+<br/><code>.y</code> : y-Koordinatenfunktion (einstellige Funktion)					
+		</td>
+	</tr>	
+	<tr>
+		<td><code>bezier(p1,p2,p3,p4)</code></td>
+		<td>
+Kubische Bezier-Kurve mit den Steuerpunkten <code>p1</code>, <code>p2</code>, <code>p3</code>, <code>p4</code>.
+<br/>Startet bei <code>p1</code> mit Richtung auf <code>p2</code> zu, endet bei <code>p4</code>, kommt dort mit
+<br/>der Richtung von <code>p3</code> her an.
+<br/>Methoden:
+<br/><code>.p1</code> : Startpunkt
+<br/><code>.p2</code> : Steuerpunkt für Startrichtung
+<br/><code>.p3</code> : Steuerpunkt für Endrichtung
+<br/><code>.p4</code> : Endpunkt				
+		</td>
+	</tr>	
+	<tr>
+		<td><code>kurvenzug({e1, e2, ... })</code></td>
+		<td>
+Kurvenzug, der entsteht, wenn die Elemente <code>e1</code>, <code>e2</code>, ... durch
+<br/>Strecken verbunden werden. Die Elemente <code>e1</code>, <code>e2</code>, ... können
+<br/>sein: Punkte, Strecken, parametrisierte Kurven oder Bezier-Kurven.
+		</td>
+	</tr>	
+	<tr>
+		<td><code>flaeche({e1, e2, ... })</code></td>
+		<td>
+Fläche, deren Begrenzung durch eine Liste {<code>e1</code>, <code>e2</code>, ...} von Elementen
+<br/>gegeben ist. Die Elemente <code>e1</code>, <code>e2</code>, ... können sein:
+<br/>Punkte, Strecken, parametrisierte Kurven oder Bezier-Kurven
+<br/>sein.					
+		</td>
+	</tr>	
+	<tr>
+		<td><code>pfeil(p,v)</code></td>
+		<td>
+Repräsentant des Vektors <code>v</code> mit Aufpunkt <code>p</code>.
+<br/><code>v</code> ist dabei ein zweidimensionaler Vektor bzw. eine Funktion, die
+<br/>als Ergebnis einen zweidimensionalen Vektor liefert.
+<br/>Methoden:
+<br/><code>.start</code> : Startpunkt des Pfeils
+<br/><code>.richtung</code> : Richtungsvektor des Pfeils
+<br/>Interaktion:
+<br/>Die Pfeilspitze kann mit der Maus bewegt werden. Dadurch werden
+<br/>die Koordinaten des Vektors <code>v</code> verändert.			
+		</td>
+	</tr>											
+</table>
+
+<p/><strong>Maus-Position als vordefinierter Punkt</strong>
+<br/>Die aktuelle Maus-Position ist als Punkt mit dem Namen <code>mouse</code> vordefiniert.
+Durch Auswahl des Elements "Mauskoordinaten anzeigen" im Menü der Steuerleiste kann eine
+Detailsicht erzeugt werden, die immer die aktuellen Koordinaten der Maus anzeigt.
+			</description>
+		</step>
+	</body>
+</math4u2>

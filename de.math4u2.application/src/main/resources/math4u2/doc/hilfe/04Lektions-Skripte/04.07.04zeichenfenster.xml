@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.7 Elementare Anweisungen</location>
+		<title>4.7.4 Eigenschaften eines Zeichenfensters festlegen</title>
+		<step>
+			<title>4.7.4 Eigenschaften eines Zeichenfensters festlegen</title>
+			<description>
+Standardmäßig ist das Zeichenfenster mit dem Namen <code>da</code> eingerichtet.
+<p/>Andere Zeichenfenster werden bei der Erzeugung über ein 
+<code>&lt;layout></code>-Tag mit Namen (z.B. <code>fenster1</code>) versehen.
+<p/>Im Folgenden ist beispielhaft beschrieben, wie die Eigenschaften des Fensters 
+<code>fenster1</code> verändert werden können.
+
+<p/><strong>Titel setzen</strong>
+<br/><code>fenster1.setTitle(title="text mit Leerzeichen")</code> legt den Text fest, 
+der links oben im Fenster <code>fenster1</code> angezeigt wird. Der Text selbst 
+muss in Anführungszeichen <code>""</code> eingeschlossen werden.
+
+<p/><strong>Graphen hinzufügen</strong>
+<br/><code>fenster1.addGraph(name = kreis1)</code> fügt im Fenster 
+<code>fenster1</code> einen Graphen des Objekts mit dem Namen <code>kreis1</code>
+ein, d.h. das Bild von <code>kreis1</code> wird jetzt dort gezeichnet.
+
+<p/>Wenn mehrere Graphen hinzugefügt werden sollen, dann können die Namen der 
+Objekte, durch Kommata getrennt, aufgeführt werden:
+<br/><code>fenster1.addGraph(name = kreis1, kreis2, strecke1, f)</code>.
+<br/>Wenn ein neu erzeugtes Objekt sofort gezeichnet werden soll, so kann über 
+das Attribut <code>target</code> das Fenster benannt werden, in dem der Graph 
+eingefügt werden soll:
+<br/><code>newObject( def = g(x):= x*sin(x); target = fenster1 )</code>.
+
+<p/><strong>Graphen löschen</strong>
+<br/><code>fenster1.deleteGraph( name = kreis1, kreis2, g )</code> löscht im 
+Fenster <code>fenster1</code> die Graphen der Objekte <code>kreis1</code>, 
+<code>kreis2</code> und <code>g</code>. Die Objekte selbst bleiben erhalten.
+
+<p/><strong>Koordinatensystem mit Zahlen statisch einrichten</strong>
+<br/><code>fenster1.coordinateSystem(xMin=-4; xMax=50; yMin=-11; yMax=12)</code> 
+richtet im Fenster <code>fenster1</code> das Koordinatensystem mit den angegebenen 
+Bereichsgrenzen ein. 
+<br/>Die Grenzen werden durch Zahlenwerte angegeben. Gegebenenfalls werden nur die 
+Grenzen aufgeführt, die verändert werden sollen.
+
+<p/><strong>Koordinatensystem mit Termen dynamisch festlegen</strong>
+<br/>Die Bereichsgrenzen des Koordinatensystems werden für jedes Fenster durch die 
+nullstelligen Funktionen <code>xMin</code>, <code>xMax</code>, <code>yMin</code>, 
+<code>yMax</code> definiert. Wenn ein Koordinatensystem statisch eingerichtet wurde,
+dann haben diese Funktionen zunächst die so festgelegten Zahlenwerte.
+<p/>Die Definition dieser Funktionen kann durch beliebige Terme überschrieben werden.
+<br/><code>newObject( def = a:= 12 );</code>
+<br/><code>newObject( def = fenster1.xMin := fix( -a/6 ) );</code>
+<br/><code>newObject( def = fenster1.xMax := fix( a*5/6 ) );</code>
+
+<p/>Nach diesen Anweisungen zeigt das Koordinatensystem im Fenster 
+<code>fenster1</code> in x-Richtung die Werte von 
+<f>-a/6=-2</f> bis <f>a*5/6=10</f>.
+Die zusätzliche Funktion <code>fix( ... )</code> in den Funktionstermen
+bewirkt, dass diese Festlegungen nicht durch manuelles Zoomen überschrieben werden.
+Zoomen in x-Richtung ist dann in diesem Fenster nicht möglich.
+
+<p/>Jetzt kann das Koordinatensystem über den Parameter <code>a</code> eingestellt werden:
+<br/><code>newObject( def = a:=24 )</code> bewirkt, dass der x-Ausschnitt des 
+Koordinatensystems doppelt so groß wird, die y-Achse behält im Fenster ihre 
+graphische Position.
+
+<p/>Mit <code>animate( name = a; to = 120; end = 10 )</code> wird der x-Ausschnitt 
+jetzt kontinuierlich verändert.
+
+<p/><strong>Koordinaten-Grenzen in Termen verwenden</strong>
+<br/>Die Funktionen <code>xMin</code>, <code>xMax</code>, <code>yMin</code> und 
+<code>yMax</code> eines Fensters können selbst als Bestandteil beliebiger
+anderer Terme verwendet werden.
+
+<p/><command>Automatisches Zoomen in einem zweiten Fenster</command>
+<br/>Hat man z.B. zwei Fenster <code>fenster1</code> und <code>fenster2</code>, so bewirkt
+<br/><code>newObject( def = fenster2.xMin := fix( fenster1.xMin ) );</code>
+<br/><code>newObject( def = fenster2.xMax := fix( fenster1.xMax ) );</code>
+<br/><code>newObject( def = fenster2.yMin := fix( fenster1.yMin ) );</code>
+<br/><code>newObject( def = fenster2.yMax := fix( fenster1.yMax ) );</code> ,
+<br/>dass sich beim Zoomen in <code>fenster1</code> automatisch in <code>fenster2</code>
+der gleiche Ausschnitt einstellt.
+Wegen der <code>fix</code>-Funktion ist ein direktes Zoomen in <code>fenster2</code> nicht möglich.
+
+<p/><command>Punkt in der Mitte eines Fensters einrichten</command>
+<br/>Definiert man zu einem Fenster <code>f1</code>
+<code><![CDATA[
+newObject(  
+	def=p:=punkt( fix( (f1.xMin+f1.xMax)/2 ),
+		fix( (f1.yMin+f1.yMax)/2 ) ) ;
+	target = f1
+);]]></code>
+<br/>dann liegt der Punkt <code>p</code> immer (beim Zoomen, Verschieben, ... ) in der 
+graphischen Mitte des Fensters <code>f1</code>. Wegen der <code>fix</code>-Funktionen 
+kann er nicht mit der Maus verschoben werden.
+
+<p/><strong>1To1-Zoom ein/ausschalten</strong>
+<br/>Das 1To1-Zoom stellt auf beiden Achsen gleiche Längeneinheiten her und 
+gewährleistet so eine verzerrungsfreie Darstelltung geometrischer Objekte, z.B. 
+von Kreisen.
+<br/><code>fenster1.zoom1To1(activate=true)</code> schaltet im Fenster <code>fenster1</code> das 1To1-Zoom ein,
+<br/><code>fenster1.zoom1To1(activate=false)</code> schaltet es aus.
+			</description>
+		</step>
+	</body>
+</math4u2>

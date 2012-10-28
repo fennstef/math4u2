@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Fenn Stefan</author>	
+		<location>Beispiele/XML</location>
+		<title>Anweisung</title>
+		<step>
+			<title>Beispiel</title>
+			<description>
+				<code><![CDATA[
+<seq>
+  <script>
+    // Alles vorherige löschen
+    deleteAll();
+		
+    // Koordinatensystem setzen
+    da.coordinateSystem(xMin=-5; xMax=5; yMin=-5; yMax=5);
+	
+    // Alle Listen zusammenklappen
+    expand(left=none; right=none);
+	
+    // rote Sinusfunktion erstellen und Graphen hinzufügen
+    newObject(
+      def= f(x):=sin(x);
+      color=red;
+      target=da;
+    );	
+		
+    // Punkt A erstellen und Graphen hinzufügen 
+    newObject(
+      def= A:=punkt(0,0);
+      target=da;
+    };
+		
+    // Punkt A an Sinusfunktion festhängen
+    newObject(
+      def= A.y:=f(A.x);
+    );						
+  </script>
+	
+  <!-- Animiere parallel -->
+  <par>
+    <script>
+      // Koordinatensystem yMin zu -1.5 und yMax zu 1.5
+      animate(name=da.yMin; to=-1.5; begin=0; end=1.5);
+      animate(name=da.yMax; to=1.5; begin=0; end=1.5);
+			
+      // Punkt A von x=0 zu x=4.5 (Zeitraum 2..4 d.h. 0.5s Pause)					
+      animate(name=A.x; from=0; to=4.5; begin=2; end=4); 
+    </script>
+  </par>
+</seq>
+]]></code>
+			</description>
+			<seq>
+				<script>
+					// Alles vorherige löschen
+					deleteAll();
+
+					// Koordinatensystem setzen
+					da.coordinateSystem(xMin=-5; xMax=5; yMin=-5; yMax=5);
+
+					// Alle Listen zusammenklappen
+					expand(left=none; right=none);
+					
+					// rote Sinusfunktion erstellen und Graphen hinzufügen
+					newObject(
+						def= f(x):=sin(x);
+						color=red;
+						target=da;
+					);	
+					
+					// Punkt A erstellen und Graphen hinzufügen 
+					newObject(
+						def= A:=punkt(0,0);
+						target=da;
+					);
+					
+					// Punkt A an Sinusfunktion festhängen
+					newObject(
+						def= A.y:=f(A.x);
+					);						
+				</script>
+				
+				<!-- Animiere parallel -->
+				<par>
+					<script>
+						// Koordinatensystem yMin zu -1.5 und yMax zu 1.5
+						animate(name=da.yMin; to=-1.5; begin=0; end=1.5);
+						animate(name=da.yMax; to=1.5; begin=0; end=1.5);
+						
+						// Punkt A von x=0 zu x=4.5 (Zeitraum 2..4 d.h. 0.5s Pause)					
+						animate(name=A.x; from=0; to=4.5; begin=2; end=4); 
+					</script>
+				</par>
+			</seq>
+		</step>
+	</body>
+</math4u2>

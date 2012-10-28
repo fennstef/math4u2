@@ -90,7 +90,7 @@ public class FunctionGraph extends AbstractSimpleGraph{
 					sdr.setScalar(da.xPixToCoord(x), false);
 					d[0] = evalFunction.eval(sdr).getScalarOrNan();
 				} catch (Throwable e) {
-					ExceptionManager.doError("Fehler beim Zeichnen des Funktions-Graphen "+getIdentifier(),e);
+					ExceptionManager.doError("Fehler beim Zeichnen des Funktions-Graphen "+getKey(),e);
 					exceptionCounter++;
 				}//catch
 				x += detail;
@@ -102,7 +102,7 @@ public class FunctionGraph extends AbstractSimpleGraph{
 						d[i] = Double.NaN;
 						if(exceptionCounter==0){
 							exceptionCounter++;
-							ExceptionManager.doError("Fehler beim Zeichnen des Funktions-Graphen "+getIdentifier(),e);
+							ExceptionManager.doError("Fehler beim Zeichnen des Funktions-Graphen "+getKey(),e);
 						}
 					}//catch
 					if (d[i] < yMin)

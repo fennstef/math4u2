@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+	    <author>Dr. Weiss</author>
+		<location>Numerik/Interpolation</location>
+		<title>Tschebyscheff-Experiment</title>
+		<summary>Runge-Phänomen, Polynom-Interpolation mit Tschebyscheff-Stützstellen</summary>
+		<keywords>
+			<keyword>Interpolation</keyword>
+			<keyword>Runge</keyword>
+			<keyword>Tschebyscheff-Experiment</keyword>
+		</keywords>
+		
+		<step>
+		<layout>
+				<row perc="90">
+					<col perc="100" name="Polynome"></col>
+				</row>
+				<row perc="10">
+					<col perc="100" name="Punkte"></col>
+				</row>
+			</layout>
+
+		<seq>
+				<script>
+			       deleteAll();
+			       Punkte.setTitle( title = "Stützpunkte");
+			       Polynome.setTitle( title = "Polynome");
+			       Polynome.coordinateSystem( xMin = -1.2; xMax= 1.2; yMin = -0.02; yMax = 0.02 );
+			       Punkte.coordinateSystem(  xMin = -1.2; xMax= 1.2; yMin = -2.5; yMax = -1.5 );
+
+			       expand( left = false; right = true );
+		
+			      
+			       newObject( def = ap:=punkt( -1, fix(Polynome.yMin + (Polynome.yMax-Polynome.yMin)/10)); target = Polynome);
+			       newObject( def = a := ap.x);
+			       newObject( def = b := -ap.x );
+			       newObject( def = n:=8; select = true);
+			       /*
+			       newObject( def = roben:=flaeche( {punkt( -20, mv), punkt(20, mv), punkt( 20, 10), punkt( -20,10)});fillcolor = fillyellow; target = Polynome );
+			       newObject( def = runten:=flaeche( {punkt( -20, -mv), punkt(20, -mv), punkt( 20, -10), punkt( -20,-10)}); fillcolor = fillyellow; target =Polynome );
+			       newObject( def = rlinks:=flaeche( {punkt( -20, -mv), punkt(a, -mv), punkt( a, mv), punkt( -20,mv)}); fillcolor = fillgreen; target = Polynome );
+			       newObject( def = rrechts:=flaeche( {punkt( 20, -mv), punkt(b, -mv), punkt( b, mv), punkt( 20,mv)}); fillcolor = fillgreen; target = Polynome );*/
+			       newObject( def = posa(n,i):=a+(b-a)/n*i );
+			      			       newObject( def =   tschebyscheff1a(n,x) := prod(i, 0, n, (x-posa(n,i)) ) ;   ) ;
+			       newObject( def = tk1a := kurve(t,a,b,t, tschebyscheff1a(n,t)); target = Polynome ; color = blue);
+			       
+			        
+
+			       
+			     
+			    </script>
+			</seq>
+		</step>
+<step>
+			<title>Tschebyscheff-Stützstellen: Experiment</title>
+			<description>Die linken Stützstellen können über die Doppelpfeile S0, ..., S3 verschoben werden. Die rechten Stützstellen verschieben sich automatisch symmetrisch.
+			Positionieren Sie die Stützstellen so, dass der gezeigte Graph im weissen Rechteck verläuft.</description>
+			<layout>
+				<row perc="90">
+					<col perc="100" name="Polynome"></col>
+				</row>
+				<row perc="10">
+					<col perc="100" name="Punkte"></col>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			       deleteAll();
+			       Punkte.setTitle( title = "Stützpunkte");
+			       Polynome.setTitle( title = "Polynome");
+			       Polynome.coordinateSystem( xMin = -1.2; xMax= 1.2; yMin = -0.02; yMax = 0.02 );
+			       Punkte.coordinateSystem(  xMin = -1.2; xMax= 1.2; yMin = -2.5; yMax = -1.5 );
+
+			       expand( left = false; right = false );
+		
+			       newObject( def= mv := 1/128);
+			       newObject( def = nn:=8 );
+			       newObject( def = dist:=2/(nn-1) );
+			       newObject( def = roben:=flaeche( {punkt( -20, mv), punkt(20, mv), punkt( 20, 10), punkt( -20,10)});fillcolor = fillyellow; target = Polynome );
+			       newObject( def = runten:=flaeche( {punkt( -20, -mv), punkt(20, -mv), punkt( 20, -10), punkt( -20,-10)}); fillcolor = fillyellow; target =Polynome );
+			       newObject( def = rlinks:=flaeche( {punkt( -20, -mv), punkt(-1, -mv), punkt( -1, mv), punkt( -20,mv)}); fillcolor = fillgreen; target = Polynome );
+			       newObject( def = rrechts:=flaeche( {punkt( 20, -mv), punkt(1, -mv), punkt( 1, mv), punkt( 20,mv)}); fillcolor = fillgreen; target = Polynome );
+			       newObject( def = pm1:=&lt;punkt>liste0(i,4, punkt(-1+i*dist, fix(-2) ) ) ; target = Punkte; style = ARROW_H; showNames = false);
+			       
+			     			     
+			       
+			       newObject( def = pl1:=&lt;punkt>liste0({   pm1[0],pm1[1],pm1[2], pm1[3], 
+			                                                                       
+			                                                                       punkt(fix(-pm1[3].x), fix(-2)) , 
+			                                                                       punkt(fix(-pm1[2].x), fix(-2))  ,
+			                                                                       punkt(fix(-pm1[1].x), fix(-2))  ,
+			                                                                       punkt(fix(-pm1[0].x), fix(-2))            }) );
+			       newObject( def = balplus1:=balken( vektor(i,nn,pl1[i-1].x), vektor(i,nn,-2.5),0 ); bordercolor = gray; linestyle = dot; target = Punkte );
+			       newObject( def = balminus1:=balken( vektor(i,nn,pl1[i-1].x), vektor(i,nn,-0.03),0 );bordercolor = gray;  linestyle = dot; target =Polynome );
+			       newObject( def =   tschebyscheff1(x) := prod(i, 0, nn-1, (x-pl1[i].x) ) ;   ) ;
+			       newObject( def = tk1 := kurve(t,-1,1,t, tschebyscheff1(t)); target = Polynome ; color = red);
+			       
+			        
+
+			       
+			     
+			    </script>
+			</seq>
+		</step>
+		<step>
+		<seq>
+				<script>
+			       deleteAll();
+			       Punkte.setTitle( title = "Stützpunkte");
+			       Polynome.setTitle( title = "Polynome");
+			       Polynome.coordinateSystem( xMin = -1.2; xMax= 1.2; yMin = -0.02; yMax = 0.02 );
+			       Punkte.coordinateSystem(  xMin = -1.2; xMax= 1.2; yMin = -2.5; yMax = -1.5 );
+
+			       expand( left = false; right = false );
+		
+			       newObject( def= mv := 1/256);
+			       newObject( def = roben:=flaeche( {punkt( -20, mv), punkt(20, mv), punkt( 20, 10), punkt( -20,10)});fillcolor = fillyellow; target = Polynome );
+			       newObject( def = runten:=flaeche( {punkt( -20, -mv), punkt(20, -mv), punkt( 20, -10), punkt( -20,-10)}); fillcolor = fillyellow; target =Polynome );
+			       newObject( def = rlinks:=flaeche( {punkt( -20, -mv), punkt(-1, -mv), punkt( -1, mv), punkt( -20,mv)}); fillcolor = fillgreen; target = Polynome );
+			       newObject( def = rrechts:=flaeche( {punkt( 20, -mv), punkt(1, -mv), punkt( 1, mv), punkt( 20,mv)}); fillcolor = fillgreen; target = Polynome );
+			       newObject( def = pm1:=&lt;punkt>liste0(i,4, punkt(-1+i*0.25, fix(-2) ) ) ; target = Punkte; style = ARROW_H; showNames = false);
+			       
+			     			     
+			       
+			       newObject( def = pl1:=&lt;punkt>liste0({   pm1[0],pm1[1],pm1[2], pm1[3], 
+			                                                                       punkt(fix(0), fix(-2)),
+			                                                                       punkt(fix(-pm1[3].x), fix(-2)) , 
+			                                                                       punkt(fix(-pm1[2].x), fix(-2))  ,
+			                                                                       punkt(fix(-pm1[1].x), fix(-2))  ,
+			                                                                       punkt(fix(-pm1[0].x), fix(-2))            }) );
+			       newObject( def = balplus1:=balken( vektor(i,9,pl1[i-1].x), vektor(i,9,-2.5),0 ); bordercolor = gray; linestyle = dot; target = Punkte );
+			       newObject( def = balminus1:=balken( vektor(i,9,pl1[i-1].x), vektor(i,9,-0.03),0 );bordercolor = gray;  linestyle = dot; target =Polynome );
+			       newObject( def =   tschebyscheff1(x) := prod(i, 0, 8, (x-pl1[i].x) ) ;   ) ;
+			       newObject( def = tk1 := kurve(t,-1,1,t, tschebyscheff1(t)); target = Polynome ; color = red);
+			       
+			        
+
+			       
+			     
+			    </script>
+			</seq>
+		</step>
+		<step>
+		<description><f>x[i]=(a+b)/2+(b-a)/2*cos((2*i+1)/(2*n+2)*pi)</f>
+		</description>
+		<seq>
+				<script>
+			       deleteAll();
+			       Punkte.setTitle( title = "Stützpunkte");
+			       Polynome.setTitle( title = "Polynome");
+			       Polynome.coordinateSystem( xMin = -1.2; xMax= 1.2; yMin = -0.02; yMax = 0.02 );
+			       Punkte.coordinateSystem(  xMin = -1.2; xMax= 1.2; yMin = -2.5; yMax = -1.5 );
+
+			       expand( left = false; right = true );
+		
+			      
+			       newObject( def = ap:=punkt( -1, fix(Polynome.yMin + (Polynome.yMax-Polynome.yMin)/10)); target = Polynome);
+			       newObject( def = a := ap.x);
+			       newObject( def = b := -ap.x );
+			       newObject( def = n:=8; select = true);
+			        newObject( def= mv := (b-a)^(n+1)/2^(2*n+1));
+			       newObject( def = roben:=flaeche( {punkt( -20, mv), punkt(20, mv), punkt( 20, 10), punkt( -20,10)});fillcolor = fillyellow; target = Polynome );
+			       newObject( def = runten:=flaeche( {punkt( -20, -mv), punkt(20, -mv), punkt( 20, -10), punkt( -20,-10)}); fillcolor = fillyellow; target =Polynome );
+			       newObject( def = rlinks:=flaeche( {punkt( -20, -mv), punkt(a, -mv), punkt( a, mv), punkt( -20,mv)}); fillcolor = fillgreen; target = Polynome );
+			       newObject( def = rrechts:=flaeche( {punkt( 20, -mv), punkt(b, -mv), punkt( b, mv), punkt( 20,mv)}); fillcolor = fillgreen; target = Polynome );
+			       newObject( def = pos(n,i):=((a+b)+(b-a)*cos((2*i+1)/(2*n+2)*pi))/2 );
+			      			       newObject( def =   tschebyscheff1(n,x) := prod(i, 0, n, (x-pos(n,i)) ) ;   ) ;
+			       newObject( def = tk1 := kurve(t,a,b,t, tschebyscheff1(n,t)); target = Polynome ; color = red);
+			        newObject( def = posa(n,i):=a+(b-a)/n*i );
+			      			       newObject( def =   tschebyscheff1a(n,x) := prod(i, 0, n, (x-posa(n,i)) ) ;   ) ;
+			       newObject( def = tk1a := kurve(t,a,b,t, tschebyscheff1a(n,t)); target = Polynome ; color = blue);
+
+			       
+			        
+
+			       
+			     
+			    </script>
+			</seq>
+		</step>
+
+		<step>
+		    <seq>
+		        <script>
+		        Polynome.deleteGraph( name = balplus1, balminus1, pm1, tk1 );
+		        newObject( def = pm2:=&lt;punkt>liste0(i,5, punkt(-1+i*0.2, fix(-2) ) ) ; target = Polynome; color = red; style = ARROW_H; showNames = false);
+			       
+			     			     
+			       
+			       newObject( def = pl2:=&lt;punkt>liste0({   pm2[0],pm2[1],pm2[2], pm2[3],  pm2[4], 
+			                                                                         punkt(fix(-pm2[4].x), fix(-2)) , 
+
+			                                                                       punkt(fix(-pm2[3].x), fix(-2)) , 
+			                                                                       punkt(fix(-pm2[2].x), fix(-2))  ,
+			                                                                       punkt(fix(-pm2[1].x), fix(-2))  ,
+			                                                                       punkt(fix(-pm2[0].x), fix(-2))            }) );
+			       newObject( def = balplus2:=balken( vektor(i,10,pl2[i-1].x), vektor(i,10,10),0 ); linestyle = dot; target = Polynome );
+			       newObject( def = balmimus2:=balken( vektor(i,10,pl2[i-1].x), vektor(i,10,-10),0 ); linestyle = dot; target = Polynome );
+			       newObject( def =   tschebyscheff2(x) := 256*prod(i, 0, 9, (x-pl2[i].x) ) ;   ) ;
+			       newObject( def = tk2 := kurve(t,-1,1,t, tschebyscheff2(t)); target = Polynome; color = red; );
+		        </script>
+		    </seq>
+		</step>
+	</body>
+</math4u2>

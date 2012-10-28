@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>		
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>M. Weiss</author>
+		<location>Beispiele/XML</location>
+		<title>Gerade durch zwei Punkte</title>
+		<summary>Gerade durch zwei Punkte als Funktionsgraph</summary>
+		<step>
+			<title>Punkte und Funktion definieren</title>
+			<description>
+<code><![CDATA[
+<seq>
+	<script>
+		// zuerst alle alten Elemente loeschen
+		deleteAll(); 
+		// neuer Punkt, rot, zeichnen
+  		newObject( def = p1:=punkt(1,1); color = red; target = da ); 
+		// neuer Punkt, blau, zeichnen
+  		newObject( def = p2:=punkt(-3,-2); color = blue; target = da ); 
+		// Funktion definieren und zeichnen
+  		newObject( def = f(x):= p1.y + (x-p1.x)*(p1.y-p2.y)/(p1.x-p2.x) ; target = da ); 
+	</script>
+</seq>
+]]></code>			
+			</description>
+			<seq>
+				<script>
+					// zuerst alle alten Elemente loeschen
+		  			deleteAll(); 
+					// neuer Punkt, rot, zeichnen
+		  			newObject( def = p1:=punkt(1,1); color = red; target = da ); 
+					// neuer Punkt, blau, zeichnen
+		  			newObject( def = p2:=punkt(-3,-2); color = blue; target = da ); 
+					// Funktion definieren und zeichnen
+		  			newObject( def = f(x):= p1.y + (x-p1.x)*(p1.y-p2.y)/(p1.x-p2.x) ; target = da ); 
+		       </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

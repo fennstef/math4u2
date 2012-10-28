@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.06 Winkel</title>
+		<step>
+			<title>3.4.6 Winkel</title>
+			<description>			
+<strong>Winkel definieren</strong>
+<br/>Ein Winkel wird definiert wie <code>w1:=winkel(punkt(1,1), e2x, vektor({1,1}), 1)</code> ,
+die Argumente sind der Reihe nach:
+<ul>
+	<li>Scheitelpunkt des Winkels</li>
+	<li>Richtungsvektor des ersten Schenkels</li>
+	<li>Richtungsvektor des zweiten Schenkels</li>
+	<li>Radius, mit dem der Winkel gezeichnet wird.</li>
+</ul>
+
+<p/><strong>Methoden eines Winkels</strong>
+<br/>Zu einem Winkel <code>w</code> liefert
+<br/><code>w.scheitelpunkt  </code><tab/> den Scheitelpunkt,
+<br/><code>w.vektor1        </code><tab/> den ersten Richtungsvektor,
+<br/><code>w.vektor2        </code><tab/> den zweiten Richtungsvektor und
+<br/><code>w.radius         </code><tab/> den Radius.
+
+<p/><strong>Beispiel:</strong> Winkel <code>w</code> über Punkte <code>s</code>, <code>p</code> 
+und <code>q</code> manipulieren
+<p/><img src="math4u2/doc/images/objekte/winkel01.jpg"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

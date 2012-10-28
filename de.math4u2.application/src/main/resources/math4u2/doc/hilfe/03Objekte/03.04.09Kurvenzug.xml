@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.09 Kurvenzug</title>
+		<step>
+			<title>3.4.9 Kurvenzug</title>
+			<description>			
+Ein Kurvenzug wird definiert durch eine Liste von Punkten, Strecken und Kurven (parametrisierte Kurven
+und Bezier-Kurven). Beim Zeichnen wird das erste Element der Liste gezeichnet, dessen Endpunkt
+mit dem Startpunkt des zweiten Elements durch eine Strecke verbunden, anschließend wird
+das zweite Element gezeichnet usw. . Ein Punkt ist dabei Start- und Endpunkt zugleich.
+
+<p/><strong>Kurvenzug definieren</strong>
+<br/>Zunächst ein paar Punkte definieren:
+<br/><code>p:=&lt;punkt>liste(i,20,punkt(cos(pi/10*i), sin(pi/10*i)))</code>. Dann erzeugt
+<br/><code>kvz1:=kurvenzug({ bezier(p[1],p[2],p[3],p[4]),</code>
+<br/><tab/><code>strecke(p[7],p[8]),</code>
+<br/><tab/><code>p[15] })</code>
+<br/>einen offenen Kurvenzug. Wenn wir den Startpunkt <code>pl[1]</code> der Bezier-Kurve als letztes Element in
+der Liste nochmals aufführen, entsteht ein geschlossener Kurvenzug:
+<br/><code>kvz1:=kurvenzug({ bezier(p[1],p[2],p[3],p[4]),</code>
+<br/><tab/><code>strecke(p[7],p[8]),</code>
+<br/><tab/><code>p[15],</code>
+<br/><tab/><code>p[1] }).</code>
+<p/>Wenn man mit <code>b:=bezier(p[1],p[2],p[3],p[4])</code> die Bezier-Kurve 
+schon definiert hat, dann erhält man zu dieser mit <code>b.p1</code> ihren 
+Startpunkt und könnte also mit <code>kvz2:=kurvenzug({b,b.p1})</code> einen 
+geschlossenen Kurvenzug erhalten.
+			</description>
+		</step>
+	</body>
+</math4u2>

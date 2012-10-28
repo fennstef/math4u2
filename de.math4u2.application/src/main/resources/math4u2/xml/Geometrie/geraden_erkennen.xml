@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. Weiss</author>
+		<location>Geometrie</location>
+		<title>Geraden erkennen</title>
+		<summary/>
+		<step>
+			<description>
+				<title2>Aufgabenstellung: Geradenerkennung</title2>Eine grundlegende Aufgabe in der digitalen Bildverarbeitung ist das Erkennen von einfachen geometrischen Objekten wie von Geraden und Kreisen. 
+		   <br/>Oben das Modell eines gerasterten Bildes. Unser Auge erkennt sofort, dass  in der gezeigten Situation eine Reihe von Bildpunkten auf einer Geraden liegen.
+		   <br/>Im Folgenden soll gezeigt werden, wie man dies mit Hilfe der <em>Hough-Transformation</em> rechnerisch erkennen kann und wie man dabei zugleich die Lage dieser Gerade bestimmt. 
+		   </description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="Punkte"/>
+					<col perc="50" name="Dichte"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			   deleteAll();
+			    Punkte.setTitle( title = "Punkte und Gerade");
+			    Dichte.setTitle( title = "Dichte" );
+			     expand( left =none; right = all);
+			     Dichte.coordinateSystem(xMin=-3.15;xMax = 3.15; yMin = -1; yMax =5);
+			     newObject( def = n := 30);
+			    	 newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 4*sin(i)), cond(i-n/2-0.5, 4-10/n*i, 4*cos(i*i*i))) ); target = Punkte; showNames = false );
+		      
+
+			   </script>
+			</seq>
+		</step>
+		
+		<step>
+			<description>Dazu benötigen wir zunächst eine spezielle Beschreibung der Lage einer Gerade.</description>
+		</step>
+		<step>
+			<description>
+				<title2>Gerade durch Abstand und Winkel festlegen</title2>Eine Gerade der Ebene läßt sich durch die Angabe von zwei Parametern festlegen, nämlich:
+		   <ul>
+					<li>durch den senkrechten Abstand <f>r</f> der Gerade vom Ursprung und</li>
+					<li>durch den Winkel <f>phi</f>, den eine Senkrechte zur Gerade mit der x-Achse einschließt.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+		       deleteAll();
+			    Punkte.setTitle( title = "Punkte und Gerade");
+			    Dichte.setTitle( title = "Dichte" );
+			     expand( left =none; right = all);
+			     Dichte.coordinateSystem(xMin=-3.15;xMax = 3.15; yMin = -1; yMax =5);
+			     newObject( def = n := 5);
+
+			      newObject( def = s:=punkt(1,2.3);  color = red);
+			      
+			      newObject( def = phi:=s.x);
+			      newObject( def = r:=s.y);
+			      newObject( def = pg:= punkt(r*cos(phi), r*sin(phi)) );
+			      newObject( def = origo := punkt(0,0) );
+			      newObject( def = g:=gerade(pg, vektor( {-sin(phi), cos(phi) } ) ) ; color = red; target = Punkte);
+			      newObject( def = kr:=kreis( origo, r ); color = gray; linestyle = dot ; target = Punkte );
+			      newObject( def = nv:=vektor( { cos(phi), sin(phi) } ) ); // Normalen-Einheitsvektor
+			      newObject( def = normg:=gerade( origo, nv ); color = blue; linestyle = dot; target = Punkte );
+			      newObject( def = norma:= strecke(origo, pg ); color = blue; target = Punkte );
+			      newObject( def = wink:=winkel( origo, e2x,nv , r/2 ) ; fillcolor = fillgreen; target = Punkte );
+			      	
+			 	newObject( def = rt:=text( punkt( 0.8*r*cos(phi), 0.8*r*sin(phi) ), "Abstand <f>r</f>", B_NW); fillcolor = fillblue; target = Punkte );	      
+			      newObject( def = phit:=text( punkt( 0.5*r*cos(phi/3), 0.5*r*sin(phi/3) ), "Winkel <f>phi</f>", B_SE); fillcolor = fillgreen; target = Punkte );	
+			      newObject( def = gt:=text( punkt( r*cos(phi)+0.3*sin(phi), r*sin(phi) -0.3*cos(phi)), "Gerade <f>g(r,phi)</f>", B_NE); color = red; target = Punkte );	
+
+		      
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Rechts ist jetzt die <f>r</f>-<f>phi</f>-Ebene zu sehen. Der rote Punkt <f>s(r,phi)</f> repräsentiert die Gerade <f>g(r,phi)</f>. 
+		   </description>
+			<seq>
+				<script>
+		      Dichte.addGraph( name = s );
+		      newObject( def = phikt:=text( punkt(Dichte.xMax, 0), "Winkel <f>phi</f>", K_W); fillcolor = fillgreen; target = Dichte );
+			 	newObject( def = rkt:=text( punkt(0, Dichte.yMax), "Abstand <f>r</f>", K_S); fillcolor = fillblue; target = Dichte );
+		      newObject( def = sr:=strecke( punkt(0,s.y), s  ) ; color = blue; linestyle = dot ; target = Dichte );
+			      newObject( def = sphi:=strecke( punkt(s.x,0), s ) ; color = green; linestyle = dot ; target = Dichte );
+		      </script>
+			</seq>
+		</step>
+		<step>
+		   <description>Wenn man den Punkt <f>s</f> in <f>r</f>-Richtung verschiebt, ändert sich der Abstand der Gerade vom Ursprung, ihre Richtung bleibt unverändert:
+		   </description>
+		</step>
+		<step>
+		    <seq>
+		        <script> animate( name = s.y; to = 4; end = 0.5);
+		         animate( name = s.y; to = 0.5; end = 5);
+		         animate( name = s.y; to =2.5; end = 2);
+
+		        </script>
+		    </seq>
+		</step>
+		<step>
+		   <description>Wenn man den Punkt <f>s</f> in <f>phi</f>-Richtung verschiebt, bleibt der Abstand der Gerade vom Ursprung gleich, ihre Richtung ändert sich:
+		   </description>
+		</step>
+
+		<step>
+			<seq>
+				<script>
+		        		         
+		          animate( name = s.x; to =3.14; end = 6);
+		         animate( name = s.x; to =-1; end = 6);
+		         animate( name = s.x; to =1; end = 2);
+
+		         		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Stellen Sie über den Punkt <f>s</f> für den aktuellen Winkel <f>phi</f> den Abstand <f>r</f> so ein, dass die rote Gerade durch den Punkt <f>p1</f> verläuft.</description>
+			<seq>
+				<script>
+		          deleteObject( name = rt, phit, gt, kr, normg);
+		            newObject( def = p1:=punkt( fix(1),fix(3)); color = orange; target = Punkte );
+		              newObject( def = s1(phi):=p1.x*cos(phi)+p1.y*sin(phi); color = orange;  );
+		            animate( name = s.x; to = 1; end = 0.5);
+		            newObject( def = s.x :=fix(2.5) );	
+		            newObject( def = abtext:=text(s, "<f>r</f> so einstellen, <br/>dass die rote Gerade<br/>durch Punkt <f>p1</f>  geht.", C_W); color = red; target = Dichte );           
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Genauso für diesen Winkel <f>phi</f>.</description>
+			<seq>
+				<script>
+		             animate( name = s.y; to =0.991; end = 0.5 );
+		             newObject( def = m1:=marker(2.5, s1(2.5) ); color = orange; target = Dichte );
+		            animate( name = s.x; to = 2; end = 1.5);	 	 
+		            deleteObject( name = abtext );    
+		            </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		            animate( name = s.y; to = 2.32; end = 0.5 );
+		             newObject( def = m2:=marker(2, s1(2) ); color = orange; target = Dichte );
+		            animate( name = s.x; to = 1.5; end = 1.5);	 
+		            newObject( def = s.x :=fix(1.5) );	           
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		            animate( name = s.y; to = 3.072; end = 0.5 );
+		             newObject( def = m3:=marker(1.5, s1(1.5) ); color = orange; target = Dichte );
+		            animate( name = s.x; to = 1; end = 2);
+		            newObject( def = s.x :=fix(1) );		            
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		       animate( name = s.y; to = 3.072; end = 0.5 );
+		             newObject( def = m4:=marker(1, s1(1) ); color = orange; target = Dichte );
+		            animate( name = s.x; to = 0.5; end = 2);
+		            newObject( def = s.x :=fix(0.5) );	
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		            animate( name = s.y; to = 2.285; end = 0.5 );
+		             newObject( def = m5:=marker(0.5, s1(0.5) );color = orange;  target = Dichte );
+		              newObject( def = m6:=marker(0, s1(0) );color = orange;  target = Dichte );
+
+		            newObject( def = s:=punkt(2.5, 3.5 ) );          
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Hessesche Normalform einer Gerade: Normalen-Einheitsvektor <f>vektor({cos(phi), sin(phi)})</f> durch den Punkt <f>p</f> mit dem Ortsvektor <f>vektor({p.x,p.y})</f> hat die <f>vektor({cos(phi), sin(phi)})*vektor({r_x, r_y})= vektor({cos(phi), sin(phi)})*vektor({p1.x,p1.y})</f>, darin ist <f>ro = vektor({cos(phi), sin(phi)})*vektor({p1.x,p1.y})</f> der senkrechte Abstand dieser Gerade vom Ursprung. MIt der Funktionsgleichung <f>ro = cos(phi)*p.x+sin(phi)*p.y</f> ist also die allgemeine Vorschrift gefunden, wie man zu einen winkel <f>phi</f> den passenden Abstand <f>ro(phi)</f> so berechnet, dass die entsprechende Gerade durch den Punkt <f>p</f> geht.</description>
+		</step>
+		<step>
+			<description>Die orange Kurve rechts repräsentiert alle Geraden, die durch den orangen Punkt <f>p1</f> gehen.
+		</description>
+			<seq>
+				<script>
+		          Dichte.addGraph( name = s1);
+		          newObject( def = s1text:= text(punkt(0.25, s1(0.25) ), "<f>s1(r,phi)</f>:<br/>Hough-Transformierte<br/>des Punktes <f>p1</f>", B_NW); color = orange; target = Dichte );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Entsprechend repräsentiert die grüne Kurve alle Geraden, die durch den grünen Punkt <f>p2</f> gehen.
+            <br/>Und: Der Schnittpunkt der orangen Kurve mit der grünen Kurve repräsentiert die Gerade, die gleichzeitig durch den orangen und den grünen Punkt geht.
+            <br/>Probieren Sie es aus: Plazieren Sie den Steuerpunkt <f>s</f> auf diesen Schnittpunkt.
+            </description>
+			<seq>
+				<script>
+                    deleteObject( name = m1, m2, m3, m4, m5, m6 );
+		         newObject( def = p2:=punkt( -1,2); color =green; target = Punkte );
+		          
+			      newObject( def = s2(phi):=p2.x*cos(phi)+p2.y*sin(phi); color = green; target = Dichte );
+			       newObject( def = s2text:= text(punkt(0.5, s2(0.5) ), "<f>s2(r,phi)</f>:<br/>Hough-Transformierte<br/>des Punktes <f>p2</f>", B_NW); color = green; target = Dichte );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Noch mehr Punkte, die auf einer Gerade liegen, rechts ihre Hough-Transformierten.
+		<br/>Alle Hough-Transformierten schneiden sich in einem Punkt: Dieser repräsentiert die Gerade, auf der alle Punkte liegen.</description>
+			<seq>
+				<script>
+				deleteObject( name = s1text, s2text);
+		         newObject( def = p3:=punkt( -3,1); color =blue; target = Punkte );
+		          
+			      newObject( def = s3(phi):=p3.x*cos(phi)+p3.y*sin(phi); color = blue; target = Dichte );
+		         newObject( def = p4:=punkt( 2,3.5); color =cyan; target = Punkte );
+		          
+			      newObject( def = s4(phi):=p4.x*cos(phi)+p4.y*sin(phi); color = cyan; target = Dichte );
+
+		      </script>
+			</seq>
+		</step>
+		
+		
+				<step>
+			<seq>
+				<script>
+				
+		         modifyObject( name = p1; visible = false);
+		         modifyObject( name = p2; visible = false);
+		          modifyObject( name = p3; visible = false);
+		          modifyObject( name = p4; visible = false);
+		          modifyObject( name = s1; visible = false);
+		          modifyObject( name = s2; visible = false);
+		          modifyObject( name = s3; visible = false);
+		           modifyObject( name = s4; visible = false);
+			     newObject( def = n := 20);
+			      newObject( def = pl:=&lt;punkt>liste(i,n, punkt( -2.5+7/n*i,4-5/n*i) ); target = Punkte; showNames = false );
+
+			      newObject( def = s:=punkt(1,1); color = red);
+			      newObject( def = phi:=s.x);
+			      newObject( def = r:=s.y);
+			      newObject( def = pg:= punkt(r*cos(phi), r*sin(phi)) );
+			      newObject( def = origo := punkt(0,0) );
+			      newObject( def = g:=gerade(pg, vektor( {-sin(phi), cos(phi) } ) ) ; color = red; target = Punkte);
+			     			      
+			     newObject( def = fl:=&lt;funktion(phi)>liste(i,n,pl[i].x*cos(phi)+pl[i].y*sin(phi)); target = Dichte );
+			     Dichte.addGraph( name = s);
+			     
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Auch wenn das Bild zwei Geraden enthält, kann man die zugehörigen Schnittpunkte der Hough-Transformierten noch gut erkennen.
+		    <br/>Stellen Sie dei zugehörigen Geraden über den Steuerpunkt <f>s</f> ein!
+		    </description>
+			<seq>
+				<script>
+		         deleteObject(name =fl, pl );
+		         Dichte.deleteGraph( name = s );
+			      newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 1+3/n*(i-n/2)), cond(i-n/2-0.5, 4-10/n*i, -3+12/n*(i-n/2))) ); target = Punkte; showNames = false );
+
+			     			      
+			     newObject( def = fl:=&lt;funktion(phi)>liste(i,n,pl[i].x*cos(phi)+pl[i].y*sin(phi)); target = Dichte );
+			     Dichte.addGraph( name = s);
+			     
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Etwas unübersichtlicher wird die Situation, wenn das Bild neben einer Geraden noch andere, willkürlich verteilte Punkte enthält.
+		    <br/>Aber auch hier kann man wohl den relevanten Schnittpunkt der Hough-Transformierten und somit die Gerade noch gut finden.
+		    </description>
+			<seq>
+				<script>
+		         deleteObject(name =fl, pl );
+		         Dichte.deleteGraph( name = s );
+			    			     newObject( def = n := 40);
+			    newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 4*sin(i)), cond(i-n/2-0.5, 4-10/n*i, 4*cos(i*i*i))) ); target = Punkte; showNames = false );
+
+
+			      			     			      
+			     newObject( def = fl:=&lt;funktion(phi)>liste(i,n,pl[i].x*cos(phi)+pl[i].y*sin(phi)); target = Dichte );
+			     Dichte.addGraph( name = s);
+			     
+			     
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Allerdings: Bisher haben wir letztlich  ein "graphisches" Problem (ob von einer Menge vom Bildpunkten viele auf einer Geraden liegen) in ein zweites "graphisches" Problem (ob von einer Menge von Funktionsgraphen sich viele in einem bestimmten Punkt schneiden) transformiert.  
+<br/>Das ist nur dann ein Fortschritt, wenn das zweite Problem  nun rechnerisch besser lösbar ist. </description>
+		</step>
+		
+		<step>
+		   <seq>
+		      <script>
+		          deleteObject(name =fl, pl );
+		          modifyObject( name = p1; visible = true );
+		          modifyObject( name = p2; visible = true );
+		          modifyObject( name = p3; visible = true );
+		          modifyObject( name = p4; visible = true );
+		          modifyObject( name = s1; visible = true );
+		          modifyObject( name = s2; visible = true );
+		          modifyObject( name = s3; visible = true );
+		          modifyObject( name = s4; visible = true );
+		      </script>
+		   </seq>		    
+		</step>
+		
+		<step>
+		   <seq>
+		      <script>
+		         newObject( def = np :=20 ); // Anzahl der Intervalle in phi-Richtung
+		       newObject( def = nr := 20 ); // Anzahl der Intervalle in r-Richtung
+		       newObject( def = nintr:=5 ); // maximaler r-Wert, der berücksichtigt wird.
+		       newObject( def = nph:=np/2);
+		     		       newObject( def = pd1( i):=(-pi+pi/nph*i ); );
+		       
+		        modifyObject( name = s1; visible = false );
+		        modifyObject( name = s2; visible = false );
+		        modifyObject( name = s3; visible = false );
+		        modifyObject( name = s4; visible = false );
+		        
+		        
+		        newObject( def = h1p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s1(pd1(i) )), 2 ) ; target = Dichte; color = orange );
+		         newObject( def = h2p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s2(pd1(i) )), 2 ) ; target = Dichte ; color = green);
+		          newObject( def = h3p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s3(pd1(i) )), 2 ) ; target = Dichte; color = blue );
+		           newObject( def = h4p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s4(pd1(i) )), 2 ) ; target = Dichte; color = cyan );
+
+
+
+		          
+		      </script>
+		   </seq>
+		</step>
+		<step>
+		   <seq>
+		      <script>
+		            newObject( def = gv:=balken(  vektor( i,np+1, -pi+pi/nph*(i-0.5)), vektor(i,np+1,7), 0 ); fillcolor = 0.0.0.0; bordercolor = lightgray; target = Dichte );
+
+		      </script>
+		   </seq>
+		   
+		</step>
+		<step>
+		   <seq>
+		      <script>
+		         newObject( def = gh:=balken(  vektor( i,nr, 0), vektor(i,nr,nintr/nr*(i-0.5)), 20 ); fillcolor = 0.0.0.0; bordercolor = lightgray; target = Dichte );
+
+		      </script>
+		   </seq>
+		</step>
+		<step>
+		  <seq>
+		    <script>newObject( def = a1 := 0 );
+		    
+		    
+		 newObject( def = sd1(phi):=(floor( ((p1.x*cos(phi)+p1.y*sin(phi))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr   ) );
+		 newObject( def = s1d1(phi):= sd1(phi)*a1+s1(phi)*(1-a1));
+
+		newObject( def = h1p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s1d1(pd1(i) )), 2 ) ; target = Dichte; color = orange );
+		         
+
+		    </script>
+		  </seq>
+		</step>
+		<step>
+		   <seq> 
+		   <script>
+		   newObject( def = a2 := 0 );
+		    
+		    
+		 newObject( def = sd2(phi):=(floor( ((p2.x*cos(phi)+p2.y*sin(phi))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr   ) );
+		 newObject( def = s2d1(phi):= sd2(phi)*a2+s2(phi)*(1-a2));
+
+		newObject( def = h2p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s2d1(pd1(i) )), 2 ) ; target = Dichte;  );
+		
+		 newObject( def = a3 := 0 );
+		    
+		    
+		 newObject( def = sd3(phi):=(floor( ((p3.x*cos(phi)+p3.y*sin(phi))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr   ) );
+		 newObject( def = s3d1(phi):= sd3(phi)*a3+s3(phi)*(1-a3));
+
+		newObject( def = h3p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s3d1(pd1(i) )), 2 ) ; target = Dichte; );
+		
+		 newObject( def = a4 := 0 );
+		    
+		    
+		 newObject( def = sd4(phi):=(floor( ((p4.x*cos(phi)+p4.y*sin(phi))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr   ) );
+		 newObject( def = s4d1(phi):= sd4(phi)*a4+s4(phi)*(1-a4));
+
+		newObject( def = h4p:=punkte( vektor( i,np, pd1(i)), vektor( i,np, s4d1(pd1(i) )), 2 ) ; target = Dichte;);
+		
+		animate( name = a2; to = 1; end = 3);
+		animate( name = a3; to = 1; end = 3);
+		animate( name = a4; to = 1; end = 3);
+
+
+
+		    
+		   </script>
+		   </seq>
+		  		</step>
+				
+		<step>
+			<seq>
+				<script>
+				
+				deleteObject( name = h4p, h3p, h2p, h1p );
+				Punkte.deleteGraph( name = p1, p2, p3, p4);
+		         Dichte.deleteGraph( name = s, gv, gh );
+
+			    			        newObject( def = hintergrund:= flaeche( {punkt(-5,-5), punkt(5,-5), punkt( 5,5), punkt(-5, 5) } ) ; fillcolor = 255.255.255.255; target = Dichte ) ;
+			      
+
+
+		       newObject( def = n := 20 );  // Anzahl der Punkte, die erzeugt werden
+		       newObject( def = np :=20 ); // Anzahl der Intervalle in phi-Richtung
+		       newObject( def = nr := 20 ); // Anzahl der Intervalle in r-Richtung
+		       newObject( def = nintr:=5 ); // maximaler r-Wert, der berücksichtigt wird.
+		       newObject( def = nph:=np/2);
+
+		    
+		         newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 4*sin(i)), cond(i-n/2-0.5, 4-10/n*i, 4*cos(i*i*i))) ); target = Punkte; showNames = false );
+ 
+
+		       newObject( def = sd(ip, i):=(0.02+0.08*sqrt(ip/n))*sin(5*pi*ip/n)+floor( ((pl[ip].x*cos(-pi+pi/nph*i)+pl[ip].y*sin(-pi+pi/nph*i))+ 0.5*nintr/nr )/nintr*nr) / nr*nintr    );
+		       newObject( def = pd(ip, i):=(0.02+0.08*sqrt(ip/n))*cos(5*pi*ip/n)-pi+pi/nph*i );
+		       
+		      		       newObject( def = gv:=balken(  vektor( i,np+1, -pi+pi/nph*(i-0.5)), vektor(i,np+1,7), 0 ); fillcolor = 0.0.0.0; bordercolor = lightgray; target = Dichte );
+		       newObject( def = gh:=balken(  vektor( i,nr, 0), vektor(i,nr,nintr/nr*(i-0.5)), 20 ); fillcolor = 0.0.0.0; bordercolor = lightgray; target = Dichte );
+		       
+		        newObject( def = h1p:=punkte( vektor( i,np, pd(1,i)), vektor( i,np, sd(1,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h2p:=punkte( vektor( i,np, pd(2,i)), vektor( i,np, sd(2,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h3p:=punkte( vektor( i,np, pd(3,i)), vektor( i,np, sd(3,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h4p:=punkte( vektor( i,np, pd(4,i)), vektor( i,np, sd(4,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h5p:=punkte( vektor( i,np, pd(5,i)), vektor( i,np, sd(5,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h6p:=punkte( vektor( i,np, pd(6,i)), vektor( i,np, sd(6,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h7p:=punkte( vektor( i,np, pd(7,i)), vektor( i,np, sd(7,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h8p:=punkte( vektor( i,np, pd(8,i)), vektor( i,np, sd(8,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h9p:=punkte( vektor( i,np, pd(9,i)), vektor( i,np, sd(9,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h10p:=punkte( vektor( i,np, pd(10,i)), vektor( i,np, sd(10,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h11p:=punkte( vektor( i,np, pd(11,i)), vektor( i,np, sd(11,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h12p:=punkte( vektor( i,np, pd(12,i)), vektor( i,np, sd(12,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h13p:=punkte( vektor( i,np, pd(13,i)), vektor( i,np, sd(13,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h14p:=punkte( vektor( i,np, pd(14,i)), vektor( i,np, sd(14,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h15p:=punkte( vektor( i,np, pd(15,i)), vektor( i,np, sd(15,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h16p:=punkte( vektor( i,np, pd(16,i)), vektor( i,np, sd(16,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h17p:=punkte( vektor( i,np, pd(17,i)), vektor( i,np, sd(17,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h18p:=punkte( vektor( i,np, pd(18,i)), vektor( i,np, sd(18,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h19p:=punkte( vektor( i,np, pd(19,i)), vektor( i,np, sd(19,i) ), 0.1 ) ; target = Dichte );
+		        newObject( def = h20p:=punkte( vektor( i,np, pd(20,i)), vektor( i,np, sd(20,i) ), 0.1 ) ; target = Dichte );
+		        
+		        Dichte.addGraph(name =gv, gh,  s );
+
+
+
+		        		       		     </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+			   			      deleteAll();
+			   			      newObject( def = n := 10);
+			   			      newObject( def = nacc := 0 );
+			      newObject( def = aa := 0.2 );
+			      newObject( def = nfac:=2; select = true );
+			        newObject( def = pl:=&lt;punkt>liste(i,n, punkt( -2.5+7/n*i,4-5/n*i) ); target = Punkte; showNames = false );
+
+			      //newObject( def = pl:=&lt;punkt>liste(i,n, punkt( sin( 2*pi*i/n), cos(2*pi*i/n) ) ); target = Punkte; showNames = false );
+			      newObject( def = dist(r, phi, x, y ) :=cond(| (cos(phi)*x+sin(phi)*y) -r |-aa, 1, 0));
+			      newObject( def = dista(r, phi, x, y ) :=cond(| (cos(phi)*x+sin(phi)*y) -r  |-0.4, 1, 0));
+			      //newObject( def = dd(a, phi) := sum(i,1,n,dist(a,phi, pl[i].x,pl[i].y) ) );
+			      newObject( def = dd(phi, r) := sum(i,1,nacc,dist(r,phi, pl[i].x,pl[i].y)   ) );
+			      newObject( def = dda(phi, r) := sum(i,1,n,dista(r,phi, pl[i].x,pl[i].y)   ) );
+
+                      newObject( def = maxa:=maxelem( matrix(i,20,k,20,dda(-5+0.5*i, pi/20*k)) ));
+			      newObject( def = ddk:=karte(dd, vektor({0, maxa})); target = Dichte );
+			      newObject( def = s:=punkt(1,1); target = Dichte);
+			      newObject( def = phi:=s.x);
+			      newObject( def = r:=s.y);
+			       newObject( def = g:=gerade( punkt(r*cos(phi), r*sin(phi)), vektor( {-sin(phi), cos(phi) } ) ) ; color = red; target = Punkte);
+
+
+			      			   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+			   			      deleteAll();
+			   			      newObject( def = n := 20);
+			   			      newObject( def = nacc := 20 );
+			      newObject( def = aa := 0.2 );
+			      newObject( def = nfac:=2; select = true );
+			        newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 1+3/n*(i-n/2)), cond(i-n/2-0.5, 4-10/n*i, -3+12/n*(i-n/2))) ); target = Punkte; showNames = false );
+
+			      //newObject( def = pl:=&lt;punkt>liste(i,n, punkt( sin( 2*pi*i/n), cos(2*pi*i/n) ) ); target = Punkte; showNames = false );
+			      newObject( def = dist(r, phi, x, y ) :=cond(| (cos(phi)*x+sin(phi)*y) -r |-aa, 1, 0));
+			      newObject( def = dista(r, phi, x, y ) :=cond(| (cos(phi)*x+sin(phi)*y) -r  |-0.4, 1, 0));
+			      //newObject( def = dd(a, phi) := sum(i,1,n,dist(a,phi, pl[i].x,pl[i].y) ) );
+			      newObject( def = dd(phi, r) := sum(i,1,nacc,dist(r,phi, pl[i].x,pl[i].y)   ) );
+			      newObject( def = dda(phi, r) := sum(i,1,n,dista(r,phi, pl[i].x,pl[i].y)   ) );
+
+                      newObject( def = maxa:=maxelem( matrix(i,20,k,20,dda(-5+0.5*i, pi/20*k)) ));
+			      newObject( def = ddk:=karte(dd, vektor({0, maxa})); target = Dichte );
+			      newObject( def = s:=punkt(1,1); target = Dichte);
+			      newObject( def = phi:=s.x);
+			      newObject( def = r:=s.y);
+			       newObject( def = g:=gerade( punkt(r*cos(phi), r*sin(phi)), vektor( {-sin(phi), cos(phi) } ) ) ; color = red; target = Punkte);
+
+
+			      			   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+			   			      deleteAll();
+			   			      newObject( def = n := 15);
+			   			      newObject( def = nacc := 15 );
+			      newObject( def = aa := 0.2 );
+			      newObject( def = nfac:=2; select = true );
+			        newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 1+3/n*(i-n/2)), cond(i-n/2-0.5, 4-10/n*i, -3+12/n*(i-n/2))) ); target = Punkte; showNames = false );
+
+			      //newObject( def = pl:=&lt;punkt>liste(i,n, punkt( sin( 2*pi*i/n), cos(2*pi*i/n) ) ); target = Punkte; showNames = false );
+			      newObject( def = dist(r, phi, x, y ) :=cond(| (cos(phi)*x+sin(phi)*y) -r |-aa, 1, 0));
+			      newObject( def = dista(r, phi, x, y ) :=cond(| (cos(phi)*x+sin(phi)*y) -r  |-0.4, 1, 0));
+			      //newObject( def = dd(a, phi) := sum(i,1,n,dist(a,phi, pl[i].x,pl[i].y) ) );
+			      newObject( def = rast(x):=floor(x*10)/10);
+			      newObject( def = dd(phi, r) := sum(i,1,nacc,dist(r,phi, pl[i].x,pl[i].y)   ) );
+			      newObject( def = dda(phi, r) := sum(i,1,n,dista(r,phi, pl[i].x,pl[i].y)   ) );
+
+                      newObject( def = maxa:=maxelem( matrix(i,20,k,20,dda(-5+0.5*i, pi/20*k)) ));
+			      newObject( def = ddk:=karte(dd, vektor({0, maxa})); target = Dichte );
+			      newObject( def = s:=punkt(1,1); target = Dichte);
+			      newObject( def = phi:=s.x);
+			      newObject( def = r:=s.y);
+			       newObject( def = g:=gerade( punkt(r*cos(phi), r*sin(phi)), vektor( {-sin(phi), cos(phi) } ) ) ; color = red; target = Punkte);
+
+
+			      			   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		       deleteAll();
+			   			      newObject( def = n := 20);
+			   			      newObject( def = nacc := 20);
+			      newObject( def = aa := 0.2 );
+			      newObject( def = nfac:=2; select = true );
+			        newObject( def = pl:=&lt;punkt>liste(i,n, punkt( cond(i-n/2-0.5, -2.5+14/n*i, 1+3/n*(i-n/2)), cond(i-n/2-0.5, 4-10/n*i, -3+12/n*(i-n/2))) ); target = Punkte; showNames = false );
+
+			      //newObject( def = pl:=&lt;punkt>liste(i,n, punkt( sin( 2*pi*i/n), cos(2*pi*i/n) ) ); target = Punkte; showNames = false );
+			      newObject( def = dist(r, phi, x, y ) :=cond(| (cos(phi)*x+sin(phi)*y) -r |-aa, 1, 0));
+			      newObject( def = dista(r, phi, x, y ) :=cond(| (cos(phi)*x+sin(phi)*y) -r  |-0.4, 1, 0));
+			      //newObject( def = dd(a, phi) := sum(i,1,n,dist(a,phi, pl[i].x,pl[i].y) ) );
+			      newObject( def = rast(x):=floor(x*10)/10);
+			      newObject( def = dd(phi, r) := sum(i,1,nacc,dist(r,phi, pl[i].x,pl[i].y)   ) );
+			      newObject( def = dda(phi, r) := sum(i,1,n,dista(r,phi, pl[i].x,pl[i].y)   ) );
+
+                      newObject( def = maxa:=maxelem( matrix(i,20,k,20,dda(-5+0.5*i, pi/20*k)) ));
+			      //newObject( def = ddk:=karte(dd, vektor({0, maxa})); target = Dichte );
+			      newObject( def = s:=punkt(1,1); target = Dichte);
+			      newObject( def = phi:=s.x);
+			      newObject( def = r:=s.y);
+			       newObject( def = g:=gerade( punkt(r*cos(phi), r*sin(phi)), vektor( {-sin(phi), cos(phi) } ) ) ; color = red; target = Punkte);
+
+		      newObject( def = gd := 0.4 );
+		        newObject( def = vv(x,y) := vektor({dd(x, y),0}) );
+		        newObject( def = vn(x,y) := vektor({0,0}) );
+		        newObject( def = ffn := feld(vn,punkt(0,0),gd,gd,20,NTP) ; color = yellow; target = Dichte);
+		        newObject( def = vv(x,y) := vektor({dd(x, y),0}) );
+		        newObject( def = ff := feld(vv,punkt(0,0),gd,gd,20,NT) ; target = Dichte);
+		      		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		       newObject( def = np :=10 );
+		       newObject( def = nr := 10 );
+		       newObject( def = nintr:=5 );
+		       newObject( def = nph:=np/2);
+		       newObject( def = s1(phi):=floor( (p1.x*cos(phi)+p1.y*sin(phi))/nintr*nr) / nr*nintr    );
+		       newObject( def = s2(phi):=floor( (p2.x*cos(phi)+p2.y*sin(phi))/nintr*nr) / nr*nintr    );
+		       newObject( def = s3(phi):=floor( (p3.x*cos(phi)+p3.y*sin(phi))/nintr*nr) / nr*nintr    );
+		       newObject( def = s4(phi):=floor( (p4.x*cos(phi)+p4.y*sin(phi))/nintr*nr) / nr*nintr    );
+		       newObject( def = gv:=balken(  vektor( i,np, -pi+pi/nph*(i+0.5)), vektor(i,np,7), 0 ); fillcolor = 0.0.0.0; bordercolor = red; target = Dichte );
+		       newObject( def = gh:=balken(  vektor( i,nr, 0), vektor(i,nr,nintr/nr*(i-0.5)), 20 ); fillcolor = 0.0.0.0; bordercolor = red; target = Dichte );
+		        newObject( def = h1p:=punkte( vektor( i,np, -pi-0.03+pi/nph*i), vektor( i,np, s1(-pi+pi/nph*i) ), 0.2 ) ; target = Dichte );
+		        newObject( def = h2p:=punkte( vektor( i,np, -pi+pi/nph*i), vektor( i,np, s2(-pi+pi/nph*i) ), 0.2 ) ; target = Dichte );
+		        newObject( def = h3p:=punkte( vektor( i,np, -pi+0.03+pi/nph*i), vektor( i,np, s3(-pi+pi/nph*i) ), 0.2 ) ; target = Dichte );
+		        newObject( def = h4p:=punkte( vektor( i,np, -pi+0.06+pi/nph*i), vektor( i,np, s4(-pi+pi/nph*i) ), 0.2 ) ; target = Dichte );
+		     </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

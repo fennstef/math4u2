@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte</location>
+		<title>4.2 Allgemeine Dokumentinformation</title>
+		<step>
+			<title>4.2 Allgemeine Dokumentinformation</title>
+			<description>
+Die ersten Tags legen die allgemeinen Dokumentinformationen fest.
+<p/><strong>Beispiel:</strong>
+<br/>
+<code><![CDATA[
+<body>
+	<author>Dr. Weiss</author>
+	<location>Test/Analysis/Entwicklung/Potenzreihen</location>
+	<title>Logarithmusreihe</title>
+	<summary>
+		Taylor-Entwicklung des natürlichen Logarithmus, Logarithmusreihe
+	</summary>
+	<keywords>
+		<keyword>Logarithmus</keyword>
+		<keyword>Taylor-Entwicklung</keyword>
+		<keyword>Potenzreihe</keyword>
+		<keyword>Konvergenzradius</keyword>
+		<keyword>Konvergenzradius2</keyword>
+	</keywords>
+	<step>
+	</step>
+</body>
+]]></code>
+
+<br/>Darin bedeutet:
+<br/>
+<ul>
+	<li>
+<code>&lt;author>(optional)</code>: Autor der Lektion.	
+	</li>
+	<li>
+<code>&lt;location></code>: Pfad, unter dem die Lektion im Themennavigator angezeigt wird. 
+Die einzelnen Teile des Pfads werden durch das Zeichen / getrennt.	
+	</li>
+	<li>
+<code>&lt;title></code>: Title der Lektion.	
+	</li>
+	<li>
+<code>&lt;summary>(optional)</code>: Kurzbeschreibung. Wird im Themennavigator rechts angezeigt.	
+	</li>
+	<li>
+<code>&lt;keywords>(optioal)</code>: Schliesst ein oder mehrere <code>&lt;keyword></code>-Tags ein.
+Jedes <code>&lt;keyword></code>-Tag definiert einen Schlüsselbegriff.	
+	</li>				
+</ul>
+<br/>
+Die Tags werden in der angegebenen Reihenfolge angegeben, allerdings sind lediglich
+<code>&lt;location></code> und <code>&lt;title></code> verpflichtend, die übrigen können entfallen.
+			</description>
+		</step>
+	</body>
+</math4u2>

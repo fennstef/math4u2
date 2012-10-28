@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.07 Parametrisierte Kurve</title>
+		<step>
+			<title>3.4.7 Parametrisierte Kurve</title>
+			<description>			
+<strong>Parametrisierte Kurve definieren</strong>
+<br/>Eine Kurve wird durch Angabe von 5 Parametern wie bei
+<br/><code>kurve1:=kurve(t,0,2*pi, cos(t), sin(t)+1)</code> definiert.
+<br/>Dabei ist der erste Parameter (hier: <code>t</code>, allgemein: ein Bezeichner) der sogenannte Kurvenparameter,
+er wird oft als Zeit interpretiert. Die beiden folgenden Parameter legen das 
+Intervall fest, das der Kurvenparameter durchläuf. Hier legen die beiden 
+Parameter <code>0</code> und <code>2*pi</code> das Intervall fest.
+
+<p/>Zuletzt folgen die beiden Koordinatenfunktionen, zuerst für die x-Koordinate, 
+dann für die y-Koordinate. Sie sind einstellige Funktionen, ihre 
+Funktionsvariable ist der vereinbarte Kurvenparameter. Hier sind als 
+Koordinatenfunktoinen die beiden Funktionen <code>cos(t)</code> und <code>sin(t)+1</code> vereinbart.
+<code>kurve1</code> definiert die Kreislinie eines Kreises mit Radius 1 und Mittelpunkt bei (0,1).
+
+<p/><strong>Detailsicht</strong>
+<p/><img src="math4u2/doc/images/objekte/kurve-detail01.jpg"/>
+
+<p/><strong>Methoden einer Kurve</strong>
+<br/>Zu einer Kurve <code>k</code> liefert
+<br/><code>k.min </code><tab/> die untere Grenze des Parameterintervalls,
+<br/><code>k.max </code><tab/> die obere Grenze des Parameterintervalls,
+<br/><code>k.x   </code><tab/> die Koordinatenfunktion der x-Koordinate (einstellige Funktion) und
+<br/><code>k.y   </code><tab/> die Koordinatenfunktion der y-Koordinate (einstellige Funktion).
+
+<p/><strong>Beispiel:</strong> Ausschnitt aus einem Funktionsgraphen als 
+parametrisierte Kurve
+<p/><img src="math4u2/doc/images/objekte/kurve01.jpg"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

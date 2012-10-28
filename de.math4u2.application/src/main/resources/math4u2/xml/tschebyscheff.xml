@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Interpolation</location>
+		<title>Tschebyscheff-Stützstellen</title>
+		<summary>Runge-Phänomen, Polynom-Interpolation mit Tschebyscheff-Stützstellen</summary>
+		<keywords>
+			<keyword>Interpolation</keyword>
+			<keyword>Runge</keyword>
+			<keyword>Tschebyscheff</keyword>
+		</keywords>
+
+		<step>
+			<title>Tschebyscheff-Stützstellen: Fragestellung</title>
+			<description>Gegeben eine Funktion <f>f(x)</f> in einem Intervall [a,b]. 
+			<br/>Berechne zu dieser Funktion eine Polynom-Interpolation <f>p(x)</f>, die dadurch entsteht, dass eine bestimmte Anzahl von Stützpunkten (<f>x</f>,<f>f(x)</f>) im Intervall [a,b] interpoliert wird.
+			<br/>Die Frage ist dann: Wie gut nähert <f>p(x)</f> die ursprüngliche Funktion <f>f(x)</f> im Intervall [a,b] an? Es geht kurz gesagt um die Qualität der Approximation.
+</description>
+			<seq>
+				<call object="main" action="expandLists">
+					<param type="Boolean" value="false"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Es liegt auf der Hand, dass  die Qualität der Approximation von zwei Faktoren abhängt: 
+		<br/>Einmal davon, um welche Funktion <f>f(x)</f> es sich handelt. Wenn z.B. <f>f(x)</f> selbst ein Polynom vom Grad <f>5</f> ist, dann wird das Interpolationspolynom <f>p(x)</f> mit <f>f(x)</f> identisch sein, wenn die Anzahl der verwendeten Stützstellen <f>5+1</f> oder größer ist. Eine weitere Erhöhung der Anzahl der Stützstellen bringt dann keine Verbesserung der Qualität mehr. Umgekehrt wird es auch mit noch so vielen Stützstellen nicht gelingen, eine Funktion wie <f>f(x)=sin(x)</f> exakt durch ein Polynom darzustellen.
+		</description>
+		</step>
+		<step>
+			<description>Zum anderen wird bei fest gewählter Funktion <f>f(x)</f> die Qualität der Approximation von der Anzahl der zur Interpolation verwendeten Stützstellen abhängen. Die Idee ist hier wohl: je mehr, desto besser. MIt einem einfachen Beispiel kann man zeigen, dass man hier vorsichtig sein muss.  
+
+		</description>
+		</step>
+		<step>
+			<title>Die Runge-Funktion</title>
+			<description>Die Runge-Funktion ist gegeben durch <f>runge</f>. Ihr Graph ist oben blau eingetragen.
+			<br/>Das Intervall, auf dem die Interpolation stattfinden soll, ist [-5,5]. Der oben grau hinterlegte Bereich interessiert also im Folgenden nicht.<br/>
+			</description>
+			<seq>
+				<script>
+					deleteAll();
+					da.coordinateSystem(xMin=-7; xMax=7; yMin=-1; yMax=3);
+					newObject( def =  recLeft:=flaeche({punkt(-5,-20),punkt(-5,30),punkt(-20,-20),punkt(-20,30)}); color = gray; target = da; hide = true );
+					newObject( def = recRight:=flaeche({punkt(5,-20),punkt(5,30),punkt(20,-20),punkt(20,30)}) ; color = gray; target = da; hide = true );
+					newObject( def =runge(x):=1/(1+x^2) ; color = blue; target = da  );
+					
+					newObject( def = a:=-5  );
+					newObject( def = b:=5  );
+					newObject( def = nInput:=8; hide = true  );
+					newObject( def = n:=floor(min(max(2,nInput), 14)); hide = true  );
+					newObject( def =  h:=(b-a)/(n-1) );
+					newObject( def = xpos(i):=a+i*h  );
+					newObject( def = pl(x,k,l):=prod(i,k,l,(x-xpos(i)))  );
+					newObject( def = lff(x,i):=pl(x,0,i-1)*pl(x,i+1,n-1)  );
+					newObject( def = lf(x,i):=lff(x,i)/lff(xpos(i),i)  );
+					newObject( def = rungetext:=text(  punkt(1,runge(1)), "<f>runge(x)</f>", B_NE); bodercolor = blue; fillcolor = 255.255.255.220; target=da);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Äquidistante Stützstellen</title>
+			<description>Als erstes versuchen wir eine Polynom-Interpolation mit äquidistanten Stützstellen: Eine Stützstelle an der linken Intervallgrenze, eine an der rechten, die restlichen in gleichen Abständen über das Intervall verteilt. Die Positionen der Stützstellen sind durch die gepunkteten Geraden markiert.</description>
+			<seq>
+				<script>
+			       newObject( def = gpos(n) := min(a+n*h, b) );
+			       newObject( def = g0:=gerade(punkt(gpos(0),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g1:=gerade(punkt(gpos(1),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g2:=gerade(punkt(gpos(2),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g3:=gerade(punkt(gpos(3),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g4:=gerade(punkt(gpos(4),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g5:=gerade(punkt(gpos(5),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g6:=gerade(punkt(gpos(6),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g7:=gerade(punkt(gpos(7),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g8:=gerade(punkt(gpos(8),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g9:=gerade(punkt(gpos(9),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g10:=gerade(punkt(gpos(10),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g11:=gerade(punkt(gpos(11),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g12:=gerade(punkt(gpos(12),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       newObject( def = g13:=gerade(punkt(gpos(13),0), vektor({0,1})); color = magenta; linestyle = dot; target = da );
+			       deleteObject( name = rungetext);
+			       
+			       
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Polynom-Interpolation, </title>
+			<description>Die Polynom-Interpolation ist jetzt oben rot eingetragen. Die aktuelle Anzahl der Stützstellen ist <f><conf>nInput(style=text)</conf>n:=nInput</f>. 
+			<br/>Experimentieren Sie! Sie können für n natürliche Zahlen zwischen <f>2</f> und <f>14</f> eingeben. Größere oder kleinere Werte werden nicht berücksichtigt.</description>
+			<seq>
+				<script>
+			       newObject( def = p(x):=sum(i,0,n,lf(x,i)*runge(xpos(i))); color = red; target = da );
+			       newObject( def = ptext:=text(  punkt(-4.5,p(-4.5)), "<f>Polynom-Interpolation</f>", B_NE); bodercolor = red; fillcolor = 255.255.255.220; target=da);
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Der Interpolationsfehler</title>
+			<description>Die Qualität der Interpolation wird deutlicher greifbar, wenn wir die Differenz zwischen ursprünglicher Funktion <fh>runge</fh> und Interpolationspolynom <fh>p</fh> explizit einzeichnen.
+<br/>Der Graph der Fehlerfunktion <f>d</f> ist jetzt oben grün eingetragen.
+<br/>Verändern Sie die Anzahl der Stützstellen: <f><conf>nInput(style=text)</conf>n:=nInput</f>.</description>
+			<seq>
+				<script>
+			        newObject( def = d(x):=runge(x)-p(x); color = green; target  = da );
+			        newObject( def = dtext:=text(  punkt(-4.5,d(-4.5)), "<f>Differenz</f>", B_SE); bodercolor = green; fillcolor = 255.255.255.220; target=da);
+			        deleteObject( name = ptext);
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Runge-Phänomen</title>
+			<description>Die Experimente deuten folgendes Phänomen an:
+			<ul>
+					<li>Es gibt einen Bereich in der Mitte des Intervalls [-5,5], in dem mit zunehmender Anzahl von Stützstellen der Interpolationsfehler kleiner wird und
+				</li>
+					<li>es gibt zwei Randbereiche (jetzt oben eingefärbt), in denen mit zunehmender Anzahl von Stützstellen der Interpolationsfehler größer wird.</li>
+				</ul>Sie können das nochmals ausprobieren: <f><conf>nInput(style=text)</conf>n:=nInput</f>
+			</description>
+			<seq>
+				<script>
+				  deleteObject( name = dtext);
+			       newObject( def = recLeft2:=flaeche({punkt(-5,-20),punkt(-5,30),punkt(-3.63,30),punkt(-3.63,-20)}) ; color = pink; target = da );
+			        newObject( def = recRight2:=flaeche({punkt(5,-20),punkt(5,30),punkt(3.63,30),punkt(3.63,-20)}) ; color = pink; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Man kann die Grenzen dieser Bereiche tatsächlich berechnen: Im Intervall ]-3.63,3.63[ wird die Interpolation mit zunehmender Anzahl von Stützstellen immer besser, ausserhalb immer schlechter.
+<br/>Dieser Sachverhalt wird als <em>Runge-Phänomen</em> bezeichnet. 
+
+		</description>
+		</step>
+		<step>
+			<title>Der Ausweg</title>
+			<description>Als Ausweg bietet sich folgendes Vorgehen an:
+		  <ul>
+					<li>Um in den Randbereichen das Polynom stärker zur ursprünglichen Funktion zu zwingen, könnte man dort noch mehr Stützstellen einfügen bzw. dort die Stützstellen enger legen als im Mittelbereich und</li>
+					<li>direkt an den Intervallgrenzen -5 bzw. 5 benötigt man keine Stützstellen, hier kann man (wie an anderen Stellen auch) einen Interpolationsfehler akzeptieren.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<title>Tschebyscheff-Stützstellen</title>
+			<description>Die Frage ist jetzt natürlich: Kann man für die Verteilung der Stützstellen ein Muster finden, so dass die maximalen Interpolationsfehler zwischen zwei Stützstellen jeweils betragsmäßig (annähernd) gleich groß sind. Diese Frage läßt sich nicht allgemein beantworten, weil der Interpolationsfehler zum einen zwar empfindlich von der Verteilung der Stützstellen abhängt, zum anderen aber auch von der zu interpolierenden Funktion. Wenn man von dem zweiten Effekt absieht, gibt es allerdings eine optimale Verteilung, und zwar die sog. <em>Tschebyscheff-Stützstellen</em>.</description>
+			<seq>
+				<call object="main" action="deleteObject">
+					<param type="String" value="recLeft2"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="recRight2"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="p"/>
+					<param type="Boolean" value="false"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="d"/>
+					<param type="Boolean" value="false"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="gpos(i):=100"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="xpos"/>
+					<param type="boolean" value="false"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Oben sind nun die Tschebyscheff-Stützstellen für das Intervall [-5,5] eingetragen. Wählen Sie eine Anzahl zwischen <f>2</f> und <f>14</f>. 
+			<f><conf>nInput(style=text)</conf>n:=nInput</f>.
+		  <br/>Beobachten Sie:
+		  <ul>
+					<li>Alle Stützstellen liegen innerhalb des Intervalls, keine auf den Grenzen.</li>
+					<li>An den Rändern liegen die Stützstellen enger als in der Mitte des Intervalls.</li>
+					<li>Die Stützstellen liegen symmetrisch zur Mitte des Intervalls.</li>
+				</ul>
+			</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="n:=floor(min(max(1,nInput-1), 13))"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="xpos(i):=(b+a)/2+(b-a)/2*cos((2*i+1)/(2*n+2)*pi)"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="xpos"/>
+					<param type="boolean" value="false"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="gpos(i):=xpos(i)"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="gpos"/>
+					<param type="Boolean" value="false"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>Genauer gilt: Sollen im Intervall [a, b] n+1 viele Stützstelle mit den Indices 0, 1, ..., n verteilt werden, so wird die Stützstellen mit dem Index <f>i</f> an der Stelle <f>xpos</f> positioniert.
+		  </description>
+		</step>
+		<step>
+			<title>Tschebyscheff-Interpolation</title>
+			<description>Eine Polynom-Interpolation wird als Tschebyscheff-Interpolation bezeichnet, wenn die Stützstellen nach dem jetzt eingestellten Muster platziert sind. Oben ist jetzt der Graph des Interpolationspolynoms p(x) (rot) und der Differenzfunktion d(x) (grün) eingetragen. 
+<br/>Anzahl der Stützstellen: <f><conf>nInput(style=text)</conf>n:=nInput</f>.
+<br/>Experimentieren Sie mit der Anzahl der Stützstellen (maximal 14). Beobachten Sie insbesondere, dass es im Randbereich bei größeren <fh>n</fh> keine "Überschwinger" mehr gibt.</description>
+			<seq>
+				<call object="main" action="newObject">
+					<param type="String" value="nInput:=8"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="pl(x,k,l):=prod(i,k,l,(x-xpos(i)))"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="lff(x,i):=pl(x,0,i-1)*pl(x,i+1,n)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="lf(x,i):=lff(x,i)/lff(xpos(i),i)"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="p(x):=sum(i,0,n,lf(x,i)*runge(xpos(i)))"/>
+					<param type="Color" value="red"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="p"/>
+					<param type="Boolean" value="true"/>
+				</call>
+				<call object="main" action="setObjectVisible">
+					<param type="String" value="d"/>
+					<param type="Boolean" value="true"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<title>Beispiel: Tschebyscheff-Interpolation der Sinus-Funktion</title>
+			<description>Als abschließendes Beispiel die Tschebyscheff-Interpolation der Sinus-Funktion (blau) im Intervall [0,<fb>nnn:=pi/2</fb>] .
+		<br/>Als Differenzfunktion ist jetzt <f>d</f> grün eingetragen. Bei wenigen Stützstellen sind die Werte dieser Funktion so groß, dass ihr Graph oben nicht zu sehen ist.</description>
+			<seq>
+				<script>
+					da.coordinateSystem(xMin=-1; xMax=4; yMin=-2; yMax=2);
+				</script>
+				<call object="main" action="newObject">
+					<param type="String" value="nInput:=4"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="d(x):=10^10*(sin(x)-p(x))"/>
+					<param type="Color" value="green"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="a:=0"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="b:=1.57"/>
+				</call>
+				<call object="main" action="newObject">
+					<param type="String" value="runge(x):=sin(x)"/>
+					<param type="Color" value="blue"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="recLeft"/>
+				</call>
+				<call object="main" action="deleteObject">
+					<param type="String" value="recRight"/>
+				</call>
+			</seq>
+		</step>
+		<step>
+			<description>
+		   Stellen Sie die Anzahl der Stützstellen (maximal 14) so ein, dass die Differenzen genügend klein (z.B. &le; <f>1*10^(-10)</f>) werden: <f><conf>nInput(style=text)</conf>n:=nInput</f>.
+		   </description>
+		</step>
+	</body>
+</math4u2>

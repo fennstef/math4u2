@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.2 Datentypen</location>
+		<title>3.2.3 Dualvektoren (Zeilenvektoren)</title>
+		<step>
+			<title>3.2.3 Dualvektoren (Zeilenvektoren)</title>
+			<description>			
+Zeilenvektoren werden wie <code>dv:=dualvektor({3,4,5})</code> mit dem Schlüsselwort 
+<code>dualvektor</code> erzeugt. Ansonsten gelten die im obigen Abschnitt für 
+Spaltenvektoren beschriebenen Konventionen entsprechend.
+			</description>
+		</step>
+	</body>
+</math4u2>

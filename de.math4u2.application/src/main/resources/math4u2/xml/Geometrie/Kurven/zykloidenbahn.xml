@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Geometrie/Kurven</location>
+		<title>Zykloide</title>
+		<summary>Zykloide zeichnen: gewöhnlich, verkürzt, verlängert</summary>
+		<step>
+			<title>Zykloide</title>
+			<description>Wenn ein Kreis mit Radius <f>R</f> auf einer Geraden rollt, dann beschreibt ein starr mit dem Kreis verbundener Punkt <f>P</f> eine <strong>Zykloide</strong>. 
+			<br/>Die genaue Form der Zykloide hängt davon ab, welchen Abstand <f>a</f> der Punkt <f>P</f> vom Kreismittelpunkt <f>M</f> hat:</description>
+			<seq>
+				<script>
+				   deleteAll();
+				   expand( left = false; right = true);
+				   newObject( def = da.xMin:=-2 );
+				   newObject( def = da.xMax:=fix(da.xMin+13.2) );
+				   newObject( def = da.yMax:=fix(4) );
+				   newObject( def = R := 1; select = true );
+				   newObject( def =  M:=punkt(0.5,fix(R)); target = da;);
+				   newObject( def = kr:=kreis(M,R); target = da;);
+				   newObject( def =a:=1; select = true );
+				   newObject( def = phi := M.x/R );
+				   newObject( def = x(t):=R*t-a*sin(t); );
+				   newObject( def = y(t):=R-a*cos(t) ; );
+				   newObject( def = speiche:=pfeil(M, vektor({-sin(phi)*a,-cos(phi)*a})); color = gray; target = da;);
+				   newObject( def = P:= punkt( fix(x(phi)), fix(y(phi)) ) ; color = red; target = da ); 
+				   newObject( def = zykloide:=kurve(t,0,phi,x(t),y(t)); color = green; target = da;);   
+				   da.zoom1To1(active=true);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Gewöhnliche Zykloide:</strong> Hier gilt <f>a=R</f> , der Punkt <f>P</f> liegt auf dem Kreis. ...</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="M.x" to="10" end="6"/>
+				<animate object="main" parameterName="M.x" to="0" end="4"/>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Verkürzte Zykloide:</strong> Hier gilt <f>a $lt R</f> , der Punkt <f>P</f> liegt innerhalb des Kreises. ...</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="a" to="0.7" end="4"/>
+				<animate object="main" parameterName="M.x" to="10" end="6"/>
+				<animate object="main" parameterName="M.x" to="0" end="4"/>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Verlängerte Zykloide:</strong> Hier gilt <f>a $gt R</f> , der Punkt <f>P</f> liegt ausserhalb des Kreises. ...</description>
+		</step>
+		<step>
+			<seq>
+				<animate object="main" parameterName="a" to="1.3" end="4"/>
+				<animate object="main" parameterName="M.x" to="10" end="6"/>
+				<animate object="main" parameterName="M.x" to="0" end="4"/>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Parameterform:</strong> Die Zykloide läßt sich als parametrisierte Kurve darstellen. 
+		  <br/>Bei den hier gewählten Startbedingungen lauten die beiden Koordinatenfunktionen der Kurve:
+		  <br/><f>$fd(x)</f> und 
+		  <br/><f>$fd(y)</f> .
+		  <br/>Experimentieren Sie: Verstellen Sie die Parameter <f>R</f> und <f>a</f> oben rechts, bewegen Sie <f>M</f> mit der Maus.
+		  </description>
+		</step>
+	</body>
+</math4u2>

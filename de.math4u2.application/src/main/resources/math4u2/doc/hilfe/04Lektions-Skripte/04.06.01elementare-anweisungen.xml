@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.6 Aktionen eines Schritts festlegen</location>
+		<title>4.6.1 Übersicht: Elementare Anweisungen</title>
+		<step>
+			<title>4.6.1 Übersicht: Elementare Anweisungen</title>
+			<description>
+Die elementaren Anweisungen beschreiben folgende grundlegenden Aktionen und Prozesse (eine
+ausführliche Beschreibung folgt weiter unten) :
+
+<p/><strong>Benutzeroberfläche konfigurieren:</strong>
+<br/><code>defaults()</code><tab/><tab/>Voreinstellungen setzen
+<br/><code>expand()</code><tab/><tab/>Listen ein/ausklappen
+
+<p/><strong>Objekte erzeugen, verändern, löschen:</strong>
+<br/><code>newObject()</code><tab/><tab/>Objekt erzeugen
+<br/><code>modifyObject()</code><tab/><tab/>Eigenschaften eines Objekts ändern
+<br/><code>deleteObject()</code><tab/><tab/>Objekte löschen
+<br/><code>deleteAll()</code><tab/><tab/>Alle Objekte löschen
+
+<p/><strong>Eigenschaften eines Zeichenfensters festlegen:</strong>
+<br/>Die Methoden richten sich an ein Fenster mit dem Namen <code>fenstername</code>:
+<p/><code>fenstername.setTitle()</code><tab/><tab/>Titel setzen
+<br/><code>fenstername.addGraph()</code><tab/><tab/>Graphen hinzufügen
+<br/><code>fenstername.deleteGraph()</code><tab/><tab/>Graphen löschen
+<br/><code>fenstername.coordinateSystem()</code><tab/>Koordinatensystem einrichten
+<br/><code>fenstername.zoom1To1()</code><tab/><tab/>1To1-Zoom ein/ausschalten
+
+<p/><strong>Hinweis</strong>: Standardmäßig ist das Zeichenfenster mit dem 
+Namen <code>da</code> eingerichtet.
+Weitere Zeichenfenster können durch ein <code>&lt;layout></code>-Tag erzeugt werden.
+
+<p/><strong>Animation:</strong>
+<br/><code>animate()</code><tab/><tab/>Animation
+			</description>
+		</step>
+	</body>
+</math4u2>

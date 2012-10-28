@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Max Weiß (Fachhochschule Augsburg) -->
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. M. Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Analysis/Entwicklung/Potenzreihen</location>
+		<title>Taylor-Entwicklung - kurz</title>
+		<summary>Zeigt die Grundidee der Taylor-Entwicklung: lokale Näherung einer differenzierbaren Funktion durch ein Polynom</summary>
+		<step>
+			<title>Taylor-Entwicklung</title>
+			<description>Zum Experimentieren auf "weiter" klicken.</description>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false;right=one);
+					da.coordinateSystem(
+						xMin=-2;					
+						xMax=2.5;
+						yMin=-2;
+						yMax=2;
+					);
+					
+					newObject(
+						def = f(x):=x*sin(x^2);
+						color = 160.160.255;
+						target = da; select = true;
+					);
+				
+					newObject(
+						def = S:=punkt(-1,fix(-1.5));
+						style = ARROW_H;
+						color = green;
+						target = da;
+					);
+
+					
+					newObject(
+						def = C:=punkt(fix(S.x),fix(0));
+						style = CIRCLE_DOT;
+						target = da;
+					);
+					
+										
+					newObject( def = gc:=gerade(C,e2y); color = green; linestyle = dot; target = da );
+					
+					newObject(def = c:=C.x);					
+				
+					newObject(
+						def = P:=punkt(fix(c),fix(f(c)));
+						target = da;
+					);
+		         
+		         newObject( def = ordnung:=2 );
+		        newObject( def = f1(x):= derive(f(x)); );
+		        newObject( def = f2(x):= derive(f(x), 2); );
+		        newObject( def = f3(x):= derive(f(x), 3); );
+		        newObject( def = f4(x):= derive(f(x), 4); );
+		        newObject( def = f5(x):= derive(f(x), 5); );
+		         newObject( def = al:=&lt;funktion>liste0({f(c), f1(c), f2(c), f3(c), f4(c), f5(c) }) );
+		         newObject( def = ord :=min(5, max(0, floor(ordnung)));  );
+		         newObject( def = p(x):=sum(i,0,ord,al[i]*(x-c)^i/i!); color = red; target = da );
+		         
+		         newObject( def = t0:=text(punkt(S.x, 0),"Entwicklungspunkt", B_NW); target = da);
+		         newObject( def = t1:=text(S,"Hier Entwicklungspunkt verschieben", B_NE); target = da);
+		         newObject( def = t2:=text(punkt(0.8,f(0.8)), "Funktion <fh>f</fh>",B_NW); target = da);
+		         newObject( def = t3:=text(punkt(-0.4,p(-0.4)), "Taylorpolynom <fh>p</fh>",B_SE); target = da);
+
+		     				   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<ul>
+					<li>Geben Sie für das Taylorpolynom eine Ordnung zwischen 0 (konstantes Polynom) und 5 ein: <fd>ordnung</fd> .</li>
+					<li>Verschieben Sie den Entwicklungspunkt über den Doppelpfeil S mit der Maus.</li>
+					<li>Geben Sie einen anderen Funktionsterm ( z.B. durch <code>1/(1+x*x)</code> oder <code>x*x*cos(x)</code> ) oben rechts ein!</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+		     deleteObject( name = t0, t1, t2, t3 );
+		  </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

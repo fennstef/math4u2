@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.5 layout-Tag: Zeichenfenster aufteilen</location>
+		<title>4.5 layout-Tag: Zeichenfenster aufteilen</title>
+		<step>
+			<title>4.5 &lt;layout>: Zeichenfläche in Zeichenfenster aufteilen</title>
+			<description>
+Standardmäßig wird die Zeichenfläche von einem Zeichenfenster mit dem Namen 
+<code>da</code> (<strong>d</strong>raw<strong>a</strong>rea) ausgefüllt. 
+Bei Bedarf kann die Zeichenfläche in mehrere Zeichenfenster aufgeteilt werden.
+
+<p/><strong>Zeichenfläche in Zeichenfenster aufteilen, Namen vergeben</strong>
+<br/>Die Zeichenfläche wird durch eine <code>&lt;layout></code>-Tag aufgeteilt:
+<br/>
+<code><![CDATA[
+<layout>
+	<row perc = "60">
+		<col perc="100" name ="fenster1"/>
+	</row>
+	<row perc = "40">
+		<col perc="50" name ="cosinusF"/>
+		<col perc="50" name ="sinusF"/>
+	</row>
+</layout>
+]]></code>
+
+<br/>Hier wird die gesamte Zeichenfläche in zwei horizontale 
+Zeilen (<code>row</code>) eingeteilt. Die erste Zeile nimmt
+dabei stets 60% der verfügbaren Höhe ein, die zweite Zeile 40%.
+
+<p/>Die gesamte Breite (100%) der ersten Zeile wird von einem einzigen Zeichenfenster eingenommen,
+für dieses wird der Name <code>fenster1</code> vereinbart.
+
+<p/>Die zweite Zeile wird zu gleichen Teilen (50% zu 50%) in zwei 
+Spalten (<code>column</code>) aufgeteilt. Von links nach rechts werden für 
+diese Zeichenfenster die Namen <code>cosinusF</code> und <code>sinusF</code> vereinbart.
+
+<p/>Die vereinbarten Namen (<code>fenster1</code>, ...) werden zur Manipulation der Fenster verwendet. Näheres
+dazu beim <code>&lt;seq></code>-Tag.
+
+<p/><strong>Aufteilung der Zeichenfläche ändern</strong>
+<br/>Wenn die Zeichenfläche in einem Schritt anders als im 
+vorhergehenden Schritt aufgeteilt werden soll, so geschieht dies durch ein 
+neues <code>&lt;layout></code>-tag:
+<br/>
+<code><![CDATA[
+<layout>
+	<row perc = "50">
+		<col perc="50" name ="cosinusF"/>
+		<col perc="50" name ="sinusF"/>
+	</row>
+	<row perc = "50">
+		<col perc="50" name ="amplitude"/>
+		<col perc="50" name ="phase"/>
+	</row>
+</layout>
+]]></code>
+<br/>Zeichenfenster, die schon vorher eingerichtet waren 
+(wie <code>cosinusF</code> und <code>sinusF</code>), bleiben mit ihren
+Graphen erhalten, sie werden in ihrer Größe an das neue Layout angepasst.
+
+<p/><strong>Zeichenfenster zeitweise ausblenden</strong>
+<br/>Wenn ein Zeichenfenster zeitweise nicht mehr benötigt wird, dann wird 
+es in der neuen layout-Anweisung nicht mehr aufgeführt (z.B. das 
+Zeichenfenster <code>fenster1</code> in der layout-Anweisung vorher). Es
+bleibt aber logisch (mit seinem gesamten Inhalt) vorhanden, es wird lediglich 
+nicht mehr gezeichnet. Soll es in einem späteren Schritt wieder gezeichnet 
+werden, dann muss es lediglich wieder mit seinem Namen in einer 
+layout-Anweisung aufgeführt werden.
+			</description>
+		</step>
+	</body>
+</math4u2>

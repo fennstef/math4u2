@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>M. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Analysis/Funktionen/Exponentialfunktion</location>
+		<title>Exponentialfunktion zur Basis 2</title>
+		<summary>Wie man durch wiederholtes Falten eines Kartons bis zum Mond kommt.</summary>
+		<keywords>
+			<keyword>Exponentialfunktion</keyword>
+		</keywords>
+
+		<step>
+			<title>Das Beispiel</title>
+			<description>Stellen Sie sich vor: Der Tisch, an dem Sie gerade sitzen, wackelt.
+			<br/>Zum Unterlegen haben Sie einen Kartonstreifen, der Karton selbst ist 1 mm dick.</description>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false; right=false);
+					newObject( def = a:=1 );
+					newObject( def= da.xMin :=-1 );
+					newObject( def= da.xMax := 20);
+					newObject( def= da.yMax := 20 );
+					newObject( def= da.yMin := - da.yMax/20 );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<title>Einmal falten</title>
+			<description>Sie probieren, wahrscheinlich ist der Karton zu dünn.
+			<br/>Also einmal falten, dann hat man schon 2 mm.</description>
+			<seq/>
+		</step>
+		<step>
+			<title>Zweimal falten</title>
+			<description>Immer noch zu dünn?
+			<br/>Das Ganze nochmal falten, dann hat man 2 * 2 mm = 4 mm.			
+			</description>
+		</step>
+		<step>
+			<description>Um bei der Falterei nicht den Überblick zu verlieren, protokollieren wir die Ergebnisse durch Punkte wie folgt:
+			<ul>
+					<li>x-Koordinate (und Index des Punktes) : <tab/>Wie oft wurde gefaltet (hier: 2-mal).</li>
+					<li>y-Koordinate: <tab/>
+						<tab/>
+						<tab/>Wie dick ist das Ergebnis (hier: 4mm).</li>
+				</ul>So entsteht der Punkt <fh>p2</fh>.
+		   </description>
+			<seq>
+				<script>
+					newObject( def = xpos:=2 );
+				    newObject( def = px:=pfeil(punkt(xpos,0), vektor({0,2^xpos})); target = da; color = green );
+					newObject( def = py:=pfeil(punkt(0,2^xpos), vektor({xpos,0})); target = da; color = blue );
+					newObject( def = p2:=punkt(fix(2),fix(4)); color = red; target = da );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Entsprechend markieren wir das Ergebnis vom einmaligen Falten, es entsteht der Punkt <fh>p1</fh>.
+</description>
+			<seq>
+				<script>
+					newObject( def = xpos:=1 );
+					newObject( def = p1:=punkt(fix(1),fix(2)); color = red; target = da );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Ausgangssituation war: 0-mal falten, 1 mm dick, es entsteht der Punkt <fh>p0</fh>.
+</description>
+			<seq>
+				<script>
+					newObject( def = xpos:=0);
+		      		newObject( def = p0:=punkt(fix(0),fix(1)); color = red; target = da );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Dreimal falten</title>
+			<description>Jetzt wird das Falten zum Selbstzweck. Nochmal falten, insgesamt also dreimal.<br/>Das Ergebnis ist jetzt <fb>2*2*2*1</fb> [mm] dick, kurz <fb>2^3=8</fb> [mm] dick, wir tragen diesen Wert über der 3 auf.
+			</description>
+			<seq>
+				<script>
+					newObject( def = xpos:=3);
+					newObject( def = p3:=punkt(fix(3),fix(8)); color = red; target = da );
+			  	</script>
+				<animate object="main" parameterName="a" to="100" end="2"/>
+			</seq>
+		</step>
+		<step>
+			<description>4 mal falten, <fb>2^4=16</fb> [mm] dick.
+		   </description>
+			<seq>
+				<script>
+					newObject( def = xpos:=4);
+					newObject( def = p4:=punkt(fix(4),fix(16)); color = red; target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<description>Bevor wir nochmal falten, müssen wir den Ausschnitt in y-Richtung verändern.</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=da.yMax; to=100; end=5;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Noch ein paarmal falten</title>
+			<description>Wir falten (in Gedanken) noch ein paar mal und erhalten:
+			<br/>5 mal, <fb>2^5=32</fb> [mm],  
+			<br/>6 mal, <fb>2^6=64</fb> [mm] ,  für unser ursprüngliches Problem wahrscheinlich schon zu dick.
+			</description>
+			<seq>
+				<script>
+					modifyObject( name = px; visible = false );
+					modifyObject( name = py; visible = false );
+					newObject( def = p5:=punkt(fix(5),fix(32)); color = red; target = da );
+					newObject( def = p6:=punkt(fix(6),fix(64)); color = red; target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<description>7 mal, 8 mal, 9 mal gefaltet: 
+			<br/>
+				<fb>2^9=512</fb> [mm], so hoch wie ein <strong>Stuhl</strong> .</description>
+			<seq>
+				<animate object="main" parameterName="da.yMax" to="700" end="5"/>
+				<script>
+					newObject( def = p7:=punkt(fix(7),fix(128)); color = red; target = da );
+					newObject( def = p8:=punkt(fix(8),fix(2^8)); color = red; target = da );
+					newObject( def = p9:=punkt(fix(9),fix(2^9)); color = red; target = da );
+					newObject( def = tt:=text(p9, "9 mal gefaltet, so hoch wie ein Stuhl", B_NW); target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<description>10 mal, 11 mal gefaltet: 
+			<br/>
+				<fb>2^11=2048</fb> [mm], mit ungefähr 2 m größer als ein durchschnittlicher <strong>Mensch</strong>.</description>
+			<seq>
+				<animate object="main" parameterName="da.yMax" to="3000" end="5"/>
+				<script>
+					newObject( def = p10:=punkt(fix(10),fix(2^10)); color = red; target = da );
+					newObject( def = p11:=punkt(fix(11),fix(2^11)); color = red; target = da );
+					newObject( def = p12:=punkt(fix(12),fix(2^12)); color = red; target = da );
+					newObject( def = tt2:=text(p11, "11 mal gefaltet, groesser als ein durchschnittlicher Mensch", B_NW); target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<description>16 mal gefaltet: Ungefähr 64 m hoch, ein Haus von dieser Höhe würde man bei uns schon als <strong>Hochhaus</strong>  bezeichnen.</description>
+			<seq>
+				<script>
+			       deleteObject( name = tt );
+			    </script>
+				<animate object="main" parameterName="da.yMax" to="100000" end="5"/>
+				<script>
+					newObject( def = p13:=punkt(fix(13),fix(2^13)); color = red; target = da );
+					newObject( def = p14:=punkt(fix(14),fix(2^14)); color = red; target = da );
+					newObject( def = p15:=punkt(fix(15),fix(2^15)); color = red; target = da );
+					newObject( def = p16:=punkt(fix(16),fix(2^16)); color = red; target = da );
+					newObject( def = tt:=text(p16, "16 mal gefaltet, so hoch wie ein Hochhaus", B_NW); target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<description>19 mal gefaltet: Ungefähr 524 m hoch, höher als das <strong>Empire State Building</strong>  (443 m).</description>
+			<seq>
+				<script>
+			       deleteObject( name = tt2 );
+			    </script>
+				<animate object="main" parameterName="da.yMax" to="1000000" end="5"/>
+				<script>
+					newObject( def = p17:=punkt(fix(17),fix(2^17)); color = red; target = da );
+					newObject( def = p18:=punkt(fix(18),fix(2^18)); color = red; target = da );
+					newObject( def = p19:=punkt(fix(19),fix(2^19)); color = red; target = da );
+					newObject( def = tt2:=text(p19, "19 mal gefaltet, hoeher als das Empire State Building", B_NW); target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<description>34 mal gefaltet: Ungefähr 17180 km hoch, höher als der <strong>Durchmesser der Erde</strong>  (12740 km).</description>
+			<seq>
+				<script>
+			       deleteObject( name = tt );
+			    </script>
+				<animate object="main" parameterName="da.yMax" to="2.3e10" end="5"/>
+				<animate object="main" parameterName="da.xMax" to="50" end="3"/>
+				<script>
+					newObject( def = p20:=punkt(fix(20),fix(2^20)); color = red; target = da );
+					newObject( def = p25:=punkt(fix(25),fix(2^25)); color = red; target = da );
+					newObject( def = p30:=punkt(fix(30),fix(2^30)); color = red; target = da );
+					newObject( def = p34:=punkt(fix(34),fix(2^34)); color = red; target = da );
+					newObject( def = tt:=text(p34, "34 mal gefaltet, mehr als der Durchmesser der Erde", B_NW); target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<description>39 mal gefaltet: Ungefähr 550000 km hoch, höher als die <strong>Entfernung zwichen Erde und Mond</strong>  (384000 km).</description>
+			<seq>
+				<script>
+					deleteObject( name = tt2 );
+				   
+					animate(name=da.yMax; to=1e12; end=5;);
+					
+					newObject( def = p39:=punkt(fix(39),fix(2^39)); color = red; target = da );
+					newObject( def = tt2:=text(p39, "39 mal gefaltet, mehr als der Abstand von Erde und Mond", B_NW); target = da );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Bislang haben wir den Argumenten x = 0 und den natürlichen Zahlen x = 1, 2, 3, ... Werte zugeordnet,  nämlich jeweils die Potenz <f>2^x</f>.
+		   <br/>Jetzt wollen wir der Frage nachgehen, ob sich diese Zuordnungvorschrift auf weitere x-Werte ausdehnen lässt. 
+
+		   </description>
+			<seq>
+				<script>
+			       deleteObject( name = tt,tt2 );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Gemäß den Schreibkonventionen
+				<fb>2^(-1)=1/(2^1)=1/2</fb>,  <fb>2^(-2)=1/(2^2)=1/4</fb> usw.
+				<br/>ordnen wir jetzt für negative ganze Zahlen Funktionswerte zu.
+			</description>
+		</step>
+		<step>
+			<seq>
+				<script>
+					animate(name=da.xMax; to=6; end=5;);
+					animate(name=da.xMin; to=-6; end=5;);
+					animate(name=da.yMax; to=9; end=5;);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+					newObject( def = q1:=punkt(fix(-1),fix(2^(-1))); color = red; target = da );
+					newObject( def = q2:=punkt(fix(-2),fix(2^(-2))); color = red; target = da );
+					newObject( def = q3:=punkt(fix(-3),fix(2^(-3))); color = red; target = da );
+					newObject( def = q4:=punkt(fix(-4),fix(2^(-4))); color = red; target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+					newObject( def = q4:=punkt(fix(-4),fix(2^(-4))); color = red; target = da );
+					newObject( def = q5:=punkt(fix(-5),fix(2^(-5))); color = red; target = da );
+					newObject( def = q6:=punkt(fix(-6),fix(2^(-6))); color = red; target = da );
+			  	</script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir erhalten so eine Funktion, die für alle ganzzahligen Argumente definiert ist.
+		  <br/>Mit den Rechenregeln für Potenzen kann man jetzt noch Werte für rationale Exponenten gewinnen, 
+		  <br/>durch entsprechende Grenzwert-Argumente kann man die Definitionsmenge letztlich auf alle reellen Argumente erweitern.</description>
+		</step>
+		<step>
+			<description>So entsteht die <strong>Exponentialfunktion zur Basis 2</strong>.</description>
+			<seq>
+				<script>
+		          newObject( def = f(x):=2^x; target = da);
+		       </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

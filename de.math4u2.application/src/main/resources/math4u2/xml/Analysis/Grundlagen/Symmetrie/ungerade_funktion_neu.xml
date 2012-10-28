@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Analysis/Grundlagen/Symmetrie</location>
+		<title>3 Ungerade Funktionen - neu</title>
+		<summary>Definition der Eigenschaft "ungerade Funktion", Beispiele</summary>
+		<step>
+			<title>Ungerade Funktionen - neu</title>
+			<description>
+			  Eine Funktion <f>f</f> heißt <em>ungerade</em>, wenn für jedes <f>x</f> der Definitionsmenge gilt:
+				<ul>
+					<li>die Funktion <f>f</f> ist auch an der Stelle <f>-x</f> definiert und</li>
+					<li><f>f(-x)=-f(x)</f></li>
+				</ul>
+				<br/>In den folgenden Schritten wollen wir Ihnen einen Eindruck vermitteln, was das bedeutet.
+				<br/>Die Struktur dieses Abschnitts entspricht großteils der des Abschnitts über <em>gerade</em> Funktionen. Rekapitulieren Sie an jeder Stelle die Parallelen, aber auch die Unterschiede in der Argumentation und den resultierenden Regeln.		  
+			</description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="da1"/>
+				</row>
+			</layout>
+			<seq>
+			     <script>
+			         deleteAll();
+			         newObject( def = ttt:=0);
+			         da1.coordinateSystem( xMin= -5; xMax = 5; yMin = -2; yMax = 2 );
+			         expand(left=false;right=false);
+			         newObject( def = f(x) :=x-0.1*x^3; hide = true );
+			     </script>
+               </seq>
+		</step>
+		<step>
+		   <seq>
+		      <script>
+		          newObject( def = pos:= 0.6);
+		          newObject( def = origo := punkt(0,0); hide = true );
+		          newObject( def = px := punkt(pos,0); hide = true );
+		          newObject( def = pmx := punkt(-pos,0); hide = true );
+		          newObject( def = tx:=text(px, "<f>f</f> ist bei <f>x</f> definiert", C_S); bordercolor = blue; target = da1; hide = true );
+		          newObject( def = kx:= kurve( t, 0, ttt, pos*cos(pi*t), pos*sin(pi*t)); color = blue; linestyle = dot; target = da1 );
+		          animate( name = ttt; to = 1; end = 3);
+		           newObject( def = gx:=pfeil(origo, pos*e2x); color = blue; linestyle = dot; target = da1; hide = true  );
+		           newObject( def = tmx:=text(pmx, "<f>f</f> ist auch bei <f>-x</f> definiert", C_N); bordercolor = blue; target = da1; hide = true );
+		             newObject( def = gmx:=pfeil(origo, -pos*e2x); color = blue; linestyle = dot; target = da1; hide = true  );
+		            deleteObject( name = kx );
+		      </script>
+		   </seq>
+		</step>
+		
+				<step>
+		   <seq>
+		      <script>
+		          newObject( def = ttt:=0);
+		          newObject( def = py := punkt(0,f(pos)); hide = true );
+		          newObject( def = pmy := punkt(0,f(-pos)); hide = true );
+		          newObject( def = mf:=marker( pos, f(pos)); target = da1; hide = true  );
+		          
+		          newObject( def = ty:=text(mf, "<f>f</f> hat bei <f>x</f> den Wert <f>f(x)</f>", C_E); bordercolor = red; target = da1; hide = true );
+		          newObject( def = gy:=pfeil( px, f(pos)*e2y); color = red; linestyle = dot; target = da1 ; hide = true );
+		           newObject( def = pg:=pfeil(origo, ttt*vektor({pos, f(pos)})); color = green; linestyle = dot; target = da1; hide = true  );
+		           newObject( def = pmg:=pfeil(origo, ttt*vektor({-pos, f(-pos)})); color = green; linestyle = dot; target = da1; hide = true  );
+		           animate( name = ttt; to = 1; end = 3 );
+		           newObject( def = mmf:=marker( -pos, f(-pos)); target = da1 ; hide = true );
+		           newObject( def = tmy:=text(mmf, "<f>f</f> hat bei <f>-x</f> den Wert <f>-f(x)</f>", C_W); bordercolor = red; target = da1; hide = true );
+		          newObject( def = gmy:=pfeil( pmx, f(-pos)*e2y); color = red; linestyle = dot; target = da1 ; hide = true );
+
+		           		      </script>
+		   </seq>
+		</step>
+		<step>
+		   <seq>
+		      <script>
+		         newObject( def = mf0:=marker( 0.6, f(0.6)); target = da1; hide = true );
+		          newObject( def = mmf0:=marker( -0.6, f(-0.6)); target = da1; hide = true  );
+
+		         animate( name = pos; to = 0.8; end = 3);
+		          newObject( def = mf1:=marker( 0.8, f(0.8)); target = da1; hide = true );
+		          newObject( def = mmf1:=marker( -0.8, f(-0.8)); target = da1; hide = true  );
+		          animate( name = pos; to = 1; end = 3);
+		          newObject( def = mf2:=marker( 1, f(1)); target = da1; hide = true  );
+		          newObject( def = mmf2:=marker( -1, f(-1)); target = da1; hide = true  );
+		          animate( name = pos; to = 1.5; end = 3);
+		          newObject( def = mf3:=marker( 1.5, f(1.5)); target = da1; hide = true  );
+		          newObject( def = mmf3:=marker( -1.5, f(-1.5)); target = da1 ; hide = true );
+		          animate( name = pos; to = 2; end = 3);
+		          newObject( def = mf4:=marker( 2, f(2)); target = da1; hide = true  );
+		          newObject( def = mmf4:=marker( -2, f(-2)); target = da1 ; hide = true );
+		          animate( name = pos; to = 2.5; end = 3);
+		          newObject( def = mf5:=marker( 2.5, f(2.5)); target = da1; hide = true  );
+		          newObject( def = mmf5:=marker( -2.5, f(-2.5)); target = da1 ; hide = true );
+
+
+		      </script>
+		   </seq>
+		</step>
+		<step>
+		   <title>Graph einer ungeraden Funktion: punktsymmetrisch zum Ursprung</title>
+		   <seq>
+		      <script>
+		          deleteObject( name = tx, tmx, ty, tmy );
+		          
+                    newObject( def = pos:=0.6);
+                    newObject( def = fgraph:= kurve(t,-pos,pos, t, f(t)); target = da1 );
+                    animate( name = pos; to = 5; end = 6 );
+		      </script>
+		   </seq>
+		</step>
+		
+		<step>
+		   <title>Potenzen mit ungeradem Exponenten</title>
+		   <seq>
+		     <script>
+		        newObject( def = pos := 0.8);
+		        newObject( def = f(x):=x^3; target = da1 );
+		     </script>
+		   </seq>
+		</step>
+		<step>
+		   <title>Polynome aus ungeraden Potenzen</title>
+		   <seq>
+		     <script>
+		        newObject( def = f(x):=x^5-3*x^3+x; target = da1 );
+		     </script>
+		   </seq>
+		</step>
+		<step>
+		   <title>Die Winkelfunktionen Sinus und Tangens</title>
+		   <seq>
+		     <script>
+		        newObject( def = f(x):=sin(x); target = da1 );
+		     </script>
+		   </seq>
+		</step>
+
+		
+
+	</body>
+</math4u2>

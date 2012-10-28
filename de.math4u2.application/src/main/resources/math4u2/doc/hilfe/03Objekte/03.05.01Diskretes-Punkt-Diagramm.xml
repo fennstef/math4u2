@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.5 Diagramme und Textelemente</location>
+		<title>3.5.1 Diskretes Punkt-Diagramm</title>
+		<step>
+			<title>3.5.1 Diskretes Punkt-Diagramm</title>
+			<description>
+<strong>Punkt-Diagramm definieren</strong>
+<br/>Ein Punktdiagramm wird wie <code>disk1:=punkte(vx,vy,2)</code> definiert durch die Angabe der Namen
+von zwei Vektoren: Die Elemente des Vektors <code>xv</code> geben die x-Positionen der Punkte an, 
+die Elemente des Vektors <code>yv</code> bestimmen die entsprechenden y-Positionen.
+Die Punkte werden durch Kreise markiert. 
+Das dritte Argument (hier: <code>2</code>) legt den Radius dieser Kreise in Pixel fest.
+
+<p/><strong>Beispiel</strong>
+<br/>Definiert man den Vektor <code>nv:=vektor(i,20,i-1)</code> mit den Komponenten 0, 1, ..., 19 und 
+den Vektor 
+<br/><code>cv:=vektor(i,20,derive(vars(x), ln(x), i-1)(1)/(i-1)!)</code>, 
+<br/>dann zeigt
+die durch <code>cg := punkte(nv,cv,4)</code> erzeugte Graphik die Abhängigkeit der Komponenten von
+<code>cv</code> vom Index <code>i</code>.
+
+<p/><img src="math4u2/doc/images/objekte/diskreter-graph01.gif"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

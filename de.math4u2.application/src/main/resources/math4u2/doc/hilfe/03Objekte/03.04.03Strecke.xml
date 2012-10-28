@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.4 Affine Objekte</location>
+		<title>3.4.03 Strecke</title>
+		<step>
+			<title>3.4.3 Strecke</title>
+			<description>			
+<strong>Strecke definieren</strong>
+<br/>Eine Strecke wird durch Angabe zweier Punkte definiert:
+<br/><code>str1:=strecke(punkt(1,1),punkt(2,2))</code>.
+
+<p/>Wenn vorher schon Punkte <code>p1</code> und <code>p2</code> definiert 
+wurden, dann können diese mit ihrem Namen angebeben 
+werden: <code>str2:=strecke(p1,p2)</code>.
+
+<p/>Für zwei Kreise <code>k1</code> und <code>k2</code> erhält man 
+mit <code>str3:=strecke(k1.mitte, k2.mitte)</code> die
+Strecke, die die Mittelpunkte der beiden Kreise verbindet.
+Definiert man mit <code>pl:=&lt;punkt>liste(i,10,punkt(i,i))</code> eine 
+Liste von Punkten, zusätzlich einen Parameter <code>a:=1</code>, dann 
+ist <code>str4:=strecke(pl[a],pl[a+1])</code> zunächst die Verbindungsstrecke
+des ersten und zweiten Punktes aus der Liste <code>pl</code>. Wenn man jetzt 
+den Wert von <code>a</code> durch <code>a:=2</code> verändert, dann 
+ist <code>str4</code> die Verbindungstrecke des zweiten und dritten Punktes der
+Liste <code>pl</code>.
+
+<p/><strong>Detailsicht</strong>
+<p/><img src="math4u2/doc/images/objekte/strecke-detail01.jpg"/>
+
+<p/><strong>Methoden einer Strecke</strong>
+<br/>Zu einer Strecke <code>str</code> liefert
+<br/><code>str.start</code><tab/> den Startpunkt der Strecke und
+<br/><code>str.ende</code><tab/> den Endpunkt der Strecke.
+<br/><code>str.laenge</code><tab/> die Länge der Strecke.
+
+<p/><strong>Beispiel:</strong> Zwei Möglichkeiten, die Länge einer Strecke zu ermitteln:
+<p/><img src="math4u2/doc/images/objekte/strecke01.jpg"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>1. Erste Schritte</location>
+		<title>1.2 Ein kleines Modell erstellen</title>
+		<step>
+			<title>1.1 Online-Lektionen bearbeiten</title>
+			<description>
+Erstellen Sie ein kleines Modell und lernen Sie die Grundlagen des
+math4u2-Bedienkonzepts kennen.
+
+<p/><strong>Schritt 1</strong>
+<p/>Sämtliche Definitionen erfolgen über das Definitionsfenster.
+<br/>Hier definieren wir einen Punkt p, er hat zunächst die Koordinaten (-1, 3).
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen01.gif"/>
+
+<p/><strong>Schritt 2</strong>
+<p/>Sobald wir ENTER drücken, wird die Definition des Punktes in die 
+Definitionsliste aufgenommen.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen02.gif"/>
+
+<p/><strong>Schritt 3</strong>
+<p/>Wir ziehen die Definition per Drag &amp; Drop auf die Zeichenfläche
+(Element der Definitionsliste mit gedrückter Maustaste auf die Zeichenfläche ziehen,
+dort loslassen).
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen03.gif"/>
+
+<p/><strong>Schritt 4</strong>
+<p/>Jetzt wird der Punkt gezeichnet.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen04.gif"/>
+
+<p/><strong>Schritt 5</strong>
+<p/>Durch klicken auf die Farbanzeige verändern wir die Farbe.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen05.gif"/>
+
+<p/><strong>Schritt 6</strong>
+<p/>Wenn wir den Punkt mit der Maus verschieben, sehen wir in seiner 
+Definition die aktuellen Koordinaten.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen06.gif"/>
+
+
+<p/><strong>Schritt 7</strong>
+<p/>Als nächstes definieren wir zwei Parameter c und d, beide haben anfangs 
+den Wert 1.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen07.gif"/>
+
+<p/><strong>Schritt 8</strong>
+<p/>Per Drag &amp; Drop erzeugen wir zu beiden Definitionen eine Detailansicht
+(Element der Definitionsliste mit gedrückter Maustaste nach rechts auf das Rechteck ziehen,
+dort loslassen).
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen08.gif"/>
+
+<p/><strong>Schritt 9</strong>
+<p/>Ferner legen wir eine Gerade mit veränderbarer Steigung (Parameter d) 
+durch unseren Punkt p. Zeichnen und Farbveränderung funktionieren wie oben beschrieben.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen09.gif"/>
+
+<p/><strong>Schritt 10</strong>
+<p/>Wir verändern die Position des Punktes (per Maus) und Steigung durch den 
+Parameter d (per Slider).
+<br/>Die Gerade folgt den eingestellten Werten.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen10.gif"/>
+
+<p/><strong>Schritt 11</strong>
+<p/>Entsprechend wie bei der Geraden definieren und zeichnen wir eine 
+weitere Funktion f.
+<br/>Die Detailsicht von f bietet spezielle Einstell-Möglichkeiten für Funktionen.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen11.gif"/>
+
+<p/><strong>Schritt 12</strong>
+<p/>Wir klappen die Definitionsliste zu (zweimal klicken). Nur noch die zentralen Elemente 
+sind sichtbar.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen12.gif"/>
+
+<p/><strong>Schritt 13</strong>
+<p/>Über das Kontextmenü kann Auschnitt und Maßstab der Zeichenfläche 
+angepasst werden.
+<p/><img src="math4u2/doc/images/ersteSchritte/modellErstellen13.gif"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

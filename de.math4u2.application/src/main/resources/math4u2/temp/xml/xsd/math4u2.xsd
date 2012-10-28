@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Max Weiß (Fachhochschule Augsburg) -->
+<!--
+Copyright 2001-2002 Fachhochschule Augsburg, Germany       
+All rights reserved.
+
+Permission to use, copy, modify, and distribute this document for
+any purposes and without fee is hereby granted in perpetuity,
+provided that the above copyright notice and this permission notice
+appear in all copies of this document. 
+
+WE PROVIDE THIS DOCUMENT TO USER "AS IS."  WE DISCLAIM ALL  
+WARRANTIES, EXPRESS OR IMPLIED, WITH RESPECT TO THIS DOCUMENT,  
+INCLUDING THE WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A   
+PARTICULAR PURPOSE.  IN NO EVENT SHALL WE BE LIABLE FOR ANY 
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,    
+OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA, OR  
+PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE, OR OTHER 
+TORTUOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OF    
+THIS DOCUMENT.
+
+-->
+<xsd:schema xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:complexType name="ContentElement">
+		<xsd:annotation>
+			<xsd:documentation>Elementtyp für Inhaltszentrierte Knoten, wie z. B. Kapitel</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:sequence>
+				<xsd:element name="title" type="MixedText" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Titelzeile</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="description" type="MixedText" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Haupttext/Beschreibung</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="summary" type="MixedText" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Zusammenfassung</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element ref="par"/>
+					<xsd:element ref="seq"/>
+				</xsd:choice>
+			</xsd:sequence>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="ExerciseItem">
+		<xsd:annotation>
+			<xsd:documentation>Datentyp für Übungselemente</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="title" type="MixedText" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Titel der Übung</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="description" type="MixedText" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Haupttext/Beschreibung der Übung</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="summary" type="MixedText" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Zusammenfassung</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="seq"/>
+				<xsd:element ref="par"/>
+			</xsd:choice>
+			<xsd:choice maxOccurs="unbounded">
+				<xsd:element ref="choice"/>
+				<xsd:element ref="selection"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="MixedText" mixed="true">
+		<xsd:annotation>
+			<xsd:documentation>Datentyp für formattierbaren (gemischten) Text mit Formeln, Auszeichnungen und Bildern</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="formula">
+				<xsd:annotation>
+					<xsd:documentation>Mathematische Formel: Es ist MathML realisiert, sowie eine Math4u2-Schreibweise. Bei letzeren wird kein Attribut "type" angegeben. Bei "show=" können nun 3 verschiedene Darstellungsarten festgelegt werden. 1.formal z.B. f(x):=a*x. 2. actual z.B. f(x):=2*x (Parameter wird eingesetzt und kann verändert werden). 3. short z.B. f(x)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="xsd:anyType">
+							<xsd:attribute name="type" type="xsd:string" use="optional"/>
+							<xsd:attribute name="show" type="xsd:string" use="optional" default="formal">
+								<xsd:annotation>
+									<xsd:documentation source="Es gibt verschiedene Formen: short->f(x) , formal -> f(x):=x*a , actual -> f(x):=x*2"/>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="bgcolor" type="xsd:string" use="optional"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="f">
+				<xsd:annotation>
+					<xsd:documentation>Kurzform von formula</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="xsd:anyType">
+							<xsd:attribute name="bgcolor" type="xsd:string" use="optional"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="fh">
+				<xsd:annotation>
+					<xsd:documentation>Kurzform von formula show = "short"</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="xsd:anyType">
+							<xsd:attribute name="bgcolor" type="xsd:string" use="optional"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="fa">
+				<xsd:annotation>
+					<xsd:documentation>Kurzform von formula show="actual"</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="xsd:anyType">
+							<xsd:attribute name="bgcolor" type="xsd:string" use="optional"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="fb">
+				<xsd:annotation>
+					<xsd:documentation>Kurzform von formula show="body"</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="xsd:anyType">
+							<xsd:attribute name="bgcolor" type="xsd:string" use="optional"/>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ref">
+				<xsd:annotation>
+					<xsd:documentation>Referenz auf andere Abschnitte</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="target" type="xsd:IDREF"/>
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="p" type="MixedText">
+				<xsd:annotation>
+					<xsd:documentation>Absatz</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="br">
+				<xsd:annotation>
+					<xsd:documentation>Zeilenumbruch</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="em" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Normal betonter Text</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="strong" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Stark betonter Text</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="img">
+				<xsd:annotation>
+					<xsd:documentation>Verweis auf ein Bild</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:attribute name="src" type="xsd:anyURI" use="required"/>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="code" type="MixedText">
+				<xsd:annotation>
+					<xsd:documentation>Code Text</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="tab">
+				<xsd:annotation>
+					<xsd:documentation>Tablulator</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="command" type="MixedText">
+				<xsd:annotation>
+					<xsd:documentation>Kommando bzw. Funktionalität</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="table">
+				<xsd:annotation>
+					<xsd:documentation>Tabelle angelehnt an HTML</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence maxOccurs="unbounded">
+						<xsd:element name="tr">
+							<xsd:complexType>
+								<xsd:sequence maxOccurs="unbounded">
+									<xsd:element name="td">
+										<xsd:complexType>
+											<xsd:complexContent>
+												<xsd:extension base="MixedText">
+													<xsd:attribute name="bgcolor" type="xsd:string" use="optional"/>
+												</xsd:extension>
+											</xsd:complexContent>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="border" type="xsd:int" use="optional" default="1"/>
+					<xsd:attribute name="bgcolor" type="xsd:string" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="ul">
+				<xsd:annotation>
+					<xsd:documentation>Unorderd List angelehnt an HTML</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence maxOccurs="unbounded">
+						<xsd:element name="li" type="MixedText">
+							<xsd:annotation>
+								<xsd:documentation>list item</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:simpleType name="Timing">
+		<xsd:annotation>
+			<xsd:documentation>Zeitangaben für Plugin-Aktionen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="collapse"/>
+			<xsd:pattern value="\d+\.?\d*(h|m|s|ms)?"/>
+			<xsd:pattern value="\d+:\d+:\d+\.\d*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="math4u2">
+		<xsd:annotation>
+			<xsd:documentation>Hauptelement. Es dient als Wurzel für alle weiteren Knotenelemente.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="head" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Kopf des Dokuments für nicht sichtbare Definitionen</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="version" type="xsd:string">
+								<xsd:annotation>
+									<xsd:documentation>Versionsnummer des Dokuments</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="author" type="xsd:string" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Autor(en) des  des Dokuments</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="meta" minOccurs="0" maxOccurs="unbounded">
+								<xsd:annotation>
+									<xsd:documentation>Zusätzliche Meta-Information</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:attribute name="name" type="xsd:string" use="required"/>
+									<xsd:attribute name="content" type="xsd:string" use="required"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="module" minOccurs="0" maxOccurs="unbounded">
+								<xsd:annotation>
+									<xsd:documentation>Zum Anmelden eines externes Moduls (z. B. von Graphendarstellung, Soundeinbindung oder von selbstgeschriebenen Modulen). Die Module werden in der Datei math4u2/conf/config.properties näher bestimmt. Jedes Modul muß in Java von JPanel abgeleitet sein.</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:attribute name="class" type="xsd:string" use="required"/>
+									<xsd:attribute name="id" type="xsd:ID" use="required"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element ref="body"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="choice">
+		<xsd:annotation>
+			<xsd:documentation>Eine einfache Ja-/Nein-Frage</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="statement" type="MixedText">
+					<xsd:annotation>
+						<xsd:documentation>Aussage</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="solution" type="xsd:boolean">
+					<xsd:annotation>
+						<xsd:documentation>Lösung</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="explanation" type="MixedText" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Begründung</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="selection">
+		<xsd:annotation>
+			<xsd:documentation>Eine Multiple-Choice-Frage</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence minOccurs="2" maxOccurs="unbounded">
+				<xsd:element name="description" type="MixedText" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Stellen einer Frage</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element ref="choice"/>
+			</xsd:sequence>
+			<xsd:attribute name="mutual" type="xsd:boolean" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="seq">
+		<xsd:annotation>
+			<xsd:documentation>Gruppe von sequentiell ausführbaren Plugin-Aktionen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="ExecGroup">
+					<xsd:attribute name="repeat" type="xsd:positiveInteger" use="optional" default="1"/>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="par">
+		<xsd:annotation>
+			<xsd:documentation>Gruppe von parallel ausführbaren Plugin-Aktionen</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="ExecGroup"/>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="ExecGroup">
+		<xsd:annotation>
+			<xsd:documentation>Datentyp für eine Befehlsgruppe</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="animate">
+				<xsd:annotation>
+					<xsd:documentation>Animation eines bestimmten Attributs eines Moduls</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:attribute name="object" type="xsd:string" use="required"/>
+					<xsd:attribute name="getAction" type="xsd:string" use="optional"/>
+					<xsd:attribute name="setAction" type="xsd:string" use="optional"/>
+					<xsd:attribute name="parameterName" type="xsd:string" use="required"/>
+					<xsd:attribute name="from" type="xsd:float" use="optional"/>
+					<xsd:attribute name="to" type="xsd:float" use="required"/>
+					<xsd:attribute name="by" type="Timing" use="optional"/>
+					<xsd:attribute name="begin" type="Timing" use="optional" default="0.0"/>
+					<xsd:attribute name="end" type="Timing" use="required"/>
+					<xsd:attribute name="dur" type="Timing" use="optional"/>
+					<xsd:attribute name="timeFunction" type="xsd:string" use="optional" default="t"/>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="call">
+				<xsd:annotation>
+					<xsd:documentation>Aktionsaufruf an ein Modul</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="param" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>Einzelner Parameter für den Aktionsaufruf</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:attribute name="type" type="xsd:string" use="required"/>
+								<xsd:attribute name="value" type="xsd:string" use="required"/>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="object" type="xsd:string" use="required"/>
+					<xsd:attribute name="action" type="xsd:string" use="required"/>
+					<xsd:attribute name="begin" type="Timing" use="optional" default="0.0"/>
+					<xsd:attribute name="end" type="Timing" use="optional"/>
+					<xsd:attribute name="dur" type="Timing" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element ref="par"/>
+			<xsd:element ref="seq"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:element name="body">
+		<xsd:annotation>
+			<xsd:documentation>Körper des Dokuments für den eigentlichen Inhalt</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="location" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="title" type="MixedText"/>
+				<xsd:element name="summary" type="xsd:string" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Zusammenfassung des Themas</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="step" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="title" type="MixedText" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Titelzeile</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="description" type="MixedText" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Haupttext/Beschreibung</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element ref="layout" minOccurs="0"/>
+							<xsd:choice minOccurs="0" maxOccurs="unbounded">
+								<xsd:element ref="par"/>
+								<xsd:element ref="seq"/>
+							</xsd:choice>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="exercise" type="ExerciseItem" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Übungen</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="layout">
+		<xsd:annotation>
+			<xsd:documentation>Setzen des Layouts</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence maxOccurs="unbounded">
+				<xsd:element name="row" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Reihe des Layouts</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence maxOccurs="unbounded">
+							<xsd:element name="col" maxOccurs="unbounded">
+								<xsd:annotation>
+									<xsd:documentation>Spalte des Layouts</xsd:documentation>
+								</xsd:annotation>
+								<xsd:complexType>
+									<xsd:attribute name="perc" type="xsd:string" use="required">
+										<xsd:annotation>
+											<xsd:documentation source="Prozentsatz"/>
+										</xsd:annotation>
+									</xsd:attribute>
+									<xsd:attribute name="name" type="xsd:string" use="required">
+										<xsd:annotation>
+											<xsd:documentation source="Name der Zeichenfläche"/>
+										</xsd:annotation>
+									</xsd:attribute>
+									<xsd:attribute name="type" type="xsd:string" use="optional"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute name="perc" type="xsd:string" use="required">
+							<xsd:annotation>
+								<xsd:documentation source="Prozentsatz"/>
+							</xsd:annotation>
+						</xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

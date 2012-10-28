@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.4 description-Tag: Text und Formelsatz</location>
+		<title>4.4.2b Formatierung</title>
+		<step>
+			<title>4.4.2b Formatierung</title>
+			<description>
+Bei Bedarf kann die Form der Ausgabe bei <code>text</code> und <code>dtext</code> durch ein Formatmuster
+(den Parameter <code>pattern</code>) festgelegt werden. Das Muster besteht aus folgenden Zeichen:
+<br/><br/>
+<table>
+	<tr>
+		<td><code>0</code></td><td>Eine Ziffer</td>
+	</tr><tr>
+		<td><code>#</code></td><td>Eine Ziffer, eine 0 wird hier nicht angezeigt</td>
+	</tr><tr>		
+		<td><code>.</code></td><td>Der Dezimalpunkt</td>
+	</tr><tr>
+		<td><code>E</code></td><td>Beginn der Musters für den Exponenten (zur Basis 10)</td>						
+	</tr>
+</table>
+<br/><br/>
+<img src="math4u2/doc/images/skript/formatierung01.jpg"/>	
+			</description>
+		</step>
+	</body>
+</math4u2>

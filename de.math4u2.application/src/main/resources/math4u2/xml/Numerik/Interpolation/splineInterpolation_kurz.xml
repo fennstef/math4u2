@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Interpolation</location>
+		<title>Kubische Spline-Interpolation - kurz</title>
+		<summary>Eigenschaften und Konstruktion einer kubischen Spline-Interpolation</summary>
+		<step>
+			<title>Punkte
+		   </title>
+			<description>Die gezeigten Punkte werden G2-stetig interpoliert</description>
+			<seq>
+				<script>
+			        deleteAll();
+					da.coordinateSystem(
+						xMin=-2;					
+						xMax=3.5;
+						yMin=-2;
+						yMax=5;
+					);
+					
+					expand(left=false;right=false);
+					
+					newObject(
+						def = P4:=punkt(2.133047210300429, 1.3417721518987342);
+						color = orange;
+						target = da;
+					);
+					newObject(
+						def = P3:=punkt(1.6373390557939915, 1.1561181434599157);
+						color = gray;
+						target = da;
+					);
+					
+					newObject(
+						def = P2:=punkt(0.6459227467811157, 1.3);
+						color = red;
+						target = da;
+					);			
+					
+					newObject(
+						def = P1:=punkt(0.20028612303290405, 2.5);
+						color = blue;
+						target = da;
+					);			
+		
+					newObject(
+						def = P0:=punkt(-0.4306151645207441, 1.2236286919831225);
+						color = green;
+						target = da;
+					);	
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Kubische Polynome</title>
+			<description>Die Koeffizienten der vier kubischen Polynome werden dazu so bestimmt, dass an jedem Übergang auf beiden Seiten die gleiche Steigung und die gleiche Krümmung vorliegt.</description>
+			<seq>
+				<script>
+							
+					
+									newObject(
+						def = determ(a,b,c,d,e,f,g,h,i):=a*e*i+b*f*g+c*d*h-c*e*g-a*f*h-b*d*i ;
+					);
+
+					newObject(
+						def = f0:=P0.y;
+					);
+					
+					newObject(
+						def = h0:=P1.x-P0.x;
+					);
+					
+					newObject(
+						def = h1:=P2.x-P1.x;
+					);										
+					
+					newObject(
+						def = h2:=P3.x-P2.x;
+					);								
+					
+					newObject(
+						def = h3:=P4.x-P3.x;
+					);			
+				
+					newObject(
+						def = delta0:=(P1.y-P0.y)/h0;
+					);			
+					
+					newObject(
+						def = delta1:=(P2.y-P1.y)/h1;
+					);			
+					
+					newObject(
+						def = delta2:=(P3.y-P2.y)/h2;
+					);										
+					
+					newObject(
+						def = delta3:=(P4.y-P3.y)/h3;
+					);	
+					
+					newObject(
+						def = alfa1:=3*(delta1-delta0);
+					);	
+					
+					newObject(
+						def = alfa2:=3*(delta2-delta1);
+					);	
+					
+					newObject(
+						def = alfa3:=3*(delta3-delta2);
+					);	
+					
+					newObject(
+						def = D1:=determ(alfa1,h1,0,alfa2,2*(h1+h2), h2, alfa3, h2, 2*(h2+h3));
+					);	
+					
+					newObject(
+						def = D2:=determ(2*(h0+h1), alfa1, 0, h1, alfa2, h2, 0, alfa3, 2*(h2+h3));
+					);	
+					
+					newObject(
+						def = D3:=determ(2*(h0+h1), h1, alfa1, h1, 2*(h1+h2), alfa2, 0, h2, alfa3);
+					);
+					
+					newObject(
+						def = D:=determ(2*(h0+h1), h1, 0, h1, 2*(h1+h2), h2, 0, h2, 2*(h2+h3));
+					);
+					
+					newObject(
+						def = c0:=0;
+					);
+					
+					newObject(
+						def = c1:=D1/D;
+					);
+					
+					newObject(
+						def = c2:=D2/D;
+					);
+					
+					newObject(
+						def = c3:=D3/D;
+					);
+					
+					newObject(
+						def = c4:=0;
+					);	
+					
+					newObject(
+						def = d0:=(c1-c0)/(3*h0);
+					);	
+					
+					newObject(
+						def = b0:=delta0-h0/3*(2*c0+c1);
+					);	
+					
+					newObject(
+						def = a:=0.5;
+					);	
+					
+					newObject(
+						def = b:=-5;
+					);		
+					
+					newObject(
+						def = c:=-5;
+					);	
+					
+					newObject(
+						def = d:=-40;
+					);	
+					
+										
+					newObject(
+						def = d1:=(c2-c1)/(3*h1);
+					);	
+					
+					newObject(
+						def = b1:=delta1-h1/3*(2*c1+c2);
+					);	
+					
+					
+					newObject( def = a0:=P0.y);
+					
+					newObject(
+						def = p0(x):=a0+b0*(x-P0.x)+c0*(x-P0.x)^2+d0*(x-P0.x)^3;
+						color = green;
+					);
+					
+					newObject(
+						def = a1:=P1.y;
+					);
+					
+					newObject(
+						def = p1(x):=a1+b1*(x-P1.x)+c1*(x-P1.x)^2+d1*(x-P1.x)^3;
+						color = blue;
+					);
+									da.addGraph( name = p0 );
+					da.addGraph( name = p1 );
+					
+					newObject(
+						def = d2:=(c3-c2)/(3*h2);
+					);
+					
+					newObject(
+						def = b2:=delta2-h2/3*(2*c2+c3);
+					);
+					
+					newObject(
+						def = p2(x):=P2.y+b2*(x-P2.x)+c2*(x-P2.x)^2+d2*(x-P2.x)^3;
+						color = red;
+						target = da;
+					);
+					
+					newObject(
+						def = d3:=(c4-c3)/(3*h3);
+					);
+					
+					newObject(
+						def = b3:=delta3-h3/3*(2*c3+c4)
+					);
+					
+					newObject(
+						def = p3(x):=P3.y+b3*(x-P3.x)+c3*(x-P3.x)^2+d3*(x-P3.x)^3;
+						color = gray;
+						target = da;
+					);
+					</script>
+			</seq>
+		</step>
+		<step>
+			<title>Kurvenstücke</title>
+			<description>Jedes Polynom trägt nur mit einem Kurvenstück zur gesamten Interpolation bei.</description>
+			<seq>
+				<script>
+					   modifyObject(name=p0; linestyle = dot);					
+					modifyObject(name=p1; linestyle = dot);
+					modifyObject(name=p2; linestyle = dot);
+					modifyObject(name=p3; linestyle = dot);					
+					
+					newObject(
+						def = k0:=kurve(t,P0.x,P1.x,t,p0(t));
+						color = green;
+						target = da;
+					);
+					
+					newObject(
+						def = k1:=kurve(t,P1.x,P2.x,t,p1(t));
+						color = blue;
+						target = da;
+					);
+
+					newObject(
+						def = k2:=kurve(t,P2.x,P3.x,t,p2(t));
+						color = red;
+						target = da;
+					);
+					
+					newObject(
+						def = k3:=kurve(t,P3.x,P4.x,t,p3(t));
+						color = gray;
+						target = da;
+					);
+
+					   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Spline-Interpolation</title>
+			<description>Übrig bleibt die Interpolationskurve. Experimentieren Sie!</description>
+			<seq>
+				<script>
+			   modifyObject(name=p0; visible = false);					
+					modifyObject(name=p1; visible = false);
+					modifyObject(name=p2; visible = false);
+					modifyObject(name=p3; visible = false);	
+			  </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Interpolation</location>
+		<title>Lagrange-Interpolation - kurz</title>
+		<summary>Zeigt die Basisfunktionen nach Lagrange und das daraus konstruierte Interpolationspolynom</summary>
+		<step><title>Lagrange-Interplation</title>
+		<description>Die gezeigen Punkte <f>p0, $dots, p4</f> sollen durch ein Polynom <f>p(x) </f>vom Grad <f>$void $lt 4</f> interpoliert werden. </description>
+
+		<layout>
+				<row perc="50.0">
+					<col perc="33.0" name="linksoben"/>
+					<col perc="34.0" name="mitteoben"/>
+					<col perc="33.0" name="rechtsoben"/>
+				</row>
+				<row perc="50.0">
+					<col perc="33.0" name="linksunten"/>
+					<col perc="34.0" name="mitteunten"/>
+					<col perc="33.0" name="rechtunten"/>
+				</row>
+			</layout>
+			<seq>
+			  <script>
+			  deleteAll();
+			  expand(left=false;right=true);
+rechtsoben.coordinateSystem(xMin=-5.0;xMax=5.0;yMin=-4;yMax=4;);
+mitteoben.coordinateSystem(xMin=-5.0;xMax=5.0;yMin=-4;yMax=4;);
+linksoben.coordinateSystem(xMin=-5.0;xMax=5.0;yMin=-4;yMax=4;);
+linksunten.coordinateSystem(xMin=-5.0;xMax=5.0;yMin=-4;yMax=4;);
+mitteunten.coordinateSystem(xMin=-5.0;xMax=5.0;yMin=-4;yMax=4;);
+rechtunten.coordinateSystem(xMin=-5.0;xMax=5.0;yMin=-4;yMax=4;);
+
+newObject(
+	def=pl := &lt;punkt> liste0({ punkt(-3,0), punkt(-1.37,-1.64), punkt(0.75,2.6), punkt(2.47,-1.23),punkt(4,1)});
+	target=rechtsoben,linksoben,linksunten,rechtunten, mitteoben, mitteunten;
+);
+
+newObject(
+	def = p1(x):=1; linestyle = dot;
+	target=rechtsoben,linksoben,linksunten,mitteoben, mitteunten;
+);
+
+
+newObject(def=l00(x) := (x-pl[1].x)*(x-pl[2].x)*(x-pl[3].x)*(x-pl[4].x););
+newObject(def=l11(x) := (x-pl[0].x)*(x-pl[2].x)*(x-pl[3].x)*(x-pl[4].x););
+newObject(def=l22(x) := (x-pl[0].x)*(x-pl[1].x)*(x-pl[3].x)*(x-pl[4].x););
+newObject(def=l33(x) := (x-pl[0].x)*(x-pl[1].x)*(x-pl[2].x)*(x-pl[4].x););
+newObject(def=l44(x) := (x-pl[0].x)*(x-pl[1].x)*(x-pl[2].x)*(x-pl[3].x););
+
+newObject( def = m0:=marker( pl[0].x,pl[0].y); color = red; target = linksoben,mitteoben, rechtsoben,linksunten, mitteunten; );
+newObject( def = m1:=marker( pl[1].x,pl[1].y); color = blue; target =linksoben,mitteoben, rechtsoben,linksunten, mitteunten; );
+newObject( def = m2:=marker( pl[2].x,pl[2].y); color = green; target = linksoben,mitteoben, rechtsoben,linksunten, mitteunten; );
+newObject( def = m3:=marker( pl[3].x,pl[3].y); color = orange; target =linksoben,mitteoben, rechtsoben,linksunten, mitteunten;  );
+newObject( def = m4:=marker( pl[4].x,pl[4].y); color = magenta; target = linksoben,mitteoben, rechtsoben,linksunten, mitteunten; );
+
+			  </script>
+			</seq>
+
+		
+		</step>
+		<step><description><title2>Basisfunktionen</title2>Die Basisfunktion <f>l_0(x)</f> ist ein Polynom vom Grad <f>$void $lt 4</f> mit folgenden Eigenschaften:
+		<ul>
+			<li>An der Stelle <f>p0_x</f> (<f>x</f>-Koordinate des Punktes <f>p0</f>) hat sie den Wert <f>1</f>.</li>
+			<li>An den Stellen <f>p1_x, $dots,p4_x</f> hat die den Wert <f>0</f></li>		</ul>Sie ist oben links gezeigt.
+						<br/>Experimentieren Sie durch Verschieben der Punkte!
+
+
+		
+		</description>
+				   <seq>
+		      <script>
+
+
+newObject(
+	def=l0(x) := l00(x)/l00(pl[0].x);
+	color=red;
+	target=linksoben;
+);
+
+
+		      </script>
+		   </seq>
+		</step>
+		<step>
+			
+			<description>Jetzt sind alle <f>5</f>  Lagangeschen Basisfunktionen <f>l_0(x),$dots,l_4(x)</f> gezeigt. 
+			<br/>Experimentieren Sie durch Verschieben der Punkte!
+			</description>
+			
+			<seq>
+				<script>
+
+newObject(
+	def=l1(x) := l11(x)/l11(pl[1].x);
+	color=blue;
+	target=mitteoben;
+);
+newObject(
+	def=l2(x) := l22(x)/l22(pl[2].x);
+	color=green;
+	target=rechtsoben;
+);
+
+newObject(
+	def=l3(x) := l33(x)/l33(pl[3].x);
+	color=orange;
+	target=linksunten;
+);
+
+
+newObject(
+	def=l4(x) := l44(x)/l44(pl[4].x);
+	color=magenta;
+	target=mitteunten;
+);
+
+
+
+
+
+
+				</script>
+			</seq>
+		</step>
+		<step>
+		<description>Jetzt sind gepunktet zusatzlich die Funktionen <f>p0_y*l_0(x), $dots, p4_y*l_4(x)</f> gezeigt, die entstehen, wenn man eine Basisfunktion mit der <f>y</f>-Koordinate des entsprechenden Punktes multipliziert.
+<br/>Experimentieren Sie durch Verschieben der Punkte!</description>
+			<seq>
+				<script>
+		     newObject(
+	def=l0a(x) := l0(x)*pl[0].y;
+	color=255.51.51;
+	linestyle=dot;
+	target=linksoben;
+);
+newObject(
+	def=l1a(x) := l1(x)*pl[1].y;
+	color=0.0.255;
+	linestyle=dot;
+	target=mitteoben;
+);
+newObject(
+	def=l2a(x) := l2(x)*pl[2].y;
+	color=green;
+	linestyle=dot;
+	target=rechtsoben;
+);
+
+newObject(
+	def=l3a(x) := l3(x)*pl[3].y;
+	color=orange;
+	linestyle=dot;
+	target=linksunten;
+);
+newObject(
+	def=l4a(x) := l4(x)*pl[4].y;
+	color=magenta;
+	linestyle=dot;
+	target=mitteunten;
+);
+
+
+
+
+		     
+		     </script>
+			</seq>
+		</step>
+		<step>
+		<description><title2>Interpolationspolynom</title2>Wenn man die gepunktet gezeichneten Funktionen aufsummiert, dann erhält man das gesuchte Interpolationspolynom:
+		<br/><f>p(x)=p0_y*l_0(x)+$dots+p4_y*l_4(x)</f> . Dies ist jetzt rechts unten eingezeichnet.
+		<br/>Experimentieren Sie durch Verschieben der Punkte!
+		</description>
+			<seq>
+				<script>
+		   newObject(
+	def=p(x) := l0a(x)+l1a(x)+l2a(x)+l3a(x)+l4a(x);
+	target=rechtunten;
+);
+
+		   </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

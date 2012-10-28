@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Analysis/Grundlagen/Koordinatentransformationen</location>
+		<title>Koordinatentrafo: Übung 3</title>
+		<step>
+			<title>Lineare Koordinatentransformationen 3</title>
+			<description>Gegeben ist die Funktion <fh>f</fh> mit dem oben schwarz gezeigten Graphen.
+			<br/>Daraus wird mit vier Parametern a, b, d, und d die Funktion <f>g</f>. Geben Sie oben für diese 4 Parameter Zahlen (schließen Sie jede Eingabe mit RETURN ab) so ein, dass <fh>g</fh>die  folgende Eigenschaften hat:
+<ul>
+					<li>
+						<fh>g</fh> hat die primitive Periode 4.</li>
+					<li>
+						<fh>g</fh> hat bei x=1 ein Minimum, dort ergibt sich der Funktionswert -3.</li>
+					<li>
+						<fh>g</fh> hat als maximalen Funktionswert den Wert 3. </li>
+				</ul>Der Graph der Funktion <fh>g</fh> wird nicht sofort gezeichnet. Sie können Ihre kompletten Eingaben im nächsten Schritt anhand des Graphen kontrollieren und gegebenenfalls verbessern.
+			</description>
+			<seq>
+				<script>
+					deleteAll();
+					da.coordinateSystem(xMin=-1; xMax=7.5; yMin=-4; yMax=6;);
+				    newObject( def = f(x) := 6*abs(0.5*x-floor(0.5*x)-0.5)-1; target = da; hide = true );
+				    newObject( def = a:=0; select = true );
+				    newObject( def = b:=0; select = true);
+				    newObject( def = c:=0; select = true );
+				    newObject( def = d:=0; select = true);
+				    newObject( def = g(x) := a*f((x-b)*c)+d; color = red );
+				    expand( left = false; right = true );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Kontrolle und Korrektur</title>
+			<description>Der Graph der Funktion <f>g</f> ist jetzt rot eingezeichnet.
+				<br/>Ändern Sie gegebenenfalls oben rechts die Parameter, um folgende Eigenschaften einzustellen:<br/>
+				<ul>
+					<li>
+						<fh>g</fh> hat die primitive Periode 4.</li>
+					<li>
+						<fh>g</fh> hat bei x=1 ein Minimum, dort ergibt sich der Funktionswert -3.</li>
+					<li>
+						<fh>g</fh> hat als maximalen Funktionswert den Wert 3. </li>
+				</ul>Im nächsten Schritt wird eine Lösung gezeigt.
+			</description>
+			<seq>
+				<script>
+			      modifyObject( name = g; target = da );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<title>Eine Lösung:</title>
+			<description>Eine Lösung erhält man mit den jetzt oben eingestellten Werten.</description>
+			<seq>
+				<script>
+					newObject(def=a:=2);
+					newObject(def=b:=-1);
+					newObject(def=c:=0.5);
+					newObject(def=d:=-1);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

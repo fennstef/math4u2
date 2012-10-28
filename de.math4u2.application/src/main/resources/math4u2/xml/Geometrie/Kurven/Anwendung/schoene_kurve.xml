@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>M. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Geometrie/Kurven/Anwendung</location>
+		<title>Schoene Kurven</title>
+		<step>
+			<title>Schöne Kurven</title>
+			<description>Gezeigt sind zwei Bezier-Kurven: rot gepunktet und blau gepunktet.
+			<br/>Am Verbindungspunkt jeweils gestichelt die Richtung der Tangente.
+			<br/>Über jedem Kurvenpunkt wird ein Lot errichtet und auf diesem Lot eine Strecke abgetragen, deren Länge der Krümmung der Kurve in diesem Punkt entspricht (konkret: 5*Krümmung). Verbindet man diese Punkte, so entsteht die durchgezogene Kurve: rot zur ersten Bezier-Kurve, blau zur zweiten. An Stellen mit Krümmung 0 schneiden sich die beiden Kurven.
+<br/>Jetzt kann man die Stetigkeit am Verbindungspunkt der beiden Kurven wie folgt kontrollieren:
+<ul>
+					<li>G0-stetig: Die beiden gestrichelten Kurven treffen sich. Das ist hier immer der fall, weil sie den Steuerpunkt pl4 gemeinsam haben.</li>
+					<li>G1-stetig, d.h. gleiche Tangente am Verbindungspunkt; Die beiden gesticheltet Strecken haben die gleiche Richtung.</li>
+					<li>G2-stetig, d.h. gleiche Krümmung am Verbindungspunkt: Die beiden durchgezogenen Kurven treffen sich.</li>
+					<li>G3-stetig, d.h. die Änderung der Krümmung ist am Verbindungspunkt gleich: Die beiden durchgezogenen Kurven haben am Verbindungspunkt die gleiche Tangente.</li>
+				</ul>Bei den vorgegebenen Punkten wurde annähernd G2-Stetigkeit erreicht.<br/>Experimentieren durch verschieben der Punkte.</description>
+			<seq>
+				<script>
+		       deleteAll();
+		       da.coordinateSystem( xMin = -0.5; xMax = 10.5; yMin = -4; yMax = 4  );
+					expand(left=false; right=false);
+					newObject( def = p1(t):= (1-t)^3 );
+					newObject( def = p2(t):= 3*t*(1-t)^2 );
+					newObject( def = p3(t):= 3*t^2*(1-t) );
+					newObject( def = p4(t):= t^3 );
+					newObject( def = dp1(t):= -3*(1-t)^2);
+					newObject( def = dp2(t):= 9*t^2-12*t+3);
+					newObject( def = dp3(t):=6*t-9*t^2 );
+					newObject( def = dp4(t):= 3*t^2 );
+					newObject( def = ddp1(t):= 6*(1-t));
+					newObject( def = ddp2(t):= 18*t-12);
+					newObject( def = ddp3(t):= 6-18*t );
+					newObject( def = ddp4(t):=6*t );
+
+					newObject( def = fl:=&lt;funktion(t)>liste({ (1-t)^3, 3*t*(1-t)^2, 3*t^2*(1-t), t^3 } ) );
+					newObject( def = dfl:=&lt;funktion(t)>liste({ -3*(1-t)^2,  9*t^2-12*t+3, 6*t-9*t^2 ,3*t^2   } ) );
+					newObject( def = ddfl:=&lt;funktion(t)>liste({ 6*(1-t), 18*t-12,  6-18*t, 6*t } ) );
+					
+					newObject( def = pl:=&lt;punkt>liste( { punkt( 1 , 0.86 ),  punkt( 2 , 0.934 ),   punkt( 2.6 , -0.7),  punkt( 4 , -0.75 ),  punkt( 5.5 , -0.76 ),   punkt( 5.85 , 1.16 ),  punkt( 7 , 0.69 ) , punkt(8,3), punkt(9,3), punkt(10,3) }); target = da );
+					newObject( def = fx1(t):=sum(i,1,4,pl[i].x*fl[i](t) ) );
+					newObject( def = fy1(t):=sum(i,1,4,pl[i].y*fl[i](t) ) );
+					
+					newObject( def = dfx1(t):=sum(i,1,4,pl[i].x*dfl[i](t) ) );
+					newObject( def = dfy1(t):=sum(i,1,4,pl[i].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx1(t):=sum(i,1,4,pl[i].x*ddfl[i](t) ) );
+					newObject( def = ddfy1(t):=sum(i,1,4,pl[i].y*ddfl[i](t) ) );
+
+
+					
+					                   
+                         newObject( def = k1(t):= ( dfx1(t)*ddfy1(t)-dfy1(t)*ddfx1(t) )/(dfx1(t)^2+dfy1(t)^2)^2.5  ; );
+					
+					newObject( def = kk1:=kurve(	t,0,1,fx1(t), fy1(t) ); target = da ; color = red; linestyle = dot);	
+					newObject( def = ffx1(t):=fx1(t)-3*k1(t)*dfy1(t) );
+					newObject( def = ffy1(t):=fy1(t)+3*k1(t)*dfx1(t) );	
+					//newObject( def =kkk1:=kurve(	t,0.001,0.999,ffx1(t), ffy1(t) ); target = da ; color = red; );	
+					newObject( def = ffx1m(t):=fx1(t)-5*k1(t)*dfy1(t) );
+					newObject( def = ffy1m(t):=fy1(t)+5*k1(t)*dfx1(t) );	
+					newObject( def = mk1:= marker( ffx1m(1), ffy1m(1) ); color = red; target = da );
+					newObject( def = sk1:=strecke(pl[4], mk1); color = gray ; target = da );
+					
+					newObject( def = fx2(t):=sum(i,1,4,pl[i+3].x*fl[i](t) ) );
+					newObject( def = fy2(t):=sum(i,1,4,pl[i+3].y*fl[i](t) ) );
+					
+					newObject( def = dfx2(t):=sum(i,1,4,pl[i+3].x*dfl[i](t) ) );
+					newObject( def = dfy2(t):=sum(i,1,4,pl[i+3].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx2(t):=sum(i,1,4,pl[i+3].x*ddfl[i](t) ) );
+					newObject( def = ddfy2(t):=sum(i,1,4,pl[i+3].y*ddfl[i](t) ) );
+
+					
+					                   
+                         newObject( def = k2(t):= ( dfx2(t)*ddfy2(t)-dfy2(t)*ddfx2(t) )/(dfx2(t)^2+dfy2(t)^2)^2.5  ;  );
+					
+					newObject( def = kk2:=kurve(	t,0,1,fx2(t), fy2(t) ); target = da ; color = blue; linestyle = dot);	
+					newObject( def = ffx2(t):=fx2(t)-3*k2(t)*dfy2(t) );
+					newObject( def = ffy2(t):=fy2(t)+3*k2(t)*dfx2(t) );	
+					//newObject( def =kkk2:=kurve(	t,0.001,0.999,ffx2(t), ffy2(t) ); target = da ; color =blue; );	
+
+					newObject( def = s1:=strecke( pl[3], pl[4] ); color = red; linestyle = dash; target = da);
+					newObject( def = s2:=strecke( pl[5], pl[4] ); color = blue; linestyle = dash; target = da);
+					
+					newObject( def = ffx2m(t):=fx2(t)-5*k2(t)*dfy2(t) );
+					newObject( def = ffy2m(t):=fy2(t)+5*k2(t)*dfx2(t) );	
+
+					
+					newObject( def = mk2:= marker( ffx2m(0), ffy2m(0) ); color = blue; target = da );
+		                newObject( def = sk2:=strecke(pl[4], mk2); color = gray ; target = da );   
+		                
+		                newObject( def = mk23:= marker( ffx2m(1), ffy2m(1) ); color = blue; target = da );
+		                newObject( def = sk23:=strecke(pl[7], mk23); color = gray ; target = da );   
+
+		                
+		                newObject( def = fx3(t):=sum(i,1,4,pl[i+6].x*fl[i](t) ) );
+					newObject( def = fy3(t):=sum(i,1,4,pl[i+6].y*fl[i](t) ) );
+					
+					newObject( def = dfx3(t):=sum(i,1,4,pl[i+6].x*dfl[i](t) ) );
+					newObject( def = dfy3(t):=sum(i,1,4,pl[i+6].y*dfl[i](t) ) );
+					
+					newObject( def = ddfx3(t):=sum(i,1,4,pl[i+6].x*ddfl[i](t) ) );
+					newObject( def = ddfy3(t):=sum(i,1,4,pl[i+6].y*ddfl[i](t) ) );
+
+					
+					                   
+                         newObject( def = k3(t):= ( dfx3(t)*ddfy3(t)-dfy3(t)*ddfx3(t) )/(dfx3(t)^3+dfy3(t)^2)^2.5  ;  );
+					
+					newObject( def = kk3:=kurve(	t,0,1,fx3(t), fy3(t) ); target = da ; color = green; linestyle = dot);	
+					newObject( def = ffx3(t):=fx3(t)-3*k3(t)*dfy3(t) );
+					newObject( def = ffy3(t):=fy3(t)+3*k3(t)*dfx3(t) );	
+					//newObject( def =kkk3:=kurve(	t,0.001,0.999,ffx3(t), ffy3(t) ); target = da ; color =green; );	
+
+					newObject( def = s13:=strecke( pl[6], pl[7] ); color = blue; linestyle = dash; target = da);
+					newObject( def = s23:=strecke( pl[7], pl[8] ); color = green; linestyle = dash; target = da);
+					
+					newObject( def = ffx3m(t):=fx3(t)-5*k3(t)*dfy3(t) );
+					newObject( def = ffy3m(t):=fy3(t)+5*k3(t)*dfx3(t) );	
+
+					
+					newObject( def = mk3:= marker( ffx3m(0), ffy3m(0) ); color =green; target = da );
+		                newObject( def = sk3:=strecke(pl[7], mk3); color = gray ; target = da );                            
+		       </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

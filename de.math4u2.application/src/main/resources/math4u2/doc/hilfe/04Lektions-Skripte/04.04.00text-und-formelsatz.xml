@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.4 description-Tag: Text und Formelsatz</location>
+		<title>4.4.0 description-Tag: Text und Formelsatz</title>
+		<step>
+			<title>4.4.0 &lt;description>: Text und Formelsatz</title>
+			<description>
+Jeder Schritt kann durch ein <code>&lt;description></code>-Tag mit einer Beschreibung erläutert werden.
+<br/>Darin wechseln sich Überschriften (<code>&lt;title2></code>-Tag), einfache Textpassagen, hervorgehobene
+Passagen (z.B. <code>&lt;command></code>-Tag), Tabellen (<code>&lt;table></code>-Tag) 
+und Formeln (<code>&lt;f></code>-Tag) in beliebiger
+Reihenfolge ab.
+<p/>Formeln können durch ein ergänzendes <code>&lt;conf></code>-Tag um Ein-/Ausgabemöglichkeiten ergänzt werden.
+
+<p/>Beispiel:
+<br/><img src="math4u2/doc/images/skript/formelsatz01.jpg"/>
+<br/>
+<code><![CDATA[
+<step>
+	<description>
+		<title2>Parameter und Funktion definieren</title2>
+		
+		Wie mit <command>a:=1</command>, <command>b:=1</command>
+		und <command>g(x):=a*x+b</command>
+		haben wir zwei Parameter und die Funktion
+		<f>$fd(g)</f> definiert.
+		
+		<title2>Experimentieren</title2>
+		
+		Verändern Sie hier die Werte der Parameter und
+		beobachten Sie die Wirkung!
+		<f><conf>a(style=text;width=6);
+		b(style=text;width=6)</conf>$fd(g)</f>
+	</description>
+	<seq>
+		<script>
+			newObject( def = a:=1; );
+			newObject( def = b:=1; );
+			newObject( def = g(x):=a*x+b; target = da );
+		</script>
+	</seq>
+</step>	
+]]></code>
+			</description>
+		</step>
+	</body>
+</math4u2>

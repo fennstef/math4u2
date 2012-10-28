@@ -1,0 +1,632 @@
+options {
+	STATIC= false;
+}
+
+
+PARSER_BEGIN(KurzSchrift)
+
+package math4u2.parser.script;
+
+import math4u2.exercises.scripting.*;
+import math4u2.controller.*;
+
+import java.io.StringReader;
+import java.util.*;
+
+public class KurzSchrift {
+
+	private final static boolean DEBUG = false;
+
+	private KurzSchrift instance;
+
+	private Broker broker;
+
+	private List actions;
+
+	private String classStr;
+
+	private String methodStr;
+
+	private HashMap params= new HashMap();
+
+	private boolean withActionContainer = true;
+	
+	public void setBroker(Broker broker){
+		this.broker=broker;
+	}
+
+	/**
+	 * Methode, die Abkürzungen initiallisiert
+	 * 
+	 * @param longword
+	 *            Schlüsselwort z.B. visible
+	 * @param shortkey
+	 *            Abkürzung z.B. v
+	 * @param params
+	 *            Parameterliste, die initialisiert werden soll
+	 */
+	public void assignShortKey(String longword, String shortkey,
+			HashMap params) {
+		if (params.get(longword) == null)
+			params.put(longword, params.get(shortkey));
+	} //assignShortKey
+
+	public List parseScript()
+			throws ParseException {
+		withActionContainer = true;
+		actions = new LinkedList();
+		Methodenliste();
+		this.broker = null;
+		return actions;
+	} //parseScript
+
+	public List parseScriptWithoutActionComponents() throws ParseException {
+		withActionContainer = false;
+		actions = new LinkedList();
+		Methodenliste();
+		this.broker = null;
+		return actions;
+	} //parseScriptWithoutActionComponents
+
+	private void buildActionOrAnimation() {
+		
+		if(!withActionContainer){
+			buildActionWithoutContainer();
+		}else{
+		
+		if (classStr == null)
+			classStr = "main";
+		if (classStr.equals("main") && methodStr.equals("animate")) {
+			buildAnimation();
+		} else {
+			buildAction();
+		}
+		}
+		//werte neu initialisieren
+		clearForNextCall();
+	} //buildActionOrAnimation
+
+	private void buildAction() {
+		LinkedList pa = new LinkedList();
+		pa.add(new EActionParam(params));
+		EActionCall eac = new EActionCall(classStr, methodStr, pa);
+		pa = null;
+		actions.add(eac);
+	} //buildAction
+	
+	private void buildActionWithoutContainer(){
+		Object[] parts = new Object[]{classStr,methodStr,params};
+		actions.add(parts);
+	}//buildActionWithoutContainer
+
+	private void buildAnimation() {
+		assignShortKey("name", "n", params);
+		assignShortKey("setmethod", "set", params);
+		assignShortKey("getmethod", "get", params);
+		assignShortKey("timefunction", "t", params);
+
+		String getMethod= "getParameter";
+		if (params.get("getmethod") != null)
+			getMethod= (String) params.get("getmethod");
+
+		String setMethod= "setParameter";
+		if (params.get("setmethod") != null)
+			setMethod= (String) params.get("setmethod");
+
+		String attributeName= (String) params.get("name");
+		if (attributeName == null)
+			throw new NullPointerException("Parametername muß definiert sein in 'animate'.");
+
+		String timeFunction= (String) params.get("timefunction");
+
+		EActionAnimation eaa=
+			new EActionAnimation(classStr, getMethod, setMethod, attributeName, timeFunction, broker);
+		float begin= 0f, end= Float.NaN, from= Float.NaN, to= Float.NaN;
+		String fromStr= (String) params.get("from");
+		if (fromStr != null)
+			from= Float.parseFloat(fromStr);
+		String toStr= (String) params.get("to");
+		if (toStr == null)
+			throw new NullPointerException("Zielwert 'to' muß definiert sein in 'animate'.");
+		to= Float.parseFloat(toStr);
+		String beginStr= (String) params.get("begin");
+		if (beginStr != null)
+			begin= Float.parseFloat(beginStr);
+		String endStr= (String) params.get("end");
+		if (endStr != null)
+			end= Float.parseFloat(endStr);
+		eaa.setBegin(begin);
+		eaa.setEnd(end);
+		eaa.setFrom(from);
+		eaa.setTo(to);
+
+		actions.add(eaa);
+	} //buildAnimation
+
+	/**
+     * Initialisiert alle Werte neu, damit keine Werte überschrieben werden.
+     *
+     */
+	private void clearForNextCall() {
+		classStr= null;
+		methodStr= null;
+		params= new HashMap();
+	} //clearForNextCall
+
+}
+
+//KurzSchrift
+
+PARSER_END(KurzSchrift)
+
+SKIP :
+{
+	"\t" | "\n" | "\r"
+
+
+
+}
+
+MORE :
+{
+	"//" : IN_SINGLE_LINE_COMMENT
+	|
+	"/*" : IN_MULTI_LINE_COMMENT
+}
+
+<IN_SINGLE_LINE_COMMENT> SPECIAL_TOKEN :
+{
+	<SINGLE_LINE_COMMENT : 
+		"\n"
+		|
+		"\r"
+		|
+		"\r\n"
+	>
+	: DEFAULT
+}
+
+<IN_MULTI_LINE_COMMENT> SPECIAL_TOKEN :
+{
+	<MULTI_LINE_COMMENT : 
+		"*/"
+	>
+	: DEFAULT
+}
+
+<IN_SINGLE_LINE_COMMENT,IN_MULTI_LINE_COMMENT> MORE :
+{
+	< 
+		~[ ]
+	>
+}
+
+/* SPECIALS */
+TOKEN :
+{
+	< LPAREN : 
+		"("
+	>
+	|
+	< RPAREN : 
+		")"
+	>
+	|
+	< SEMICOLON : 
+		";"
+	>
+	|
+	< COMMA : 
+		","
+	>
+	|
+	< DOT : 
+		"."
+	>
+	|
+	< ISTGLEICH : 
+		"="
+	>
+	|
+	< DEF :
+		":="
+	>
+	|
+	< SPACE : 
+		(" ")+
+	>
+	|
+	< ESCAPED_SC :
+		"\\;"
+	>
+	|
+	< ESCAPED_QM :
+		"\\\""
+	>
+}
+
+TOKEN :
+{
+	< ID : 
+		( [ "a"-"z", "A"-"Z", "_", "~", "0"-"9" ] )+	
+	>
+	|
+	<DESCRIPTION :
+		((<ID>)?(["ä","ö","ü","ß"])+(<ID>)?)+
+	>
+	|
+	< MATHS : 
+		[
+			"!", 
+			"\"", 
+			"#", 
+			"$", 
+			"%", 
+			"&", 
+			"'", 
+			"*", 
+			"+", 
+			"-", 
+			"/", 
+			":", 
+			"<", 
+			">", 
+			"?", 
+			"[", 
+			"\\", 
+			"]", 
+			"^", 
+			"_", 
+			"`", 
+			"{", 
+			"|", 
+			"}", 
+			"~"
+		]
+		|
+		"<*>"
+		|
+		"&"<ID>";"
+	>
+	|
+	<STRING_LITERAL :
+		"\"" (~["\""])* "\""
+	>
+}
+
+void Methodenliste() : {
+	String s;
+}
+{
+	
+		(<SPACE>)* 
+	
+	(
+		Methodenaufruf() <SEMICOLON>(<SPACE>)*
+		{
+			if (DEBUG)
+				System.out.println("ausgabe " + classStr + "." + methodStr + "(" + params + ")");
+
+			buildActionOrAnimation();
+		}
+	)*
+	
+	<EOF> 
+	
+
+
+}
+
+void Methodenaufruf() : {
+	String s;
+	String temp1= "";
+	String temp2= "";
+	String klasse= "";
+	String methode= "";
+}
+{
+	s= Name() 
+	{
+		temp1= s;
+	}
+	
+
+
+	(
+		<DOT> s= Name() 
+		{
+			temp2 += s;
+		}
+	)?
+	(<SPACE>)* 
+	 Parameterliste() 
+	(<SPACE>)* 
+	{
+		if (temp2.equals("")) {
+			methodStr= temp1;
+		} else {
+			classStr= temp1;
+			methodStr= temp2;
+		}
+	}
+	
+
+
+}
+
+void Parameterliste() : {}
+{
+	<LPAREN>
+	(<SPACE>)* 
+	(
+		Parameter() 
+		(
+			
+			LOOKAHEAD(10)
+			<SEMICOLON> (<SPACE>)*Parameter() 	
+		)*
+		
+	)?
+	(
+		<SEMICOLON> 
+		(<SPACE>)*
+	)?
+	 <RPAREN>
+
+}
+
+void Parameter() : {
+	String key;
+	String value;
+}
+{
+	
+	key= Key() 
+	(<SPACE>)* 
+	<ISTGLEICH> value= Value() 
+	{
+		params.put(key, value);
+
+	}
+}
+
+String Key() : {
+	String s;
+}
+{
+	s= Name() 
+	{
+		return s;
+	}
+}
+
+String Value() : {
+	String s;
+	String temp;
+}
+{
+	s= Text() 
+	{
+		temp= s;
+	}
+	{
+		return s;
+	}
+}
+
+String Text() : {
+	String s;
+	String temp= "";
+	Token t;
+	if (DEBUG)
+		System.out.println("Text() start");
+}
+{
+	(
+		(
+			s= MatheString() 
+			{
+				temp += s;
+			}
+			(
+				s= Geklammert() 
+				{
+					temp += s;
+				}
+			)*
+		)
+		|
+		(
+			s= Geklammert() 
+			{
+				temp += s;
+			}
+		)+
+	)
+	{
+		if (DEBUG)
+			System.out.println("text: " + temp);
+		return temp;
+	}
+}
+
+String Geklammert() : {
+	String s;
+	String temp;
+	if (DEBUG)
+		System.out.println("Geklammert() start");
+}
+{
+	<LPAREN> 
+	{
+		temp= "(";
+	}
+	s= Text() 
+	{
+		temp += s;
+	}
+	<RPAREN> 
+	{
+		temp += ")";
+	}
+	(
+		s= MatheString() 
+		{
+			temp += s;
+		}
+	)?
+	{
+		if (DEBUG)
+			System.out.println("Geklammert: " + temp);
+		return temp;
+	}
+}
+
+String MatheString() : {
+	String s;
+	String temp= "";
+	if (DEBUG)
+		System.out.println("MatheString() start");
+}
+{
+	(
+		s= Description() 
+		{
+			temp= s;
+		}
+		(
+			s= Trenner() 
+			{
+				temp += s;
+			}
+			(
+				s= Description() 
+				{
+					temp += s;
+				}
+			)?
+		)*
+		{
+			if (DEBUG)
+				System.out.println("Mathestring: " + temp);
+			return temp;
+		}
+	)
+	|
+	(
+		(
+			s= Trenner() 
+			{
+				temp += s;
+			}
+			
+
+
+			(
+				s= Description() 
+				{
+					temp += s;
+				}
+			)?
+		)+
+		{
+			if (DEBUG)
+				System.out.println("Mathestring: " + temp);
+			return temp;
+		}
+	)
+	
+
+
+}
+
+
+String Description() : {
+	String temp= "";
+	Token t;
+}
+{
+	(
+		t= <ID> 
+		{
+			temp += t.image;
+		}
+		|
+		t=<DESCRIPTION> 
+		{
+			temp += t.image;
+		}
+		|
+		t=<STRING_LITERAL> 
+		{
+			temp += t.image;
+		}
+		
+	)
+	{
+		return temp;
+	}
+}
+
+String Name() : {
+	String temp= "";
+	Token t;
+}
+{
+	(
+		t= <ID> 
+		{
+			temp += t.image;
+		}
+	)+
+	{
+		return temp;
+	}
+}
+
+String Trenner() : {
+	Token t;
+	String s= "";
+}
+
+
+
+{
+	t= <DOT> 
+	{
+		return t.image;
+	}
+	|
+	t= <COMMA> 
+	{
+		return t.image;
+	}
+	|
+	t= <ISTGLEICH> 
+	{
+		return t.image;
+	}
+	|
+	t= <DEF> 
+	{
+		return t.image;
+	}
+	|
+	t= <MATHS> 
+	{
+		return t.image;
+	}
+	|
+	t= <SPACE> 
+	{
+		return t.image;
+	}
+	|
+	<ESCAPED_SC> 
+	{
+		return ";";
+	}
+	
+
+
+}

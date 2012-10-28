@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.5 Diagramme und Textelemente</location>
+		<title>3.5.5 Vektorfeld</title>
+		<step>
+			<title>3.5.5 Vektorfeld</title>
+			<description>
+<strong>Vektorfeld definieren</strong>
+<br/>Zu einer zweistelligen Funktion <code>vek(x,y)</code>, die als Ergebnis einen zweidimensionalen Vektor liefert,
+definiert man durch 
+<br/><code>vekgraph:=feld(vek, aufpunkt, xdist, ydist, cutoff)</code>
+<br/>einen Graphen. Dieser wird im folgenden als Vektorfeld bezeichnet.
+<p/><code>vek</code> ist darin der Name der Funktion, die dargestellt werden soll.
+<br/>Der Punkt <code>aufpunkt</code> und die nullstelligen Funktionen <code>xdist</code> und <code>ydist</code> definieren ein Gitter:
+<code>aufpunkt</code> ist ein Gitterpunkt und legt so die Lage des Gitters fest, <code>xdist</code> bestimmt den Abstand
+der Gitterpunkte in x-Richtung, <code>ydist</code> den Abstand in y-Richtung.
+Die nullstellige Funktion <code>cutoff</code> legt den größten darzustellenden Betrag fest.
+An den Gitterpunkten wird der Wert der Funktion <code>vek</code> als Pfeil dargestellt, sofern der Betrag nicht
+größer als der Wert von <code>cutoff</code> ist.
+
+<p/><strong>Beispiel:</strong>
+Zu einem Potential <code>pot(x,y)</code> (d.h. zu einer zweistelligen skalaren Funktion) erhält man das Kraftfeld
+als Vektor der partiellen Ableitungen:
+<br/><code>v(x,y):=vektor({pderive(pot(x,y), x), pderive(pot(x,y),y)})</code>
+<p/>Um die Darstellung dieses Feldes gezielt anpassen zu können, definiert man
+<ul>
+	<li>einen Aufpunkt <code>p:=punkt(0,-1)</code>,</li>
+	<li>einen Parameter, der die Gitterkonstante für die Darstellung festlegt: <code>d:=0.2</code> und</li>
+	<li>einen Faktor für die Darstellung der Feldvektoren: <code>s:=0.1</code> ,</li>
+	<li>damit das darzustellende Feld als <code>dv(x,y):=s*v(x,y)</code>.</li>
+</ul>
+<br/>Nach diesen Vorarbeiten zeichnet <code>g:=feld(dv,p,d,d,0.5)</code> ein Bild des Kraftfeldes.
+<p/><img src="math4u2/doc/images/objekte/feld01.gif"/>
+
+<p/>Die Vektoren des Feldes werden an den Stellen nicht gezeichnet, an denen ihr Betrag größer als der
+eingestellte Cuttof <code>0.5</code> ist. Die ist nahe bei den Punkten <code>A</code> und <code>B</code> der Fall.
+
+<p/>Durch Verschieben des Punktes <code>p</code> und Variieren der Parameter <code>d</code> und <code>s</code> kann man 
+die Darstellung verändern.
+
+<p/>Will man nur die Richtung des Kraftfeldes darstellen, so kann man die Vektoren normieren:
+<br/><code>nv(x,y):=s*v(x,y)/|v(x,y)|</code>.
+<br/>mit <code>ng:=feld(nv,p,d,d,0.5 )</code> erhält man jetzt eine übersichtliche Darstellung der Kraftrichtung.
+
+<p/><img src="math4u2/doc/images/objekte/feld02.gif"/>
+
+<p/><strong>Punktgitter am Linienraster des Fensters ausrichten</strong>
+<br/>Ein Zeichenfenster da liefert mit der Methode <code>da.xDist</code> den Abstand der Koordinatenlinien in 
+x-Richtung und mit <code>da.yDist</code> den Abstand in y-Richtung.
+Definiert man
+<br/><code>vekgraph1:=feld(vek, punkt(0,0), da.xDist/2, da.yDist/2, cutoff)</code>
+<br/>und zeichnet dieses Vektorfeld im Zeichenfenster <code>da</code>, dann ist in beiden Richtungen der Abstand der
+Gitterpunkte zum Zeichnen des Feldes stets halb so groß wie der Abstand der Koordinatenlinien. Dieser
+Zusammenhang bleibt auch beim Zoomen erhalten.
+
+<p/><strong>Layout festlegen</strong>
+<br/>Bei Bedarf kann die Darstellung wie bei
+<br/><code>nvekgraph:=feld(vek, aufpunkt, xdist, ydist, cutoff, NV)</code>
+<br/>durch eine Layout-Konstante (6. Parameter) beeinflusst werden.
+Wenn diese Angabe fehlt, wird der Wert <code>V</code> als Voreinstellung ergänzt.
+
+<p/>Folgende Layout-Konstanten sind möglich:
+<p/><code>V</code><tab/>Betragstreue Pfeile (Voreinstellung),
+<br/><code>VP</code><tab/>mit Darstellung des Aufpunkts.
+
+<p/><code>NV</code><tab/>Normierte Pfeile: Die Länge der Pfeile wird an den Abstand der Gitterpunkte
+angepasst,
+<br/><code>NVP</code><tab/>mit Darstellung des Aufpunkts.
+
+<p/><code>T</code><tab/>Betragstreue Tangenten-Strecken (ohne Pfeilspitze),
+<br/><code>TP</code><tab/>mit Darstellung des Aufpunkts.
+
+<p/><code>NT</code><tab/>Normierte Tangenten-Strecken (ohne Pfeilspitze): Die Länge der
+Strecken wird an den Abstand der Gitterpunkte angepasst,
+<br/><code>NTP</code><tab/>mit Darstellung des Aufpunkts.
+
+<p/><img src="math4u2/doc/images/objekte/feld03.gif"/>
+			</description>
+		</step>
+	</body>
+</math4u2>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Interpolation</location>
+		<title>Runge-Phänomen</title>
+		<summary>Die Polynom-Interpolation der Runge-Funktion wird mit zunehmender Anzahl äquidistanter Stützstellen immer schlechter.</summary>
+		<step>
+			<title>Polynominterpolation</title>
+			<description>.....	</description>
+			<seq>
+				<script>
+					deleteAll();
+					da.coordinateSystem(
+						xMin=-6;					
+						xMax=6;
+						yMin=-16;
+						yMax=8;
+					);
+					
+					expand(left=false;right=false);
+					newObject( def = runge(x):= 1/(1+x^2); target = da );
+					
+					newObject( def = n := 4);
+                     newObject( def = delta := 10/n );
+					newObject( def = pl := &lt;punkt&gt;liste(i,n+1, punkt(-5+(i-1)*delta,runge(-5+(i-1)*delta)));  );
+					newObject( def = m := matrix(i,n+1,k,n+1, pl[i].x^(k-1)) );
+					newObject( def = b := vektor( i,n+1, pl[i].y ) );
+					newObject( def = a:= solvelin( m, b ) );
+					newObject( def = p(x) := vektor(i,n+1, x^(i-1) ) );
+					newObject( def = poly(x):= p(x) &lt;*&gt;a; color = red; target = da);					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Polynominterpolation</title>
+			<description>.....	</description>
+			<seq>
+				<script>
+
+					modifyObject( name = poly; linestyle = dot );
+					newObject( def = n2 := 16);
+                     newObject( def = delta2 := 10/n2 );
+					newObject( def = pl2 := &lt;punkt&gt;liste(i,n2+1, punkt(-5+(i-1)*delta2,runge(-5+(i-1)*delta2)));  );
+					newObject( def = m2 := matrix(i,n2+1,k,n2+1, pl2[i].x^(k-1)) );
+					newObject( def = b2 := vektor( i,n2+1, pl2[i].y ) );
+					newObject( def = a2:= solvelin( m2, b2 ) );
+					newObject( def = p2(x) := vektor(i,n2+1, x^(i-1) ) );
+					newObject( def = poly2(x):= p2(x) &lt;*&gt;a2; color = blue; target = da);					
+				</script>
+			</seq>
+		</step>
+
+		
+			</body>
+</math4u2>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>tridiagonalMatrix</name>
+				<result-type>MatrixType</result-type>
+				<arguments>
+					<argument type="VectorType" name="v"/>
+					<argument type="ScalarType" name="dim"/>
+				</arguments>				
+				<method><![CDATA[
+					public Object eval(Object[] args) throws MathException{
+						int k=0;
+						//Parameter v als Vektor holen
+						double[] v = ((Result) args[k++]).getVector();
+				
+						//Parameter dim als Skalar holen und auf int casten
+						int dim = Math.floor(((Result) args[k++]).getScalar());
+						
+						//falls dim ungültig ist, dim auf einen vernünftigen Wert setzten
+						if(dim<=0) dim=1;
+						
+						//Matrix erzeugen
+						double[][] matrix = new double[dim][dim];
+						int vl = v.length;
+				
+						//Matrix schreiben
+						for(int i=0; i<dim; i++){
+							for(int k=0; k<vl; k++){
+								if(i+k-vl/2>=0 && i+k-vl/2<dim){
+									matrix[i][i+k-vl/2]=v[k];	
+								}//if
+							}//for k
+						}//for i
+				
+						//Matrix zurück geben
+						return new MatrixDoubleResult(matrix);
+					}
+				]]></method>
+			</function>
+		</define>
+	</head>
+	<body>
+		<location>/Beispiele/Java-Schnittstelle</location>
+		<title>Beispiel 04</title>
+		<step>
+			<title>Beispiel 4: weitere Typen - Vektoren und Matrizen</title>
+			<description>
+XML-Lektion hierzu:
+<code><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>tridiagonalMatrix</name>
+				<result-type>MatrixType</result-type>
+				<arguments>
+					<argument type="VectorType" name="v"/>
+					<argument type="ScalarType" name="dim"/>
+				</arguments>				
+				<method><![CDATA[
+					public Object eval(Object[] args) throws MathException{
+						int k=0;
+						//Parameter v als Vektor holen
+						double[] v = ((Result) args[k++]).getVector();
+				
+						//Parameter dim als Skalar holen und auf int casten
+						int dim = Math.floor(((Result) args[k++]).getScalar());
+						
+						//falls dim ungültig ist, dim auf einen vernünftigen Wert setzten
+						if(dim<=0) dim=1;
+						
+						//Matrix erzeugen
+						double[][] matrix = new double[dim][dim];
+						int vl = v.length;
+				
+						//Matrix schreiben
+						for(int i=0; i<dim; i++){
+							for(int k=0; k<vl; k++){
+								if(i+k-vl/2>=0 && i+k-vl/2<dim){
+									matrix[i][i+k-vl/2]=v[k];	
+								}//if
+							}//for k
+						}//for i
+				
+						//Matrix zurück geben
+						return new MatrixDoubleResult(matrix);
+					}
+				]]>]]&gt;<![CDATA[</method>		
+			</function>
+		</define>
+	</head>
+	<body>
+		<location>/Beispiele/Java-Schnittstelle</location>
+		<title>Beispiel 04</title>
+		<step>
+			<seq>
+				<script>
+					newObject(def=m := tridiagonalMatrix(vektor({1,2,1}), 4));
+					newObject(def=t := text(punkt(0,0),"<f><conf>m(style=eval)</conf>m</f>",POSTIT); target=da;);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>
+
+]]></code>			
+			</description>			
+			<seq>
+				<script>
+					newObject(def=m := tridiagonalMatrix(vektor({1,2,1}), 4));
+					newObject(def=t := text(punkt(0,0),"<f><conf>m(style=eval)</conf>m</f>",POSTIT); target=da;);
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

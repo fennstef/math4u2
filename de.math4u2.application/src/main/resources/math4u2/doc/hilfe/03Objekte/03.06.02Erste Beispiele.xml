@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.2 Erste Beispiele</title>
+		<step>
+			<title>3.6.2 Erste Beispiele</title>
+			<description>
+				<strong>Beispiel 1: Funktion mit einem Argument</strong>
+				<br/>Wir wollen nun eine Funktion <f>myFunc(x)</f> schreiben, die den Wert 0 liefert, wenn <f>|sin(x)|&lt;0.5</f> gilt, 
+die ansonsten den Wert <f>sin(x)</f> annimmt. <br/>Diese Funktion könnte man zwar auch mit Hilfe der in math4u2 vordefinierten 
+<code>cond(..)</code>-Funktion definieren, <br/>jetzt wollen wir sie über die Java-Schnittstelle in Java realisieren.
+				
+<p/>Betrachten Sie hierzu die Lektion unter "Beispiele/Java-Schnittstelle/Beispiel 01".
+Hier als Auszug der wichtige Teil der Lektion:
+<br/>
+				<code><![CDATA[
+...
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+		<define>
+			<function>
+				<name>myFunc</name>
+				<result-type>ScalarType</result-type>
+				<arguments>
+					<argument type="ScalarType" name="x"/>
+				</arguments>				
+				<method><![CDATA[
+
+public Object eval(Object[] args) throws MathException{
+	//Argumentwert holen
+	double x = ((Result) args[0]).getScalar();
+
+	//Variable für das Ergebniss
+	double result = 0.0;
+				
+	//Berechnung des Funktionswertes
+	if(Math.abs(Math.sin(x))<0.5){
+		result = 0.0;
+	}else{
+		result = Math.sin(x);
+	}
+			
+	//Ergebnisrückgabe
+	return new ScalarDoubleResult(result);
+}
+
+				]]>]]&gt;<![CDATA[</method>				
+			</function>
+		</define>
+	</head>
+...
+]]></code>
+				<p/>
+Kurzbeschreibung der Tags (Eine vollständige Beschreibng der Tags findet sich im Kapitel <strong>Tags</strong>):
+<p/>
+				<table>
+					<tr>
+						<td bgcolor="#F4C86C">Tag-Name</td>
+						<td bgcolor="#F4C86C">Beschreibung</td>
+					</tr>
+					<tr>
+						<td>
+							<code>define</code>
+						</td>
+						<td>Innerhalb dieses Tags werden alle Funktionsdefinitionen durchgeführt.</td>
+					</tr>
+					<tr>
+						<td>
+							<code>function</code>
+						</td>
+						<td>Schließt die Definition einer Funktion ein.</td>
+					</tr>
+					<tr>
+						<td>
+							<code>name</code>
+						</td>
+						<td>Name, mit dem die Funktion später aufgerufen wird.</td>
+					</tr>
+					<tr>
+						<td>
+							<code>result-type</code>
+						</td>
+						<td>Ergebnistyp der Funktion. <br/>Folgende Typen stehen zur Verfügung:<br/>
+							<strong>ScalarType</strong> (Skalar), <strong>VectorType</strong> (Spaltenvektor),
+							<strong>DualVectorType</strong> (Zeilenvektor),<br/>
+							<strong>MatrixType</strong> (Matrix).
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>arguments</code>
+						</td>
+						<td>Innerhalb dieses Tags werden die Argumente der Funktion festgelegt.</td>
+					</tr>
+					<tr>
+						<td>
+							<code>argument</code>
+						</td>
+						<td>Jedes Argument erhält einen Namen (z.B. name="x") und einen Typ (z.B. type="ScalarType").
+			<br/>Als Typen sind die bei <code>result-type</code> aufgeführten Typen möglich, 
+			<br/>ausserdem kann eine Funktion als Argument übergeben werden, 
+			<br/>die Typangabe ist dann <strong>UserFunction</strong>.
+			<br/>Für mehrstellige Funktionen werden mehrere <code>argument</code>-Tags angegeben.
+		</td>
+					</tr>
+					<tr>
+						<td>
+							<code>method</code>
+						</td>
+						<td>Eigentlicher Java-Code. Um den Funktionswert zu berechnen, wird hier die Methode <code>eval</code>
+			überschrieben.
+			<br/>Die Sequenz <code>&lt;![CDATA[</code> leitet einen Abschnitt ein, in der alle Sonderzeichen
+			<br/>wie z.B. <code>&lt;</code>,<code>&gt;</code> oder <code>&amp;</code> als Text interpretiert werden. 
+			Die Sequenz wird mit <code>]]&gt;</code>
+			abgeschlossen.
+		</td>
+					</tr>
+				</table>
+				<p/>
+In diesem Beispiel haben wir also eine Funktion <code>myFunc</code> definiert, die eine skalares 
+Argument <code>x</code> hat und ein skalares Ergebnis liefert.
+<p/>
+Nun zur Methode <code>eval</code>. Mit dem Methodenkopf
+<br/>
+				<code>public Object eval(Object[] args) throws MathException</code>
+				<br/>wird diese Methode der 
+Superklasse überschrieben. Dadurch wird bei jeden Berechnungsaufruf der Funktion die im Rumpf spezifizierte
+Methode aufgerufen. 
+<br/>Im Array <code>Object[] args</code>  werden der Methode <code>eval</code> die aktuellen Argument-Werte übergeben, für die die Berechnung durchgeführt werden sollen.
+Im konkreten Fall hat die Funktion <code>myFunc</code> ein Argument. Das <code>args</code>-Array hat dann beim Aufruf der Methode <code>eval</code> die Länge 1.
+<br/>Im Methodenrumpf wird als erstes der Wert für das (erste und einzige) Argument geholt ( <code>args[0]</code> ), gecastet ( <code>(Result)</code> ), extrahiert ( <code>getScalar()</code> ) und in der Variable <code>x</code> gespeichert.
+<br/>Die Variable <code>result</code> wird für das spätere Ergebnis bereitgestellt.
+<br/>Nun kommt die eigentliche Berechnung des Funktionswertes. Wie
+oben beschrieben wird abgeprüft, ob <f>|sin(x)|&lt;0.5</f> gilt, entsprechend 
+wird der Variable <code>result</code> ein  Wert zugewiesen.
+<br/>Zuletzt wird das Ergebnis <code>result</code> in einer Wrapper-Klasse <code>ScalarDoubleResult</code> verpackt und zurückgegeben.
+				
+<p/>
+				<strong>Hinweis: </strong>
+Es müssen bei Methodenaufrufen ALLE Casts von Hand gemacht werden, was nicht üblich für Java ist.
+Beispiel:
+<br/>
+				<code>Math.sqrt(2);</code>
+				<br/>würde in diesem Beispiel zu einen
+Fehler führen, da die <code>2</code> als <code>int</code> verstanden werden
+würde und <code>Math.sqrt()</code> einen <code>double</code>-Wert als Argument verlangt. 
+<br/>Ein expliziter Cast führt zum gewünschten Erfolg:
+<br/>
+				<code>Math.sqrt((double)2);</code>
+				<br/>oder hier einfacher und schneller 
+<br/>
+				<code>Math.sqrt(2.0);</code>.
+<p/>
+				<strong>Beispiel 2: Funktion mit zwei Argumenten</strong>
+				<br/>Nun soll in einer Funktion <code>myFunc2</code> die oben verwendete Grenze 0.5 verallgemeinert und als zweites Argument <code>limit</code> übergeben werden.
+Also:
+<code><![CDATA[
+<arguments>
+		<argument type="ScalarType" name="x"/>
+		<argument type="ScalarType" name="limit"/>
+</arguments>
+]]></code>
+				<br/>Die Extraktion der Argument-Werte und die Berechnungsvorschrift werden angepasst:
+<code><![CDATA[
+public Object eval(Object[] args) throws MathException{
+	//Argumentwerte holen
+	int k=0;
+	double x = ((Result) args[k++]).getScalar();
+	double limit = ((Result) args[k++]).getScalar();				
+
+	//Variable für das Ergebniss
+	double result = 0;						
+				
+	//Berechnung des Funktionswertes
+	if(Math.abs(Math.sin(x))<limit){
+		result = 0.0;
+	}else{
+		result = Math.sin(x);
+	}
+						
+	//Ergebnisrückgabe
+	return new ScalarDoubleResult(result);
+}
+]]></code>
+				<br/>Die Funktion <code>myFunc2</code> kann nun in einem Skript verwendet werden wie:
+<code><![CDATA[
+<script>
+	newObject(def=a:=0.3; select=true; min=0; max=1);
+	newObject(def=f(x) := myFunc2(x,a); target=da;);
+</script>
+]]></code>
+				<br/>Sie finden dieses Beispiel auch unter "Beispiele/Java-Schnittstelle/Beispiel 02" .
+<p/>
+				<strong>Beispiel 3: Funktion, die als Argument eine andere Funktion erwartet</strong>
+				<br/>Zuletzt soll einer Funktion <code>myFunc3</code> als drittes Argument eine Funktion übergeben werden. Der Typ <code>UserFunction</code> im dritten <code>argument</code>-Tag beschreibt dies:
+<code><![CDATA[
+<arguments>
+	<argument type="ScalarType" name="x"/>
+	<argument type="ScalarType" name="limit"/>
+	<argument type="UserFunction" name="f"/>
+</arguments>
+]]></code>
+<br/>Die Methode <code>eval</code> wird überschrieben:				
+				<code><![CDATA[
+public Object eval(Object[] args) throws MathException{
+	//Argumentwerte holen
+	int k=0;
+	double x = ((Result) args[k++]).getScalar();
+	double limit = ((Result) args[k++]).getScalar();
+	UserFunction f = ((UserFunction) args[k++]);				
+
+	//Variable für das Ergebnis bereitstellen
+	double result = 0;						
+				
+	//Berechnung des Funktionswertes f(x) in zwei Schritten
+				
+	//1. Parameterliste für Funktionsaufruf von f vorbereiten
+	Object[] x2 = new Object[]{args[0]};
+				
+	//2. Wert f(x) berechnen und speichern
+	double y = ((Result)f.eval(x2)).getScalar();
+			
+	//Berechnung des Ergebnisses von ymFunc3 wie zuvor
+	if(Math.abs(y)<limit){
+		result = 0.0;
+	}else{
+		result = y;
+	}
+						
+	//Ergebnisrückgabe
+	return new ScalarDoubleResult(result);
+}
+]]></code>
+<br/>Zu beachten ist, dass beim Cast nicht mehr auf <code>Result</code> gecastet wird, sondern
+direkt auf die Klasse <code>UserFunction</code>.
+<br/>Bei der Berechnung sieht man: Der Funktionswert für eine als Argument übergebene Funktion wird wieder mit <code>eval(Object[] args)</code> berechnet.
+<br/>
+<br/>Der Aufruf der Funktion in einem Skript sieht nun folgendermaßen aus:
+<code><![CDATA[
+newObject(def=a:=0.3; select=true; min=0; max=1);
+newObject(def=g(x):=cos(x));
+newObject(def=f(x) := myFunc3(x,a, g.funktion); target=da;);
+]]></code>
+				<br/>Sie finden dieses Beispiel auch unter "Beispiele/Java-Schnittstelle/Beispiel 03".
+			</description>
+		</step>
+	</body>
+</math4u2>

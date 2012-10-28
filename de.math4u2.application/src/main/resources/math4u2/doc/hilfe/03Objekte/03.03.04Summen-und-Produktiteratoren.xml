@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.3 Funktionen</location>
+		<title>3.3.4 Summen- und Produktiterator</title>
+		<step>
+			<title>3.3.4 Summen- und Produktiterator</title>
+			<description>			
+<table>
+	<tr>
+		<td bgcolor="#F4C86C"><strong>Struktur</strong></td>
+		<td bgcolor="#F4C86C"><strong>Bedeutung</strong></td>
+	</tr>
+	<tr>
+		<td>
+<code>sum(index,unten,oben,term)</code>
+<br/><br/>
+wie z.B.
+<br/><br/>
+<code>f(x):=sum(i,0,3,x^i)</code>
+		</td>
+		<td>
+Summe
+<br/><code>index</code>: Bezeichner für den Summationsindex
+<br/><code>unten</code>: Term für die untere Summationsgrenze
+<br/>mit ganzzahligem Wert
+<br/><code>oben</code>: Term für die obere Summatioonsgrenze
+<br/>mit ganzzahligem Wert
+<br/><code>term</code>: Term für den Summanden			
+		</td>
+	</tr>	
+	<tr>
+		<td>
+<code>prod(index,unten,oben,term)</code>
+<br/><br/>
+wie z.B.
+<br/><br/>
+<code>fak(i):=prod(ind,1,i,i)</code>
+		</td>
+		<td>
+Produkt
+<br/><code>index</code>: Bezeichner für den Summationsindex
+<br/><code>unten</code>: Term für die untere Summationsgrenze
+<br/>mit ganzzahligem Wert
+<br/><code>oben</code>: Term für die obere Summatioonsgrenze
+<br/>mit ganzzahligem Wert
+<br/><code>term</code>: Term für den Faktor			
+		</td>
+	</tr>	
+</table>
+
+<p/>Zum Zeitpunkt der Auswertung müssen die Terme für die obere und 
+die untere Summationsgrenze eine ganze Zahl als Wert liefern. Falls die 
+Summationsgrenze über einen Parameter <code>a</code> verändert werden 
+soll, kann man die Ganzzahligkeit z.B. durch <code>floor(a)</code> oder 
+<code>ceil(a)</code> sicherstellen.
+<p/>Wenn der Wert der oberen Grenze kleiner ist als der Wert der unteren 
+Grenze, liefert <code>sum</code> das Ergebnis 0, <code>prod</code> das Ergebnis 1.
+
+<p/><strong>Beispiel</strong>
+<br/>Definiert man zunächst <code>n:=3</code>, so kann man mit
+<code>tayCos(x):=sum(i,0,n,(-1)^i*x^(2*i)/(2*i)! )</code> das allgemeine Taylor-Polynom für
+die cos-Funktion mit Entwicklungspunkt <f>c=0</f> definieren. Über den Wert 
+von <code>n</code> kann man dann die Ordnung des Polynoms verändern.
+			</description>
+		</step>
+	</body>
+</math4u2>

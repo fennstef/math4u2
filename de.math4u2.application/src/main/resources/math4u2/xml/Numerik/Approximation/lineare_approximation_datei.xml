@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Approximation</location>
+		<title>Ausgleichsgerade - Daten aus Datei</title>
+		<summary>Erstellt Ausgleichsgerade mit Daten aus einer Datei</summary>
+		<step>
+			<description>
+				<title2>Daten bereitstellen</title2>
+		      Erstellt die Ausgleichsgerade zu einer Menge von Punkten. Die Daten werden aus einer ASCII-Datei gelesen. 
+		      <ul>
+					<li>Die erste Zeile dieser Datei enthält die x-Koordinaten der Punkte.</li>
+					<li>Die zweite Zeile enthält in der gleichen Reihenfolge die y-Koordinaten.</li>
+					<li> Zahlen werden angegeben wie <code>12</code> oder  <code>1.23</code>  oder <code>-23.77</code>   oder <code>1.0e-4</code>    .</li>
+					<li>Die einzelnen Zahlenangaben werden durch ein oder mehrere Leerzeichen getrennt.</li>
+				</ul><br/>Im Verzeichnis <code>/xml</code> der math4u2-Installation finden Sie eine Beispieldatei <code>daten1.txt</code>.
+			</description>
+			<seq>
+				<script>
+		       deleteAll();
+					expand(left=false; right=false);
+					da.setTitle( title = "Ausgleichsgerade");
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<title2>Datei öffnen</title2>
+			</description>
+		</step>
+		<step>
+			<seq>
+				<script>newObject( def = daten:=matrix( finput ); );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<title2>Ausgleichsgerade bstimmen</title2>Die Ausgleichsgerade <f>$fd(g)</f> hat:
+			<br/>Achsenabschnitt: <tab/>
+				<f>
+					<conf>a(style=deval; width = 7)</conf>a</f>
+				<br/>Steigung: <tab/>
+				<tab/>
+				<f>
+					<conf>b(style=deval; width = 7)</conf>b</f>
+			</description>
+			<seq>
+				<script>
+					
+					
+					newObject( def = n := daten.spalten );
+					newObject( def = pl:=&lt;punkt>liste(i,daten.spalten, punkt( fix(daten[1,i]),  fix(daten[2,i]) ) ); showNames = false; target = da );
+					newObject( def = minx:=minelem( vektor(i,daten.spalten, daten[1,i])   )   );
+					newObject( def = maxx:=maxelem( vektor(i,daten.spalten, daten[1,i])   )   );
+
+					newObject( def = miny:=minelem( vektor(i,daten.spalten, daten[2,i])   )   );
+					newObject( def = maxy:=maxelem( vektor(i,daten.spalten, daten[2,i])   )   );
+					
+					newObject( def = xdiff := (maxx - minx)/5 );
+					newObject( def = ydiff := (maxy - miny)/5 );
+					newObject( def = da.xMin := minx-xdiff );
+					newObject( def = da.xMax := maxx+xdiff );
+					newObject( def = da.yMin := miny-ydiff );
+					newObject( def = da.yMax := maxy+ydiff );
+					
+					newObject( def = a11:= n );
+					newObject( def = a12:= sum(i,1,n,daten[1,i]  ) );
+					newObject( def = a22:= sum(i,1,n,daten[1,i]^2   ) );
+					
+                           newObject( def = b1:= sum(i,1,n,daten[2,i]  ) );
+                           newObject( def = b2:= sum(i,1,n,daten[1,i]*daten[2,i]  ) );
+                           
+                           newObject( def = A:= matrix( { {a11, a12},{a12,a22} } ) );
+                           newObject( def = B:= vektor( { b1, b2} ) );
+                           newObject( def = x := solvelin( A,B ) );
+                           newObject( def = a := x[1] );
+                           newObject( def = b := x[2] );
+                           newObject( def = g(x):= a+b*x; target = da; color = red );
+                           newObject( def = gtext:=text( punkt( (minx+maxx)/2, g((minx+maxx)/2)), "Ausgleichsgerade <f>$fd(g)</f>
+					<br/>Achsenabschnitt: <tab/>
+					<f>
+						<conf>a(style=deval; width = 7)</conf>a</f>
+					<br/>Steigung: <tab/>
+					<tab/>
+					<f>
+						<conf>b(style=deval; width = 7)</conf>b</f>", B_NW); target = da );
+
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

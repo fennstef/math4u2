@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>M.Weiss</author>
+		<location>Analysis/Grundlagen/Koordinatentransformationen</location>
+		<title>Sinus-Funktion mit Parametern</title>
+		<summary>Experimentieren Sie mit einer Sinus-Funktion mit Parametern: Phase, Amplitude, Verschiebung in x- und y-Richtung</summary>
+		
+		<step>
+		<title>Sinus-Funktion mit Parametern</title>
+		<description>Häufig werden Funktionen verwendet, die aus der Sinus-Funktion durch die Verwendung von bis zu 4 Parametern hervorgehen.
+		<f>$fb(g)</f>
+			</description>
+		
+		<seq>
+		  <script>
+		     expand( left = false );
+		     da.coordinateSystem( xMin=-4; xMax = 10; yMin = -5.5; yMax = 5  );
+		     newObject( def = a :=1 );
+		     newObject( def = b:= 1 );
+		     newObject( def = c := 0 );
+		     newObject( def = d:= 0 );
+		     newObject( def = g(x):=sin(x); color = red; linestyle = dot; target = da; hide = true );
+		     newObject( def = tsin:=text( punkt(2,sin(2)), "<f>y=sin(x)</f>", B_NE ); color = red; target = da; hide = true );
+		     newObject( def = mg:= gerade( punkt( 0,d), e2x ) ; color = blue; linestyle = dot; target = da; hide = true );
+		     newObject( def = sp:= gerade( punkt( c, 0 ), e2y ) ; color = green; linestyle = dot; target = da; hide = true );
+		     newObject( def = ep := gerade( punkt( c+2*pi/b, 0), e2y); color = green; linestyle = dot; target = da; hide = true );
+		     newObject( def = apf:=pfeil( punkt( pi/(2*b)+c, d), vektor({fix(0),fix(a)}) ); color = orange; target = da; hide = true );
+		     newObject( def = perpf1:=pfeil( punkt( c+pi/b, -3), vektor({fix(-pi/b), fix(0)}) ); color = green; linestyle = dot; target = da; hide = true );
+		     newObject( def = perpf2:=pfeil( punkt( c+pi/b, -3), vektor({fix(pi/b), fix(0)}) ); color = green; linestyle = dot; target = da; hide = true );
+		     newObject( def = tper:=text( punkt(c+pi/b, -3), "Periode: <f>T=(2*pi)/b</f>", B_SE); color = green; target = da; hide = true );
+		  </script>
+		</seq>
+		</step>
+
+		<step>
+		<title>Sinus-Funktion mit Parametern</title>
+		<description><f>$fd(f)</f>
+			</description>
+		
+		<seq>
+		  <script>
+		  deleteObject( name = tsin );
+		     		     newObject( def = f(x):= a*sin(b*(x-c)) + d; target = da );
+		     		     newObject( def = tamp:=text( punkt( pi/(2*b)+c, d + a/5 ), "Amplitude: <f>a</f>", B_NE) ; color = orange; target = da; hide = true );
+		  </script>
+		</seq>
+		</step>
+		<step>		
+		<description>
+			<title2>Amplitude</title2>
+			Als Amplitude wird ...
+			
+		<f>
+			<conf>a(style=slider;min=-3;max=3)</conf>$fd(f)
+		</f>
+			</description>
+		
+		<seq>
+		  <script>
+		     newObject( def = a :=1 );
+		     newObject( def = b:= 1 );
+		     newObject( def = c := 0 );
+		     newObject( def = d:= 0 );
+		  </script>
+		</seq>
+		</step>
+
+		<step>		
+		<description>
+		<title2>Periode</title2>
+		<f><conf>b(style=slider;min=-1;max=3)</conf>$fd(f)</f>
+			</description>
+		
+		<seq>
+		  <script>
+		     newObject( def = a :=1 );
+		     newObject( def = b:= 1 );
+		     newObject( def = c := 0 );
+		     newObject( def = d:= 0 );
+		  </script>
+		</seq>
+		</step>
+		
+		<step>		
+		<description>
+		<title2>Phase</title2>
+		<f><conf>c(style=slider;min=-1;max=5)</conf>$fd(f)</f>
+			</description>
+		
+		<seq>
+		  <script>
+		     newObject( def = a :=1 );
+		     newObject( def = b:= 1 );
+		     newObject( def = c := 0 );
+		     newObject( def = d:= 0 );
+		     newObject( def = pphas := pfeil( punkt( 0, -3), c*e2x ); color = magenta; linestyle = dot; target = da; hide= true );
+		     newObject( def = tphas:=text( punkt( c/2, -3 ), "Phase: <f>c</f>", B_SW); color = magenta; target = da; hide = true );
+		  </script>
+		</seq>
+		</step>
+		
+		<step>		
+		<description>
+		<title2>Verschiebung in y-Richtung</title2>
+		<f><conf>d(style=slider;min=-1;max=5)</conf>$fd(f)</f>
+			</description>
+		
+		<seq>
+		  <script>
+		     newObject( def = a :=1 );
+		     newObject( def = b:= 1 );
+		     newObject( def = c := 0 );
+		     newObject( def = d:= 0 );
+		  </script>
+		</seq>
+		</step>
+
+
+
+		<step>
+		<description>
+		<f><conf>a(style=text; oneStepActive=false; width=6); b(style=text; width=6); c(style=text; width=6); d(style=text; width=6)</conf>$fd(f)</f>
+		<br/><f><conf>a(style=slider;min=-3;max=3)</conf>a</f>
+		<br/><f><conf>b(style=slider;min=-3;max=3)</conf>b</f>
+		<br/><f><conf>c(style=slider;min=-2;max=2)</conf>c</f>
+		<br/><f><conf>d(style=slider;min=-2;max=2)</conf>d</f><br/>
+		</description>
+		
+		<seq>
+		  <script>
+		    		     newObject( def = a :=1 );
+		     newObject( def = b:= 1 );
+		     newObject( def = c := 0 );
+		     newObject( def = d:= 0 );
+		     newObject( def = f(x):= a*sin(b*(x-c)) + d; target = da );
+		  </script>
+		</seq>
+		</step>
+		<step>
+		</step>
+	</body>
+</math4u2>

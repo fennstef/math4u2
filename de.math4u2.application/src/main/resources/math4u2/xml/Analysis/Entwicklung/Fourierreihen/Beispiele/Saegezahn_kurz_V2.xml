@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. Weiss</author>
+		<location>Analysis/Entwicklung/Fourierreihen/Beispiele</location>
+		<title>Sägezahn - kurz - V2</title>
+		<summary>Zeigt die Fourier-Entwicklung der Sägezahn-Funktion</summary>
+		<keywords>
+			<keyword>Sägezahn</keyword>
+			<keyword>Fourier-Reihe</keyword>
+			<keyword>Gibb</keyword>
+			<keyword>Gibbsches Phänomen</keyword>
+		</keywords>
+		<step>
+			<title>Fourier-Summe der Sägezahnfunktion, Gibbsches Phänomen</title>
+			<description>Die Fourier-Summe für die Sägezahnfunktion ist <f>$fd(f)</f>. 
+				<br/>Experimentieren Sie: Sie können die obere Summationsgrenze hier einstellen: <f>
+					<conf> n(style=dtext;width=4; pattern=##0)</conf>n</f>. 
+				<br/>Wählen Sie z.B. die Werte <f>5,  50, 500</f>.<br/>
+			</description>
+			<layout>
+				<row perc="100">
+					<col perc="60" name="gesamt"/>
+					<col perc="40" name="detail"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			       deleteAll();
+			       expand( left = false; right = false );
+			       newObject( def = saegezahn(x) :=2*pi*( (x+pi)/(2*pi)-floor((x+pi)/(2*pi)) ) - pi; target = gesamt; );
+			       gesamt.setTitle(title="Gesamt");
+                   detail.setTitle(title="Detail");
+                   newObject(def = gesamt.xMin := -5);
+                   newObject(def = gesamt.xMax := 12);
+                   newObject(def = gesamt.yMin := -4);
+                   newObject(def = gesamt.yMax := 4);
+
+                   
+                   newObject(def = detail.xMin := 2.4);
+                   newObject(def = detail.xMax := 3.4);
+                   newObject(def = detail.yMin := 2.4);
+                   newObject(def = detail.yMax := 3.7);
+                   newObject( def = dx:= (detail.xMax - detail.xMin)/40 );
+                   newObject( def = dy:= (detail.yMax - detail.yMin)/40 );
+                   
+                   newObject(def = r:=kurvenzug( { punkt(detail.xMin+dx, detail.yMin+dx),
+															     punkt(detail.xMax-dx, detail.yMin+dx),
+															    	punkt(detail.xMax-dx, detail.yMax-dy),
+															   	punkt(detail.xMin+dx, detail.yMax-dy),
+															   	punkt(detail.xMin+dx, detail.yMin+dy) } );
+										color= blue;
+										target=gesamt );		
+					detail.addGraph( name = r );
+				newObject( def = n := 1 );
+				newObject( def = f(x) :=2*sum(i, 1, n, (-1)^(i+1)*sin( i*x)/i) ; color = red; target = gesamt );						
+				 detail.addGraph(name = f);
+				 detail.addGraph(name = saegezahn);									 
+
+			    </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

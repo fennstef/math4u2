@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.2//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_2DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.2_ausfuehrbar/>
+		<version>2.2</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>3. Daten, Funktionen, Objekte, Graphen/3.6 Java-Schnittstelle</location>
+		<title>3.6.3 Vektoren und Matrizen</title>
+		<step>
+			<title>3.6.3 Vektoren und Matrizen</title>
+			<description>
+				<strong>Beispiel 4: Vektoren und Matrizen</strong>
+				<br/>In den ersten Beispielen war der Rückgabetyp der erstellten Funktionen stets ein Skalar, als Argumenttypen wurden Skalare oder eine Funktion verwendet. 
+				<br/>Nun ein Beispiel, in dem auch Vektoren und Matrizen vorkommen:  Mit Hilfe einer Funktion sollen tridiagonale Matrizen wie 
+				<br/>
+				<f>matrix({{2,-3,0,0},{1,2,-3,0},{0,1,2,-3},{0,0,1,2}})</f>.
+<br/>erstellt werden. Auf der Diagonalen und auf der untern und oberen Nebendiagonalen sollen jeweils die gleichen Werte stehen, die restlichen Elemente haben den Wert 0. 
+Um eine beliebige Matrix dieser Struktur zu erzeugen, müssen zum einen diese drei Werte und zum
+anderen die Dimension der Matrix bekannt sein. 
+<br/>Wir wollen nun eine Funktion <code>tridiagonalMatrix(&lt;vektor> v,dim)</code>
+schreiben, die mit <code>tridiagonalMatrix(vektor({1,2,-3}),4)</code> die oben gezeigt Matrix erzeugt.
+<br/>Die drei Zahlenwerte sollen also zu einem einzigen Argument vom Typ <strong>Vektor</strong> zusammengefasst werden.
+<p/>
+Der erste Teil muss dann wie folgt aussehen:
+<code><![CDATA[
+
+<function>
+	<name>tridiagonalMatrix</name>
+	<result-type>MatrixType</result-type>
+	<arguments>
+		<argument type="VectorType" name="v"/>
+		<argument type="ScalarType" name="dim"/>
+	</arguments>
+	...
+
+]]></code>Also wird ein Paramter vom Typ <strong>Vektor</strong> und vom Typ <strong>Skalar</strong> erwartet und
+das Ergebnis ist eine <strong>Matrix</strong>.
+<p/>
+Betrachten wir nun den Java-Code:
+<code><![CDATA[
+
+public Object eval(Object[] args) throws MathException{
+	int k=0;
+	//Wert des ersten Arguments als double[] holen
+	double[] v = ((Result) args[k++]).getVector();
+
+	//Wert des zweiten Arguments als Skalar holen, auf int abrunden und in dim speichern
+	int dim = Math.floor(((Result) args[k++]).getScalar());
+		
+	//falls dim ungültig ist, dim auf einen vernünftigen Wert setzten
+	if(dim<=0) dim=1;
+		
+	//Passendes Array erzeugen
+	double[][] matrix = new double[dim][dim];
+	int vl = v.length;
+
+	//Array mit Werten belegen
+	for(int i=0; i<dim; i++){
+		for(int k=0; k<vl; k++){
+			if(i+k-vl/2>=0 && i+k-vl/2<dim){
+				matrix[i][i+k-vl/2]=v[k];	
+			}//if
+		}//for k
+	}//for i
+
+	//In Wrapper verpacken und zurückgeben
+	return new MatrixDoubleResult(matrix);
+}
+
+]]></code>
+				<p/>
+Testen der Funktion:
+<code><![CDATA[
+
+newObject(def=m := tridiagonalMatrix(vektor({1,2,-3}), 4));
+newObject(def=t := text(punkt(0,0),"<f><conf>m(style=eval)</conf>m</f>",POSTIT); target=da;);
+
+]]></code>Sie finden dieses Beispiel unter "Beispiele/Java-Schnittstelle/Beispiel 04".
+<p/>
+			</description>
+		</step>
+	</body>
+</math4u2>

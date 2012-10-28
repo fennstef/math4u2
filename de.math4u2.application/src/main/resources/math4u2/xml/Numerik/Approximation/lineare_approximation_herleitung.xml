@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M. Weiss</author>
+		<location>Numerik/Approximation</location>
+		<title>Ausgleichsgerade - Herleitung</title>
+		<summary>Herleitung der Normalgleichungen für die Ausgleichsgerade</summary>
+		<step>
+			<title>Ausgleichsgerade - Aufgabenstellung</title>
+			<description>
+		   Bei technischen Messungen oder naturwissenschaftlichen Experimenten nimmt man häufig eine Reihe von Messpunkten auf, von denen bekannt ist, dass ihre Lage einer bestimmten Gesetzmäßigkeit genügen sollte. 
+<br/>Im einfachsten Fall erwartet man, dass sämtliche Messpunkte auf einer Gerade iegen.
+		   </description>
+			<layout>
+				<row perc="100">
+					<col perc="100" name="Experiment"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false; right=false);
+					Experiment.setTitle(title="Experiment");
+          
+					Experiment.coordinateSystem(xMin=-4; xMax=5; yMin=-5.2; yMax=5.2);
+
+					newObject( def = p:=&lt;punkt&gt;liste({  
+						punkt( fix(-1.2), -1.6),	
+               				punkt( fix(-2),-3.3),
+                            
+                            punkt( fix(-3), -3),
+							punkt( fix(1.5), 0.7),
+                            
+                            punkt( fix(3.2), 2.4),
+                            punkt( fix(4), 3.8),
+                            punkt( fix(2.5),1.9) }) ; 
+							
+						target = Experiment;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Auf Grund von Messfehlern erhält man oft Messpunkte <f>p[i](x[i],y[i])</f>, die nicht alle auf einer Gerade liegen.
+			<br/>In diesem Fall approximiert man die Messpunkte durch eine Gerade, d.h. für eine Gerade <f>y=a+b*x</f> mit Achsenabschnitt <f>a</f> und die Steigung <f>b</f> sucht man Werte für <f>a</f> und <f>b</f> so, dass alle Punkte "möglichst nahe" an der Gerade liegen.
+			</description>
+			<seq>
+				<script>				
+					
+                       newObject( def = a:=1 );
+                       newObject( def = b:=1 );
+					                                                      
+					newObject( def = f(x):=  a + b*x ; target = Experiment; color = blue;  );
+					newObject( def = text_f:= text( punkt( 2,f(2)), "<f>y=a+b*x</f>", B_NW); fillcolor = fillgreen;bordercolor = blue; target = Experiment );
+					newObject(  def = pf:=&lt;punkt&gt;liste(i,7, punkt(p[i].x, f(p[i].x))) );
+					
+						
+					Experiment.setTitle(title="Experiment");
+					
+					
+					
+
+
+					
+                             
+				</script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		          animate( name = a; to = 2; end = 5  );
+		          animate( name = a; to = -1; end = 3 );
+		          animate( name = a; to = 0.8; end = 4 );
+		           animate( name = b; to = 2; end = 5  );
+		          animate( name = b; to = -1; end = 3 );
+		          animate( name = b; to = 0.5; end = 4 );
+
+		          
+		       </script>
+			</seq>
+		</step>
+		<step>
+			<description>Probieren sie es aus: Stellen Sie nach "Augenmaß" Werte für <f>a</f> und <f>b</f> so ein, dass die blaue Gerade die Punkte möglichst gut approximiert.
+		   <br/>Achsenabschnitt: <f>
+					<conf>a(style=dslider;min=-3;max=3)</conf>a</f>, Steigung: <f>
+					<conf>b(style=dslider;min=-3;max=3)</conf>b</f>
+			</description>
+		</step>
+		<step>
+			<description>Je nach Wahl der Parameter <f>a</f> und <f>b</f> wird die Gerade die Messpunkte mehr oder weniger gut approximieren. Wir wollen nun eine rechnerische Größe definieren, die die Qualität der Approximation mit einem Zahlenwert beschreibt. Sie werden zuletzt sehen, dass die Approximation über diese rechnerische Größe und die mit dem "Augenmaß" sehr gut übereinstimmen.
+		   </description>
+			<seq>
+				<script/>
+			</seq>
+		</step>
+		<step>
+			<title>Der Defekt einer Approximation</title>
+			<description>Beginnen wir beim Punkt <f>p[1]</f> mit den Koordinaten <f>(x[1],y[1])</f>: Für diesen Punkt wäre die Wahl von <f>a</f> und <f>b</f> dann perfekt, wenn die Geradengleichung <f>y=a+b*x</f> an der Stelle <f>x[1]</f> genau den Wert <f>y[1]</f> liefern würde: Dann würde der Punkt <f>p[1]</f> auf der Graden liegen. 
+<br/>Konkret liegt dieser Fall leider nicht vor: Die Werte von <f>a+b*x[1]</f> und <f>y[1]</f> sind verschieden.
+<br/>Ihre Differenz <f>(a+b*x[1])-y[1]</f> wird  als Defekt beim Punkt <f>p[1]</f> bezeichnet.
+		</description>
+			<seq>
+				<script>
+									animate( name = a ; to = 0.5; end = 1);
+					animate( name = b ; to = 0.8; end = 1);
+		       newObject( def = gx1:=gerade( p[1], e2y); linestyle = dot; target = Experiment );
+		      newObject( def = s1 := strecke(p[1], pf[1]); color = red; target = Experiment );             
+					
+		        newObject( def = xv:=vektor(i,7,p[i].x) );
+                       newObject( def = x:=&lt;funktion>liste(i,7,p[i].x) );
+                      newObject( def = y:=&lt;funktion>liste(i,7,p[i].y) );
+
+                      newObject( def = pv:=punkte( xv, vektor(i,7,f(x[i])), 4 ); color = blue; target = Experiment );
+                        newObject( def = Defekt(a,b):=sum(i,1,7, ((a+b*x[i])-y[i])^2 ));
+                       // newObject( def = Defekt(a,b):=sum(i,1,7, |y[i]-(a*x[i]+b)| ));
+                       
+                        newObject( def = text_punkt1:=text( p[1], "Messpunkt <f>p[1]</f> mit Koordinaten <f>(x[1], y[1])</f>", B_SE );  fillcolor = 200.250.50.220;target = Experiment );
+                         newObject( def = text_punkt2:=text( punkt(x[1], f(x[1])), "Punkt der Gerade mit Koordinaten <f>(x[1], a+b*x[1])</f>", B_NE );  fillcolor = 200.250.50.220;target = Experiment );
+
+
+		         newObject( def = text_defekt1:=text( punkt( x[1], (y[1]+f(x[1]))/2 ), "Defekt bei <f>p[1]</f>: <f>(a+b*x[1])-y[1]</f>", B_NW);fillcolor = 200.250.50.220; bordercolor = red; target = Experiment );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Genauso ergibt sich ein Defekt beim Punkt <f>p[2]</f>, bei <f>p[3]</f> und bei den restlichen Punkten. Diese sind oben durch rote Strecken gekennzeichnet.
+	        <br/>Das Ziel könnte man jetzt so beschreiben: Wähle Werte für <f>a</f> und <f>b</f> so, dass die Länge der roten Strecken insgesamt möglichst klein wird.
+	        <br/>Achsenabschnitt: <f>
+					<conf>a(style=dslider;min=-3;max=3)</conf>a</f>, Steigung: <f>
+					<conf>b(style=dslider;min=-3;max=3)</conf>b</f>
+			</description>
+			<seq>
+				<script>
+	          deleteObject( name = text_punkt1, text_punkt2, text_defekt1, gx1);
+	          
+	         newObject( def = s2 := strecke(p[2], pf[2]); color = red; target = Experiment );
+					newObject( def = s3 := strecke(p[3], pf[3]); color = red; target = Experiment );
+					newObject( def = s4 := strecke(p[4], pf[4]); color = red; target = Experiment );
+					newObject( def = s5 := strecke(p[5], pf[5]); color = red; target = Experiment );
+					newObject( def = s6 := strecke(p[6], pf[6]); color = red; target = Experiment );
+					newObject( def = s7 := strecke(p[7], pf[7]); color = red; target = Experiment );
+
+
+	          </script>
+			</seq>
+		</step>
+		<step>
+			<description>Da sich die Länge einer Strecke als Betrag des entsprechenden Defekts ergibt, wäre der Wert des Terms <f>|(a+b*x[1])-y[1]|+|(a+b*x[2])-y[2]|+$hdots+|(a+b*x[7])-y[7]|</f> eine brauchbare Größe zur Beurteilung der Qualität der Approximation.
+
+			<br/>Ungünstig ist an diesem Term, dass die darin verwendete Betragsfunktion an ihrem Minimum nicht differenzierbar ist. 
+			<br/>Weil wir später mit Mitteln der Differnzialrechnung arbeiten wollen, wählen wir folgende sehr ähnlich definierte Größe als Qualitätskriterium:
+	        <br/>
+				<f>Defekt(a,b):=((a+b*x[1])-y[1])^2+((a+b*x[2])-y[2])^2+$hdots+((a+b*x[7])-y[7])^2</f>.
+			</description>
+		</step>
+		<step>
+			<description>Wichtig sind an der Defektfunktion <f>$fd(Defekt)</f> folgende Eigenschaften:
+		  <ul>
+					<li>Sie hat nur Werte <f>$void $gt 0</f>
+					</li>
+					<li>Der Wert <f>$void = 0</f> wird genau dann angenommen, wenn sämtliche Punkte auf der Gerade liegen.</li>
+					<li>Wenn man bei einem einzelnen Punkt den Abstand von der Gerade vergrößert, dann wächst auch der Wert der Defektfunktion.</li>
+				</ul>
+			</description>
+		</step>
+		<step>
+			<description>Rechts ist jetzt ein zweites Koordinatensystem eingeblendet. 
+			<br/>Über den Punkt <f>ab</f> können sie mit der Maus ein Parameterpaar <f>(a,b)</f> einstellen. 
+			<ul>
+				<li>Wenn Sie den Punkt <f>ab</f> nach oben oder unten bewegen, ändert sich der Achsenabschnitt <f>a</f>,</li>
+				<li>wenn Sie den Punkt nach links oder rechts bewegen, änder sich die Steigung <f>b</f>.</li>
+			</ul>Die Gerade stellt sich entsprechend ein.<br/>Experimentieren Sie! Stellen Sie ein Wertepaar ein, bei dem die Gerade die Punkte gut approximiert.</description>
+			<layout>
+				<row perc="100">
+					<col perc="50" name="Experiment"/>
+					<col perc="50" name="Abweichung"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+				newObject( def = ab:=punkt(0.8,0.5) );
+					                                                      
+					newObject( def = f(x):=  ab.y + ab.x*x ; target = Experiment; color = blue;  );
+
+	          deleteObject( name = text_f );
+                          Abweichung.setTitle(title="Defekt(a,b)");
+					Abweichung.coordinateSystem( xMin = -0.3; xMax = 2.5; yMin = -1.5; yMax = 1.5  );                 
+                       
+                        Abweichung.addGraph( name = ab );
+                        newObject( def = mx:=ab.x);
+newObject( def = my:=ab.y);
+                        newObject( def = taa:= text( punkt( Abweichung.xMax,0), "<f>b</f>", K_W); target = Abweichung );
+					newObject( def = tbb:= text( punkt( 0,Abweichung.yMax), "<f>a</f>", K_S); target = Abweichung );
+					newObject( def = mt:=text(ab, "<f>
+						<conf>my(style=eval;width=6;pattern=0.00)</conf>a=my</f>
+					<br/>
+					<f>
+						<conf>mx(style=eval;width=6;pattern=0.00)</conf>b=mx</f>", C_N); fillcolor = 200.250.50.220; target = Abweichung );
+
+	          </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt ist zusätzlich der Wert des Defekts zum aktuellen Parameterpaar angezeigt. 
+	        <br/>Versuchen Sie die Stelle zu finden, an der dieser Wert am kleinsten ist.
+	        <br/>Damit haben Sie zugleich eine Gerade gefunden, die die Messpunkte gut approximiert.     
+	        </description>
+			<seq>
+				<script>
+	                  deleteObject( name = mt);
+                        
+newObject( def = val:= Defekt(my, mx) );
+                          newObject( def = KDefekt(b,a):=sum(i,1,7, ((a+b*x[i])-y[i])^2 ));
+                         newObject( def = kk:=karte( KDefekt, vektor({-0.01, 30})); target = Abweichung; visible = false );
+					newObject( def = mt:=text(ab, "<f>
+						<conf>my(style=eval;width=6;pattern=0.00)</conf>a=my</f>
+					<br/>
+					<f>
+						<conf>mx(style=eval;width=6;pattern=0.00)</conf>b=mx</f>
+					<br/>
+					<f>
+						<conf>val(style=eval;width=8;pattern=00.00)</conf>Defekt(a,b)=val</f>", C_N); fillcolor = 200.250.50.220; target = Abweichung );
+                         
+	           </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<par>
+					<script>
+	                 animate( name = ab.x; to = 1.6; end = 2 );
+	                 animate( name = ab.y; to = -0.6; end = 2 );
+	              </script>
+				</par>
+				<par>
+					<script>
+	                 animate( name = ab.x; to = 0.6; end =4 );
+	                 animate( name = ab.y; to = -1; end = 4 );
+	              </script>
+				</par>
+				<par>
+					<script>
+	                 animate( name = ab.x; to = 0.8; end = 2 );
+	                 animate( name = ab.y; to = 0.25; end = 2 );
+	              </script>
+				</par>
+				<par>
+					<script>
+	                 animate( name = ab.x; to = 1.1; end = 2 );
+	                 animate( name = ab.y; to = -1; end = 2 );
+	              </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Die Suche nach dem kleinsten Defekt</title>
+			<description>Um einen etwas besseren Überblick zu schaffen, haben wir jetzt rechts im wichtigsten Bereich die Werte der Defektfunktion wie in einer Landkarte farblich dargstellt:
+		<br/>Kleine Werte erscheinen dunkelblau, größere hellblau, dann grün, gelb, die größten Werte sind rot dargestellt.
+		<br/>Jetzt ist es sehr viel einfacher, einen möglichst kleinen Wert zu finden.
+		</description>
+			<seq>
+				<script>
+                         
+                        modifyObject( name = kk; visible = true );
+                                     
+			 		
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Allerdings auch nur deshalb, weil der Rechner vorher intensiv gearbeitet hat.
+			<br/>Ziel ist es letztlch, das beste Parameterpaar ohne "Sucherei" mit Hilfe einer Rechenformel zu ermitteln.
+		   </description>
+		</step>
+		<step>
+			<description>Dazu jetzt rechts oben ein neues Koordinatensystem.
+			<br/>Hier wollen wir auftragen, wie bei einem festen Wert für <f>a~quer</f> der Wert der Defektfunktion <f>Defekt(a~quer,b)</f> von <f>b</f> abhängt.
+			<br/>Wir tragen z.B. bei festem <f>a~quer=-1.00</f>ein paar Werte ein:</description>
+			<layout>
+				<row perc="50">
+					<col perc="50" name="Experiment"/>
+					<col perc="50" name="x_Ableitung"/>
+				</row>
+				<row perc="50">
+					<col perc="50" name="y_Ableitung"/>
+					<col perc="50" name="Abweichung"/>
+				</row>
+			</layout>
+			<seq>
+				<script>x_Ableitung.setTitle( title = "Defekt(b) bei konstantem a");
+		     
+		       x_Ableitung.addGraph(name = taa );
+		     
+		        newObject(def =  x_Ableitung.xMin:=fix(Abweichung.xMin) );
+		        newObject( def =  x_Ableitung.xMax:=fix(Abweichung.xMax) );
+		        newObject( def =  x_Ableitung.yMin := -20 );
+		        newObject( def =  x_Ableitung.yMax :=80 );
+		        newObject(def =  y_Ableitung.yMin:=fix(Abweichung.yMin) );
+		        newObject( def = y_Ableitung.yMax:=fix(Abweichung.yMax) );
+		        newObject( def =  y_Ableitung.xMin := -20 );
+		        newObject( def =  y_Ableitung.xMax :=80 );
+		        newObject( def = ga:=gerade( punkt( ab.x, 0 ), e2y) ; linestyle = dot; target = x_Ableitung );
+		           newObject( def = gb:=gerade( punkt( 0, ab.y), e2x) ; linestyle = dash;  target = Abweichung);
+		          Abweichung.addGraph( name = ga );
+
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Und im nächsten Schritt der komplette Funktionsgraph:
+             </description>
+			<seq>
+				<script>
+                   animate( name = ab.y; to = -1; end = 1);
+                    animate( name = ab.x; to = 0.4; end = 1);
+                    newObject( def = mm1:=marker( 0.4, Defekt(-1, 0.4) ); target = x_Ableitung );
+                    animate( name = ab.x; to = 0.6; end = 2);
+                    newObject( def = mm2:=marker( 0.6, Defekt(-1, 0.6) ); target = x_Ableitung );
+                    animate( name = ab.x; to = 0.8; end = 2);
+                    newObject( def = mm3:=marker( 0.8, Defekt(-1, 0.8) ); target = x_Ableitung );
+
+animate( name = ab.x; to = 1; end = 2);
+                    newObject( def = mm4:=marker( 1, Defekt(-1, 1) ); target = x_Ableitung );
+
+animate( name = ab.x; to = 1.2; end = 2);
+                    newObject( def = mm5:=marker( 1.2, Defekt(-1, 1.2) ); target = x_Ableitung );
+
+animate( name = ab.x; to = 1.4; end = 2);
+                    newObject( def = mm6:=marker(1.4, Defekt(-1, 1.4) ); target = x_Ableitung );
+                    animate( name = ab.x; to =1.6; end = 1);
+                    newObject( def = mm7:=marker( 1.6, Defekt(-1, 1.6) ); target = x_Ableitung );
+
+
+
+                </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn Sie über den Punkt <f>ab</f> einen anderen Wert für <f>a~quer</f> einstellen, ändert sich die Gestalt der Parabel.</description>
+			<seq>
+				<script>
+		      		         	 animate( name = ab.x; to =0.2; end = 1);
+		      		         	
+                                  
+		        		         newObject( def = fb(a):=Defekt(ab.y, a); );
+		                          newObject( def = fbc:=kurve( t , 0.2, ab.x, t, fb(t) ) ; target = x_Ableitung );
+		                         animate( name = ab.x; to = 2; end = 5);
+		                         x_Ableitung.addGraph( name = fb );
+		                          deleteObject( name = mm1, mm2, mm3, mm4, mm5, mm6, mm7, fbc );
+		         		         	newObject( def = defb_text:=text(punkt( 1.6, fb(1.6)), "<f>
+						<conf>my(style=eval;width=6;pattern=0.00)</conf>Defekt(b,my)</f>",B_NW);
+		         	 fillcolor = 200.250.50.220; target = x_Ableitung );
+		         	 
+
+
+		         	 animate( name = ab.x; to = 1; end = 1);
+
+		         	 
+		         		          
+
+		         
+		         
+
+
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt im Koordinatensystem links unten entsprechend die Abhängigkeit von <f>Defekt(a,b~quer)</f> von <f>a</f> bei festem <f>b~quer</f>.
+				<br/>Etwas ungewohnt vielleicht: Die WErte von <f>a</f> werden auf der vertikalen Achse aufgetragen, die zugehörigen Funktionswerte auf der horizintalen Achse.</description>
+			<seq>
+				<script>
+		          y_Ableitung.setTitle( title = "Defekt(a) bei konstantem b");
+		           		             y_Ableitung.addGraph(name = tbb );
+   y_Ableitung.addGraph( name = gb );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<script>
+		          		            
+		                 
+		            newObject( def = fa(b):=Defekt(b, ab.x) );
+		            animate( name = ab.y; to = -1.25; end = 1 );
+		            newObject( def = tmin := -1.25 );
+		            newObject( def = tmax := ab.y );
+
+		         newObject( def = ffa:=kurve(t,tmin, tmax, Defekt(t, ab.x), t )    ; target = y_Ableitung );
+		         animate( name = ab.y; to = 1.25; end = 7 );
+		           newObject( def = tmin := y_Ableitung.yMin );
+		            newObject( def = tmax := y_Ableitung.yMax );
+		            animate( name = ab.y; to = -1; end = 1 );
+                   
+		                    	newObject( def = defa_text:=text(punkt( fa(1), 1), "<f>
+						<conf>mx(style=eval;width=6;pattern=0.00)</conf>Defekt(mx,a)</f>",B_SE);
+		         	 fillcolor = 200.250.50.220; target = y_Ableitung );
+	
+
+
+		             
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<par>
+					<script>
+		              animate( name = ab.y; to = -1.1; end = 1 );
+		              animate( name = ab.x; to = 1; end = 1 );
+		           </script>
+				</par>
+				<script>
+		           animate( name = ab.y; to = -1.3; end = 1 );
+		           animate( name = ab.y; to = 1.2; end = 8 );
+		           animate( name = ab.y; to = -1.1; end = 1 );    
+		        </script>
+			</seq>
+		</step>
+		<step>
+			<description>Beide Funktionen sind Parabeln. 
+		<br/>Jetzt ist es ziemlich einfach, durch Aiusprobieren die Stelle <f>(a,b)</f>zu finden, an der der Defekt am kleinsten ist: 
+		<br/>Punkt <f>ab</f> verschieben und damit
+		<ul>
+					<li>Wert von <f>b</f> so wählen, dass man sich am Minimum der Parabel oben rechts befindet und zugleich</li>
+					<li>Wert von <f>a</f> so wählen, dass man sich am Minimum der Parabel unten links befindet.</li>
+				</ul>
+			</description>
+			<seq>
+				<script>
+				modifyObject( name = kk; visible = false );
+		         Abweichung.deleteGraph( name = mt );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>Das Normalgleichungssystem</title>
+			<description>Zur rechnerischen Ermittlung der Stellen, an der eine differenzierbare Funktion ein Minimum hat, gibt es ein praktisches Hifsmittel: die Ableitung: Ein Minimum kann nur dort sein, wo die Ableitiung den Wert <f>0</f> hat.
+<br/>Die Ableitung für die Parabel oben rechts zu <f>Defekt(a~quer,b)</f> bei festem <f>a~quer</f> erhält man, wenn man <f>a~quer</f> als Konstante betrachtet und nach <f>b</f> ableitet. Man bezeichnet diesen Vorgang als <em>partielle Ableitung</em>. </description>
+			<seq>
+				<script>
+		   		       newObject( def = fx(a,b):=pderive(Defekt(a,b), a) );
+		         newObject( def = fy(a,b):=pderive(Defekt(a,b), b) );
+
+		         newObject( def = fbb(a):=fy(my, a) ; color = red; target = x_Ableitung );
+		          newObject( def = faa:=kurve(t,y_Ableitung.yMin, y_Ableitung.yMax, fx(t, mx), t )    ; color = red; target = y_Ableitung );
+		          deleteObject( name = defa_text, defb_text);
+		   		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Aufgabe läßt sich jetzt sehr einfach formulieren: Finde ein Parameterpaar so, dass dort die partielle Ableitung <f>pderive(Defekt(a,b),a)</f> und zugleich die partielle Ableitung nach <f>pderive(Defekt(a,b),b)</f> den Wert <f>0</f> haben.
+		   		</description>
+			<seq>
+				<script>
+		         x_Ableitung.setTitle( title = "Defekt: Partielle Ableitung nach b" );
+		         y_Ableitung.setTitle( title = "Defekt: Partielle Ableitung nach a" );
+		         x_Ableitung.deleteGraph( name = fb);
+		         y_Ableitung.deleteGraph( name = ffa );
+		         newObject( def = defa_text:=text(punkt( fx(0.25, mx ), 0.25), "<f>
+						<conf>mx(style=eval;width=6;pattern=0.00)</conf>pderive(Defekt(a,b), a )</f>",B_SE);
+		         	 fillcolor = 200.250.50.220; target = y_Ableitung );
+		         	 newObject( def = defb_text:=text(punkt( 1.1, fy(my, 1.1)), "<f>
+						<conf>mx(style=eval;width=6;pattern=0.00)</conf>pderive(Defekt(a,b), b )</f>",B_NW);
+		         	 fillcolor = 200.250.50.220; target = x_Ableitung );
+
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Mit <f>$fd(Defekt)</f> hat man 
+		   <br/>
+				<f>pderive(Defekt(a,b), a) = sum(i,1,7,2*((a+b*x[i])-y[i]))=0</f> und
+		   <br/>
+				<f>pderive(Defekt(a,b), b) = sum(i,1,7,2*((a+b*x[i])-y[i])*x[i])=0</f>
+			</description>
+		</step>
+		<step>
+			<description>Nach einer Umformung sieht man deutlicher, dass zur Bestimmung von <f>a</f> und <f>b</f> ein lineares Gleichungssystem vorliegt:
+			<br/>I)<tab/>
+				<f>a*(sum(i,1,7,1))+b*(sum(i,1,7,x[i])) = sum(i,1,7,y[i])</f>
+				<br/>II)<tab/>
+				<f>a*(sum(i,1,7,x[i]))+b*(sum(i,1,7,x[i]*x[i])) = sum(i,1,7,y[i]*x[i])</f>, kurz
+				<br/>
+				<f>matrix({{sum(i,1,7,1), sum(i,1,7,x[i])},{sum(i,1,7,x[i]), sum(i,1,7,x[i]^2)}})*vektor({a,b})=vektor({ sum(i,1,7,y[i]),sum(i,1,7,x[i]*y[i]) })</f>. Dieses Gleichungssystem wird als <em>Normalgleichunssystem</em> bezeichnet.
+			</description>
+		</step>
+		<step>
+			<title>Die Approximationsgerade</title>
+			<description>Wir lösen es z.B. mit der Cramerschen Regel. Dazu berechnen wir die Determinanten 
+		<br/>
+				<f>D=det(matrix({{sum(i,1,7,1), sum(i,1,7,x[i])},{sum(i,1,7,x[i]), sum(i,1,7,x[i]^2)}}))</f>, 
+		<f>D_a=det(matrix({{sum(i,1,7,y[i]), sum(i,1,7,x[i])},{sum(i,1,7,y[i]*x[i]), sum(i,1,7,x[i]^2)}}))</f> und <f>D_b=det(matrix({{sum(i,1,7,1), sum(i,1,7,y[i])},{sum(i,1,7,x[i]), sum(i,1,7,y[i]*x[i])}}))</f> und daraus die Lösung
+<br/>
+				<f>a=D_a/D</f> und <f>b=D_b/D</f>
+			</description>
+		</step>
+		<step>
+			<description>Oben ist jetzt die Gerade gestrichelt eingezeichnet, die sich mit den so berechneten Werten ergibt.
+		     <br/>Sie wird als <em>Approximationsgerade</em> oder als <em>Ausgleichsgerade</em> bezeichnet.
+		     <br/>Weil in der Defektfunktion <f>$fd(Defekt)</f> nicht der Betrag der einzelnen Defekte <f>(a+b*x[i])-y[i]</f>aufsummiert wird, sondern das Quadrat der einzelnen Defekte, wird die vorgestellte Methode zur Berechnung von <f>a</f> und <f>b</f> und so letztlich der Ausgleichsgerade als <em>Methode der kleinsten Quadrate</em> bezeichnet, im Englischen als <em>Least Square Method</em>, insgeamt auch als <em>least sqare Approximation</em>. 
+		     </description>
+			<seq>
+				<script>
+		   		        newObject( def = D := 7*(  sum(i,1,7,p[i].x^2)   )-(  sum(i,1,7,p[i].x)   )^2    );
+					newObject( def = Db := 7*( sum(i,1,7,p[i].x*p[i].y) ) - ( sum(i,1,7,p[i].x) ) * ( sum(i,1,7, p[i].y) ) );
+					newObject( def = Da := ( sum( i,1,7, p[i].x^2) ) * ( sum ( i,1,7, p[i].y) ) - ( sum(i,1,7, p[i].x*p[i].y)  ) * ( sum(i,1,7, p[i].x)  ) );
+					newObject( def = a:= Da/D );
+					newObject( def = b := Db/D);
+					newObject( def = g(x):= a + b*x; linestyle = dash; color = magenta; target = Experiment );   
+					newObject( def = minfehler := sum(i,1,7, (p[i].y-g(p[i].x))^2 ) );  
+		   		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt nochmal die wichtigsten Informationen im Überblick.
+		  <br/>Experimentieren Sie! Sie können auch die Punkte in senkrechter Richtung verschieben.</description>
+			<seq>
+				<script>
+		         modifyObject( name = kk; visible = true );
+		         x_Ableitung.addGraph(name = fbb);
+		         y_Ableitung.addGraph( name = faa );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<title>Ausblick</title>
+			<description>Die Methode der kleinsten Quadrate läßt sich auch auf Approximationsaufgaben mit mehr als zwei Parametern erweitern.
+		<br/>Wenn man z.B. weiß, dass die Punkte durch eine Parabel <f>y=a+b*x+c*x^2</f> angenähert werden sollen, leitet man mit einer entsprechenden Argumentation im dreidimensioalen <f>(a,b,c)</f>-Raum ein Normalgleichungssystem für diese drei Parameter her. Dieses bestht dann aus 3 Gleichungen.</description>
+		</step>
+	</body>
+</math4u2>

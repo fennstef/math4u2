@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Dr. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Numerik/Interpolation</location>
+		<title>Tschebyscheff-Polynome</title>
+		<summary>Polynom-Interpolation mit Tschebyscheff-Stützstellen</summary>
+		<step>
+			<title>Tschebyscheff-Stützstellen: Fragestellung</title>
+			<description></description>
+			<layout>
+				<row perc="50">
+					<col perc="33" name="linksoben"/>
+					<col perc="33" name="mitteoben"/>
+					<col perc="33" name="rechtsoben"/>
+				</row>
+				<row perc="50">
+					<col perc="33" name="linksunten"/>
+					<col perc="33" name="mitteunten"/>
+					<col perc="33" name="rechtsunten"/>
+				</row>
+			</layout>
+			<seq>
+			    <script>
+			        deleteAll();
+			        linksoben.setTitle( title="T3(x)");
+			         mitteoben.setTitle( title="T4(x)");
+			          rechtsoben.setTitle( title="T5(x)");
+			          linksunten.setTitle( title="T6(x)");
+			         mitteunten.setTitle( title="T9(x)");
+			          rechtsunten.setTitle( title="T13(x)");
+			          newObject( def = xmin := -1.5 );
+			          newObject( def = xmax := 1.5 );
+			          newObject( def = ymin := -1.5 );
+			          newObject( def = ymax := 1.5 );
+			          
+			          
+			          newObject(def =  linksoben.xMin := xmin);
+			          newObject( def = linksoben.xMax := xmax );
+			          newObject( def = linksoben.yMin := ymin );
+			           newObject( def = linksoben.yMax := ymax );
+			           
+			           newObject(def =  mitteoben.xMin := xmin);
+			          newObject( def = mitteoben.xMax := xmax );
+			          newObject( def = mitteoben.yMin := ymin );
+			           newObject( def = mitteoben.yMax := ymax );
+
+			          
+			          newObject(def =  rechtsoben.xMin := xmin);
+			          newObject( def = rechtsoben.xMax := xmax );
+			          newObject( def = rechtsoben.yMin := ymin );
+			           newObject( def = rechtsoben.yMax := ymax );
+			           
+			           
+
+
+			          newObject(def =  linksunten.xMin := xmin);
+			          newObject( def = linksunten.xMax := xmax );
+			          newObject( def = linksunten.yMin := ymin );
+			           newObject( def = linksunten.yMax := ymax );
+			           
+			           newObject(def =  mitteunten.xMin := xmin);
+			          newObject( def = mitteunten.xMax := xmax );
+			          newObject( def = mitteunten.yMin := ymin );
+			           newObject( def = mitteunten.yMax := ymax );
+			           
+			           newObject(def =  rechtsunten.xMin := xmin);
+			          newObject( def = rechtsunten.xMax := xmax );
+			          newObject( def = rechtsunten.yMin := ymin );
+			           newObject( def = rechtsunten.yMax := ymax );
+
+
+			           
+			           
+
+			        
+			        newObject( def = g1:=gerade(punkt(0,1), vektor({1,0}) ); color = red );
+			        newObject( def = g2:=gerade(punkt(0,-1), vektor({1,0}) ); color = red );
+			        linksoben.addGraph( name = g1);
+			        linksoben.addGraph( name = g2);
+			         mitteoben.addGraph( name = g1);
+			        mitteoben.addGraph( name = g2);
+			         rechtsoben.addGraph( name = g1);
+			        rechtsoben.addGraph( name = g2);
+			         linksunten.addGraph( name = g1);
+			        linksunten.addGraph( name = g2);
+			         mitteunten.addGraph( name = g1);
+			        mitteunten.addGraph( name = g2);
+			         rechtsunten.addGraph( name = g1);
+			        rechtsunten.addGraph( name = g2);   
+			        newObject( def = xpos(low,up,n,i):=(up+low)/2+(up-low)/2*cos((2*i+1)/(2*n+2)*pi) ; );
+			        newObject( def = newt(x,n):=prod(i,0,n,(x-xpos(-1,1,n,i) ) ) ;  );
+
+			        newObject( def = tscheb(x,n):=2^n*newt(x,n ); );
+			        newObject( def = n2(x):=newt(x,2); color = green; target = linksoben );
+			        newObject( def = t2(x):=tscheb(x,2); target = linksoben );
+			        newObject( def = n2(x):=newt(x,3); color = green; target = mitteoben );
+			        newObject( def = t3(x):=tscheb(x,3); target = mitteoben );
+			        newObject( def = n4(x):=newt(x,4); color = green; target = rechtsoben );
+			        newObject( def = t4(x):=tscheb(x,4); target = rechtsoben );
+			        newObject( def = n5(x):=newt(x,5); color = green; target = linksunten );
+			        newObject( def = t5(x):=tscheb(x,5); target = linksunten );
+			        newObject( def = n8(x):=newt(x,8); color = green; target = mitteunten);
+			        newObject( def = t8(x):=tscheb(x,8); target = mitteunten );
+			        newObject( def = n12(x):=newt(x,12); color = green; target = rechtsunten );
+			        newObject( def = t12(x):=tscheb(x,12); target = rechtsunten );
+			    </script>
+			    </seq>
+					</step>
+			</body>
+</math4u2>

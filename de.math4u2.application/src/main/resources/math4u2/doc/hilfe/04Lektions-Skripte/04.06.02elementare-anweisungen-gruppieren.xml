@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.6 Aktionen eines Schritts festlegen</location>
+		<title>4.6.2 skript-Tag: Elementare Anweisungen gruppieren</title>
+		<step>
+			<title>4.6.2 &lt;skript>-Tag: Elementare Anweisungen gruppieren</title>
+			<description>
+<ul>
+	<li>
+Ein <code>&lt;script></code>-Tag schließt eine oder mehrere elementare Anweisungen ein.
+	</li>
+	<li>
+Jede Anweisung wird durch ein Semikolon <code>;</code> abgeschlossen.	
+	</li>
+	<li>
+Die Anweisungen können durch Kommentare erläutert werden.
+	</li>
+	<li>
+Das umgebende Tag ( <code>&lt;seq></code> oder <code>&lt;par></code> ) regelt, 
+ob die Anweisungen sequentiell (nacheinander) oder parallel ausgeführt werden.
+	</li>
+</ul>
+
+<p/><strong>Kommentarte</strong>
+<p/><command>Block-Kommentare</command>
+<br/>Sie werden eingeleitet durch die Zeichenfolge <code>/*</code> und beendet durch 
+die Zeichenfolge <code>*/</code>.
+
+<p/><command>Zeilenende-Kommentare</command>
+<br/>Sie beginnen mit der Zeichenfolge <code>//</code> und erstrecken sich bis 
+zum Ende der Zeile.
+
+<p/><strong>Beispiel:</strong>
+<br/>
+<code><![CDATA[
+<script>
+	/************************************
+	* ein auffaelliger Blockkommentar *
+	************************************/
+	
+	newObject(def = n:=1); //Anweisung, durch Semikolon abgeschlossen
+	newObject(def = f(x):=x*x);
+	
+	/* ein
+	dezenter
+	Blockkommentar */
+</script>
+]]></code>
+			</description>
+		</step>
+	</body>
+</math4u2>

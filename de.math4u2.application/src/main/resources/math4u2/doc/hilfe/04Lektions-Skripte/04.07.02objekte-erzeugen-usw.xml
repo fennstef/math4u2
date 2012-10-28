@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.7 Elementare Anweisungen</location>
+		<title>4.7.2 Objekte erzeugen, verändern, löschen</title>
+		<step>
+			<title>4.7.2 Objekte erzeugen, verändern, löschen</title>
+			<description>
+<p/><strong>newObject() : Objekt erzeugen</strong>
+<br/><code>newObjekt( def = kreis1 := kreis( punkt(1,1), 2 ) )</code>
+erzeugt ein neues Objekt.
+<br/>
+<ul>
+	<li>
+Als Wert des Attributs <code>def</code> wird die gewünschte Definition angegeben, hier die Definition
+<br/><code>kreis1 := kreis( punkt(1,1), 2 )</code>.
+<p/>Die weiteren Eigenschaften des Objekts werden durch folgende Attribute und zugehörige Werte
+festgelegt:	
+	</li>
+	<li>
+Sichtbarkeit der Definition
+<br/><code>hide = true</code> oder <code>false</code>
+<br/>Dieses Attribut legt fest, ob die Definition des Objekts in der 
+Definitionsliste angezeigt wird (<code>hide = false</code>) oder 
+nicht (<code>hide = true</code>).
+<p/>Wenn dieses Attribut nicht angegeben ist, dann wird der aktuell gültige 
+<code>default</code>-Wert übernommen.
+Dieser wird durch die <code>defaults</code>-Anweisung eingestellt.	
+	</li>
+	<li>
+Sichtbarkeit der Graphen
+<br/><code>visible = true</code> oder <code>false</code> Voreinstellung: <code>true</code>
+	</li>
+	<li>
+Linienart
+<br/><code>linestyle = solid</code> oder <code>dot</code> oder <code>dash</code>
+oder <code>dot-dash</code>; Voreinstellung: <code>solid</code>
+	</li>
+	<li>
+Farbe
+<br/><code>color</code> = Farbangabe Voreinstellung: <code>black</code>
+<br/><code>fillcolor</code> = Farbangabe Voreinstellung: weiss transparent
+<br/><code>bordercolor</code> = Farbangabe Voreinstellung: <code>black</code>
+
+<strong>Farbangabe</strong> kann sein:
+<br/><br/>- Eine der folgenden Fabkonstanten:
+<br/><command>Besonders geeignet für Linien:</command><br/><br/>
+<table>
+<tr>
+<td bgcolor="orange"><strong>Bezeichner</strong></td><td bgcolor="orange"><strong>Farbe</strong></td></tr><tr>
+<td>black</td><td bgcolor="black"><tab/><tab/></td></tr><tr>
+<td>darkgray</td><td bgcolor="darkgray"></td></tr><tr>
+<td>gray</td><td bgcolor="gray"></td></tr><tr>
+<td>lightgray</td><td bgcolor="lightgray"></td></tr><tr>
+<td>white</td><td bgcolor="white"></td></tr><tr>
+<td>darkred</td><td bgcolor="darkred"></td></tr><tr>
+<td>red</td><td bgcolor="red"></td></tr><tr>
+<td>orange</td><td bgcolor="orange"></td></tr><tr>
+<td>lightorange</td><td bgcolor="lightorange"></td></tr><tr>
+<td>yellow</td><td bgcolor="yellow"></td></tr><tr>
+<td>lightgreen</td><td bgcolor="lightgreen"></td></tr><tr>
+<td>green</td><td bgcolor="green"></td></tr><tr>
+<td>cyan</td><td bgcolor="cyan"></td></tr><tr>
+<td>blue</td><td bgcolor="blue"></td></tr><tr>
+<td>magenta</td><td bgcolor="magenta"></td></tr><tr>
+<td>pink</td><td bgcolor="pink"></td></tr>
+</table>
+<br/>
+<br/><command>Besonders geeignet als Füllfarben (mit Transparenz):</command><br/><br/>
+<table>
+<tr>	
+<td bgcolor="orange"><strong>Bezeichner</strong></td><td bgcolor="orange"><strong>Farbe</strong></td></tr><tr>	
+<td>fillgray</td><td bgcolor="fillGray"><tab/><tab/></td></tr><tr>
+<td>filwhite</td><td bgcolor="fillwhite"></td></tr><tr>
+<td>fillred</td><td bgcolor="fillred"></td></tr><tr>
+<td>fillorange</td><td bgcolor="fillorange"></td></tr><tr>
+<td>fillyellow</td><td bgcolor="fillyellow"></td></tr><tr>
+<td>fillgreen</td><td bgcolor="fillgreen"></td></tr><tr>
+<td>fillcyan</td><td bgcolor="fillcyan"></td></tr><tr>
+<td>fillblue</td><td bgcolor="fillblue"></td></tr><tr>
+<td>fillmagenta</td><td bgcolor="fillmagenta"></td></tr>
+</table>
+
+<br/>
+<br/>
+-Eine RGB-Angabe wie <code>100.0.255</code>. Darin steht allgemein für jede der 
+drei Farben Rot, Grün und Blau ein ganzzahliger Wert <code>0 ... 255</code>.
+<br/>
+<br/>
+-Eine RGB-Angabe mit alpha-Wert wie <code>100.0.255.120</code>.
+Der zusätzliche alpha-Wert (hier: <code>120</code>) beschreibt die Transparenz: 
+<code>0</code> bedeutet vollständig transparant, <code>255</code> bedeutet 
+vollkommen deckend.	
+	</li>
+	<li>
+Darstellende Zeichenfläche
+<br/><code>target = Fenstername</code> Voreinstellung: keine
+<br/><br/>Im Zeichenfenster mit dem Namen <code>Fenstername</code> wird ein Graph 
+des Objekts erzeugt und gezeichnet (falls das Objekt einen entsprechenden 
+Graphen hat und das Attribut <code>visible</code> den Wert <code>true</code> hat).
+<br/><br/>Wenn ein Objekt in mehreren Fenstern gezeichnet werden soll, so können diese 
+wie bei <code>target = da1,da2,da3</code> durch Kommata getrennt angeführt werden.	
+	</li>
+</ul>
+
+<p/><strong>deleteObject() : Objekt löschen</strong>
+<br/><code>deleteObject( name = obj1 )</code> löscht das Objekt mit 
+Namen <code>obj</code>.
+<br/>Wenn mehrere Objekte nacheinander gelöscht werden sollen, dann können diese 
+wie bei <code>deleteObject( name = obj2, obj3, obj4 )</code> in einer Anweisung 
+durch Kommata getrennt aufgeführt werden.
+
+<p/><strong>deleteAll() : Alle Objekte löschen</strong>
+<br/><code>deleteAll()</code> löscht sämtliche Objekte. Wenn mehrere Fenster 
+eingerichtet wurden, so werden auch diese gelöscht, anschließend wird das 
+Standardfenster <code>da</code> wieder eingerichtet.
+
+<p/><strong>modifyObject() : Eigenschaften eines Objekts ändern</strong>
+<br/>Mit dieser Anweisung können die Eigenschaften eines Objekts geändert werden.
+Das betroffene Objekt wir durch das Attribut <code>name=Objektname</code> angegeben.
+Eigenschaften sind dabei die oben bei <code>newObject()</code> angegebenen 
+Attribute und ihre Werte.
+
+<p/><strong>Beispiel:</strong>
+<br/>Hat man mit <code>newObject(def = k:=kreis(punkt(1,1), 2 ); target = da1 )</code> den
+Kreis <code>k</code> erzeugt, dann wird der Kreis zunächst im Fenster 
+<code>da1</code> gezeichnet, per Voreinstellung ist die Kreislinie schwarz und die 
+Fläche wird nicht gefüllt.
+<p/>Mit <code>modifyObject(name=k;bordercolor=red;fillcolor=blue;target=da2,da3)</code>
+wird die Farbe für die Umrandung (Kreislinie) und für die Fläche verändert. 
+Ausserdem wird festgelegt, dass der Kreis zusätzlich in den Fenstern 
+<code>da2</code> und <code>da3</code> gezeichnet werden soll.
+
+<p/><strong>Hinweis:</strong> Wenn der Graph des Kreises <code>k</code> aus dem 
+Fenster <code>da1</code> entfernt werden soll, dann geschieht dies durch die 
+Anweisung <code>da1.deleteGraph( name = k )</code>.
+			</description>
+		</step>
+	</body>
+</math4u2>

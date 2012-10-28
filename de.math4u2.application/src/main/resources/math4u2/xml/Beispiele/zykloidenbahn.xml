@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Beispiele/Geometrie</location>
+		<title>Zykloidenbahn erstellen</title>
+		<step>
+			<title>Zykloidenbahn</title>
+			<description>
+ In diesem Kapitel wollen wir Ihnen zeigen, wie Sie mit Math4u2 ein interaktives Modell einer Zykloidenbahn erstellen können.<br/>
+				<br/>Eine Zykloidanbahn entsteht, wenn man auf einem Rad einen Punkt markiert und dann die Bahn dieses Punktes zeichnet, die entsteht, wenn das Rad auf der Ebene abrollt.<br/>
+				<br/>In den folgenden Schritten zeigen wir, wie Sie schrittweise ein solches Modell aufbauen können. <br/>In jedem Schritt sind die entsprechenden Eingaben beschrieben. Diese Eingaben werden hier allerdings automatisch für Sie erledigt.<br/>Sie können jeweils mit dem erreichten Stand des Modells experimentieren.   
+			</description>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false; right=true);
+					
+					newObject(def = da.xMin:=-3);					
+					newObject(def = da.xMax:=fix(da.xMin+12.2));
+					da.zoom1To1(active=true);
+					newObject(def = da.yMax:=fix(3));
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Parameter "radius"</title>
+			<description>
+Das Rad wird durch einen Kreis modelliert, dessen Radius man später mit einem Parameter <fh>radius</fh> verstellen kann.<br/>Als erstes erzeugen wir deshalb den Parameter. Er soll zunächst den Wert 1 haben.<br/>
+				<br/>
+				<code>radius:=1</code>
+				<br/>
+				<br/>Der Paramter <fh>radius</fh> ist jetzt oben in der Werkzeugleiste angezeigt.  
+				</description>
+			<seq>
+				<script>
+					newObject(def = radius:=1);
+					modifyObject(name=radius; select=true);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Kreismittelpunkt "M"</title>
+			<description>
+Nun soll der Mittelpunkt eines Kreises so eingerichtet werden, dass er sich immer im Abstand <fh>radius</fh> über der x-Achse befindet und sich in x-Richtung mit der Maus bewegen läßt. <br/>
+				<br/>
+				<code>M:=punkt(0.5,fix(radius))</code>
+				<br/>
+				<br/>Sie sehen nun den Punkt M und können ihn mit der Maus in x-Richtung bewegen.<br/>In y-Richtung ist der Punkt M durch eine Zwangsbedingung festgelegt. Wenn Sie den Wert des Parameters <fh>radius</fh> verändern, bewegt sich M in y-Richtung.	</description>
+			<seq>
+				<script>
+					newObject(
+						def = M:=punkt(0.5,fix(radius));
+						select = false;
+						target = da;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Kreis erstellen</title>
+			<description>
+Nun wird ein Kreis mit Mittelpunkt M und Radius <fh>radius</fh> erstellt:<br/>
+				<br/>
+				<code>kr := kreis(M, radius)</code>
+				<br/>
+				<br/>Mit <code> M </code> wird dabei der Punkt M angesprochen.<br/>
+				<br/>Nun bewegt sich mit dem Punkt M auch der soeben erstellte Kreis.                                </description>
+			<seq>
+				<script>
+					newObject(
+						def = kr:=kreis(M,M.y);
+						target = da;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Kreis und Punkt bewegen sich synchron</title>
+			<description>
+Jetzt bewegen sich Kreis und Punkt M immer synchron.<br/>
+			</description>
+			<seq>
+				<animate object="main" parameterName="M.x" to="2" begin="0" end="3"/>
+				<animate object="main" parameterName="M.x" to="0" begin="0" end="1"/>
+			</seq>
+		</step>
+		<step>
+			<title>Kreis mit der Maus bewegen</title>
+			<description>Wenn Sie jetzt den Punkt M mit der Maus bewegen, bewegt sich auch der Kreis.</description>
+			<seq/>
+		</step>
+		<step>
+			<title>Speiche einbauen</title>
+			<description>
+Um das Abrollen des Rads sichtbar zu machen, wird eine Speiche eingebaut. Um die Argumentation einfacher zu machen, haben wir den Mittelpunkt M zunächst auf die y-Achse geschoben. Die Speiche wird durch einen Pfeil modelliert. 
+<br/>Zur Erzeugung eines Pfeil-Objekts benötigen wir 2 Parameter:<br/>
+				<ul>
+					<li>Aufhängepunkt. Der Aufhängepunkt soll hier der Mittelpunkt M sein, also verwenden wir <code> M.x</code>.</li>
+					<li>Vektor des Pfeils. Für die x-Komponente verwenden zunächst <code>0</code>.
+					    Die Speiche soll nach unten zeigen, also ist die y-Komponente <code>-radius</code>.
+					</li>
+				</ul>
+				<br/>
+				Der Pfeil wir außerdem noch mit <code>fix()</code> festgesetzt, damit per Maus der Pfeil nicht mehr bewegt werden kann.
+				<br/>Insgesamt also<br/>
+				<br/>
+				<code>speiche:=pfeil(M,vektor({fix(0),fix(-radius)}))</code>
+			</description>
+			<seq>
+				<script>
+					newObject(def = M.x:=0);
+					newObject(
+						def = speiche:=pfeil(M,vektor({fix(0),fix(-radius)})); 
+						color = red;
+						target = da;
+					);
+					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Das Rad Schleift, Rollbedingung</title>
+			<description>
+Allerdings dreht sich das Rad noch nicht, sondern es "schleift".
+			</description>
+			<seq>
+				<animate object="main" parameterName="M.x" to="4" begin="0" end="5"/>
+				<animate object="main" parameterName="M.x" to="0" begin="0" end="2"/>
+			</seq>
+		</step>
+		<step>
+			<title>Rollbedingung</title>
+			<description>
+Durch die Einführung der sog. Rollbedingung wird die Orientierung des Pfeils "speiche" mit der x-Koordinate <code>M.x</code> des Mittelpunkts M verknüpft:
+				<br/>
+				<br/>
+				<code>speiche:=pfeil(M,vektor({-sin(M.x/radius)*radius,-cos(M.x/radius)*radius}))</code>
+			</description>
+			<seq>
+				<script>
+					newObject(
+						def = speiche:=pfeil(M,vektor({-sin(M.x/radius)*radius,-cos(M.x/radius)*radius}));
+						color = red;
+					);					
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Nun rollt das Rad</title>
+			<description/>
+			<seq>
+				<par>
+					<animate object="main" parameterName="M.x" from="0" to="3" begin="0" end="2"/>
+					<animate object="main" parameterName="M.x" from="3" to="0" begin="3" end="4"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Zykloidenbahn erstellen</title>
+			<description>
+Nun soll mit Hilfe einer parametrisierten Kurve der Weg der Pfeilspitze gezeichnet werden.<br/>Ein Kurvenobjekt benötigt insgesamt 5 Parameter:<ul>
+					<li>Einen Namen für den Kurvenparameter. Wir wählen <code>t</code>.</li>
+					<li>Die untere Grenze für das Intervall, das der Kurvenparameter durchläuft. Wir wählen <code>0</code>.</li>
+					<li>Die obere Grenze für das Parameterintervall. Da wir die Zykloide bis zur aktuellen Position des Rads zeichnen wollen, wählen wir die x-Koordinate des Mittelpunkts, also <code>M.x</code>.</li>
+					<li>Die Funktion für die x-Koordinate des Kurvenpunkts zum Zeitpunkt t: <code>t-sin(t/radius)*radius</code>.</li>
+					<li>Ebenso für die y-Koodinaten: <code>M.y-cos(t/radius)*radius</code>.</li>
+				</ul>
+				<br/>Insgesamt also: <br/>
+				<br/>
+				<code>zykloide:=kurve(t,0,M.x,t-sin(t/radius)*radius,M.y-cos(t/radius)*radius )</code>
+			</description>
+			<seq>
+				<script>
+					newObject(
+						def = zykloide:=kurve(t,0,M.x,t-sin(t/radius)*radius,M.y-cos(t/radius)*radius );
+						color = green;
+						target = da;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Zykloidenbahn zeichnen</title>
+			<description>
+Wenn man jetzt den Mittelpunkt des Kreises bewegt, dann wird die Zykloidenbahn gezeichnet.<br/>
+			</description>
+			<seq>
+				<par>
+					<animate object="main" parameterName="M.x" from="0" to="3" begin="0" end="2"/>
+					<animate object="main" parameterName="M.x" from="3" to="-2" begin="3" end="6"/>
+					<animate object="main" parameterName="M.x" from="-2" to="0" begin="7" end="8"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Probieren Sie es selber aus</title>
+			<description>
+Sie können jetzt damit experimentieren, indem Sie den Mittelpunkt bewegen.</description>
+			<seq/>
+		</step>
+		<step>
+			<title>Verlängerte und verkürzte Zykloidenbahn</title>
+			<description>
+Stellt man sich jetzt eine Punkt vor, der sich mit dem Kreis dreht, aber nicht auf dem Kreis liegt, so spricht man
+von einer <em>verkürzten bzw. verlängerten Zykloidenbahn</em>.
+<br/>
+				<br/>Für den Abstand des Punkts vom Mittelpunkt führen wir einen neuen Parameter ein: <code>k:=1.5</code>, <br/>dann definieren wir die Speiche und die Kurve etwas allgemeiner:<br/>
+				<br/>
+				<code>speiche:=pfeil(M,vektor({-sin(M.x/radius)*k,-cos(M.x/radius)*k}))</code>
+				<br/>
+				<code>zykloide:=kurve(t,0,M.x,t-sin(t/radius)*k,M.y-cos(t/radius)*k )</code>
+			</description>
+			<seq>
+				<script>
+					newObject(def = k:=1.5; select=true);
+					
+					newObject(
+						def = speiche:=pfeil(M,vektor({-sin(M.x/radius)*k,-cos(M.x/radius)*k}));
+						color = red;
+					);
+					
+					newObject(
+						def = zykloide:=kurve(t,0,M.x,t-sin(t/radius)*k,M.y-cos(t/radius)*k );
+						color = green;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Verlängerte Zykloidenbahn zeichnen</title>
+			<description/>
+			<seq>
+				<par>
+					<animate object="main" parameterName="da.xMin" to="7" begin="2" end="4"/>
+					<animate object="main" parameterName="M.x" from="0" to="17" begin="0" end="5"/>
+				</par>
+				<par>
+					<animate object="main" parameterName="da.xMin" to="-2" begin="1" end="2"/>
+					<animate object="main" parameterName="M.x" to="0" begin="0" end="2"/>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<title>Probieren Sie es selber aus</title>
+			<description>
+Sie können jetzt damit experimentieren, indem Sie den Mittelpunkt bewegen oder die Parameter
+<code>radius</code> und <code>k</code> verändern.
+                                </description>
+			<seq>
+				<script>
+					newObject(def=da.xMax:=10.2);					
+				</script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

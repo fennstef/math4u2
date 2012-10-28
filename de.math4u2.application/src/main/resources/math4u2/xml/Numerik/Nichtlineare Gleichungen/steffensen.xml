@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>M. Weiss</author>
+		<location>Numerik/Nichtlineare Gleichungen</location>
+		<title>Steffensen-Verfahren</title>
+		<summary/>
+		<step>
+			<title>Steffensen-Verfahren</title>
+			<description>Gegeben ist eine reelle Funktion <f>F(x)</f>, gesucht ist eine Lösung der Gleichung <f>F(x)=x</f>, ein sogenannter Fixpunkt. 
+			<br/>Geometrisch interpretiert suchen wir einen Schittpunkt des roten Funktionsgraphen <f>y=F(x)</f> mit der schwarzen Winkelhalbierenden <f>y=x</f>, genauer dessen <f>x</f>-Koordinate.</description>
+			<layout>
+				<row perc="100.0">
+					<col perc="100.0" name="da1"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			      			      deleteAll();
+			      expand(left=none;right=all);
+da1.coordinateSystem(xMin=-0.5;xMax=4.5;yMin=-0.6;yMax=2.2;);
+da1.setTitle(title = "1. Steffensen-Schritt");
+newObject(def=F(x) := 2-exp(-x); color=255.0.0; target=da1;);
+newObject(def=g(x) := x; color=black; target=da1;);
+newObject( def = x0:= 1);
+newObject( def = F0:=F(x0); hide = true );
+newObject( def = FF0 := F(F0); hide = true );
+
+newObject( def = tF:=text( punkt( 2.5, F(2.5)), "<f>y=F(x)</f>", B_SE); target = da1 );
+      newObject( def = tg:=text( punkt( 1.5, 1.5), "<f>y=x</f>", B_SE); target = da1 );
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wir starten mit der Iteration in der Nähe des gesuchten Fixpunktes, hier an der Stelle <f>x[0]</f>.</description>
+			<seq>
+				<script>
+		newObject( def = t0:= text( punkt(x0, 0), "<f>x[0]</f>", C_S ) ; target = da1 );
+		         
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>In einem ersten Iterationsschritt berechnen wir daraus den Funktionswert <f>F(x[0])</f> und tragen diesen auf der x-Achse an.
+		 </description>
+			<seq>
+				<script>
+
+deleteObject( name = tF, tg );
+newObject( def = m00 := marker(x0, F0); target = da1);
+
+
+newObject( def = s00 := strecke ( punkt(x0, 0), punkt(x0, F0) ) ; target = da1; linestyle =dash);
+newObject( def = s01 := strecke ( punkt(x0, F0), punkt(F0, F0) ) ; target = da1; linestyle = dash);
+newObject( def = s011 := strecke ( punkt(x0, F0), punkt(0, F0) ) ; target = da1; linestyle =dot);
+newObject( def = s012 := strecke ( punkt(F0, F0), punkt(F0, 0) ) ; target = da1; linestyle =dot);
+
+
+newObject( def = t01:= text( punkt(F0, 0), "<f>F(x[0])</f>", C_N ) ; target = da1 );
+newObject( def = t011:= text( punkt(0,F0), "<f>F(x[0])</f>", C_W ) ; target = da1 );
+
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<description>In einem zweiten Interationsschritt berechnen wir den zu <f>F(x[0])</f> gehörigen Funktionswert, kurz <f>F(F(x[0]))</f>.
+		<br/>Durch die drei Werte <f>x[0]</f>, <f>F(x[0])</f> und <f>F(F(x[0]))</f> sind die zwei markierten Punkte des Funktionsgraphen der Funktion <f>F(x)</f> bestimmt.</description>
+			<seq>
+				<script>
+		     newObject( def = m01 := marker( F0, FF0); target = da1 );
+		     newObject( def = s21 := strecke ( punkt(F0, FF0), punkt(0, FF0) ) ; target = da1; linestyle =dot);
+newObject( def = s02 := strecke ( punkt(F0, F0), punkt(F0, FF0) ) ; target = da1; linestyle = dash);
+newObject( def = t02:= text( punkt(0, FF0), "<f>F(F(x[0]))</f>", C_E ) ; target = da1 );
+		     
+		     
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Setzen wir dieses Verfahren der Iteration fort, so erhalten wir eine Folge von weiteren Punkten, die gegen den gesuchten Schnittpunkt konvergiert.
+		  <br/>Wir brechen jetzt die Iteration nach diesen zwei Schritten zunächst ab und argumentieren:</description>
+		</step>
+		<step>
+			<description>Ersetzt man den roten Graphen der Funktion <f>F(x)</f> durch die blaue Gerade durch die beiden Punkte, dann schneidet die blaue Gerade ebenfalls die Winkelhalbierende ...
+		   </description>
+			<seq>
+				<script>
+		         newObject( def = g0 := gerade( punkt(x0, F0), vektor({F0-x0, FF0-F0}) ); color = blue; linestyle = dot; target = da1 );
+		         newObject( def = x1 := x0-(F0-x0)^2/(FF0-2*F0+x0); hide = true );
+newObject( def = F1:=F(x1); hide = true);
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>und der Schnittpunkt liegt wesentlich näher beim gesuchten Punkt als die beiden zuvor berechneten Punkte.</description>
+			<seq>
+				<script>
+		     newObject( def = m10 := marker(x1, x1); color = blue;  target = da1);
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Koordinaten dieses Schnittpunkts <f>S(x[1],x[1])</f> kann man aus den Koordinaten der zuvor ermittelten Punkte berechnen, letztlich also aus den Werten <f>x[0]</f>, <f>F(x[0])</f> und <f>F(F(x[0]))</f>. 
+<br/>Man erhält: <f>x[1]=x[0]-(F(x[0])-x[0])^2/(F(F(x[0]))-2*F(x[0])+x[0])</f>
+			</description>
+			<seq>
+				<script>
+
+newObject( def = es1 := strecke ( punkt(x1,x1), punkt(x1,0) ) ; color = blue; target = da1; linestyle =dot);
+
+newObject( def = t1:= text( punkt(x1, x1), "Schnittpunkt <f>S(x[1],x[1])</f> mit Koordinaten<br/>
+					<f>x[1]=x[0]-(F(x[0])-x[0])^2/(F(F(x[0]))-2*F(x[0])+x[0])</f>", B_SE ) ; target = da1 );
+
+newObject( def = tx1:= text( punkt(x1, 0), "<f>x[1]</f>", C_S ) ; target = da1 );
+
+
+				</script>
+			</seq>
+		</step>
+		<step/>
+		<step>
+			<description>Unser Vorgehen kurz beschrieben: Wir berechnen zu einen Startwert <f>x[0]</f> zwei Iterationswerte <f>F(x[0])</f> und <f>F(F(x[0]))</f> und mit Hilfe einer linearen Extrapolation der entstehenden Punkte einen neuen Wert <f>x[1]</f> über die oben angegebene Formel.</description>
+			<seq>
+				<script>
+		       			     da1.deleteGraph( name =t1,  t01, t011, t02 );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Rechts ist die Situation jetzt ein zweites Mal dargestellt.  Wir wollen den relevanten Ausschnitt genauer ansehen.</description>
+			<layout>
+				<row perc="100.0">
+					<col perc="50" name="da1"/>
+					<col perc="50" name="da2"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			     da2.coordinateSystem(xMin=-0.5;xMax=4.5;yMin=-0.6;yMax=2.2;);
+			     da2.setTitle( title = "2. Steffensen-Schritt");
+
+			     da2.addGraph(name = g, F, t0, es1, m10);
+			     newObject( def = f1 := kurvenzug( {punkt(da2.xMin, da2.yMin), 
+			                                                            punkt(da2.xMax, da2.yMin), 
+			                                                            punkt(da2.xMax, da2.yMax), 
+			                                                            punkt(da2.xMin, da2.yMax), 
+			                                                            punkt(da2.xMin, da2.yMin) }) ; color = green; target = da1 );
+			       newObject( def = tx21:= text( punkt(x1, da2.yMin+0.3*(da2.yMax-da2.yMin)), "<f>x[1]</f>", B_SW ) ; target = da2 );
+			                                                            
+			   </script>
+			</seq>
+		</step>
+		<step>
+			<seq>
+				<par>
+					<script>
+			      animate( name = da2.xMin; to = 1.82; end = 15 );
+			      animate( name = da2.xMax; to = 1.88; end = 15 );
+			      animate( name = da2.yMin; to = 1.82; end = 15 );
+			      animate( name = da2.yMax; to = 1.88; end = 15 );
+			     </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Natürlich haben wir mit dem Wert <f>x[1]</f> den gesuchten Fixpunkt nicht exakt getroffen, aber:
+			Mit dem schon viel besseren Startwert <f>x[1]</f> verfahren wir nun genauso:
+		   </description>
+		</step>
+		<step>
+			<description>Funktionswerte <f>F(x[1])</f> und <f>F(F(x[1]))</f> berechnen, damit sind zwei Punkte des Funktionsgraphen bestimmt.
+		   </description>
+			<seq>
+				<script>
+		       newObject( def = F1:=F(x1); hide = true );
+newObject( def = FF1 := F(F1); hide = true );
+newObject( def = m110 := marker(x1, F1); target = da2);
+newObject( def = m111 := marker( F1, FF1); target = da2 );
+newObject( def = s10 := strecke ( punkt(x1, x1), punkt(x1, F1) ) ; target = da2; linestyle =dash);
+newObject( def = s11 := strecke ( punkt(x1, F1), punkt(F1, F1) ) ; target = da2; linestyle = dash);
+newObject( def = s111 := strecke ( punkt(x1, F1), punkt(0, F1) ) ; target = da2; linestyle =dot);
+newObject( def = s112 := strecke ( punkt(F1, F1), punkt(F1, 0) ) ; target = da2; linestyle =dot);
+newObject( def = s121 := strecke ( punkt(F1, FF1), punkt(0, FF1) ) ; target = da2; linestyle =dot);
+newObject( def = s12 := strecke ( punkt(F1, F1), punkt(F1, FF1) ) ; target = da2; linestyle = dash);
+newObject( def = x2 := x1-(F1-x1)^2/(FF1-2*F1+x1); hide = true );
+
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Dann diese beiden Punkte durch eine Gerade verbinden, Schnittpunkt <f>S(x[2],x[2])</f> mit der Winkelhalbierenden bestimmen, 
+			<br/>damit ist der nächste Wert <f>x[2]</f> der Steffensen-Iteration bestimmt.</description>
+			<seq>
+				<script>
+		     
+newObject( def = g1 := gerade( punkt(x1, F1), vektor({F1-x1, FF1-F1}) ); color = blue; linestyle = dot; target = da2 );
+
+
+
+
+
+
+newObject( def = F2:=F(x2); );
+newObject( def = m20 := marker(x2, x2); color = blue;  target = da2);
+
+newObject( def = es2 := strecke ( punkt(x2,x2), punkt(x2,0) ) ; color = blue; target = da2; linestyle =dot);
+newObject( def = tx22:= text( punkt(x2, da2.yMin+0.3*(da2.yMax-da2.yMin)), "<f>x[2]</f>", B_SW) ; target = da2 );
+
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn wir die beiden Schritte oben vergleichen, ahnen wir, warum das Steffensen-Verfahren so wirkungsvoll ist:
+		   <br/>Je näher am gesuchten Fixpunkt wir mit dem Schritt starten (rechts wesentlich näher als links), desto besser wird der Funktionsgraph (rot) durch die Gerade (blau) approximiert, und umso besser stimmt der damit extrapolierte Schnittpunkt mit dem gesuchten Schnittpunkt überein.
+		   </description>
+		</step>
+		<step>
+			<description>Natürlich braucht man auch hier diese geometrische Konstruktion letztlich nicht, man berechnet
+			<br/>
+				<f>x[2]=x[1]-(F(x[1])-x[1])^2/(F(F(x[1]))-2*F(x[1])+x[1])</f>
+				<br/>Hier sieht es so aus, als ob wir mit unserer Konstruktion den gesuchten Fixpunkt wirklich getroffen hätten.
+			<br/>Wir zeichnen die Situation ein drittes Mal und schauen genauer hin:
+		   </description>
+		</step>
+		<step>
+			<layout>
+				<row perc="100.0">
+					<col perc="33" name="da1"/>
+					<col perc="34" name="da2"/>
+					<col perc="33" name="da3"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+			     da3.coordinateSystem(xMin=1.82;xMax=1.88;yMin=1.82;yMax=1.88;);
+			     da3.setTitle( title = "3. Steffensen-Schritt");
+			    			     da3.addGraph(name = g, F, es2);		     
+			     newObject( def = f2 := kurvenzug( {punkt(da3.xMin, da3.yMin), 
+			                                                            punkt(da3.xMax, da3.yMin), 
+			                                                            punkt(da3.xMax, da3.yMax), 
+			                                                            punkt(da3.xMin, da3.yMax), 
+			                                                            punkt(da3.xMin, da3.yMin) }) ; color = green; target = da2 );
+			     newObject( def = tx23:= text( punkt(x2, da3.yMin+0.3*(da3.yMax-da3.yMin)), "<f>x[2]</f>", B_SW) ; target = da3 );
+			                                                            
+			   </script>
+				<par>
+					<script>
+			      animate( name = da3.xMin; to = 1.841399; end = 15 );
+			      animate( name = da3.xMax; to = 1.841424; end = 15 );
+			      animate( name = da3.yMin; to = 1.841397; end = 15 );
+			      animate( name = da3.yMax; to = 1.84142; end = 15 );
+			     </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Wir sehen: Auch <f>x[2]</f> ist nur eine Näherung für den gesuchten Fixpunkt. Auf eine geometrische Konstruktion wie in den ersten beiden Schritten können wir letztlich verzichten, denn wie dort erhalten  wir asgehend von <f>x[2]</f> mit 
+		   <br/>
+				<f>x[3]=x[2]-(F(x[2])-x[2])^2/(F(F(x[2]))-2*F(x[2])+x[2])</f> wieder eine wesentlich bessere Näherung.</description>
+			<seq>
+				<script>
+		        
+		         newObject( def = FF2:=F(F2); );
+		         newObject( def = x3 := x2-(F2-x2)^2/(FF2-2*F2+x2); hide = true );
+		         newObject( def = es3 := strecke ( punkt(x3,x3), punkt(x3,0) ) ; color = blue; target = da3; linestyle =dot);
+		         newObject( def = tx33:= text( punkt(x3, da3.yMin+0.3*(da3.yMax-da3.yMin)), "<f>x[3]</f>", B_SW) ; target = da3 );
+		         
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<title2>Steffensen-Verfahren</title2>Des Steffensen-Verfahren läßt sich also kurz so beschreiben:
+			<br/>Gegeben ist eine Fixpunktgleichung <f>F(x)=x</f>. 
+			<br/>Starte mit einem Wert <f>x[0]</f> möglichst nahe beim gesuchten Fixpunkt und berechne eine Folge <f>x[0], x[1], x[2], x[3], $dots</f> mit der Vorschrift
+				<br/>
+				<f>x[i+1]=x[i]-(F(x[i])-x[i])^2/(F(F(x[i]))-2*F(x[i])+x[i])</f>, 
+				<br/>dann konvergiert diese Folge "wesentlich schneller" gegen den gesuchten Fixpunkt als die ursprüngliche Fixpunktiteration <f>x[n+1]=F(x[n])</f>.
+				<br/>Die Aussage "wesentlich schneller" läßt sich mit Hilfe des Begriffs der Konvergenzordnung so konkretisieren: Hat die ursprüngliche Fixpunktiteration die Konvergenzordnung1, so hat die zugehörige Steffensen-Iteraion mindestens die Konvergenzordnung 2.
+			</description>
+		</step>
+		<step>
+			<description>Es gilt sogar: Das Steffensen-Verfahren konvergiert auch dann, wenn die ursprüngliche Iteration <f>x[n+1]=F(x[n])</f> divergiert. </description>
+		</step>
+			</body>
+</math4u2>

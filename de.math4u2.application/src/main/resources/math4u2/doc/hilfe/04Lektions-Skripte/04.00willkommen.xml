@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte</location>
+		<title>4.0 Lektions-Skripte</title>
+		<step>
+			<title>Lektions-Skripte</title>
+			<description>
+math4u2-Lektionen werden durch XML-Skripte gesteuert. Der Aufbau dieser Skripte 
+ist im folgenden beschrieben.
+
+<p/>Die Skripte können prinzipiell mit jedem ASCII-Editor erstellt und verändert 
+werden. Hilfreich ist allerdings ein spezieller XML-Editor, der den Benutzer bei 
+der Einhaltung der korrekten Syntax unterstützt.
+			</description>
+		</step>
+	</body>
+</math4u2>

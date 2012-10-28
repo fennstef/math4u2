@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>	<body>
+	     <author>Dr. M. Weiss</author>
+		<location>Analysis/Grundlagen/Funktionsterme zuordnen</location>
+		<title>Funktionsterme mit sin und tan</title>
+		<summary>Ordnen Sie einer Reihe von Funktionsgraphen die zugehörigen Funktionsterme zu.</summary>
+		<step>
+			<description>Gegeben sind folgende 8 Funktionsterme:<br/>
+				<br/>
+				<table>
+					<tr>
+						<td>1: <f>$fb(f1)</f>
+						</td>
+						<td>2: <f>$fb(f2)</f>
+						</td>
+						<td>3: <f>$fb(f3)</f>
+						</td>
+						<td>4: <f>$fb(f4)</f>
+						</td>
+					</tr>
+					<tr>
+						<td>5: <f>$fb(f5)</f>
+						</td>
+						<td>6: <f>$fb(f6)</f>
+						</td>
+						<td>7: <f>$fb(f7)</f>
+						</td>
+						<td>8: <f>$fb(f8)</f>
+						</td>
+					</tr>
+				</table>
+
+								<br/>
+				<br/>Tragen Sie in jedem Fenster die Nummer des dort gezeigten Funktionsterms ein !
+			</description>
+			<layout>
+				<row perc="50.0">
+					<col perc="33" name="da11"/>
+					<col perc="34" name="da12"/>
+					<col perc="33" name="da13"/>
+				</row>
+				<row perc="50.0">
+					<col perc="33" name="da21"/>
+					<col perc="34" name="da22"/>
+					<col perc="33" name="da23"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+deleteAll();
+
+expand(left=false;right=false);
+  
+  // 8 einstellige Funktionen definieren
+   newObject( def = f1(x):=sin(pi/4*x); hide = true );
+  newObject( def = f2(x):=sin(x+pi); hide = true );
+  newObject( def = f3(x):=sin(x +2*pi);  hide = true );
+  newObject( def = f4(x):=(sin(x-pi/2)); hide = true );
+     newObject( def = f5(x):=tan(x); hide = true );
+   newObject( def = f6(x):=tan(-x); hide = true );
+    newObject( def = f7(x):=tan(pi*x); hide = true );
+      newObject( def = f8(x):=tan(pi/2*x);  hide = true );
+
+  
+  // festlegen, welche 6 dieser Funktionen wo erscheinen
+  newObject( def = a11L:=3; hide = true  );
+  newObject( def = a12L:=1; hide = true );
+  newObject( def = a13L:=6; hide = true  );
+  newObject( def = a21L:=4; hide = true );
+  newObject( def = a22L:=2; hide = true );
+  newObject( def = a23L:=8; hide = true );
+  
+  
+  newObject( def = a11 := 0; hide = true );
+  newObject( def = a12 :=0; hide = true );
+  newObject( def = a13 := 0; hide = true );
+  newObject( def = a21 := 0; hide = true );
+  newObject( def = a22 := 0; hide = true );
+  newObject( def = a23 := 0; hide = true );
+
+
+  newObject( def= kmt(x,y):= |x-y|*1000; hide = true );
+  newObject( def = kmf(x,y):= (|signum(x-y)|-1)*1000; hide = true );
+  newObject( def = k11t:=kreis(punkt(kmt(a11,a11L), kmt(a11,a11L)), 100); fillcolor = 0.255.0.80; target = da11; visible = false ; hide = true );
+  newObject( def = k11f:=kreis(punkt(kmf(a11,a11L), kmf(a11,a11L)), 100); fillcolor =255.0.0.80; target = da11; visible = false; hide = true  );
+   newObject( def = k12t:=kreis(punkt(kmt(a12,a12L), kmt(a12,a12L)), 100); fillcolor = 0.255.0.80; target = da12; visible = false; hide = true  );
+  newObject( def = k12f:=kreis(punkt(kmf(a12,a12L), kmf(a12,a12L)), 100); fillcolor =255.0.0.80; target = da12; visible = false; hide = true  );
+   newObject( def = k13t:=kreis(punkt(kmt(a13,a13L), kmt(a13,a13L)), 100); fillcolor = 0.255.0.80; target = da13; visible = false ; hide = true );
+  newObject( def = k13f:=kreis(punkt(kmf(a13,a13L), kmf(a13,a13L)), 100); fillcolor =255.0.0.80; target = da13; visible = false ; hide = true );
+   newObject( def = k21t:=kreis(punkt(kmt(a21,a21L), kmt(a21,a21L)), 100); fillcolor = 0.255.0.80; target = da21; visible = false; hide = true  );
+  newObject( def = k21f:=kreis(punkt(kmf(a21,a21L), kmf(a21,a21L)), 100); fillcolor =255.0.0.80; target = da21; visible = false ; hide = true );
+   newObject( def = k22t:=kreis(punkt(kmt(a22,a22L), kmt(a22,a22L)), 100); fillcolor = 0.255.0.80; target = da22; visible = false; hide = true  );
+  newObject( def = k22f:=kreis(punkt(kmf(a22,a22L), kmf(a22,a22L)), 100); fillcolor =255.0.0.80; target = da22; visible = false; hide = true  );
+   newObject( def = k23t:=kreis(punkt(kmt(a23,a23L), kmt(a23,a23L)), 100); fillcolor = 0.255.0.80; target = da23; visible = false; hide = true  );
+  newObject( def = k23f:=kreis(punkt(kmf(a23,a23L), kmf(a23,a23L)), 100); fillcolor =255.0.0.80; target = da23; visible = false; hide = true  );
+
+
+
+
+  
+   
+
+  newObject( def = fl:=&lt;funktion(x)>liste0({10E10, f1(x), f2(x), f3(x), f4(x), f5(x), f6(x), f7(x), f8(x), 10E10 } ); hide = true );
+  
+ newObject( def = f11(x):=fl[a11L](x); color = blue; target = da11; hide = true );
+  newObject( def = f12(x):=fl[a12L](x); color = blue; target = da12; hide = true );
+  newObject( def = f13(x):=fl[a13L](x); color = blue; target = da13; hide = true );
+  newObject( def = f21(x):=fl[a21L](x); color = blue; target = da21; hide = true );
+  newObject( def = f22(x):=fl[a22L](x); color = blue; target = da22; hide = true );
+   newObject( def = f23(x):=fl[a23L](x); color = blue; target = da23; hide = true );
+  
+  newObject( def = tt11:=text(punkt(da11.xMin, da11.yMax), "<fh>
+						<conf>a11(style=text; width = 2; pattern = 0)</conf>a11</fh>", POSTIT );  target = da11; hide = true );
+  newObject( def = tt12:=text(punkt(da12.xMin, da12.yMax), "<fh>
+						<conf>a12(style=text; width = 2; pattern = 0)</conf>a12</fh>", POSTIT ); target = da12; hide = true  );
+  newObject( def = tt13:=text(punkt(da13.xMin, da13.yMax), "<fh>
+						<conf>a13(style=text; width = 2; pattern = 0)</conf>a13</fh>", POSTIT ); target = da13; hide = true  );
+  newObject( def = tt21:=text(punkt(da21.xMin, da21.yMax), "<fh>
+						<conf>a21(style=text; width = 2; pattern = 0)</conf>a21</fh>", POSTIT ); target = da21; hide = true  );
+   newObject( def = tt22:=text(punkt(da22.xMin, da22.yMax), "<fh>
+						<conf>a22(style=text; width = 2; pattern = 0)</conf>a22</fh>", POSTIT ); target = da22; hide = true  );
+    newObject( def = tt23:=text(punkt(da23.xMin, da23.yMax), "<fh>
+						<conf>a23(style=text; width = 2; pattern = 0)</conf>a23</fh>", POSTIT ); target = da23; hide = true  );
+
+  				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Grün = richtig. Rot = falsch. Der Graph zum gewählten Term ist gestrichelt eingetragen. Lösung im nächsten Schritt.</description>
+			<seq>
+				<script>		   
+		   
+		   modifyObject( name = k11t; visible = true );
+		   modifyObject( name = k11f; visible = true );
+		   modifyObject( name = k12t; visible = true );
+		   modifyObject( name = k12f; visible = true );
+		    modifyObject( name = k13t; visible = true );
+		   modifyObject( name = k13f; visible = true );
+		   modifyObject( name = k21t; visible = true );
+		   modifyObject( name = k21f; visible = true );
+		   modifyObject( name = k22t; visible = true );
+		   modifyObject( name = k22f; visible = true );
+		    modifyObject( name = k23t; visible = true );
+		   modifyObject( name = k23f; visible = true );
+
+
+
+		   newObject( def = toInt(x):=min( max( 0, floor(x)) , 9 ); hide = true );
+		   
+		   newObject( def = f11L(x):=fl[toInt(a11)](x); linestyle = dot; target = da11; );
+		                             newObject( def = f12L(x):=fl[toInt(a12)](x); linestyle = dot; target = da12 ; hide =true);
+		                             newObject( def = f13L(x):=fl[toInt(a13)](x); linestyle = dot; target = da13; hide =true );
+		                             newObject( def = f21L(x):=fl[toInt(a21)](x); linestyle = dot; target = da21 ; hide =true);
+		                             newObject( def = f22L(x):=fl[toInt(a22)](x); linestyle = dot; target = da22 ; hide =true);
+		                             newObject( def = f23L(x):=fl[toInt(a23)](x); linestyle = dot; target = da23 ; hide =true);
+
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Jetzt sind die richtigen Nummern eingetragen.</description>
+			<seq>
+				<script>
+  
+  // HIer Werte von a11L, a12L, ... eintragen.
+  newObject( def = a11 := 3; hide =true);
+  newObject( def = a12:= 1; hide =true);
+  newObject( def = a13 := 6; hide =true);
+  newObject( def = a21 := 4; hide =true);
+  newObject( def = a22 := 2; hide =true);
+  newObject( def = a23 := 8; hide =true);
+  
+						
+
+
+		      </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

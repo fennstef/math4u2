@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2//DE" "http://www.math4u2.de/xml/dtd/math4u2DTD.dtd">
+<math4u2>
+	<head>
+		<version>2.0</version>
+		<author>M. Weiss</author>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<location>Analysis/Grundlagen/Koordinatentransformationen</location>
+		<title>Koordinatentrafo: Übung 5</title>
+		<summary>Passen Sie eine Funktion mit Hilfe von 4 Parametern an verscheidene Vorgaben an.</summary>
+		<step>
+			<title>Koordinatentrafo: Übung 5</title>
+			<description>Oben ist der Graph einer Funktion <fh>f</fh> schwarz gepunktet eingezeichnet.
+			<br/>Aus der Funktion <fh>f</fh> entsteht die Funktion <f>g</f>, sie enthält die Parameter <fh>a</fh>, <fh>b, </fh>, <fh>c</fh> und <fh>d</fh>.
+			<br/>Der Graph der Funktion <fh>g</fh> ist oben blau eingezeichnet.
+			<br/><strong>Aufgabe:</strong>
+				<br/>Geben Sie oben rechts Werte für die Parameter <fh>a</fh>, <fh>b, </fh>, <fh>c</fh> und <fh>d</fh> so ein, dass der Graph von <fh>g</fh> mit dem rot eingezeichneten Graphen übereinstimmt (insbesondere in den hervorgehobenen Punkten).
+<br/>Jede Eingabe mit RETURN abschließen.
+<br/>Die Lösung wird im folgenden Schritt gezeigt.
+			
+			</description>
+			<layout>
+				<row perc="100.0">
+					<col perc="100.0" name="da"/>
+				</row>
+			</layout>
+			<seq>
+				<script>
+deleteAll();
+
+expand(left=false;right=true);
+da.coordinateSystem(xMin=-3.8711286364172857;xMax=9.007912164408943;yMin=-1.092817132893954;yMax=10.299679571796762;);
+
+
+newObject(
+	def=d := 0;
+	select=true;
+);
+
+newObject(
+	def=c := 2;
+	select=true;
+);
+
+
+newObject(
+	def=b :=3;
+	select=true;
+	
+);
+
+newObject(
+	def=a := 3;
+	select=true;
+);
+
+
+
+
+
+newObject(def=ah := 3; hide = true);
+newObject(def=bh :=0; hide = true);
+newObject(def=ch :=1; hide = true);
+newObject(def=dh := 1; hide = true);
+
+
+
+newObject(
+	def=f(x) := x^2-1/(1+x^2)*sin(pi*x);
+	linestyle=dot;
+	target = da;
+	hide = true;
+);
+
+newObject(
+	def=m1 := marker(1,f(1));
+	target=da;	hide = true;
+);
+
+newObject(
+	def=m2 := marker(2,f(2));
+	target=da;	hide = true;
+);
+
+
+newObject(
+	def=m3 := marker(-1,f(-1));
+	target=da;	hide = true;
+);
+
+
+newObject(
+	def=m4 := marker(-2,f(-2));
+	target = da;	hide = true;
+);
+
+newObject(
+	def=m5 := marker(0,f(0));
+	target=da;	hide = true;
+);
+
+
+
+newObject(
+	def=g(x) := d*f(c*(x-a))+b;
+	target=da;
+	color = blue;
+);
+
+
+newObject(
+	def=h(x) := dh*f(ch*(x-ah))+bh;
+	color=255.0.51;
+	linestyle = dot;
+	target=da;
+	hide = true;
+);
+
+
+newObject(
+	def=m1g := marker(1/c+a,g(1/c+a));
+	target=da;
+	color = blue; 	hide = true;
+);
+
+newObject(
+	def=m2g := marker(2/c+a,g(2/c+a));
+	target=da;color = blue;	hide = true;
+);
+
+
+newObject(
+	def=m3g := marker(-1/c+a,g(-1/c+a));
+	target=da;color = blue;	hide = true;
+);
+
+newObject(
+	def=m4g := marker(-2/c+a,g(-2/c+a));
+	target=da;color = blue;	hide = true;
+);
+
+newObject(
+	def=m5g := marker(a,g(a));
+	target=da;color = blue;	hide = true;
+);
+
+
+
+
+newObject(
+	def=m5h := marker(ah,h(ah));
+	target=da;
+	color = red;	hide = true;
+);
+newObject(
+	def=m4h := marker(-2/ch+ah,h(-2/ch+ah));
+	target=da; color = red;	hide = true;
+);
+
+newObject(
+	def=m3h := marker(-1/ch+ah,h(-1/ch+ah));
+	target=da; color = red;	hide = true;
+);
+
+
+
+newObject(
+	def=m2h := marker(2/ch+ah,h(2/ch+ah));
+	target=da; color = red;	hide = true;
+);
+
+newObject(
+	def=m1h := marker(1/ch+ah,h(1/ch+ah));
+	target=da; color = red;	hide = true;
+);
+
+newObject(
+	def=tg := text(punkt(5.5,2),"&lt;f>y=d*f(c*(x-a))+b&lt;/f>",POSTIT);
+	target=da;
+	bodercolor = blue;	hide = true;
+);
+
+newObject(
+	def=tf := text(punkt(-3.5,2),"&lt;f>y=f(x)&lt;/f>",POSTIT);
+	target=da;
+	linestyle = dot;	hide = true;
+);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				<strong>Lösung:</strong> Die richtigen Werte werden oben eingestellt.
+			</description>
+			<seq>
+				<par>
+					<script>
+		        animate( name = a; to = 3; end = 2 );
+		        animate( name = b; to = 0; end = 2 ); 
+		        animate( name = c; to = 1; end = 2 );
+		        animate( name = d; to = 1; end = 2 );
+		     </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = 0; end = 2 );
+		        animate( name = bh; to = 2; end = 2 ); 
+		        animate( name = ch; to = 1; end = 2 );
+		        animate( name = dh; to =1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = 0; end = 2 );
+		        animate( name = b; to = 2; end = 2 ); 
+		        animate( name = c; to = 1; end = 2 );
+		        animate( name = d; to = 1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = 0; end = 2 );
+		        animate( name = bh; to = 0; end = 2 ); 
+		        animate( name = ch; to = 2; end = 2 );
+		        animate( name = dh; to =1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = 0; end = 2 );
+		        animate( name = b; to = 0; end = 2 ); 
+		        animate( name = c; to = 2; end = 2 );
+		        animate( name = d; to = 1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = 1; end = 2 );
+		        animate( name = bh; to =0; end = 2 ); 
+		        animate( name = ch; to =2; end = 2 );
+		        animate( name = dh; to = 1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = 1; end = 2 );
+		        animate( name = b; to = 0; end = 2 ); 
+		        animate( name = c; to = 2; end = 2 );
+		        animate( name = d; to = 1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = 1; end = 2 );
+		        animate( name = bh; to = 1; end = 2 ); 
+		        animate( name = ch; to = -1; end = 2 );
+		        animate( name = dh; to = 2; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = 1; end = 2 );
+		        animate( name = b; to = 1; end = 2 ); 
+		        animate( name = c; to = -1; end = 2 );
+		        animate( name = d; to = 2; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = 3; end = 2 );
+		        animate( name = bh; to = 0; end = 2 ); 
+		        animate( name = ch; to = -2; end = 2 );
+		        animate( name = dh; to = 1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = 3; end = 2 );
+		        animate( name = b; to = 0; end = 2 ); 
+		        animate( name = c; to = -2; end = 2 );
+		        animate( name = d; to =1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = 0; end = 2 );
+		        animate( name = bh; to = 5; end = 2 ); 
+		        animate( name = ch; to = 1; end = 2 );
+		        animate( name = dh; to = -1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = 0; end = 2 );
+		        animate( name = b; to = 5; end = 2 ); 
+		        animate( name = c; to =1; end = 2 );
+		        animate( name = d; to =-1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = 2; end = 2 );
+		        animate( name = bh; to =6; end = 2 ); 
+		        animate( name = ch; to = 1; end = 2 );
+		        animate( name = dh; to = -1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = 2; end = 2 );
+		        animate( name = b; to =6; end = 2 ); 
+		        animate( name = c; to = 1; end = 2 );
+		        animate( name = d; to =-1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = -1; end = 2 );
+		        animate( name = bh; to =6; end = 2 ); 
+		        animate( name = ch; to = -1; end = 2 );
+		        animate( name = dh; to = -1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = -1; end = 2 );
+		        animate( name = b; to =6; end = 2 ); 
+		        animate( name = c; to = -1; end = 2 );
+		        animate( name = d; to =-1; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		
+		<step>
+			<description>Neue Aufgabe</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = ah; to = -1; end = 2 );
+		        animate( name = bh; to =8; end = 2 ); 
+		        animate( name = ch; to = -1; end = 2 );
+		        animate( name = dh; to = -2; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+		<step>
+			<description>Lösung</description>
+			<seq>
+				<par>
+					<script>
+		         animate( name = a; to = -1; end = 2 );
+		        animate( name = b; to =8; end = 2 ); 
+		        animate( name = c; to = -1; end = 2 );
+		        animate( name = d; to =-2; end = 2 );
+ </script>
+				</par>
+			</seq>
+		</step>
+
+
+
+
+	</body>
+</math4u2>

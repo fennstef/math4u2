@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Dr. M.Weiss</author>
+		<location>Analysis/Entwicklung/Potenzreihen</location>
+		<title>Taylor-Entwicklung</title>
+		<summary>Zeigt die Grundidee der Taylor-Entwicklung: lokale Näherung einer differenzierbaren Funktion durch ein Polynom</summary>
+		<step>
+			<title>Taylor-Entwicklung</title>
+			<description>
+				<p>Das wohl bekannteste Verfahren zur Approximation einer Funktion <f>f(x)</f> durch eine "einfachere" Funktion <f>p(x)</f> ist die <em>Taylor-Entwicklung.</em>
+				</p>
+				<p> Dabei wird die Funktion <f>f(x)</f> in der Umgebung einer Stelle <f>c</f> der <f>x</f>-Achse durch ein Polynom <f>p(x)</f> angenähert.<br/>Die Stelle <f>c</f> wird in diesem Zusammenhang als <em>Entwicklungspunkt</em> bezeichnet.</p>
+			</description>
+			<seq>
+				<script>
+					deleteAll();
+					expand(left=false;right=false);
+					da.coordinateSystem(
+						xMin=-2;					
+						xMax=2.5;
+						yMin=-2;
+						yMax=2;
+					);
+					
+					newObject(
+						def = f(x):=x*sin(x^2);
+						color = 160.160.255;
+						target = da;
+					);
+				
+					newObject(
+						def = S:=punkt(-1,fix(-1.5));
+						style = ARROW_H;
+						color = green;
+						target = da;
+					);
+
+					
+					newObject(
+						def = C:=punkt(fix(S.x),fix(0));
+						style = CIRCLE_DOT;
+						target = da;
+					);
+					
+										
+					newObject( def = gc:=gerade(C,e2y); color = green; linestyle = dot; target = da );
+					
+					newObject(def = c:=C.x);					
+				
+					newObject(
+						def = P:=punkt(fix(c),fix(f(c)));
+						target = da;
+					);
+
+					newObject(def = a0:=1);
+					newObject(def = a1:=0);
+					newObject(def = a2:=0);
+					newObject(def = a:=vector({a0,a1,a2}));
+					
+					newObject(
+						def = p(x):=a[1]+a[2]*x+a[3]*x^2;
+						color = red;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>
+				Dies soll nun an einem Beispiel demonstriert werden.
+				<br/>Sie sehen oben den Graphen der Funktion einer Funktion <f>f(x)</f> .
+				<br/>Ausserdem sehen Sie den Entwicklungspunkt <f>c</f>. Diesen können Sie zum Experimentieren über den Doppelpfeil <f>S</f> mit der Maus verschieben.
+			</description>
+		</step>
+		<step>
+			<title>Ziel der Taylor-Entwicklung</title>
+			<description>Das Ziel der Taylor-Entwicklung einer Funktion <f>f(x)</f> am Entwicklungspunkt <f>c</f> könnte man anschaulich so beschreiben:
+						<br/>Finde eine Polynomfunktion <f>p(x)</f>, deren Graph in einer Umgebung des Punktes <f>P</f> möglichst gut mit dem Graphen der Funktion <f>f(x)</f> übereinstimmt. 
+					</description>
+		</step>
+		<step>
+			<description>Manchmal ist es ausreichend genau, wenn man eine Funktion in der Umgebung des Entwicklungspunktes 
+				<f>c</f> durch eine konstante Funktion ersetzt. 
+				<br/>Denken Sie z.B. an ein Sparbuch, mit dem Sie am Beginn eines Jahres (Entwicklungspunkt) 1000 Euro anlegen. Auch wenn sich der Wert des Sparbuchs von Tag zu Tag verändert, ist es doch in der Regel ausreichend genau, wenn man während eines ganzen Jahres davon ausgeht, dass der Wert "ungefähr 1000 Euro" ist.
+		  </description>
+		</step>
+		<step>
+			<title>Näherung durch eine Konstante: Taylorpolynom vom Grad 0</title>
+			<description>Wenn man jetzt allgemein eine Funktion <f>f(x)</f> in der Umgebung einer Stelle <f>c</f> durch eine konstante Funktion möglichst gut annähern will, dann wählt man als konstanten Funktionswert natürlich den Wert 
+				<f>f(c)</f> an dieser Stelle <f>c</f>
+				<br/>Wir starten also mit dem konstanten Polynom 
+					 <f>$fd(p)</f>
+				<br/>Dieses (konstante) Polynom wird als Taylorpolynom vom Grad 0 zum Entwicklungspunkt <f>c</f> bezeichnet.
+			</description>
+			<seq>
+				<script>
+			       newObject( def = p(x):=f(c); color = red ; target = da );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Der Graph von <f>p(x)</f> ist jetzt oben rot eingezeichnet.<br/>Experimentieren Sie durch Verschieben des Entwicklungspunkts <f>c</f>!
+		</description>
+		</step>
+		<step>
+			<description>Offensichtlich gibt es Stellen, an denen die Näherung durch eine Konstante "ganz gut" funktioniert, z.B. bei <f>c=0</f>, </description>
+			<seq>
+				<script>
+		      animate( name = S.x; to=0; end = 5 );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>an anderen Stellen funktioniert diese Idee weniger gut, z.B. bei <f>c=1</f>.</description>
+			<seq>
+				<script>
+		      animate( name = S.x; to=1; end = 4 );
+		  		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>Den Unterschied zwischen beiden Stellen könnte man so beschreiben:
+		</description>
+		</step>
+		<step>
+			<description>Entwicklungspunkt <f>c=0</f>: <br/>Die Näherung durch eine Konstante ist hier relativ gut, weil sich die Funktionswerte hier mit <f>x</f> nur langsam ändern.
+		</description>
+			<seq>
+				<script>
+		       newObject( def = S.x := 0);
+		       newObject( def =tt:= text(punkt(0,0), "Die Näherung durch Konstante<br/>ist hier relativ gut, weil sich<br/>die Funktionswerte hier<br/>mit <f>x</f> nur langsam ändern.", B_SW); target = da );
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Entwicklungspunkt <f>c=1</f>:  <br/>Die Näherung durch eine Konstante ist hier relativ schlecht, weil sich die Funktionswerte hier mit <f>x</f> schnell ändern.
+		</description>
+			<seq>
+				<script>
+		    newObject( def = S.x := 1);
+		       newObject( def =ttt:= text(punkt(1,f(1)), "Die Näherung durch Konstante<br/>ist hier relativ schlecht, weil sich<br/>die Funktionswerte hier<br/>mit <f>x</f> schnell ändern.", B_SE); target = da );
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>An einer Stelle, an der sich dei Funktionswerte mit <f>x</f> relativ schnell ändern, sollten wir <f>f(x)</f> besser durch eine Funktion approximieren, die diese Änderung im Groben wiedergeben kann. Die einfachste Funktion, mit der dies möglich ist, ist eine lineare Funktion mit einem Funktionsterm <f>s*x+b</f>. Ihr Graph ist wieder eine Gerade, mit <f>s</f> kann man aber die Steigung so anpassen, dass die Änderung der Funktionswerte im Groben wiedergegeben wird. 
+		  </description>
+			<seq>
+				<script>
+		       deleteObject( name = tt, ttt ) ;
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Damit wir allerdings mit unserer Geraden in jedem Fall den Funktionswert am Entwicklungspunkt <f>c</f> treffen, machen wir einen etwas anderen Ansatz für diese lineare Funktion:<br/>
+				<f>$fd(p)</f>, dann gilt stets <f>f(c)=p(c)</f>, die Steigung können wir über den Parameter <f>s</f> davon unabhängig einstellen. Experimentieren Sie! Sie können <f>s</f> über den Schieberegler rechts oben oder durch direkte Eingabe verändern.
+		   </description>
+			<seq>
+				<script>
+		         expand( right = true );
+		         newObject( def = s:=1 ; select = true );
+		         newObject( def = p(x):=f(c)+s*(x-c) );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<description>Natürlich muss man die Steigung nicht experimentell ermitteln. Die zentrale Idee der Differentialrechnung ist ja:
+			<br/>Von alle Geraden approximiert die Tangente die Funktion in der Umgebung eines Punktes am besten, die Steigung der Tangente ist der Wert der Ableitung an dieser Stelle.
+
+		   </description>
+		</step>
+		<step>
+			<title>Lineare Näherung: Taylorpolynom vom Grad 1
+		   </title>
+			<description>Die lineare Näherung wird also beschrieben durch<br/>
+				<f>p(x)=f(c)+derive(f(c))*(x-c)</f>. <br/>Dieses Polynom wird als Taylorpolynom vom Grad 1 zum Entwicklungspunkt <f>c</f> bezeichnet.		   </description>
+			<seq>
+				<script>
+				
+		           newObject( def = p(x):=f(c)+derive(f(x))(c)*(x-c) );
+		           deleteObject( name = s );
+		        		         </script>
+			</seq>
+		</step>
+		<step>
+			<description>Wenn man nun wieder die lineare Näherung bei verschiedenen Entwicklungspunkten vergleicht, dann stellt man fest, dass sie die Funktion unterschiedlich "gut" approximiert:</description>
+		</step>
+		<step>
+			<description>Z.B. funktioniert die lineare Näherung "ganz gut" bei <f>c=-1</f>,</description>
+			<seq>
+				<script>
+		      animate( name = S.x; to=-1; end = 5 );
+		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>im Vergleich dazu funktioniert sie  schlechter bei <f>c=1.35</f>.</description>
+			<seq>
+				<script>
+		      animate( name = S.x; to=1.35; end = 4 );
+		  		   </script>
+			</seq>
+		</step>
+		<step>
+			<description>
+					Will man dies stärker formalisieren, so hilft dabei folgende Beobachtung:<br/>An der einen Stelle ist die Approximation durch eine Gerade (lineare Näherung) deshalb in einer "großen" Umgebung des Entwicklungspunktes "gut", weil sich die Tangentensteigung in der Umgebung dieses Punktes "langsam" ändert.
+				<br/>Schauen Sie mal zu:</description>
+			<seq>
+				<script>
+				     animate( name = S.x; to=-1; end = 2 );
+				  </script>
+			</seq>
+		</step>
+		<step>
+			<description>An dieser Stelle ändert sich die Tangentensteigung in der Umgebung des Entwicklungspunktes relativ "langsam",</description>
+			<seq>
+				<animate parameterName="S.x" to="-1.1" begin="0.0" end="0.1" object="main"/>
+				<animate parameterName="S.x" to="-0.9" begin="0.0" end="2" object="main"/>
+				<animate parameterName="S.x" to="-1.1" begin="0.0" end="3" object="main"/>
+				<animate parameterName="S.x" to="-0.9" begin="0.0" end="3" object="main"/>
+				<animate parameterName="S.x" to="-1" begin="0.0" end="1" object="main"/>
+			</seq>
+		</step>
+		<step>
+			<description>an der anderen Stelle ändert sich die Tangentensteigung in einer gleich großen Umgebung des Entwicklungspunktes wesentlich "schneller":
+					</description>
+			<seq>
+				<animate parameterName="S.x" to="1.35" begin="0.0" end="0.5" object="main"/>
+				<animate parameterName="S.x" to="1.45" begin="0.0" end="2" object="main"/>
+				<animate parameterName="S.x" to="1.25" begin="0.0" end="3" object="main"/>
+				<animate parameterName="S.x" to="1.45" begin="0.0" end="3" object="main"/>
+				<animate parameterName="S.x" to="1.35" begin="0.0" end="1" object="main"/>
+			</seq>
+		</step>
+		<step>
+			<description>Den Unterschied zwischen beiden Stellen könnte man so beschreiben:
+		</description>
+		</step>
+		<step>
+			<description>Entwicklungspunkt <f>c=-1</f>: <br/>Die Näherung durch die Tangente ist hier relativ gut, weil sich die Ableitungswerte hier mit <f>x</f> nur langsam ändern.
+		</description>
+			<seq>
+				<script>
+		      newObject( def = S.x := -1 );
+		       newObject( def =tt:= text(punkt(-1,f(-1)), "Die Näherung durch die Tangente ist hier relativ gut,<br/>weil sich die Ableitungswerte hier mit <f>x</f> nur langsam ändern.", B_SE); target = da );
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Entwicklungspunkt <f>c=1.35</f>:  <br/>Die Näherung durch die Tangente ist hier relativ schlecht, weil sich die Ableitungswerte hier mit <f>x</f> schnell ändern.
+		</description>
+			<seq>
+				<script>newObject( def = S.x := 1.35 );
+		       newObject( def =ttt:= text(punkt(1.35,f(1.35)), "Die Näherung durch die Tangente<br/>ist hier relativ schlecht, weil sich<br/>die Ableitungswerte hier<br/>mit <f>x</f> schnell ändern.", B_SW); target = da );
+		    </script>
+			</seq>
+		</step>
+		<step>
+			<description>Die Argumentation verläuft jetzt fast genau so wie oben:<br/>An einer Stelle, an der sich die Ableitungswerte mit <f>x</f> relativ schnell ändern, sollten wir <f>f(x)</f> besser durch eine Funktion approximieren, die diese Änderung der Ableitungswerte im Groben wiedergeben kann. Die einfachste Funktion, mit der dies möglich ist, ist eine quadratische Funktion mit einem Funktionsterm <f>q*x^2+s*x+b</f>. Ihr Graph ist eine Parabel, mit <f>q</f> kann man deren Form prinzipiell so anpassen, dass die Änderung der Ableitungswerte im Groben wiedergegeben wird. 
+<br/>Der Unterschied zu oben: oben ging es um die Veränderung der Funktionswerte, jetzt geht es um die Veränderung der Ableitungswerte.
+		  </description>
+			<seq>
+				<script>
+		       deleteObject( name = tt, ttt );
+		     </script>
+			</seq>
+			<seq/>
+		</step>
+		<step>
+			<description>Damit wir die bisherige Arbeit nicht ganz umsonst gemacht haben, starten wir jetzt aber nicht mit einem grundsätzlich neuen Polynom, sondern wir erweitern unsere bisherige Lösung, indem wir einen quadratischen Term <f>q*(x-c)^2</f> dazu addieren.
+<br/>Unser Ansatz lautet <f>p(x)=f(c)+derive(f(c))*(x-c)+q*(x-c)^2</f>
+				<br/>Am Entwicklungspunkt hat dieser zusätzliche Term den Wert <f>0</f>, ebenso seine Ableitung. Unsere Approximation stimmt also dort nach wie vor mit der Funktion <f>f(x)</f>  in Funktionswert und Ableitung überein, unabhängig davon, wie wir den Parameter <f>q</f> wählen. 
+<br/>Den Parameter <f>q</f> können wir so einstellen, dass das Ergebnis möglichst gut wird.
+		    </description>
+			<seq>
+				<script>
+		        expand( right = true);
+		        
+		        newObject( def = q:=1; select = true );
+		         newObject( def = p(x):=f(c)+derive(f(x))(c)*(x-c)+q*(x-c)^2 );
+		     </script>
+			</seq>
+		</step>
+		<step>
+			<description>Experimentieren Sie!<br/>Sie können den Wert von <f>q</f> mit den Schieberegler oben rechts oder durch direkte Eingabe ändern.
+		<br/>Experimentieren Sie an verschiedenen Entwicklungspunkten!</description>
+		</step>
+		<step>
+			<description>Allerdings muss man auch den optimalen Wert für <f>q</f> auch hier nicht experimentell ermitteln.<br/>Die Funktion <f>f(x)</f> sollte durch <f>p(x)</f> in einer Umgebung von <f>c</f> dann besonders gut übereinstimmen, wenn sich Tangentensteigung ( = erste Ableitung) dort bei beiden Funktionen gleich stark verändert. Die Änderung der Tangentensteigung wird durch die zweite Ableitung beschrieben. Wir fordern also dass <f>f(x)</f> und <f>p(x)</f> bei <f>c</f> auch in der zweiten Ableitung übereinstimmen sollen, kurz <f>derive(f(c),2)=derive(p(c),2)</f>. Die zweite Ableitung von <f>$fd(p)</f> ist <f>derive(p(c), 2)=2*q</f>, also soll konkret: <f>derive(f(c),2)=2*q</f> gelten, der optimale Wert für <f>q</f> ist demnach <f>q=derive(f(c),2)/2</f>
+			</description>
+		</step>
+		<step>
+			<title>Quadratische Näherung: Taylorpolynom vom Grad 2</title>
+			<description>Wir haben diesen Wert jetzt eingesetzt.
+		  					<br/>Die Quadratische Näherung ist also gegeben durch <f>p(x)=f(c)+derive(f(c))*(x-c)+derive(f(c),2)/2*(x-c)^2</f>
+				<br/>Dieses Polynom wird als Taylorpolynom vom Grad 2  zum Entwicklungspunkt <f>c</f> bezeichnet.
+		  					<br/>Der Graph von <f>p(x)</f> ist oben rot gezeichnet. Er hat in der Regel die Form einer Parabel. In speziellen Fällen kann er auch eine Gerade sein.<br/>
+			</description>
+			<seq>
+				<script>
+					da.coordinateSystem(xMin=-2;xMax=2.5;yMin=-2;yMax=2);
+					newObject( def = p(x):=f(c)+derive(f(x))(c)*(x-c)+derive(f(x),2)(c)/2*(x-c)^2 );
+					deleteObject( name = q );
+				</script>
+			</seq>
+		</step>
+		<step>
+			<description>Bei der quadratischen Näherung stimmen im Entwicklungspunkt <f>c</f> überein:<ul>
+					<li>Funktionswert</li>
+					<li>Steigung der Tangente (1.Ableitung)</li>
+					<li>Krümmung (2.Ableitung)</li>
+				</ul>Experimentieren Sie durch Verschieben des Entwicklungspunkts. Verfolgen Sie dabei die Vorzeichen der ersten und der zweiten Ableitung. Suchen Sie Entwicklungspunkte <f>c</f>, an denen der Graph von <f>p(x)</f> eine Gerade ist.	
+		   </description>
+		</step>
+		<step>
+			<description>Jetzt sollte der Gang der Dinge klar sein:<br/>Man kann die Näherung weiter verbessern, wenn man ein kubisches Polynom (d.h. ein Polynom vom Grad 3) verwendet.<br/>Wieder macht man mit einem Parameter <f>r</f> einen Ansatz für das Polynom <f>p(x)=f(c)+derive(f(c))*(x-c)+derive(f(c),2)/2*(x-c)^2+r*(x-c)^3</f> und fordert jetzt, dass Funktionswert und die ersten drei Ableitungen am Entwicklungspunkt <f>c </f> übereinstimmen. 
+<br/>Aus einer kurzen Rechnung erhält man  <f>derive(f(c),3)=6*r</f> und <f>r=derive(f(c),3)/6</f>
+				<br/>
+			</description>
+			<seq>
+				<script>
+		         newObject( def = r:=1 );
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>Kubisches Näherung: Taylorpolynom vom Grad 3</title>
+			<description>
+				<br/>
+				<f>p(x)=f(c)+derive(f(c))*(x-c)+(derive(f(c),2)/2)*(x-c)^2+ (derive(f(c),3)/6)*(x-c)^3</f>
+				<br/>
+				<br/>Experimentieren Sie durch Verschieben des Entwicklungspunkts.
+					</description>
+			<seq>
+				<script>
+			       newObject( def = p(x):=f(c)+derive(f(x))(c)*(x-c)+derive(f(x),2)(c)/2!*(x-c)^2+derive(f(x),3)(c)/3!*(x-c)^3 );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Taylorpolynom von Grad 4</title>
+			<description>
+					Wenn die Funktion <f>f(x)</f> genügend oft differenzierbar ist, kann man die Funktion immer besser durch Polynome von immer höherem Grad annähern. 
+				<br/>Als Näherung mit einem Polynom vom Grad 4 in der Umgebung des Entwicklungspunkts <f>c</f> erhält man:
+				<br/>
+				<f>p</f>=<fb>ff(x):=f(c)+derive(f(c))*(x-c)+(derive(f(c),2)/2!)*(x-c)^2+ (derive(f(c),3)/3!)*(x-c)^3+ (derive(f(c),4)/4!)*(x-c)^4</fb>
+				<br/>Experimentieren Sie !
+			</description>
+			<seq>
+				<script>
+			       newObject( def = p(x):=f(c)+derive(f(x))(c)*(x-c)+derive(f(x),2)(c)/2!*(x-c)^2+derive(f(x),3)(c)/3!*(x-c)^3+derive(f(x),4)(c)/4!*(x-c)^4 );
+			    </script>
+			</seq>
+		</step>
+		<step>
+			<title>Mit der Ordnung experimentieren</title>
+			<description>Jetzt können Sie alles nochmal ausprobieren:
+		  <br/>Geben Sie für das Taylorpolynom eine Ordnung zwischen 0 (konstantes Polynom) und 5 ein: <f>
+					<conf>ordnung(style=text;width=1;pattern=0)</conf>ordnung</f>
+				<br/>Verändern Sie den Entwicklungspunkt!
+		  </description>
+			<seq>
+				<script>
+		         
+		         newObject( def = ordnung:=5 );
+		        newObject( def = f1(x):= derive(f(x)); );
+		        newObject( def = f2(x):= derive(f(x), 2); );
+		        newObject( def = f3(x):= derive(f(x), 3); );
+		        newObject( def = f4(x):= derive(f(x), 4); );
+		        newObject( def = f5(x):= derive(f(x), 5); );
+		         newObject( def = al:=&lt;funktion>liste0({f(c), f1(c), f2(c), f3(c), f4(c), f5(c) }) );
+		         newObject( def = ord :=min(5, max(0, floor(ordnung)));  );
+		         newObject( def = p(x):=sum(i,0,ord,al[i]*(x-c)^i/i!) );
+
+		      </script>
+			</seq>
+		</step>
+		<step>
+			<title>Mit anderen Funktionen experimentieren</title>
+			<description>
+					Soweit das Prinzip. 
+				<br/>Jetzt können Sie mit bekannten Funktionen und deren Taylorpolynom selber experimentieren.
+				<br/>Zunächst ersetzen wir die anfangs gewählte Funktion durch die Sinus-Funktion ersetzt.
+				<br/>Geben Sie für das Taylorpolynom eine Ordnung zwischen 0 (konstantes Polynom) und 5 ein: <f>
+					<conf>ordnung(style=text;width=1;pattern=0)</conf>ordnung</f>
+			</description>
+			<seq>
+				<script>
+					da.coordinateSystem(xMin=-7; xMax=7; yMin=-2; yMax=2;);
+					newObject(
+						def = f(x):=sin(x);
+						color = blue;
+					);
+				</script>
+			</seq>
+		</step>
+		<step>
+			<title>Selber Funktionen definieren</title>
+			<description>
+					Sie können mit anderen Funktionen experimentieren, indem Sie die Definition der Funktion <formula show="short">f(x)</formula> durch eine andere Funktionsdefinition ersetzen, z.B. durch <code>1/(1+x*x)</code> oder <code>x*x*cos(x)</code>.
+				<br/>Geben Sie den gewünschten Funktionsterm oben rechts ein!
+				<br/>Geben Sie für das Taylorpolynom eine Ordnung zwischen 0 (konstantes Polynom) und 5 ein: <f>
+					<conf>ordnung(style=text;width=1;pattern=0)</conf>ordnung</f>
+			</description>
+			<seq>
+				<script>
+				      modifyObject( name = f; select = true );
+				   </script>
+			</seq>
+		</step>
+	</body>
+</math4u2>

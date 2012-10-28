@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE math4u2 PUBLIC "-//FH Augsburg//DTD Math4u2 V2.1//DE" "http://www.math4u2.de/xml/dtd/math4u2_V2_1DTD.dtd">
+<math4u2>
+	<head>
+		<Lektion_nur_in_math4u2_Version_2.1_ausfuehrbar/>	
+		<version>2.1</version>
+		<module id="main" class="ShowMeGraph"/>
+	</head>
+	<body>
+		<author>Stefan Fenn, Erich Seifert, Prof. Dr. Maximilian Weiß</author>	
+		<location>4 Lektions-Skripte/4.7 Elementare Anweisungen</location>
+		<title>4.7.0 Elementare Anweisungen</title>
+		<step>
+			<title>4.7.0 Elementare Anweisungen</title>
+			<description>
+Die Wirkung der elementaren Anweisungen wird durch entsprechende Attribute gesteuert.
+Jedes Attribut wird in der Form <code>ATTRIBUTNAME = WERT</code> angegeben.
+<br/>Die Reihenfolge, in der die Attribute angegeben werden, ist beliebig.
+Die Angabe von Attributen, für die eine Voreinstellung angegeben ist, kann entfallen.
+			</description>
+		</step>
+	</body>
+</math4u2>

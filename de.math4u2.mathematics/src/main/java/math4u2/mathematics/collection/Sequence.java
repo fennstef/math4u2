@@ -223,6 +223,10 @@ public class Sequence implements MathObject, CreatesPath{
 	public Object getIdentifier() {
 			return name;
 	} //getKey
+	
+	public String getKey() {
+		return name;
+} //getKey
 
 	public boolean testSubstitution(MathObject oldObject, Set oldAggregateSet) {
 		return true;

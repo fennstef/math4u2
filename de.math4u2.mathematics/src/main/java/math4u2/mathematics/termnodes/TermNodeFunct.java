@@ -80,7 +80,7 @@ public class TermNodeFunct extends TermNode {
 	 * @return Funktionsname
 	 */
 	public String getName() {
-		return (String) function.getIdentifier();
+		return (String) function.getKey();
 	}
 
 	// ?? muss man das immer neu ermitteln oder kann man es beim Erzeugen schon

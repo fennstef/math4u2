@@ -170,7 +170,7 @@ public class CurveGraph extends AbstractSimpleGraph {
 				ll.addFirst(new int[] { x, y });
 		} catch (Exception e) {
 			ExceptionManager.doError("Fehler beim Zeichnen der Kurve "
-					+ getIdentifier(), e);
+					+ getKey(), e);
 		}
 	} 
 

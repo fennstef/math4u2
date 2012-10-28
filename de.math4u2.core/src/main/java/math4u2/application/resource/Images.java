@@ -1,5 +1,7 @@
 package math4u2.application.resource;
 
+import java.net.URL;
+
 import javax.swing.ImageIcon;
 
 import math4u2.util.exception.ExceptionManager;
@@ -126,7 +128,11 @@ public class Images {
 	
 	public static ImageIcon load(String name) {
 		try {
-			return new ImageIcon(ClassLoader.getSystemResource(name));
+			URL imageUrl = ClassLoader.getSystemClassLoader().getResource(name);
+			if(imageUrl==null){
+				imageUrl = Images.class.getClassLoader().getResource(name);
+			}
+			return new ImageIcon(imageUrl);
 		} catch (Throwable t) {
 			ExceptionManager.doError("Das Bild '" + name
 					+ "' wurde nicht gefunden");

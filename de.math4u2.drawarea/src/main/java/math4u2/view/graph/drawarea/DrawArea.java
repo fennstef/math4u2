@@ -265,9 +265,9 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 			SimpleGraphInterface gi = (SimpleGraphInterface) iter.next();
 			if (gi == null)
 				return false;
-			if (gi.getIdentifier() == null)
+			if (gi.getKey() == null)
 				return false;
-			if (gi.getIdentifier().equals(key))
+			if (gi.getKey().equals(key))
 				return true;
 		} // for iter
 		return false;
@@ -291,7 +291,7 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 	public SimpleGraphInterface getGraph(String name) {
 		for (Iterator iter = graphs.iterator(); iter.hasNext();) {
 			SimpleGraphInterface gi = (SimpleGraphInterface) iter.next();
-			if (name.equals(gi.getIdentifier()))
+			if (name.equals(gi.getKey()))
 				return gi;
 		}// for iter
 		return null;
@@ -306,7 +306,7 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 		SimpleGraphInterface graph = null;
 		for (Iterator iter = graphs.iterator(); iter.hasNext();) {
 			if (graphName.equals((graph = (SimpleGraphInterface) iter.next())
-					.getIdentifier()))
+					.getKey()))
 				break;
 		} // for iter
 		if (graph == null)
@@ -394,7 +394,7 @@ public class DrawArea extends JPanel implements DrawAreaInterface,
 		try {
 			graph.detach();
 		} catch (Exception e) {
-			ExceptionManager.doError("Graph " + graph.getIdentifier()
+			ExceptionManager.doError("Graph " + graph.getKey()
 					+ " kann nicht gelöscht werden.");
 		}
 		// Graphen

@@ -195,7 +195,7 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 			broker.propagateChange(minFunction);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'min' ("
-					+ getIdentifier() + ").", e);
+					+ getKey() + ").", e);
 		}
 		return null;
 	} // operator_set_min
@@ -216,7 +216,7 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 			broker.propagateChange(maxFunction);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'max' ("
-					+ getIdentifier() + ").", e);
+					+ getKey() + ").", e);
 		}
 		return null;
 	} // operator_set_max
@@ -236,7 +236,7 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 		try {
 			broker.propagateChange(xFunction);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'x' (" + getIdentifier()
+			ExceptionManager.doError("Fehler bei der Methode 'x' (" + getKey()
 					+ ").", e);
 		}
 		return null;
@@ -257,7 +257,7 @@ public class Curve extends AbstractAffineObject implements AppendShapeInterface 
 		try {
 			broker.propagateChange(yFunction);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'y' (" + getIdentifier()
+			ExceptionManager.doError("Fehler bei der Methode 'y' (" + getKey()
 					+ ").", e);
 		}
 		return null;

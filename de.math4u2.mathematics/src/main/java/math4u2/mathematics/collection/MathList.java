@@ -234,6 +234,10 @@ public class MathList implements MathObject, CreatesPath, HasGraph,
 	public Object getIdentifier() {
 		return name;
 	} // getKey
+	
+	public String getKey() {
+		return name;
+	}
 
 	public boolean testSubstitution(MathObject oldObject, Set oldAggregateSet) {
 		return true;

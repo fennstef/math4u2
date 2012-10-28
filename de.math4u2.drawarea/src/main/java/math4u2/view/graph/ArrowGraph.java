@@ -16,7 +16,7 @@ import math4u2.view.graph.util.IVectorDoubleValueHolder;
 public class ArrowGraph extends AbstractSimpleGraph {
 
 	/** Grafische Interaktionen (Button) */
-	private DragButtonArrow dragVector;
+	private DragButtonArrow dragButtonArrow;
 	
 	private IScalarDoubleHolder startX;
 	private IScalarDoubleHolder startY;
@@ -28,11 +28,11 @@ public class ArrowGraph extends AbstractSimpleGraph {
 		this.startX = startX;
 		this.startY = startY;
 		this.vector = vector;
-		dragVector = new DragButtonArrow(da, name, startX, startY, vector);
+		dragButtonArrow = new DragButtonArrow(da, name, startX, startY, vector);
 	} 
 
 	public void paintGraph(Graphics gr) {
-		dragVector.setVisible(isVisible());
+		dragButtonArrow.setVisible(isVisible());
 		if (!isVisible())
 			return;
 
@@ -71,7 +71,7 @@ public class ArrowGraph extends AbstractSimpleGraph {
 						new int[] { yd, y1, y2 }, 3);
 			}//if
 		} catch (Exception e) {
-			ExceptionManager.doError("Fehler beim Zeichnen des Pfeil-Graphen "+getIdentifier(),e);
+			ExceptionManager.doError("Fehler beim Zeichnen des Pfeil-Graphen "+getKey(),e);
 		}
 		g.setColor(ca);
 
@@ -81,15 +81,15 @@ public class ArrowGraph extends AbstractSimpleGraph {
 
 	public void setVisible(boolean b) {
 		super.setVisible(b);
-		dragVector.setVisible(b);
+		dragButtonArrow.setVisible(b);
 	} //setVisible
 
 	public void renew() {
-		dragVector.renew();
+		dragButtonArrow.renew();
 	} //renew
 
 	public void detach() throws Exception {
-		dragVector.remove();
+		dragButtonArrow.remove();
 		//beim letzten mal zeichen verstecken
 		setVisible(false);
 	}

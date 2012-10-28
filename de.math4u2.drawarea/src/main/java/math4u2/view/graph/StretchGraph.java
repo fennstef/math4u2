@@ -39,7 +39,7 @@ public class StretchGraph extends AbstractSimpleGraph {
 				ve = end.getVector();
 			} catch (Exception e) {
 				ExceptionManager.doError("Fehler beim Zeichnen der Strecke "
-						+ getIdentifier(), e);
+						+ getKey(), e);
 				return;
 			}
 			

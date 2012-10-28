@@ -164,7 +164,7 @@ public class Bar extends AbstractArea {
 		try {
 			broker.propagateChange(xVector);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("+getIdentifier()+").",e);
+			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("+getKey()+").",e);
 		}
 		return null;
 	} //operator_vektor1
@@ -181,7 +181,7 @@ public class Bar extends AbstractArea {
 		try {
 			broker.propagateChange(yVector);
 		} catch (BrokerException e) {
-			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("+getIdentifier()+").",e);
+			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("+getKey()+").",e);
 		}
 		return null;
 	} //operator_vektor2

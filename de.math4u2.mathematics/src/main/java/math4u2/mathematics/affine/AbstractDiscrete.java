@@ -158,7 +158,7 @@ public abstract class AbstractDiscrete extends AbstractArea {
 			broker.propagateChange(xVector);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("
-					+ getIdentifier() + ").", e);
+					+ getKey() + ").", e);
 		}
 		return null;
 	} // operator_vektor1
@@ -176,7 +176,7 @@ public abstract class AbstractDiscrete extends AbstractArea {
 			broker.propagateChange(yVector);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'vektor1' ("
-					+ getIdentifier() + ").", e);
+					+ getKey() + ").", e);
 		}
 		return null;
 	} // operator_vektor2
@@ -194,7 +194,7 @@ public abstract class AbstractDiscrete extends AbstractArea {
 			broker.propagateChange(rFunc);
 		} catch (BrokerException e) {
 			ExceptionManager.doError("Fehler bei der Methode 'rFunc' ("
-					+ getIdentifier() + ").", e);
+					+ getKey() + ").", e);
 		}
 		return null;
 	} // operator_radius

@@ -44,7 +44,7 @@ public class SimpleGraphPoint implements SimpleGraphInterface{
 		return color;
 	}
 
-	public String getIdentifier() {
+	public String getKey() {
 		return "p";
 	}
 

@@ -24,11 +24,11 @@ import math4u2.controller.relation.RelationFactory;
 import math4u2.controller.relation.RelationInterface;
 import math4u2.mathematics.results.DoubleResult;
 import math4u2.mathematics.results.ScalarDoubleResult;
-import math4u2.mathematics.standardfunctions.BracketsFunction;
 import math4u2.mathematics.termnodes.TermNode;
 import math4u2.mathematics.types.ScalarType;
 import math4u2.util.exception.ExceptionManager;
 import math4u2.util.exception.NotImplementedException;
+import math4u2.util.io.file.FileResolver;
 import math4u2.util.io.file.FileUtils;
 import math4u2.util.io.file.GenericFileFilter;
 import math4u2.util.io.file.Visitor;
@@ -224,7 +224,7 @@ public abstract class Function implements MathObject, CreatesPath {
 					f = (Function) (fncClass.getConstructors())[0]
 							.newInstance(new Object[] {});
 					if (f instanceof StandardFunction)
-						broker.publishObject(f, (String) f.getIdentifier());
+						broker.publishObject(f, (String) f.getKey());
 				} catch (BrokerException e) {
 					ExceptionManager.doError(e);
 				} catch (ClassNotFoundException e) {
@@ -249,9 +249,9 @@ public abstract class Function implements MathObject, CreatesPath {
 									+ fullClassName + ")", e);
 				}
 			}// visit
-		};
-		File stdFunctionsDir = new File(BracketsFunction.class.getClassLoader()
-				.getResource("math4u2/mathematics/standardfunctions").toURI());
+		};		
+
+		File stdFunctionsDir = FileResolver.resolve("math4u2/mathematics/standardfunctions", Function.class);
 		FileUtils.traverseDir(stdFunctionsDir,
 				new GenericFileFilter("*.class"), visitor);
 	}// registerAll
@@ -413,8 +413,12 @@ public abstract class Function implements MathObject, CreatesPath {
 	 * String, der den Namen der Funktion enthält.
 	 */
 	public Object getIdentifier() {
-		return name;
-	} // getKey
+		return getName();
+	}
+	
+	public String getKey() {
+		return getName();
+	}
 
 	/***************************************************************************
 	 * Entscheidet, ob eine Funktionsdefinition durch eine andere ersetzt werden

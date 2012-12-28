@@ -24,3 +24,19 @@ Das System ist komplett in Java implementiert: Parser(yavacc), mathematischer Ke
 **Projekt**:
 
 Start im Herbst 2001, im Zeitraum 2001 bis 2004 gefördert durch das  Programm zur Förderung der Weiterentwicklung von Hochschule und (HWP).
+
+Mathematischer Kern:
+=======
+
+Der mathematische Kern deckt mit der üblichen Term-Syntax folgende Gebiete ab:
+
+**Analysis:**
+Funktionen mit einer oder mehreren Veränderlichen, Ableitung
+
+**Lineare Algebra:**
+Matrizen und Vektoren, Determinante, inverse Matrix, Lösung von linearen Gleichungssystemen mit regulärer Koeffizientenmatrix
+
+**Geometrie:**
+Punkt, Strecke, Gerade, Kreis und Winkel, parametrisierte Kurven und Kurvenzüge.
+
+<img src="doc/images/image01.jpg"/>

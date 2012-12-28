@@ -123,3 +123,44 @@ With this information we can create the function graph.
     }
     
 ![image](https://github.com/fennstef/math4u2/blob/master/doc/images/drawarea01.jpg?raw=true)
+
+You can now zoom the draw area or delete the graph "f".
+
+Another example is the contour map for a two dimensional function. In the math4u2 application you would type
+
+	f(x,y) := sin(x)*cos(y)
+	test := karte(f,vektor({-0.8,0,0.8}))
+	
+In Java-Code this is
+
+	public void testMapGraph() throws InterruptedException {
+		JFrame frame = createFrame();
+		final DrawArea da = createDrawArea();
+		frame.getContentPane().add(da);
+		//Contour thickness
+		SimpleScalarDoubleValueHolder contourDelta = new SimpleScalarDoubleValueHolder(0.001);
+		SimpleVectorDoubleValueHolder bandVector = new SimpleVectorDoubleValueHolder(
+				new double[] { -0.8, 0, 0.8 });
+		MapGraph graph = new MapGraph(
+				new DefaultGraphSettings(),
+				da,
+				bandVector,
+				contourDelta,
+				new IFunction2<IScalarDoubleHolder, IScalarDoubleHolder, IScalarDoubleHolder>() {
+					public IScalarDoubleHolder eval(IScalarDoubleHolder p1,
+							IScalarDoubleHolder p2) throws Exception {
+						//f(x,y) := sin(x)*cos(y)
+						double d = Math.sin(p1.getScalarOrNan())
+								* Math.cos(p2.getScalarOrNan());
+						return new SimpleScalarDoubleValueHolder(d);
+					}
+	
+					public String getKey() {
+						return "test";
+					}
+				});
+		da.addGraph(graph);	
+		showFrame(frame);
+	}
+
+	

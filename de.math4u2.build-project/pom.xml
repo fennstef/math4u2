@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.math4u2</groupId>
@@ -19,7 +19,7 @@
 					<!-- Ant-Task to copy everything into one jar and add aditional resource 
 						files -->
 					<execution>
-						<id>PackOneJar_CopyAdditionalResources</id>
+						<id>PackOneJar</id>
 						<phase>install</phase>
 						<goals>
 							<goal>run</goal>
@@ -40,21 +40,6 @@
 								<move
 									file="../de.math4u2.application/target/application-0.0.1-SNAPSHOT.one-jar.jar"
 									tofile="target/math4u2.jar"></move>
-
-								<!-- Copy the xml lessons for this release -->
-								<delete dir="target/math4u2/xml" />
-								<mkdir dir="target/math4u2/xml" />
-								<copy todir="target/math4u2/xml">
-									<fileset dir="../../../release-xml" />
-								</copy>
-
-								<!-- Portable resources (jre) to build path -->
-								<copy todir="target">
-									<fileset dir="../../../PortableTemplate2">
-										<exclude name="data/**" />
-									</fileset>
-								</copy>
-								<zip destfile="target/Math4u2_portable.zip" basedir="target" />
 							</tasks>
 						</configuration>
 					</execution>					
@@ -62,4 +47,58 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>integration</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>CopyAdditionalResources</id>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<copy todir="target">
+											<fileset dir="../de.math4u2.core/src/main/resources" />
+											<fileset dir="../de.math4u2.drawarea/src/main/resources" />
+											<fileset dir="../de.math4u2.mathematics/src/main/resources" />
+											<fileset dir="../de.math4u2.mathematics/src/main/resources" />
+											<fileset dir="../de.math4u2.application/src/main/resources" />
+										</copy>
+										<copy todir="target/math4u2/mathematics/standardfunctions">
+											<fileset
+												dir="../de.math4u2.mathematics/target/classes/math4u2/mathematics/standardfunctions" />
+										</copy>
+										<move
+											file="../de.math4u2.application/target/application-0.0.1-SNAPSHOT.one-jar.jar"
+											tofile="target/math4u2.jar"></move>
+										
+										<!-- Copy the xml lessons for this release -->
+										<delete dir="target/math4u2/xml" />
+										<mkdir dir="target/math4u2/xml" />
+										<copy todir="target/math4u2/xml">
+											<fileset dir="../../../release-xml" />
+										</copy>
+		
+										<!-- Portable resources (jre) to build path -->
+										<copy todir="target">
+											<fileset dir="../../../PortableTemplate2">
+												<exclude name="data/**" />
+											</fileset>
+										</copy>
+										<zip destfile="target/Math4u2_portable.zip" basedir="target" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

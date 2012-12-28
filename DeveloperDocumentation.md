@@ -55,3 +55,71 @@ Now everything is set up and you can run some examples.
         assertEquals(-9,vdr.valueArray[0][0], TOL);
         assertEquals(12,vdr.valueArray[1][0], TOL);
     }
+
+
+Using the drawarea module
+=======
+
+To create a drawarea you can often use the following method
+
+    private DrawArea createDrawArea() {
+		final DrawArea da = new DrawArea("test");
+		da.addChangeListener(new DrawAreaChangeListener() {
+			public void drawAreaChanged() {
+				da.graphHasChanged();
+			}
+		});
+		return da;
+	}
+
+Here the drawarea "test" is created and an eventlistener for change events is implemented.
+
+To create a function graph you must implement the interface 
+
+    public interface IFunction1<R,P1> {
+        R eval(P1 p1) throws Exception;
+    	String getKey();
+    }
+        
+Where the type parameter R is the return class and P1 is the first parameter. 
+For a function f:IR -> IR the class must be IScalarDoubleHolder with the following methods.
+
+    public interface IScalarDoubleHolder extends ICanBeFixed{
+        double getScalar() throws Exception;
+    	void setScalar(double value, boolean propagateChange) throws Exception;
+    	double getScalarOrNan();
+    }
+    
+    public interface ICanBeFixed {
+        boolean isFixed();
+    	void setFixed(boolean fixed);
+    }
+
+The method getScalarOrNan() throws no exceptions but returns Double.NAN. There are a number of implementations
+for the value holders. For the IScalarDoubleHolder there exists the implmentation SimpleScalarDoubleValueHolder.
+
+With this information we can create the function graph.
+
+    public void testFunctionGraph() throws InterruptedException {
+        JFrame frame = createFrame();
+        final DrawArea da = createDrawArea();
+        frame.getContentPane().add(da);
+        IFunction1<IScalarDoubleHolder, IScalarDoubleHolder> func = new IFunction1<IScalarDoubleHolder, IScalarDoubleHolder>() {
+        	public IScalarDoubleHolder eval(IScalarDoubleHolder p1)
+        			throws Exception {
+        		double d = Math.sin(p1.getScalarOrNan());
+        		return new SimpleScalarDoubleValueHolder(d);
+        	}
+        
+        	public String getKey() {
+        		return "f";
+        	}
+        };
+        
+        FunctionGraph graph = new FunctionGraph(da, new DefaultGraphSettings(), func);
+        graph.setColor(Color.blue);
+        da.addGraph(graph);
+        showFrame(frame);
+    }
+    
+![image](https://github.com/fennstef/math4u2/blob/master/doc/images/drawarea01.jpg?raw=true)

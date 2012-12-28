@@ -56,7 +56,7 @@
 						<artifactId>maven-antrun-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>CopyAdditionalResources</id>
+								<id>PackOneJar</id>
 								<phase>install</phase>
 								<goals>
 									<goal>run</goal>

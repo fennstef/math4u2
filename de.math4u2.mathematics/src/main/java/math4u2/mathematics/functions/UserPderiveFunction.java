@@ -73,7 +73,7 @@ public class UserPderiveFunction extends UserFunction implements HasCompleteView
                 functionTerm = functionTerm.evalNum();
             }
         } catch (Exception e) {
-            throw new MathException(e.getMessage());
+            throw new MathException(e);
         }
     }
 

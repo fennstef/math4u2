@@ -102,7 +102,7 @@ public abstract class UnaryStandardFunction extends StandardFunction {
 			}
 			
 		} catch (Exception e) {
-			throw new MathException(e.getMessage());
+			throw new MathException(e);
 		}
 
 	}

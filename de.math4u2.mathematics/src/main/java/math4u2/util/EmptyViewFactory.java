@@ -1,4 +1,4 @@
-package de.math4u2.mathematics;
+package math4u2.util;
 
 import math4u2.controller.Broker;
 import math4u2.mathematics.functions.UserFunction;

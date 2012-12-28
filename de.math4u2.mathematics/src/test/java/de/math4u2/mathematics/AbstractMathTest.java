@@ -12,8 +12,9 @@ import math4u2.mathematics.functions.MathException;
 import math4u2.mathematics.functions.UserFunction;
 import math4u2.mathematics.results.ScalarDoubleResult;
 import math4u2.parser.parser;
+import math4u2.util.EmptyViewFactory;
+import math4u2.util.SystemErrorExceptionFrame;
 import math4u2.util.exception.ExceptionManager;
-import math4u2.util.exception.IExceptionFrame;
 import math4u2.util.exception.parser.ParseException;
 
 import org.junit.Before;
@@ -25,19 +26,11 @@ public abstract class AbstractMathTest {
 	
 	@Before
 	public void setup(){
-		ExceptionManager.initExceptionFrame(new IExceptionFrame() {
-			public void setVisible(boolean visible) {
-			}
-			
-			public void newException(String title, String message) {
-				System.err.println(title+": "+message);
-			}
-		});
+		ExceptionManager.initExceptionFrame(new SystemErrorExceptionFrame());
 		broker = new Broker();
 		EmptyViewFactory evf = new EmptyViewFactory();
 		Function.setViewFactory(evf);
 		parser.init(broker, evf);
-		
 	}
 
 	protected UserFunction parseUserFunction(String def) throws ParseException, ObjectNotInRelationException, BrokerException {

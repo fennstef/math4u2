@@ -9,6 +9,7 @@ import math4u2.controller.MathObject;
 import math4u2.controller.relation.ObjectNotInRelationException;
 import math4u2.mathematics.functions.MathException;
 import math4u2.mathematics.functions.UserFunction;
+import math4u2.mathematics.results.VectorDoubleResult;
 import math4u2.parser.parser;
 import math4u2.util.exception.ExceptionManager;
 import math4u2.util.exception.IExceptionFrame;
@@ -125,14 +126,13 @@ public class TestSimpleMathExpressions extends AbstractMathTest{
 	}	
 	
 	@Test
-	public void testMatrixFunctions05() throws Exception{
+	public void testLinearEquation() throws Exception{
 		UserFunction a = parseUserFunction("a:=matrix({ {6, 12}, {3, 3} })");
 		UserFunction b = parseUserFunction("b := vektor({90,9})");
 		UserFunction c = parseUserFunction("c := solvelin(a,b)");
-		UserFunction d = parseUserFunction("d := c[1]");
-		UserFunction f = parseUserFunction("f := c[2]");
-		assertEquals(-9,d.evalScalar(), TOL);
-		assertEquals(12,f.evalScalar(), TOL);
+		VectorDoubleResult vdr = (VectorDoubleResult) c.eval();
+		assertEquals(-9,vdr.valueArray[0][0], TOL);
+		assertEquals(12,vdr.valueArray[1][0], TOL);
 	}
 	
 	@Test

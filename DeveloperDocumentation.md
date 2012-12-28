@@ -163,4 +163,4 @@ In Java-Code this is
 		showFrame(frame);
 	}
 
-	
+![image](https://github.com/fennstef/math4u2/blob/master/doc/images/drawarea02.jpg?raw=true)

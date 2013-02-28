@@ -9,3 +9,4 @@ math4u2 is a computer-mathematic-system, which is specialized for the use in lec
 - <a href="doc/math4u2-doc_2_1.pdf?raw=true">Math4u2 User Documentation v2.1 (German, PDF, for latest version see inline documentation)</a>
 - <a href="BuildFromSource.md">Build and run math4u2 from source</a>
 - <a href="DeveloperDocumentation.md">Documentation for Developers (English)</a> 
+- <a href="licence.md>Licence (GPL)</a>
